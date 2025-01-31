@@ -1,14 +1,9 @@
 import Reconciler, { OpaqueHandle } from 'react-reconciler'
 import ReactReconciler from 'react-reconciler'
 import _ from 'lodash'
-import {
-  MidiMessage,
-  Color,
-  Controller as ControllerModel,
-  emptyController,
-  messageToKey,
-} from '@midi-structor/core'
+import { MidiMessage, Color, messageToKey } from '@midi-structor/core'
 import { MidiTarget } from '../midi/MidiTarget'
+import { Controller as ControllerModel, emptyController } from '../controllers/Controller'
 
 const log = false ? console.log : () => {}
 
