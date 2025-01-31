@@ -5,7 +5,6 @@ import MenuIcon from '@mui/icons-material/Menu'
 import { NavLinkItem } from './components/NavLinkItem'
 import { ProjectsSelectComponent } from './components/projects/ProjectsSelectComponent'
 import RefreshIcon from '@mui/icons-material/Refresh'
-import { ControllerMidi } from './midi/ControllerMidi'
 
 export type NavProps = {}
 

@@ -3,7 +3,7 @@ import { ActiveTrackClipWidget } from '../../model/Widgets'
 import _ from 'lodash'
 import { Box } from '@mui/material'
 import { ActiveTrackClipComponent } from '../ActiveTrackClipComponent'
-import { ProjectHooks } from '../../hooks/ProjectHooks'
+import { ProjectHooks } from '@midi-structor/core'
 
 export type ActiveTrackClipWidgetComponentProps = {
   widget: ActiveTrackClipWidget

@@ -5,14 +5,14 @@ import { Widgets } from '../model/Widgets'
 import * as E from 'fp-ts/Either'
 import { toast } from 'react-toastify'
 import { PathReporter } from 'io-ts/lib/PathReporter'
-import { ProjectHooks } from '../hooks/ProjectHooks'
-import { ProjectsConfig } from '../midi/ProjectMidi'
+import { ProjectHooks, ProjectsConfig } from '@midi-structor/core'
+import { UIWidgets } from '../hooks/UIWidgets'
 
 export type SettingsPageProps = {}
 
 export const SettingsPage: React.FC<SettingsPageProps> = ({}) => {
   const arrangement = ProjectHooks.useArrangement()
-  const [widgets, setWidgets] = ProjectHooks.useWidgets()
+  const [widgets, setWidgets] = UIWidgets.useWidgets()
   const [projects, setProjects] = ProjectHooks.useProjectsConfig()
 
   const [rawWidgets, setRawWidgets] = React.useState('')

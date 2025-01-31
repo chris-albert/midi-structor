@@ -16,12 +16,12 @@ import {
   timeSignature,
   trackSections,
 } from '../model/Widgets'
-import { ProjectHooks } from '../hooks/ProjectHooks'
+import { UIWidgets } from '../hooks/UIWidgets'
 
 export type AddWidgetComponentProps = {}
 
 export const AddWidgetComponent: React.FC<AddWidgetComponentProps> = ({}) => {
-  const [_, setWidgets] = ProjectHooks.useWidgets()
+  const [_, setWidgets] = UIWidgets.useWidgets()
 
   return (
     <Box

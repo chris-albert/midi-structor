@@ -1,7 +1,7 @@
 import React from 'react'
 import { Box, Typography } from '@mui/material'
 import _ from 'lodash'
-import { useBarBeats, useTimeSignature } from '../hooks/RealTimeHooks'
+import { ProjectHooks } from '@midi-structor/core'
 
 const beatOneColor = 'red'
 const beatOtherColor = 'green'
@@ -10,8 +10,8 @@ const noBeatColor = '#777777'
 export type BarBeatComponentProps = {}
 
 export const BarBeatComponent: React.FC<BarBeatComponentProps> = ({}) => {
-  const barBeat = useBarBeats()
-  const timeSignature = useTimeSignature()
+  const barBeat = ProjectHooks.useBarBeats()
+  const timeSignature = ProjectHooks.useTimeSignature()
 
   const sizeArr = React.useMemo(() => {
     return Array.from({ length: timeSignature.noteCount }, (v, i) => i + 1)

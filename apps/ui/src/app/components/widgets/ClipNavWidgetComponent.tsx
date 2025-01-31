@@ -3,7 +3,7 @@ import { ClipNavWidget } from '../../model/Widgets'
 import _ from 'lodash'
 import { Box } from '@mui/material'
 import { ClipNavComponent } from '../ClipNavComponent'
-import { ProjectHooks } from '../../hooks/ProjectHooks'
+import { ProjectHooks } from '@midi-structor/core'
 
 export type ClipNavWidgetComponentProps = {
   widget: ClipNavWidget

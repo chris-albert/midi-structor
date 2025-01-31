@@ -17,7 +17,7 @@ import { SpacerWidgetComponent } from './widgets/SpacerWidgetComponent'
 import { WidgetSettingsComponent } from './widgets/WidgetSettingsComponent'
 import { ButtonWidgetComponent } from './widgets/ButtonWidgetComponent'
 import { KnobWidgetComponent } from './widgets/KnobWidgetComponent'
-import { ProjectHooks } from '../hooks/ProjectHooks'
+import { UIWidgets } from '../hooks/UIWidgets'
 
 const modalStyle = {
   position: 'absolute' as 'absolute',
@@ -35,7 +35,7 @@ export type WidgetComponentProps = {
 
 export const WidgetComponent: React.FC<WidgetComponentProps> = ({ widget }) => {
   const isEdit = useAtomValue(editWidgetsAtom)
-  const [_, setWidgets] = ProjectHooks.useWidgets()
+  const [_, setWidgets] = UIWidgets.useWidgets()
   const [settingsOpen, setSettingsOpen] = React.useState(false)
 
   let el = <Box>Unknown</Box>

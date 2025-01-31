@@ -3,7 +3,7 @@ import _ from 'lodash'
 import { Box } from '@mui/material'
 import { SectionsTrackClipComponent } from '../SectionsTrackClipComponent'
 import { TrackSectionsWidget } from '../../model/Widgets'
-import { ProjectHooks } from '../../hooks/ProjectHooks'
+import { ProjectHooks } from '@midi-structor/core'
 
 export type TrackSectionWidgetComponentProps = {
   widget: TrackSectionsWidget

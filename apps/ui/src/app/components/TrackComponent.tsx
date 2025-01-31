@@ -1,6 +1,6 @@
 import React from 'react'
 import { PrimitiveAtom, useAtomValue } from 'jotai'
-import { getHexColor, UITrack } from '../model/UIStateDisplay'
+import { getHexColor, UITrack } from '@midi-structor/core'
 import { Box, Grid } from '@mui/material'
 import { splitAtom } from 'jotai/utils'
 import { ClipComponent } from './ClipComponent'

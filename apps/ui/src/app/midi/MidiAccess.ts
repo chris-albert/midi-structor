@@ -1,4 +1,5 @@
-import { MidiDevices, MidiDevice } from '@midi-structor/core'
+import { MidiDevices, MidiDevice, Midi } from '@midi-structor/core'
+import React from 'react'
 
 const mapToArray = (map: any): Array<any> => {
   const arr: Array<any> = []
@@ -24,4 +25,16 @@ export function getMidiAccess(sysex = false): Promise<MidiDevices> {
     : new Promise((resolve, reject) => reject(new Error('MIDI Not Available')))
 }
 
-export default getMidiAccess
+const useAccess = () => {
+  React.useEffect(() => {
+    getMidiAccess(true)
+      .then((midi) => {
+        Midi.init(midi)
+      })
+      .catch(console.error)
+  }, [])
+}
+
+export const MidiAccess = {
+  useAccess,
+}

@@ -1,11 +1,11 @@
 import React from 'react'
 import { Box, Typography } from '@mui/material'
-import { useBarBeats } from '../../hooks/RealTimeHooks'
+import { ProjectHooks } from '@midi-structor/core'
 
 export type BeatCountComponentProps = {}
 
 export const BeatCountComponent: React.FC<BeatCountComponentProps> = ({}) => {
-  const barBeat = useBarBeats()
+  const barBeat = ProjectHooks.useBarBeats()
 
   return (
     <Box

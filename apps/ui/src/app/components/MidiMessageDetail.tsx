@@ -12,7 +12,7 @@ import {
 } from '@mui/material'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { JSONEditor } from './JSONEditor'
-import { parseAbletonUIMessage } from '../model/AbletonUIMessage'
+import { parseAbletonUIMessage } from '@midi-structor/core'
 import _ from 'lodash'
 
 const renderRawAsInt = (raw: Uint8Array): string => {

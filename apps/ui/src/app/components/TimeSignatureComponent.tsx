@@ -1,11 +1,11 @@
 import React from 'react'
 import { Box, Typography } from '@mui/material'
-import { useTimeSignature } from '../hooks/RealTimeHooks'
+import { ProjectHooks } from '@midi-structor/core'
 
 export type TimeSignatureComponentProps = {}
 
 export const TimeSignatureComponent: React.FC<TimeSignatureComponentProps> = ({}) => {
-  const timeSignature = useTimeSignature()
+  const timeSignature = ProjectHooks.useTimeSignature()
 
   return (
     <Box

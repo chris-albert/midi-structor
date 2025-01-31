@@ -1,9 +1,8 @@
 import React from 'react'
-import { MidiInput, MidiMessageWithRaw } from '@midi-structor/core'
+import { MidiInput, MidiMessageWithRaw, Midi } from '@midi-structor/core'
 import { Box, Button, Card, CardContent, Grid } from '@mui/material'
 import _ from 'lodash'
 import { MidiMessageDetail } from '../components/MidiMessageDetail'
-import { Midi } from '../midi/GlobalMidi'
 
 export type MonitorPageProps = {}
 

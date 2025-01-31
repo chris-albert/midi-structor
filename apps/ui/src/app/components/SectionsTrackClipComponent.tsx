@@ -1,8 +1,8 @@
 import React from 'react'
-import { getHexColor, UIClip, UITrack } from '../model/UIStateDisplay'
+import { getHexColor, UIClip, UITrack } from '@midi-structor/core'
 import { Box, Typography } from '@mui/material'
 import _ from 'lodash'
-import { ProjectHooks } from '../hooks/ProjectHooks'
+import { ProjectHooks } from '@midi-structor/core'
 const INACTIVE_COLOR = '#777777'
 
 export type SectionsTrackClipComponentProps = {

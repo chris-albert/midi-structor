@@ -1,7 +1,7 @@
 import React from 'react'
 import { ButtonWidget } from '../../model/Widgets'
 import { Box, Button, Typography } from '@mui/material'
-import { Midi } from '../../midi/GlobalMidi'
+import { Midi } from '@midi-structor/core'
 
 export type ButtonWidgetComponentProps = {
   widget: ButtonWidget

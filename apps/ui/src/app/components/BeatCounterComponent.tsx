@@ -1,6 +1,6 @@
 import React from 'react'
 import { Box, Typography } from '@mui/material'
-import { ProjectHooks } from '../hooks/ProjectHooks'
+import { ProjectHooks } from '@midi-structor/core'
 
 export type BeatCounterComponentProps = {}
 

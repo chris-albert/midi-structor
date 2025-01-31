@@ -5,12 +5,12 @@ import { WidgetComponent } from './WidgetComponent'
 import { editWidgetsAtom } from '../model/Widgets'
 import { useAtomValue } from 'jotai'
 import objectHash from 'fast-json-stable-stringify'
-import { ProjectHooks } from '../hooks/ProjectHooks'
+import { UIWidgets } from '../hooks/UIWidgets'
 
 export type WidgetsComponentProps = {}
 
 export const WidgetsComponent: React.FC<WidgetsComponentProps> = ({}) => {
-  const [widgets] = ProjectHooks.useWidgets()
+  const [widgets] = UIWidgets.useWidgets()
   const isEdit = useAtomValue(editWidgetsAtom)
 
   return (

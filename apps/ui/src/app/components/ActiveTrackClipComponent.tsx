@@ -1,7 +1,7 @@
 import React from 'react'
 import { Box, Typography } from '@mui/material'
-import { getHexColor, UITrack } from '../model/UIStateDisplay'
-import { ProjectHooks } from '../hooks/ProjectHooks'
+import { getHexColor, UITrack } from '@midi-structor/core'
+import { ProjectHooks } from '@midi-structor/core'
 const INACTIVE_COLOR = '#777777'
 const INACTIVE_CLIP_NAME = 'None'
 

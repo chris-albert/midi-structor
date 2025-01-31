@@ -2,7 +2,7 @@ import React from 'react'
 import { Box } from '@mui/material'
 import { SelectComponent, SelectItem } from '../SelectComponent'
 import _ from 'lodash'
-import { ProjectHooks } from '../../hooks/ProjectHooks'
+import { ProjectHooks } from '@midi-structor/core'
 
 export type ProjectsSelectComponentProps = {}
 

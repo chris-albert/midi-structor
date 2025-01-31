@@ -11,10 +11,8 @@ import 'react-toastify/dist/ReactToastify.css'
 import { ArrangementComponent } from './components/arrangement/ArrangementComponent'
 import { ControllersPage } from './pages/ControllersPage'
 import { MidiPage } from './pages/MidiPage'
-import { ProjectMidi } from './midi/ProjectMidi'
-import { Midi } from './midi/GlobalMidi'
-import { ControllerMidi } from './midi/ControllerMidi'
-import { ProjectHooks } from './hooks/ProjectHooks'
+import { ProjectMidi, Midi, ControllerMidi, ProjectHooks } from '@midi-structor/core'
+import { MidiAccess } from './midi/MidiAccess'
 
 const darkTheme = createTheme({
   palette: {
@@ -26,9 +24,7 @@ const darkTheme = createTheme({
 })
 
 function App() {
-  Midi.init().then((_) => {
-    ControllerMidi.init()
-  })
+  MidiAccess.useAccess()
 
   ProjectMidi.useProjectListener()
 

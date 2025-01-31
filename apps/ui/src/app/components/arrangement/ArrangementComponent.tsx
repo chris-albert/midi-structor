@@ -2,7 +2,7 @@ import React from 'react'
 import { Box } from '@mui/material'
 import { TrackComponent } from '../TrackComponent'
 import { ArrangementTimelineComponent } from './ArrangementTimelineComponent'
-import { ProjectHooks } from '../../hooks/ProjectHooks'
+import { ProjectHooks } from '@midi-structor/core'
 
 export type ArrangementComponentProps = {}
 

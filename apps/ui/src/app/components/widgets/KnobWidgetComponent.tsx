@@ -2,7 +2,7 @@ import React from 'react'
 import { Box, Typography } from '@mui/material'
 import { KnobWidget } from '../../model/Widgets'
 import { Knob } from 'primereact/knob'
-import { Midi } from '../../midi/GlobalMidi'
+import { Midi } from '@midi-structor/core'
 
 export type KnobWidgetComponentProps = {
   widget: KnobWidget

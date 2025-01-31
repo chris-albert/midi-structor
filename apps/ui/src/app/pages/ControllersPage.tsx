@@ -1,6 +1,6 @@
 import React from 'react'
 import { Box } from '@mui/material'
-import { LaunchpadMiniComponent } from '../components/controllers/LaunchpadMiniComponent'
+import { LaunchpadMiniComponent } from '../components/controller/LaunchpadMiniComponent'
 
 export type ControllersPageProps = {}
 

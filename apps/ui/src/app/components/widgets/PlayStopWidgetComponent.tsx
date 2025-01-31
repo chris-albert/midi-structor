@@ -2,15 +2,13 @@ import React from 'react'
 import { Box } from '@mui/material'
 import { PlayButtonComponent } from '../PlayButtonComponent'
 import { StopButtonComponent } from '../StopButtonComponent'
-import { TX_MESSAGE } from '../../model/AbletonUIMessage'
-import { Midi } from '../../midi/GlobalMidi'
-import { useIsPlaying } from '../../hooks/RealTimeHooks'
+import { TX_MESSAGE, ProjectHooks, Midi } from '@midi-structor/core'
 
 export type PlayStopWidgetComponentProps = {}
 
 export const PlayStopWidgetComponent: React.FC<PlayStopWidgetComponentProps> = ({}) => {
   const dawEmitter = Midi.useDawEmitter()
-  const isPlaying = useIsPlaying()
+  const isPlaying = ProjectHooks.useIsPlaying()
 
   const onClick = (play: boolean) => {
     if (play) {

@@ -1,10 +1,10 @@
 import React from 'react'
-import { getHexColor, NavigateableClip, UITrack } from '../model/UIStateDisplay'
+import { getHexColor, NavigateableClip, UITrack } from '@midi-structor/core'
 import { Box, Typography } from '@mui/material'
-import { TX_MESSAGE } from '../model/AbletonUIMessage'
+import { TX_MESSAGE } from '@midi-structor/core'
 import _ from 'lodash'
-import { Midi } from '../midi/GlobalMidi'
-import { ProjectHooks } from '../hooks/ProjectHooks'
+import { Midi } from '@midi-structor/core'
+import { ProjectHooks } from '@midi-structor/core'
 
 export type ClipNavComponentProps = {
   track: UITrack
