@@ -149,12 +149,27 @@ export const MidiMessage = t.union([
 
 export type MidiMessage = t.TypeOf<typeof MidiMessage>
 
+export type ParseMidiOpts = {
+  sysex: {
+    useDelimiter: boolean
+  }
+}
+
+const defaultParseMidiOpts: ParseMidiOpts = {
+  sysex: {
+    useDelimiter: true,
+  },
+}
+
 export type MidiMessageWithRaw = MidiMessage & {
   raw: Uint8Array
   time: Date
 }
 
-export const parseMidiInput = (input: any): MidiMessageWithRaw => {
+export const parseMidiInput = (
+  input: any,
+  opts: ParseMidiOpts = defaultParseMidiOpts,
+): MidiMessageWithRaw => {
   const time = new Date()
   if (input.data !== undefined) {
     const common = {
@@ -166,7 +181,7 @@ export const parseMidiInput = (input: any): MidiMessageWithRaw => {
     // console.log('status', status, status & NOTE_ON_STATUS, NOTE_ON_STATUS)
     if (status === SYSEX_STATUS) {
       return {
-        ...parseRawSysex(data.slice(1, -1)),
+        ...parseRawSysex(data.slice(1, -1), opts),
         ...common,
       }
     } else if ((status & NOTE_ON_STATUS) === NOTE_ON_STATUS) {
@@ -256,18 +271,29 @@ export const parseMidiInput = (input: any): MidiMessageWithRaw => {
   }
 }
 
-const parseRawSysex = (data: Uint8Array): SysExMessage => {
+const parseRawSysex = (data: Uint8Array, opts: ParseMidiOpts): SysExMessage => {
   const contents = data.slice(1)
-  const str = _.join(
-    _.map(contents, (value) => String.fromCharCode(value)),
-    '',
-  )
-  const splitStr = _.split(str, String.fromCharCode(DATA_DELIMITER))
-  return {
-    type: 'sysex',
-    manufacturer: data[0],
-    statusByte: _.toNumber(splitStr[0]),
-    body: splitStr.splice(1),
+
+  if (opts.sysex.useDelimiter) {
+    const str = _.join(
+      _.map(contents, (value) => String.fromCharCode(value)),
+      '',
+    )
+    const splitStr = _.split(str, String.fromCharCode(DATA_DELIMITER))
+    return {
+      type: 'sysex',
+      manufacturer: data[0],
+      statusByte: _.toNumber(splitStr[0]),
+      body: splitStr.splice(1),
+    }
+  } else {
+    const codes = _.map(contents, (value) => String.fromCharCode(value))
+    return {
+      type: 'sysex',
+      manufacturer: data[0],
+      statusByte: _.toNumber(codes.slice(0, 1)),
+      body: codes.slice(1),
+    }
   }
 }
 

@@ -218,6 +218,7 @@ export const Midi = {
   useControllerEmitter: () => useAtomValue(atoms.controller.emitter),
   useDawListener: () => useAtomValue(atoms.daw.listener),
   useControllerListener: () => useAtomValue(atoms.controller.listener),
+  useAgentListener: () => useAtomValue(atoms.agent.listener),
   useAgentEmitter: () => useAtomValue(atoms.agent.emitter),
   //Temporary exports
   dawListener: store.get(atoms.daw.listener),

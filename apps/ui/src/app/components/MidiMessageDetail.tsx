@@ -1,5 +1,5 @@
 import React from 'react'
-import { MidiMessageWithRaw } from '@midi-structor/core'
+import { AgentMidi, MidiMessageWithRaw } from '@midi-structor/core'
 import {
   Box,
   Grid,
@@ -38,7 +38,7 @@ export const MidiMessageDetail: React.FC<MidiMessageDetailProps> = ({ message, m
 
   if (message.type === 'sysex') {
     try {
-      var json = parseAbletonUIMessage(message)
+      const json = parseAbletonUIMessage(message)
       if (json !== undefined) {
         console.log('json message', json)
 
@@ -90,6 +90,15 @@ export const MidiMessageDetail: React.FC<MidiMessageDetailProps> = ({ message, m
             </Box>
           )
         }
+      } else {
+        jsonType = <Box>Agent</Box>
+        const parsed = AgentMidi.parse(message)
+        detail = (
+          <JSONEditor
+            height={'200px'}
+            value={JSON.stringify(parsed, null, 2)}
+          />
+        )
       }
     } catch (e) {
       detail = <Box>Unable to parse JSON, raw sysex data [{message.raw}]</Box>
