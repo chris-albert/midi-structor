@@ -18,7 +18,7 @@ const run = () => {
   const output = new easymidi.Output(MIDI_OUTPUT_NAME, true)
 
   input.on('sysex', (sysex) => {
-    const midi = parseMidiInput({ data: sysex.bytes }, { sysex: { useDelimiter: false } })
+    const midi = parseMidiInput({ data: sysex.bytes })
     const result = Router.route(midi)
     const body = Either.match(result, {
       onLeft: (error) => {

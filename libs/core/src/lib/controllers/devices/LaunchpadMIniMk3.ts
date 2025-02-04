@@ -8,17 +8,16 @@ import { MidiTarget } from '../../midi/MidiTarget'
 const sysex = (body: Array<number>): SysExMessage => ({
   type: 'sysex',
   manufacturer: 0,
-  statusByte: 32,
   body,
 })
 
 export const LaunchPadMiniMk3 = (emitter: MidiEmitter, listener: MidiListener) =>
   new Controller({
     init: () => {
-      emitter.send(sysex([41, 2, 13, 14, 1]))
+      emitter.send(sysex([32, 41, 2, 13, 14, 1]))
     },
     render: (pads) => {
-      const sysexArr = [41, 2, 13, 3]
+      const sysexArr = [32, 41, 2, 13, 3]
       _.forEach(pads, (pad) => {
         if (pad.color !== undefined) {
           const [r, g, b] = Color.toRGB(pad.color)

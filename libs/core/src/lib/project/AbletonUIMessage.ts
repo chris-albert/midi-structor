@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import { SysExMessage } from '../midi/MidiMessage'
 
-// const DATA_DELIMITER = 0x01
+const DATA_DELIMITER = 0x01
 const MANUFACTURER_ID = 0x02
 
 type MessageParser = {
@@ -191,12 +191,22 @@ export type AbletonUIMessage =
   | IsPlayingMessage
   | InitCueMessage
 
+const parseSysExBody = (body: Array<number>): [number, Array<string>] => {
+  const str = _.join(
+    _.map(body, (value) => String.fromCharCode(value)),
+    '',
+  )
+  const splitStr = _.split(str, String.fromCharCode(DATA_DELIMITER))
+
+  return [_.toNumber(splitStr[0]), splitStr.splice(1)]
+}
 export const parseAbletonUIMessage = (message: SysExMessage): AbletonUIMessage | undefined => {
   try {
     if (message.manufacturer === MANUFACTURER_ID) {
-      const parser = RX_STATUS_LOOKUP[message.statusByte]
+      const [statusByte, body] = parseSysExBody(message.body)
+      const parser = RX_STATUS_LOOKUP[statusByte]
       if (parser !== undefined) {
-        return parser.parse(message.body)
+        return parser.parse(body)
       } else {
         console.warn('Did not find parser for message', message)
       }
@@ -221,8 +231,7 @@ export const TX_MESSAGE = {
     return {
       type: 'sysex',
       manufacturer: MANUFACTURER_ID,
-      statusByte,
-      body: charCodesFromString(body.toString()),
+      body: [statusByte, ...charCodesFromString(body.toString())],
     }
   },
   play: () => {

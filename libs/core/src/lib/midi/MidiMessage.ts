@@ -18,8 +18,6 @@ const STOP_STATUS = 0xfc
 const ACTIVE_SENSING_STATUS = 0xfe
 const RESET_STATUS = 0xff
 
-const DATA_DELIMITER = 0x01
-
 export const MidiChannel = t.type({
   channel: t.number,
 })
@@ -28,7 +26,6 @@ export type MidiChannel = t.TypeOf<typeof MidiChannel>
 export const SysExMessage = t.type({
   type: t.literal('sysex'),
   manufacturer: t.number,
-  statusByte: t.number,
   body: t.array(t.any),
 })
 
@@ -148,28 +145,12 @@ export const MidiMessage = t.union([
 ])
 
 export type MidiMessage = t.TypeOf<typeof MidiMessage>
-
-export type ParseMidiOpts = {
-  sysex: {
-    useDelimiter: boolean
-  }
-}
-
-const defaultParseMidiOpts: ParseMidiOpts = {
-  sysex: {
-    useDelimiter: true,
-  },
-}
-
 export type MidiMessageWithRaw = MidiMessage & {
   raw: Uint8Array
   time: Date
 }
 
-export const parseMidiInput = (
-  input: any,
-  opts: ParseMidiOpts = defaultParseMidiOpts,
-): MidiMessageWithRaw => {
+export const parseMidiInput = (input: any): MidiMessageWithRaw => {
   const time = new Date()
   if (input.data !== undefined) {
     const common = {
@@ -181,7 +162,7 @@ export const parseMidiInput = (
     // console.log('status', status, status & NOTE_ON_STATUS, NOTE_ON_STATUS)
     if (status === SYSEX_STATUS) {
       return {
-        ...parseRawSysex(data.slice(1, -1), opts),
+        ...parseRawSysex(data.slice(1, -1)),
         ...common,
       }
     } else if ((status & NOTE_ON_STATUS) === NOTE_ON_STATUS) {
@@ -271,34 +252,18 @@ export const parseMidiInput = (
   }
 }
 
-const parseRawSysex = (data: Uint8Array, opts: ParseMidiOpts): SysExMessage => {
-  const contents = data.slice(1)
+const parseRawSysex = (data: Uint8Array): SysExMessage => {
+  const contents = data.slice(1) as any as Array<number>
 
-  if (opts.sysex.useDelimiter) {
-    const str = _.join(
-      _.map(contents, (value) => String.fromCharCode(value)),
-      '',
-    )
-    const splitStr = _.split(str, String.fromCharCode(DATA_DELIMITER))
-    return {
-      type: 'sysex',
-      manufacturer: data[0],
-      statusByte: _.toNumber(splitStr[0]),
-      body: splitStr.splice(1),
-    }
-  } else {
-    const codes = _.map(contents, (value) => String.fromCharCode(value))
-    return {
-      type: 'sysex',
-      manufacturer: data[0],
-      statusByte: _.toNumber(codes.slice(0, 1)),
-      body: codes.slice(1),
-    }
+  return {
+    type: 'sysex',
+    manufacturer: data[0],
+    body: contents,
   }
 }
 
 export const generateRawSysex = (sysex: SysExMessage): Uint8Array => {
-  const arr = [0xf0, sysex.manufacturer, sysex.statusByte]
+  const arr = [0xf0, sysex.manufacturer]
   const withBody = arr.concat(sysex.body)
   withBody.push(0xf7)
   return withBody as any as Uint8Array

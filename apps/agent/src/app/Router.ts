@@ -1,5 +1,6 @@
-import { MidiMessageWithRaw, parseMidiInput, SysExMessage } from '@midi-structor/core'
-import { Either } from 'effect'
+import { AgentMidi, MidiMessageWithRaw, parseMidiInput, SysExMessage } from '@midi-structor/core'
+import { Either, pipe } from 'effect'
+import { Routes } from './Routes'
 
 const parseSysEx = (raw: MidiMessageWithRaw): Either.Either<SysExMessage, string> => {
   if (raw.type === 'sysex') {
@@ -9,18 +10,10 @@ const parseSysEx = (raw: MidiMessageWithRaw): Either.Either<SysExMessage, string
   }
 }
 
-const parseJson = (sysex: SysExMessage): Either.Either<any, string> => {
-  try {
-    const json = JSON.parse(sysex.body.join(''))
-    return Either.right(json)
-  } catch (e) {
-    return Either.left(`Unable to parse as JSON [${e}] [${sysex.body.join('')}]`)
-  }
-}
-
 const route = (raw: MidiMessageWithRaw): Either.Either<any, string> => {
   console.log(`Routing message`, raw)
-  return Either.left('Error!!!!')
+
+  return pipe(raw, parseSysEx, Either.flatMap(AgentMidi.parse), Either.flatMap(Routes.handle))
 }
 
 export const Router = {
