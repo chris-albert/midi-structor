@@ -1,9 +1,9 @@
 import React from 'react'
 import { Data, Option } from 'effect'
-import { MidiMessage } from '@midi-structor/core'
 import _ from 'lodash'
 import { Color } from './Color'
 import { MidiTarget } from '../midi/MidiTarget'
+import { MidiMessage } from '../midi/MidiMessage'
 
 export const messageToKey = (message: MidiMessage): string => {
   if (message.type === 'noteon' && message.velocity > 0) {

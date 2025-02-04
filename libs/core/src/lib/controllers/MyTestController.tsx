@@ -1,8 +1,8 @@
 import React from 'react'
 import { Color } from './Color'
-import { LaunchPadMiniMk3 } from '../../model/controllers/LaunchPadMiniMk3'
-import { MidiTarget } from '../../midi/MidiTarget'
-import { Midi } from '../../midi/GlobalMidi'
+import { LaunchPadMiniMk3 } from './devices/LaunchpadMIniMk3'
+import { MidiTarget } from '../midi/MidiTarget'
+import { Midi } from '../midi/GlobalMidi'
 
 export const MyController = () => {
   const emitter = Midi.useControllerEmitter()

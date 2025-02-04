@@ -1,10 +1,10 @@
-import { useAtom, useAtomValue, useSetAtom } from 'jotai'
+import { useAtom, useAtomValue, useSetAtom, WritableAtom } from 'jotai'
 import { ProjectImportStatus, ProjectMidi } from './ProjectMidi'
 import React from 'react'
 import _ from 'lodash'
 import { focusAtom } from 'jotai-optics'
 import { splitAtom } from 'jotai/utils'
-import { emptyTrack, UIClip, UITrack } from './UIStateDisplay'
+import { emptyTrack, UIArrangement, UIClip, UITrack } from './UIStateDisplay'
 
 const isClipActive = (clip: UIClip, beat: number): boolean => {
   return beat >= clip.startTime && (clip.endTime === undefined || beat < clip.endTime)
@@ -28,7 +28,8 @@ const useArrangementAtom = () => {
 const useArrangement = () => useAtomValue(useArrangementAtom())
 
 const useTracksAtom = () => {
-  const arrangement = useArrangementAtom()
+  const arrangement: WritableAtom<UIArrangement, [UIArrangement], void> = useArrangementAtom()
+
   return React.useMemo(() => focusAtom(arrangement, (o) => o.prop('tracks')), [arrangement])
 }
 

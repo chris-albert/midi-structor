@@ -1,7 +1,8 @@
 import React from 'react'
 import { StopWidget } from './StopWidget'
 import { PlayWidget } from './PlayWidget'
-import { MidiTarget, ProjectHooks } from '@midi-structor/core'
+import { MidiTarget } from '../../midi/MidiTarget'
+import { ProjectHooks } from '../../project/ProjectHooks'
 
 type PlayStopWidgetProps = {
   target: MidiTarget

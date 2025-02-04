@@ -1,6 +1,7 @@
 import React from 'react'
 import { Color } from '../Color'
-import { MidiTarget, ProjectHooks } from '@midi-structor/core'
+import { MidiTarget } from '../../midi/MidiTarget'
+import { ProjectHooks } from '../../project/ProjectHooks'
 
 type TimeSigNoteLengthWidgetProps = {
   targets: Array<MidiTarget>

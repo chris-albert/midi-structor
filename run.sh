@@ -1,1 +1,1 @@
-npx nx serve ui
+npx nx run-many --parallel --target=serve --projects=ui,agent

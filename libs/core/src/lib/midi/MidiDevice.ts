@@ -1,11 +1,5 @@
-import {
-  EventEmitter,
-  EventRecord,
-  generateRawMidiMessage,
-  MidiMessage,
-  MidiMessageWithRaw,
-  parseMidiInput,
-} from '@midi-structor/core'
+import { generateRawMidiMessage, MidiMessage, MidiMessageWithRaw, parseMidiInput } from './MidiMessage'
+import { EventEmitter, EventRecord } from '../EventEmitter'
 
 export type MidiPort = {
   type: 'input' | 'output'

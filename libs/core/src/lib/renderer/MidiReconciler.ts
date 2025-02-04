@@ -1,13 +1,17 @@
 import Reconciler, { OpaqueHandle } from 'react-reconciler'
 import ReactReconciler from 'react-reconciler'
 import _ from 'lodash'
-import { MidiMessage, Color, messageToKey } from '@midi-structor/core'
 import { MidiTarget } from '../midi/MidiTarget'
-import { Controller as ControllerModel, emptyController } from '../controllers/Controller'
+import { Controller as ControllerModel, emptyController, messageToKey } from '../controllers/Controller'
+import { Color } from '../controllers/Color'
+import { MidiMessage } from '../midi/MidiMessage'
 
-const log = false ? console.log : () => {}
+const SHOW_VERBOSE_LOGS = false
+
+const log = SHOW_VERBOSE_LOGS ? console.log : () => {}
 
 declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace JSX {
     interface IntrinsicElements {
       pad: PadProps

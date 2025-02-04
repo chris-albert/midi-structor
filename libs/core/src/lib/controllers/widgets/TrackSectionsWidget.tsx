@@ -1,7 +1,9 @@
 import React from 'react'
 import { Pad } from '../pads/Pad'
 import { Color } from '../Color'
-import { MidiTarget, ProjectHooks, UIClip } from '@midi-structor/core'
+import { MidiTarget } from '../../midi/MidiTarget'
+import { ProjectHooks } from '../../project/ProjectHooks'
+import { UIClip } from '../../project/UIStateDisplay'
 
 const validInParent =
   (parentClip: UIClip) =>

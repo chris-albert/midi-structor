@@ -1,6 +1,5 @@
 import _ from 'lodash'
-import { SysExMessage } from '@midi-structor/core'
-import { UIRealClip } from './UIStateDisplay'
+import { SysExMessage } from '../midi/MidiMessage'
 
 // const DATA_DELIMITER = 0x01
 const MANUFACTURER_ID = 0x02

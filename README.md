@@ -4,4 +4,15 @@
 ```
 ./run.sh
 ```
-# midi-structor
+
+Running agent
+```
+npx nx serve agent
+
+npx nx build core
+
+
+```
+
+
+

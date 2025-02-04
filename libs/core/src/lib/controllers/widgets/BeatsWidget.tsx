@@ -1,7 +1,8 @@
 import React from 'react'
 import _ from 'lodash'
 import { Color } from '../Color'
-import { MidiTarget, ProjectHooks } from '@midi-structor/core'
+import { MidiTarget } from '../../midi/MidiTarget'
+import { ProjectHooks } from '../../project/ProjectHooks'
 
 type BeatsWidgetProps = {
   targets: Array<MidiTarget>

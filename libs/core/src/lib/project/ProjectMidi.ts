@@ -9,7 +9,7 @@ import {
   initTrack,
   UIArrangement,
 } from './UIStateDisplay'
-import { atom, getDefaultStore, useAtom, useAtomValue, useSetAtom } from 'jotai'
+import { atom, getDefaultStore, useAtom, useAtomValue, useSetAtom, WritableAtom } from 'jotai'
 import { parseAbletonUIMessage } from './AbletonUIMessage'
 import * as t from 'io-ts'
 import { atomWithStorage, splitAtom } from 'jotai/utils'
@@ -58,7 +58,7 @@ const atoms = {
   ),
   project: {
     active: atomWithStorage('active-project', 'default'),
-    arrangement: (name: string) =>
+    arrangement: (name: string): WritableAtom<UIArrangement, Array<UIArrangement>, void> =>
       atomWithStorage<UIArrangement>(`arrangement-${name}`, emptyArrangement(), createJSONStorage(), {
         getOnInit: true,
       }),

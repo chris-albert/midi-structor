@@ -18,6 +18,7 @@ export const Pad: React.FC<PadProps> = (props) => {
       return () => clearInterval(timer)
     } else {
       setColor(props.color)
+      return () => {}
     }
   }, [props.color, props.isFlashing])
 

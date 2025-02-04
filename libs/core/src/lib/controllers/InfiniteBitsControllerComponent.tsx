@@ -11,7 +11,8 @@ import { SongsWidget } from './widgets/SongsWidget'
 import { BarTrackerWidget } from './widgets/BarTrackerWidget'
 import { TrackSectionsWidget } from './widgets/TrackSectionsWidget'
 import { KeyBoardWidget } from './widgets/KeyBoardWidget'
-import { Midi, MidiTarget } from '@midi-structor/core'
+import { Midi } from '../midi/GlobalMidi'
+import { MidiTarget } from '../midi/MidiTarget'
 
 type InfiniteBitsControllerComponentProps = {}
 

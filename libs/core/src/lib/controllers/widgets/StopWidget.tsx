@@ -1,6 +1,8 @@
 import React from 'react'
 import { Color } from '../Color'
-import { Midi, MidiTarget, TX_MESSAGE } from '@midi-structor/core'
+import { MidiTarget } from '../../midi/MidiTarget'
+import { Midi } from '../../midi/GlobalMidi'
+import { TX_MESSAGE } from '../../project/AbletonUIMessage'
 
 type StopWidgetProps = {
   target: MidiTarget

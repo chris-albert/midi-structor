@@ -1,7 +1,9 @@
 import React from 'react'
 import { Pad } from '../pads/Pad'
 import { Color } from '../Color'
-import { MidiTarget, ProjectHooks, UIClipsOps } from '@midi-structor/core'
+import { MidiTarget } from '../../midi/MidiTarget'
+import { ProjectHooks } from '../../project/ProjectHooks'
+import { UIClipsOps } from '../../project/UIStateDisplay'
 
 export type KeyBoardWidgetProps = {
   topTargets: Array<MidiTarget>

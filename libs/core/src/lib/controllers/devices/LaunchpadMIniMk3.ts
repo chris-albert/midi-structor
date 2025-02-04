@@ -1,5 +1,9 @@
-import { Color, Controller, MidiEmitter, MidiListener, MidiTarget, SysExMessage } from '@midi-structor/core'
+import { MidiEmitter, MidiListener } from '../../midi/GlobalMidi'
+import { SysExMessage } from '../../midi/MidiMessage'
 import _ from 'lodash'
+import { Controller } from '../Controller'
+import { Color } from '../Color'
+import { MidiTarget } from '../../midi/MidiTarget'
 
 const sysex = (body: Array<number>): SysExMessage => ({
   type: 'sysex',

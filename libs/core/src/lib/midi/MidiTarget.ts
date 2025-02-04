@@ -1,5 +1,5 @@
 import { Data } from 'effect'
-import { MidiMessage } from '@midi-structor/core'
+import { MidiMessage } from './MidiMessage'
 
 export type MidiTarget = Data.TaggedEnum<{
   Note: { note: number }

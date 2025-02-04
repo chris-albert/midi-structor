@@ -1,7 +1,11 @@
 import React from 'react'
 import _ from 'lodash'
 import { Pad } from '../pads/Pad'
-import { Midi, MidiTarget, NavigateableClip, ProjectHooks, TX_MESSAGE, UIRealClip } from '@midi-structor/core'
+import { MidiTarget } from '../../midi/MidiTarget'
+import { ProjectHooks } from '../../project/ProjectHooks'
+import { Midi } from '../../midi/GlobalMidi'
+import { NavigateableClip, UIRealClip } from '../../project/UIStateDisplay'
+import { TX_MESSAGE } from '../../project/AbletonUIMessage'
 
 type SongsWidgetProps = {
   targets: Array<MidiTarget>
