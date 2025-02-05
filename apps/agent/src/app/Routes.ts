@@ -1,7 +1,8 @@
 import { Either, Schema } from 'effect'
-import { AgentMessage, GetDevicesMessage, HealthMessage } from '@midi-structor/core'
+import { AgentMessage, HealthMessage } from '@midi-structor/core'
+import { Devices } from './routes/Devices'
 
-type MessageHandler = (message: AgentMessage) => Either.Either<any, string>
+export type MessageHandler = (message: AgentMessage) => Either.Either<any, string>
 
 type MessageHandlers<Messages extends { _tag: string }> = {
   [M in Messages as M['_tag']]: (message: M) => Either.Either<any, string>
@@ -11,9 +12,7 @@ const MessageHandlers: MessageHandlers<AgentMessage> = {
   HealthMessage: (healthMessage: HealthMessage) => {
     return Either.right({ status: 'ok' })
   },
-  GetDevicesMessage: (getDevicesMessage: GetDevicesMessage) => {
-    return Either.right({ status: 'ok' })
-  },
+  GetDevicesMessage: Devices.getDevicesMessage,
 }
 
 const Handler = () => {

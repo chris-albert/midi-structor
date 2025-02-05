@@ -2,6 +2,7 @@ import * as easymidi from 'easymidi'
 import { generateRawSysex, parseMidiInput, AgentMidi } from '@midi-structor/core'
 import { Router } from './Router'
 import { Either } from 'effect'
+import { Agent } from './Agent'
 
 console.log('Starting agent ...')
 
@@ -35,6 +36,8 @@ const run = () => {
 
   console.log(`Listening to Midi input [${MIDI_INPUT_NAME}] ...`)
   console.log()
+
+  Agent.run()
 }
 
 export const App = {

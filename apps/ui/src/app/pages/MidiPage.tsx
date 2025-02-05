@@ -2,8 +2,7 @@ import React from 'react'
 import { Box, Button, Card, CardContent, CardHeader } from '@mui/material'
 import { MonitorPage } from './MonitorPage'
 import { MidiSelectComponent } from '../components/midi/MidiSelectComponent'
-import { HealthMessage, Midi } from '@midi-structor/core'
-import { AgentMidi } from '../../../../../libs/core/src/lib/midi/AgentMidi'
+import { GetDevicesMessage, HealthMessage, Midi, AgentMidi } from '@midi-structor/core'
 
 type MidiPageProps = {}
 
@@ -64,7 +63,8 @@ export const MidiPage: React.FC<MidiPageProps> = () => {
             </CardContent>
             <Button
               onClick={() => {
-                agentEmitter.send(AgentMidi.message(HealthMessage.make({})))
+                // agentEmitter.send(AgentMidi.message(HealthMessage.make({})))
+                agentEmitter.send(AgentMidi.message(GetDevicesMessage.make({})))
               }}>
               Test
             </Button>
