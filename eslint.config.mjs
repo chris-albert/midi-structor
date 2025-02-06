@@ -30,6 +30,7 @@ export default [
     // Override or add rules here
     rules: {
       allowObjectTypes: 'off',
+      '@typescript-eslint/no-namespace': 'off',
     },
   },
 ]

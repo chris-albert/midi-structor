@@ -1,15 +1,14 @@
-import { ServiceImpl, AgentService, HealthRequest, HealthResponse, BuildServer } from '@midi-structor/core'
+import { AgentService, Service } from '@midi-structor/core'
 import { Devices } from './routes/Devices'
 
-const Health = (req: HealthRequest): Promise<string> =>
-  // Promise.resolve(HealthResponse.make({ status: 'ok' }))
-  Promise.resolve('')
+const Health: Service.Handler<AgentService, 'Health'> = (req) => Promise.resolve({ status: 'ok' })
 
-const AgentServiceImpl: ServiceImpl<typeof AgentService> = {
+const AgentServiceImpl: AgentService = {
   AvailableDevices: Devices.AvailableDevices,
+  SetDevice: Devices.SetDevices,
   Health,
 }
 
 export const Routes = {
-  handle: BuildServer(AgentService, AgentServiceImpl).handle,
+  handle: Service.Server(AgentService, AgentServiceImpl).handle,
 }
