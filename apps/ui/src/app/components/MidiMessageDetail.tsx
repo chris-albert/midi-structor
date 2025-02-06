@@ -174,11 +174,9 @@ export const MidiMessageDetail: React.FC<MidiMessageDetailProps> = ({ message, m
         </AccordionSummary>
         <Divider />
         <AccordionDetails>
-          <Typography>
-            {detail}
-            <Box>Raw Int: {renderRawAsInt(message.raw)}</Box>
-            <Box>RawHex: {renderRawAsHex(message.raw)}</Box>
-          </Typography>
+          {detail}
+          <Box>Raw Int: {renderRawAsInt(message.raw)}</Box>
+          <Box>RawHex: {renderRawAsHex(message.raw)}</Box>
         </AccordionDetails>
       </Accordion>
     </Box>

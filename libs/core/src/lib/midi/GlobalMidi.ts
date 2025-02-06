@@ -132,7 +132,7 @@ const runInit = () => {
   selectionInit('daw')
   selectionInit('controller')
   selectionInit('agent')
-  ControllerMidi.init()
+  // ControllerMidi.init()
 }
 
 const init = (manager: MidiDeviceManager) => {

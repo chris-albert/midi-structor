@@ -1,13 +1,13 @@
-import { GetDevicesMessage } from '@midi-structor/core'
-import { Either } from 'effect'
+import { GetAvailableDevicesRequest, GetAvailableDevicesResponse } from '@midi-structor/core'
 import * as easymidi from 'easymidi'
 
-const getDevicesMessage = (getDevicesMessage: GetDevicesMessage) => {
+const AvailableDevices = (req: GetAvailableDevicesRequest): Promise<GetAvailableDevicesResponse> => {
   const inputs = easymidi.getInputs()
   const outputs = easymidi.getOutputs()
 
-  return Either.right({ inputs, outputs })
+  return Promise.resolve({ inputs, outputs })
 }
+
 export const Devices = {
-  getDevicesMessage,
+  AvailableDevices,
 }

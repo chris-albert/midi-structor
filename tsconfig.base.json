@@ -14,6 +14,7 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
+    "strict": true,
     "paths": {
       "@midi-structor/agent": ["apps/agent/src/index.ts"],
       "@midi-structor/core": ["libs/core/src/index.ts"]

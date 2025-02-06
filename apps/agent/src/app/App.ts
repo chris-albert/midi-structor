@@ -1,7 +1,6 @@
 import * as easymidi from 'easymidi'
 import { generateRawSysex, parseMidiInput, AgentMidi } from '@midi-structor/core'
 import { Router } from './Router'
-import { Either } from 'effect'
 import { Agent } from './Agent'
 
 console.log('Starting agent ...')
@@ -20,18 +19,15 @@ const run = () => {
 
   input.on('sysex', (sysex) => {
     const midi = parseMidiInput({ data: sysex.bytes })
-    const result = Router.route(midi)
-    const body = Either.match(result, {
-      onLeft: (error) => {
+    Router.route(midi)
+      .then((result) => {
+        console.log('Successful output', result)
+        output.send('sysex', successResponse(result) as any as Array<number>)
+      })
+      .catch((error) => {
         console.error('Error routing', error)
-        return errorResponse(error)
-      },
-      onRight: (output) => {
-        console.log('Successful output', output)
-        return successResponse(output)
-      },
-    })
-    output.send('sysex', body as any as Array<number>)
+        output.send('sysex', errorResponse(error) as any as Array<number>)
+      })
   })
 
   console.log(`Listening to Midi input [${MIDI_INPUT_NAME}] ...`)
