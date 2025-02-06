@@ -5,7 +5,7 @@ import { Agent } from './Agent'
 
 console.log('Starting agent ...')
 
-const MIDI_DEVICE_NAME = 'MIDI Structor'
+const MIDI_DEVICE_NAME = 'MIDI Structor Agent'
 const MIDI_INPUT_NAME = `${MIDI_DEVICE_NAME} Input`
 const MIDI_OUTPUT_NAME = `${MIDI_DEVICE_NAME} Output`
 
@@ -21,7 +21,7 @@ const run = () => {
     const midi = parseMidiInput({ data: sysex.bytes })
     Router.route(midi)
       .then((result) => {
-        console.log('Successful output', result)
+        // console.log('Successful output', result)
         output.send('sysex', successResponse(result) as any as Array<number>)
       })
       .catch((error) => {

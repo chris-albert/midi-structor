@@ -4,8 +4,7 @@ import { Devices } from './routes/Devices'
 const Health: Service.Handler<AgentService, 'Health'> = (req) => Promise.resolve({ status: 'ok' })
 
 const AgentServiceImpl: AgentService = {
-  AvailableDevices: Devices.AvailableDevices,
-  SetDevice: Devices.SetDevices,
+  ...Devices,
   Health,
 }
 

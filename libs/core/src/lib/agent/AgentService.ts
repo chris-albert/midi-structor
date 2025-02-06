@@ -1,9 +1,12 @@
 import { Schema } from 'effect'
 import { Service } from '../service/Service'
+import { MidiDeviceType, MidiType } from '../midi/GlobalMidi'
 
+const StringOrUndefined = Schema.Union(Schema.String, Schema.Undefined)
+const Empty = Schema.Any
 export const AgentService = Service.build({
   AvailableDevices: {
-    request: Schema.Struct({}),
+    request: Empty,
     response: Schema.Struct({
       inputs: Schema.Array(Schema.String),
       outputs: Schema.Array(Schema.String),
@@ -11,12 +14,27 @@ export const AgentService = Service.build({
   },
   SetDevice: {
     request: Schema.Struct({
-      name: Schema.String,
+      name: StringOrUndefined,
+      midiType: MidiType,
+      midiDeviceType: MidiDeviceType,
     }),
-    response: Schema.Struct({}),
+    response: Empty,
+  },
+  DeviceState: {
+    request: Empty,
+    response: Schema.Struct({
+      controller: Schema.Struct({
+        input: StringOrUndefined,
+        output: StringOrUndefined,
+      }),
+      daw: Schema.Struct({
+        input: StringOrUndefined,
+        output: StringOrUndefined,
+      }),
+    }),
   },
   Health: {
-    request: Schema.Struct({}),
+    request: Empty,
     response: Schema.Struct({
       status: Schema.String,
     }),
