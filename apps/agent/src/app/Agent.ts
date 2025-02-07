@@ -20,6 +20,7 @@ const buildListener = (name: string) => (): MidiListener => {
     const midiMessage = parseMidiInput(rawMessage)
     emitter.emit(midiMessage)
   })
+
   return emitter
 }
 
@@ -27,9 +28,38 @@ const buildEmitter = (name: string) => (): MidiEmitter => {
   const output = new easymidi.Output(name)
   return {
     send: (msg: MidiMessage) => {
-      const raw = generateRawMidiMessage(msg)
-      console.debug('Sending midi message', raw)
-      // output.send(raw)
+      try {
+        console.debug('Sending midi message', msg)
+        if (msg.type === 'sysex') {
+          const raw = generateRawMidiMessage(msg)
+          output.send('sysex', raw as any as Array<number>)
+        } else if (msg.type === 'noteon') {
+          output.send('noteon', {
+            note: msg.note,
+            velocity: msg.velocity,
+            channel: msg.channel as easymidi.Channel,
+          })
+        } else if (msg.type === 'noteoff') {
+          output.send('noteoff', {
+            note: msg.note,
+            velocity: msg.velocity,
+            channel: msg.channel as easymidi.Channel,
+          })
+        } else if (msg.type === 'cc') {
+          output.send('cc', {
+            controller: msg.controllerNumber,
+            value: msg.data,
+            channel: msg.channel as easymidi.Channel,
+          })
+        } else if (msg.type === 'pc') {
+          output.send('program', {
+            number: msg.programNumber,
+            channel: msg.channel as easymidi.Channel,
+          })
+        }
+      } catch (e) {
+        console.error('Error sending midi message', e)
+      }
     },
   }
 }

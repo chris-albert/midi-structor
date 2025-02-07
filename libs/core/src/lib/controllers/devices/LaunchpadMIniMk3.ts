@@ -21,7 +21,13 @@ export const LaunchPadMiniMk3 = (emitter: MidiEmitter, listener: MidiListener) =
       _.forEach(pads, (pad) => {
         if (pad.color !== undefined) {
           const [r, g, b] = Color.toRGB(pad.color)
-          sysexArr.push(3, MidiTarget.toValue(pad.target), r / 2, g / 2, b / 2)
+          sysexArr.push(
+            3,
+            MidiTarget.toValue(pad.target),
+            Math.floor(r / 2),
+            Math.floor(g / 2),
+            Math.floor(b / 2),
+          )
         }
       })
       emitter.send(sysex(sysexArr))

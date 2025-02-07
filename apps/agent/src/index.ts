@@ -1,3 +1,7 @@
 import { App } from './app/App'
 
-App.run()
+try {
+  App.run()
+} catch (error) {
+  console.error('App error', error)
+}

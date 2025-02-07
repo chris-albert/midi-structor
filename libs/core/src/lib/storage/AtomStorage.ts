@@ -12,13 +12,16 @@ const safeEnv = (name: string, ifEmpty: string): string => {
   return ifEmpty
 }
 
-const STORAGE_PATH = safeEnv('MIDI_STRUCTOR_PATH', '~/.midi-structor')
+const STORAGE_PATH = safeEnv('MIDI_STRUCTOR_PATH', '/Users/christopheralbert/.midi-structor')
 
 const IS_AGENT = safeEnv('NX_TASK_TARGET_PROJECT', 'browser') === 'agent'
 
 const serverStorage = (): SyncStringStorage => ({
   getItem: (key: string): string => {
-    return fs.readFileSync(`${STORAGE_PATH}/${key}`, 'utf8')
+    try {
+      return fs.readFileSync(`${STORAGE_PATH}/${key}`, 'utf8')
+    } catch (e) {}
+    return ''
   },
   setItem: (key: string, newValue: string): void => {
     fs.writeFileSync(`${STORAGE_PATH}/${key}`, newValue)
@@ -30,7 +33,6 @@ const serverStorage = (): SyncStringStorage => ({
 
 const storage = <A>(): SyncStorage<A> => {
   if (IS_AGENT) {
-    console.log('usuing agent')
     return createJSONStorage<A>(serverStorage)
   } else {
     return createJSONStorage<A>()
