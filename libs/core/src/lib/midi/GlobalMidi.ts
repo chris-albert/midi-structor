@@ -8,6 +8,7 @@ import { MidiMessage } from './MidiMessage'
 import { EventEmitter } from '../EventEmitter'
 import { MidiDeviceManager } from './MidiDeviceManager'
 import { AsyncStorage, SyncStorage, SyncStringStorage } from 'jotai/vanilla/utils/atomWithStorage'
+import { AtomStorage } from '../storage/AtomStorage'
 
 export const MidiType = Schema.Union(
   Schema.Literal('daw'),
@@ -37,33 +38,6 @@ export type MidiDeviceSelection = {
 
 const store = getDefaultStore()
 
-const isAgent = () => {
-  try {
-    return process.env['NX_TASK_TARGET_PROJECT'] === 'agent'
-  } catch (e) {}
-  return false
-}
-
-const serverStorage = (): SyncStringStorage => ({
-  getItem: (key: string): string => {
-    console.log('trying to get item', key)
-    return 'hi'
-  },
-  setItem: (key: string, newValue: string): void => {
-    console.log('trying to set item', key, newValue)
-  },
-  removeItem: (key: string): void => {},
-})
-
-const storage = <A>(): SyncStorage<A> => {
-  if (isAgent()) {
-    console.log('usuing agent')
-    return createJSONStorage<A>(serverStorage)
-  } else {
-    return createJSONStorage<A>()
-  }
-}
-
 export type MidiListener = Omit<EventEmitter<MidiEventRecord>, 'emit'>
 
 export type MidiEmitter = {
@@ -77,7 +51,7 @@ const emptyEmitter = (): MidiEmitter => ({
 })
 
 const selectedAtom = (name: string): PrimitiveAtom<Option.Option<string>> =>
-  atomWithStorage<Option.Option<string>>(name, Option.none(), storage(), {
+  atomWithStorage<Option.Option<string>>(name, Option.none(), AtomStorage.storage(), {
     getOnInit: true,
   })
 

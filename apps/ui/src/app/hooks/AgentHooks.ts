@@ -26,7 +26,13 @@ const useAgentDevices = (deviceType: MidiDeviceType, type: MidiType): MidiDevice
 
   React.useEffect(() => {
     agentService.DeviceState({}).then((state) => {
-      console.log('DeviceState', state)
+      if (type === 'controller') {
+        setSelected(
+          Option.fromNullable(deviceType === 'input' ? state.controller.input : state.controller.output),
+        )
+      } else {
+        setSelected(Option.fromNullable(deviceType === 'input' ? state.daw.input : state.daw.output))
+      }
     })
 
     agentService.AvailableDevices({}).then((result) => {

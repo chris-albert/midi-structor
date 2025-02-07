@@ -16,8 +16,6 @@ const SetDevice: Service.Handler<AgentService, 'SetDevice'> = (req) => {
 }
 
 const DeviceState: Service.Handler<AgentService, 'DeviceState'> = (req) => {
-  console.log('Device state')
-
   return Promise.resolve({
     controller: {
       input: Option.getOrElse(Midi.getSelected('controller', 'input'), () => undefined),
