@@ -8,6 +8,7 @@ import {
   MidiDeviceManager,
   MidiListener,
   MidiEmitter,
+  ControllerMidi,
 } from '@midi-structor/core'
 import React from 'react'
 import _ from 'lodash'
@@ -66,6 +67,7 @@ const useAccess = () => {
     getMidiAccess(true)
       .then((manager) => {
         Midi.init(manager)
+        // ControllerMidi.init()
       })
       .catch(console.error)
   }, [])

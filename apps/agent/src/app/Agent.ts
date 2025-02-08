@@ -17,8 +17,12 @@ const buildListener = (name: string) => (): MidiListener => {
   const emitter = EventEmitter<MidiEventRecord>()
   const input = new easymidi.Input(name)
   input.on('sysex', (rawMessage: any) => {
-    const midiMessage = parseMidiInput(rawMessage)
-    emitter.emit(midiMessage)
+    try {
+      const midiMessage = parseMidiInput({ data: rawMessage.bytes })
+      emitter.emit(midiMessage)
+    } catch (e) {
+      console.error(`Parsing midi error`, e)
+    }
   })
 
   return emitter
@@ -29,7 +33,7 @@ const buildEmitter = (name: string) => (): MidiEmitter => {
   return {
     send: (msg: MidiMessage) => {
       try {
-        console.debug('Sending midi message', msg)
+        // console.debug('Sending midi message', msg)
         if (msg.type === 'sysex') {
           const raw = generateRawMidiMessage(msg)
           output.send('sysex', raw as any as Array<number>)
