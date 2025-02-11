@@ -57,6 +57,26 @@ const useAgentDevices = (deviceType: MidiDeviceType, type: MidiType): MidiDevice
   }
 }
 
+const useAgentControllerEnabled = () => {
+  const agentService = useAgentService()
+
+  const [enabled, setEnabled] = React.useState<boolean>(false)
+
+  const onSetEnabled = (enabled: boolean) => {
+    setEnabled(enabled)
+    agentService.SetControllerEnabled({ enabled })
+  }
+
+  React.useEffect(() => {
+    agentService.DeviceState({}).then((state) => {
+      setEnabled(state.controller.enabled)
+    })
+  }, [])
+
+  return [enabled, onSetEnabled] as const
+}
+
 export const AgentHooks = {
   useAgentDevices,
+  useAgentControllerEnabled,
 }

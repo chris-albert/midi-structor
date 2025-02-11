@@ -46,11 +46,11 @@ export class Controller extends Data.Class<{
       this.cleanup()
     }
   }
-}
 
-export const emptyController: Controller = new Controller({
-  targets: [],
-  init: () => {},
-  render: () => {},
-  listener: Midi.emptyListener(),
-})
+  static empty: Controller = new Controller({
+    targets: [],
+    init: () => {},
+    render: () => {},
+    listener: Midi.emptyListener(),
+  })
+}

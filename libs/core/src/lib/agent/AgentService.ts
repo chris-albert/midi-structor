@@ -20,10 +20,17 @@ export const AgentService = Service.build({
     }),
     response: Empty,
   },
+  SetControllerEnabled: {
+    request: Schema.Struct({
+      enabled: Schema.Boolean,
+    }),
+    response: Empty,
+  },
   DeviceState: {
     request: Empty,
     response: Schema.Struct({
       controller: Schema.Struct({
+        enabled: Schema.Boolean,
         input: StringOrUndefined,
         output: StringOrUndefined,
       }),

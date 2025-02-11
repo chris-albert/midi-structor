@@ -34,8 +34,8 @@ const run = () => {
   console.log(`Listening to Midi input [${MIDI_INPUT_NAME}] ...`)
   console.log()
 
-  // Agent.run()
-  // Controller.run()
+  Agent.run()
+  Controller.run()
 }
 
 export const App = {

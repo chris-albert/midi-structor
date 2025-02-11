@@ -20,7 +20,7 @@ export const InfiniteBitsControllerComponent: React.FC<InfiniteBitsControllerCom
   const emitter = Midi.useControllerEmitter()
   const listener = Midi.useControllerListener()
   const enabled = Midi.useControllerEnabled()
-  console.log('InfiniteBitsControllerComponent', enabled)
+
   if (!enabled) {
     return null
   } else {

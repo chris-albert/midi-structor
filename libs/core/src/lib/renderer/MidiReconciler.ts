@@ -2,7 +2,7 @@ import Reconciler, { OpaqueHandle } from 'react-reconciler'
 import ReactReconciler from 'react-reconciler'
 import _ from 'lodash'
 import { MidiTarget } from '../midi/MidiTarget'
-import { Controller as ControllerModel, emptyController, messageToKey } from '../controllers/Controller'
+import { Controller as ControllerModel, messageToKey } from '../controllers/Controller'
 import { Color } from '../controllers/Color'
 import { MidiMessage } from '../midi/MidiMessage'
 
@@ -63,13 +63,13 @@ type UpdatePayload = Instance
 type SuspenseInstance = never
 
 const GlobalControllerManager = () => {
-  let controller: ControllerModel = emptyController
+  let controller: ControllerModel = ControllerModel.empty
 
   return {
     remove() {
       controller.clear()
       controller.off()
-      controller = emptyController
+      controller = ControllerModel.empty
     },
     set(c: ControllerModel) {
       controller = c

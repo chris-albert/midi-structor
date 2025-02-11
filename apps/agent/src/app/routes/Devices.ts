@@ -18,6 +18,7 @@ const SetDevice: Service.Handler<AgentService, 'SetDevice'> = (req) => {
 const DeviceState: Service.Handler<AgentService, 'DeviceState'> = (req) => {
   return Promise.resolve({
     controller: {
+      enabled: Midi.getControllerEnabled(),
       input: Option.getOrElse(Midi.getSelected('controller', 'input'), () => undefined),
       output: Option.getOrElse(Midi.getSelected('controller', 'output'), () => undefined),
     },
@@ -28,8 +29,14 @@ const DeviceState: Service.Handler<AgentService, 'DeviceState'> = (req) => {
   })
 }
 
+const SetControllerEnabled: Service.Handler<AgentService, 'SetControllerEnabled'> = (req) => {
+  Midi.setControllerEnabled(req.enabled)
+  return Promise.resolve({})
+}
+
 export const Devices = {
   AvailableDevices,
   SetDevice,
+  SetControllerEnabled,
   DeviceState,
 }
