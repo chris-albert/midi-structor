@@ -32,8 +32,6 @@ export const LaunchPadMiniMk3 = (emitter: MidiEmitter, listener: MidiListener) =
       })
       emitter.send(sysex(sysexArr))
     },
-    on: (f) => {
-      listener.on('*', f)
-    },
-    pads: [],
+    listener,
+    targets: MidiTarget.notes({ from: 11, to: 99 }),
   })

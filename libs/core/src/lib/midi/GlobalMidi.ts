@@ -7,7 +7,6 @@ import { MidiDevice, MidiDevices, MidiEventRecord } from './MidiDevice'
 import { MidiMessage } from './MidiMessage'
 import { EventEmitter } from '../EventEmitter'
 import { MidiDeviceManager } from './MidiDeviceManager'
-import { AsyncStorage, SyncStorage, SyncStringStorage } from 'jotai/vanilla/utils/atomWithStorage'
 import { AtomStorage } from '../storage/AtomStorage'
 
 export const MidiType = Schema.Union(
@@ -40,6 +39,10 @@ const store = getDefaultStore()
 
 export type MidiListener = Omit<EventEmitter<MidiEventRecord>, 'emit'>
 
+const emptyListener = (): MidiListener => ({
+  on: () => () => {},
+})
+
 export type MidiEmitter = {
   send: (m: MidiMessage) => void
 }
@@ -50,10 +53,13 @@ const emptyEmitter = (): MidiEmitter => ({
   },
 })
 
-const selectedAtom = (name: string): PrimitiveAtom<Option.Option<string>> =>
-  atomWithStorage<Option.Option<string>>(name, Option.none(), AtomStorage.storage(), {
+const storageAtom = <A>(name: string, ifEmpty: A): PrimitiveAtom<A> =>
+  atomWithStorage<A>(name, ifEmpty, AtomStorage.storage(), {
     getOnInit: true,
   })
+
+const selectedAtom = (name: string): PrimitiveAtom<Option.Option<string>> =>
+  storageAtom<Option.Option<string>>(name, Option.none())
 
 const atoms = {
   deviceManager: atom<MidiDeviceManager>(MidiDeviceManager.empty),
@@ -67,6 +73,7 @@ const atoms = {
     },
   },
   controller: {
+    enabled: storageAtom<boolean>('controller-enabled', false),
     emitter: atom<MidiEmitter>(emptyEmitter()),
     listener: atom<MidiListener>(EventEmitter<MidiEventRecord>()),
     selected: {
@@ -126,6 +133,14 @@ const setSelected = (name: Option.Option<string>, midiType: MidiType, deviceType
 const getSelected = (midiType: MidiType, deviceType: MidiDeviceType) =>
   store.get(getSelectedAtom(midiType, deviceType))
 
+const getControllerEnabled = () => {
+  return store.get(atoms.controller.enabled)
+}
+
+const setControllerEnabled = (enabled: boolean) => {
+  return store.set(atoms.controller.enabled, enabled)
+}
+
 const useMidiDevices = (midiType: MidiType, deviceType: MidiDeviceType): MidiDeviceSelection => {
   const manager = useAtomValue(atoms.deviceManager)
 
@@ -151,7 +166,6 @@ const runInit = () => {
   selectionInit('daw')
   selectionInit('controller')
   selectionInit('agent')
-  // ControllerMidi.init()
 }
 
 const init = (manager: MidiDeviceManager) => {
@@ -165,7 +179,10 @@ export const Midi = {
   useMidiAllowed,
   setSelected,
   getSelected,
+  getControllerEnabled,
+  setControllerEnabled,
   //Hooks
+  useControllerEnabled: () => useAtomValue(atoms.controller.enabled),
   useDawEmitter: () => useAtomValue(atoms.daw.emitter),
   useControllerEmitter: () => useAtomValue(atoms.controller.emitter),
   useDawListener: () => useAtomValue(atoms.daw.listener),
@@ -175,4 +192,6 @@ export const Midi = {
   //Temporary exports
   dawListener: store.get(atoms.daw.listener),
   dawListenerAtom: atoms.daw.listener,
+
+  emptyListener,
 }

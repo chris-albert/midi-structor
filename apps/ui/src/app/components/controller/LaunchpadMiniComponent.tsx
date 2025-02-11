@@ -1,8 +1,8 @@
 import React from 'react'
 import { Box, Button } from '@mui/material'
 import { ControllerGridComponent } from './ControllerGridComponent'
-import { LaunchPadMiniMk3 } from './LaunchPadMiniMk3'
-import { Midi } from '@midi-structor/core'
+import { LaunchPadMiniMk3UI } from './LaunchPadMiniMk3UI'
+import { Midi, LaunchPadMiniMk3 } from '@midi-structor/core'
 
 export type LaunchpadMiniComponentProps = {}
 
@@ -10,6 +10,7 @@ export const LaunchpadMiniComponent: React.FC<LaunchpadMiniComponentProps> = ({}
   const emitter = Midi.useControllerEmitter()
   const listener = Midi.useControllerListener()
   const controller = LaunchPadMiniMk3(emitter, listener)
+  const controllerUI = LaunchPadMiniMk3UI(controller)
 
   const enableProgrammerMode = () => {
     controller.init()
@@ -49,7 +50,7 @@ export const LaunchpadMiniComponent: React.FC<LaunchpadMiniComponentProps> = ({}
         </Button>
       </Box>
       <Box>
-        <ControllerGridComponent controller={controller} />
+        <ControllerGridComponent controller={controllerUI} />
       </Box>
     </Box>
   )

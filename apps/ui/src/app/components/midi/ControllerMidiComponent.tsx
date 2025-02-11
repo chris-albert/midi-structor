@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, Card, CardContent, CardHeader } from '@mui/material'
+import { Box, Card, CardContent, CardHeader, FormControlLabel, Switch } from '@mui/material'
 import { SelectComponent, SelectItem } from '../SelectComponent'
 import { ControllerBrowserModeComponent } from './ControllerBrowserModeComponent'
 import { ControllerAgentModeComponent } from './ControllerAgentModeComponent'
@@ -29,16 +29,18 @@ export const ControllerMidiComponent: React.FC<ControllerMidiComponentProps> = (
           sx={{ p: 1 }}
           title='Controller Setup'
           action={
-            <SelectComponent
-              items={selectItems}
-              label='Controller Mode'
-              activeLabel={mode === 'browser' ? 'Browser' : 'Agent'}
-              onChange={(v) => {
-                if (v !== undefined) {
-                  setMode(v)
-                }
-              }}
-            />
+            <Box sx={{ display: 'flex' }}>
+              <SelectComponent
+                items={selectItems}
+                label='Controller Mode'
+                activeLabel={mode === 'browser' ? 'Browser' : 'Agent'}
+                onChange={(v) => {
+                  if (v !== undefined) {
+                    setMode(v)
+                  }
+                }}
+              />
+            </Box>
           }
         />
         <CardContent>

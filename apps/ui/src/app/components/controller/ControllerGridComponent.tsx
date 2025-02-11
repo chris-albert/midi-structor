@@ -1,9 +1,10 @@
 import React from 'react'
 import { Box } from '@mui/material'
-import { Controller, Midi, ControllerPad } from '@midi-structor/core'
+import { Midi } from '@midi-structor/core'
+import { ControllerPad, ControllerUI } from './ControllerUI'
 
 type ControllerGridComponentProps = {
-  controller: Controller
+  controller: ControllerUI
 }
 
 export const ControllerGridComponent: React.FC<ControllerGridComponentProps> = ({ controller }) => {

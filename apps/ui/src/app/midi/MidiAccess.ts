@@ -67,7 +67,7 @@ const useAccess = () => {
     getMidiAccess(true)
       .then((manager) => {
         Midi.init(manager)
-        // ControllerMidi.init()
+        ControllerMidi.init()
       })
       .catch(console.error)
   }, [])

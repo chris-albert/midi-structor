@@ -1,9 +1,9 @@
-import React from 'react'
-import { Data, Option } from 'effect'
+import { Data } from 'effect'
 import _ from 'lodash'
 import { Color } from './Color'
 import { MidiTarget } from '../midi/MidiTarget'
 import { MidiMessage } from '../midi/MidiMessage'
+import { Midi, MidiListener } from '../midi/GlobalMidi'
 
 export const messageToKey = (message: MidiMessage): string => {
   if (message.type === 'noteon' && message.velocity > 0) {
@@ -15,74 +15,42 @@ export const messageToKey = (message: MidiMessage): string => {
   }
 }
 
-export type ControllerPadColor = {
+export type TargetColor = {
   target: MidiTarget
-  color: number | undefined
+  color: number
 }
 
-export class ControllerPad extends Data.Class<{
-  target: MidiTarget
-  content: React.ReactElement
-}> {
-  message(value: number): MidiMessage {
-    return MidiTarget.toMessage(this.target, value)
-  }
-}
-
-/**
- * The `pads` are laid out from top left to bottom right
- */
 export class Controller extends Data.Class<{
-  pads: Array<Array<ControllerPad>>
+  targets: Array<MidiTarget>
   init: () => void
-  render: (pads: Array<ControllerPadColor>) => void
-  on: (f: (m: MidiMessage) => void) => void
+  render: (pads: Array<TargetColor>) => void
+  listener: MidiListener
 }> {
-  private noteLookup: Record<number, ControllerPad> = _.fromPairs(
-    _.compact(
-      _.flatMap(this.pads, (r) =>
-        _.map(r, (p) =>
-          MidiTarget.match({
-            Note: ({ note }) => [note, p],
-            CC: () => undefined,
-            PC: () => undefined,
-          })(p.target),
-        ),
-      ),
-    ),
-  )
-
-  foreach(f: (pad: ControllerPad) => void): void {
-    this.pads.forEach((row) => row.forEach(f))
-  }
-
-  find(midi: MidiMessage): Option.Option<ControllerPad> {
-    if (midi.type === 'noteon') {
-      const res = _.get(this.noteLookup, midi.note)
-      if (res !== undefined && midi.velocity > 0) {
-        return Option.some(res)
-      }
-    }
-    return Option.none()
-  }
+  cleanup: (() => void) | undefined = undefined
 
   clear() {
     this.render(
-      _.flatMap(this.pads, (padRow) =>
-        _.map(padRow, (pad) => ({
-          target: pad.target,
-          color: Color.BLACK,
-        })),
-      ),
+      _.map(this.targets, (target) => ({
+        target,
+        color: Color.BLACK,
+      })),
     )
+  }
+
+  on(f: (m: MidiMessage) => void): void {
+    this.cleanup = this.listener.on('*', f)
+  }
+
+  off() {
+    if (this.cleanup !== undefined) {
+      this.cleanup()
+    }
   }
 }
 
 export const emptyController: Controller = new Controller({
-  pads: [],
+  targets: [],
   init: () => {},
   render: () => {},
-  on: () => {},
+  listener: Midi.emptyListener(),
 })
-
-export const midiFromRowCol = (row: number, column: number): number => parseInt(`${row}${column + 1}`)

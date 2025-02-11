@@ -30,6 +30,7 @@ export type PadProps = {
 type ControllerProps = {
   children: Array<Pad> | Pad | null
   model: ControllerModel
+  enabled?: boolean
 }
 
 type Pad = {
@@ -59,19 +60,25 @@ type HostContext = {
 }
 type TimeoutHandle = unknown
 type UpdatePayload = Instance
-type SuspenseInstance = unknown
+type SuspenseInstance = never
 
 const GlobalControllerManager = () => {
   let controller: ControllerModel = emptyController
 
   return {
-    get() {
-      return controller
+    remove() {
+      controller.clear()
+      controller.off()
+      controller = emptyController
     },
     set(c: ControllerModel) {
       controller = c
       controller.init()
       controller.clear()
+      controller.on(Listeners.on)
+    },
+    render(pads: Array<PadProps>) {
+      controller.render(pads)
     },
   }
 }
@@ -80,7 +87,7 @@ const GlobalController = GlobalControllerManager()
 
 const commit = (instance: Instance) => {
   if (instance.type === 'pad') {
-    GlobalController.get().render([instance.props])
+    GlobalController.render([instance.props])
   } else if (instance.type === 'controller') {
   }
 }
@@ -125,7 +132,6 @@ const Listeners = ListenersManager()
 const initInstance = (instance: Instance) => {
   if (instance.type === 'controller') {
     GlobalController.set(instance.props.model)
-    GlobalController.get().on(Listeners.on)
   } else if (instance.type === 'pad') {
     if (instance.props.onClick !== undefined) {
       Listeners.add(instance.props.target, instance.props.onClick)
@@ -160,6 +166,13 @@ const instance = Reconciler({
     internalHandle: ReactReconciler.OpaqueHandle,
   ): TextInstance {
     throw new Error('ReactMidi does not support text instances.')
+  },
+
+  removeChildFromContainer(container: Container, child: Instance | TextInstance | SuspenseInstance): void {
+    log('removeChildFromContainer', container, child)
+    if (child.type === 'controller') {
+      GlobalController.remove()
+    }
   },
 
   appendChild(parentInstance: Instance, child: Instance | TextInstance): void {
@@ -300,7 +313,6 @@ const instance = Reconciler({
   },
   prepareScopeUpdate(scopeInstance: any, instance: any): void {},
   clearContainer(container: Container): void {},
-  removeChildFromContainer(container: Container, child: Instance | TextInstance | SuspenseInstance): void {},
 })
 
 export const MidiReconciler = {

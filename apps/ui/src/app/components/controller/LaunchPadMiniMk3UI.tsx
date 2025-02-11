@@ -4,42 +4,12 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
 import ArrowLeftIcon from '@mui/icons-material/ArrowLeft'
 import ArrowRightIcon from '@mui/icons-material/ArrowRight'
 import { Box } from '@mui/material'
-import _ from 'lodash'
-import {
-  SysExMessage,
-  MidiEmitter,
-  MidiListener,
-  Controller,
-  Color,
-  MidiTarget,
-  ControllerPad,
-  midiFromRowCol,
-} from '@midi-structor/core'
+import { Controller, MidiTarget } from '@midi-structor/core'
+import { ControllerPad, ControllerUI, midiFromRowCol } from './ControllerUI'
 
-const sysex = (body: Array<number>): SysExMessage => ({
-  type: 'sysex',
-  manufacturer: 0,
-  body,
-})
-
-export const LaunchPadMiniMk3 = (emitter: MidiEmitter, listener: MidiListener) =>
-  new Controller({
-    init: () => {
-      emitter.send(sysex([32, 41, 2, 13, 14, 1]))
-    },
-    render: (pads) => {
-      const sysexArr = [32, 41, 2, 13, 3]
-      _.forEach(pads, (pad) => {
-        if (pad.color !== undefined) {
-          const [r, g, b] = Color.toRGB(pad.color)
-          sysexArr.push(3, MidiTarget.toValue(pad.target), r / 2, g / 2, b / 2)
-        }
-      })
-      emitter.send(sysex(sysexArr))
-    },
-    on: (f) => {
-      listener.on('*', f)
-    },
+export const LaunchPadMiniMk3UI = (controller: Controller) =>
+  new ControllerUI({
+    controller,
     pads: [
       [
         new ControllerPad({

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Color } from './Color'
-import { LaunchPadMiniMk3 } from './devices/LaunchpadMIniMk3'
+import { LaunchpadMiniMk3 } from './devices/LaunchPadMiniMk3'
 import { MidiTarget } from '../midi/MidiTarget'
 import { Midi } from '../midi/GlobalMidi'
 
@@ -18,7 +18,7 @@ export const MyController = () => {
   }, [])
 
   return (
-    <controller model={LaunchPadMiniMk3(emitter, listener)}>
+    <controller model={LaunchpadMiniMk3(emitter, listener)}>
       <pad
         color={pad1Color}
         target={MidiTarget.note(11)}
