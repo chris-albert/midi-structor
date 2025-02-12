@@ -17,7 +17,7 @@ npx nx build core
 
 ### UI
 ```
-npx nx build ui --base 'https://chris-albert.github.io/midi-structor/' --no-cloud
+npx nx build ui --base './' --no-cloud
 ```
 
 ### Agent

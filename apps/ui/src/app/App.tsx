@@ -43,6 +43,7 @@ function App() {
           <ThemeProvider theme={darkTheme}>
             <ToastContainer position='bottom-right' />
             <CssBaseline />
+            <Box>Hi yea, whats going on</Box>
             <Routes>
               <Route
                 path='/'
