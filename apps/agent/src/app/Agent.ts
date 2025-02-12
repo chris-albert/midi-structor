@@ -15,6 +15,7 @@ import _ from 'lodash'
 
 const buildListener = (name: string) => (): MidiListener => {
   const emitter = EventEmitter<MidiEventRecord>()
+  console.log('Building listener for ', name)
   const input = new easymidi.Input(name)
   input.on('sysex', (rawMessage: any) => {
     try {
@@ -23,6 +24,38 @@ const buildListener = (name: string) => (): MidiListener => {
     } catch (e) {
       console.error(`Parsing midi error`, e)
     }
+  })
+  input.on('noteon', (noteon) => {
+    emitter.emit({
+      raw: [] as any as Uint8Array,
+      time: new Date(),
+      type: 'noteon',
+      channel: noteon.channel,
+      note: noteon.note,
+      velocity: noteon.velocity,
+    })
+  })
+
+  input.on('noteoff', (noteoff) => {
+    emitter.emit({
+      raw: [] as any as Uint8Array,
+      time: new Date(),
+      type: 'noteoff',
+      channel: noteoff.channel,
+      note: noteoff.note,
+      velocity: noteoff.velocity,
+    })
+  })
+
+  input.on('cc', (cc) => {
+    emitter.emit({
+      raw: [] as any as Uint8Array,
+      time: new Date(),
+      type: 'cc',
+      channel: cc.channel,
+      controllerNumber: cc.controller,
+      data: cc.value,
+    })
   })
 
   return emitter

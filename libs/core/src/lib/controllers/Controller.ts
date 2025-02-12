@@ -25,8 +25,10 @@ export class Controller extends Data.Class<{
   init: () => void
   render: (pads: Array<TargetColor>) => void
   listener: MidiListener
+  listenFilter?: (m: MidiMessage) => boolean
 }> {
   cleanup: (() => void) | undefined = undefined
+  filter: (m: MidiMessage) => boolean = this.listenFilter || (() => true)
 
   clear() {
     this.render(
@@ -38,7 +40,11 @@ export class Controller extends Data.Class<{
   }
 
   on(f: (m: MidiMessage) => void): void {
-    this.cleanup = this.listener.on('*', f)
+    this.cleanup = this.listener.on('*', (m) => {
+      if (this.filter(m)) {
+        f(m)
+      }
+    })
   }
 
   off() {

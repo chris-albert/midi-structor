@@ -9,8 +9,6 @@ export type MidiTarget = Data.TaggedEnum<{
 
 const _MidiTarget = Data.taggedEnum<MidiTarget>()
 
-const note = (note: number): MidiTarget => _MidiTarget.Note({ note })
-
 const notes = ({ from, to }: { from: number; to: number }): Array<MidiTarget> => {
   const arr: Array<MidiTarget> = []
   for (let i = from; i <= to; i++) {
@@ -19,8 +17,16 @@ const notes = ({ from, to }: { from: number; to: number }): Array<MidiTarget> =>
   return arr
 }
 
-const cc = (controllerNumber: number): MidiTarget => _MidiTarget.CC({ controllerNumber })
+const ccs = ({ from, to }: { from: number; to: number }): Array<MidiTarget> => {
+  const arr: Array<MidiTarget> = []
+  for (let i = from; i <= to; i++) {
+    arr.push(cc(i))
+  }
+  return arr
+}
 
+const note = (note: number): MidiTarget => _MidiTarget.Note({ note })
+const cc = (controllerNumber: number): MidiTarget => _MidiTarget.CC({ controllerNumber })
 const pc = (programNumber: number): MidiTarget => _MidiTarget.PC({ programNumber })
 
 const toKey = (target: MidiTarget): string =>
@@ -64,6 +70,7 @@ export const MidiTarget = {
   note,
   notes,
   cc,
+  ccs,
   pc,
   toKey,
   toMessage,

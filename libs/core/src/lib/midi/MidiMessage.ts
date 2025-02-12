@@ -4,10 +4,10 @@ import _ from 'lodash'
 const CHANNEL_MASK = 0x0f
 
 const SYSEX_STATUS = 0xf0
-const NOTE_ON_STATUS = 0x90
-const NOTE_OFF_STATUS = 0x80
-const CONTROL_CHANGE_STATUS = 0xb0
-const PROGRAM_CHANGE_STATUS = 0xc0
+const NOTE_ON_STATUS = 0x09
+const NOTE_OFF_STATUS = 0x08
+const CONTROL_CHANGE_STATUS = 0x0b
+const PROGRAM_CHANGE_STATUS = 0x0c
 
 const MTC_QUARTER_FRAME_STATUS = 0xf1
 const TIMING_CLOCK_STATUS = 0xf8
@@ -165,7 +165,7 @@ export const parseMidiInput = (input: any): MidiMessageWithRaw => {
         ...parseRawSysex(data.slice(1, -1)),
         ...common,
       }
-    } else if ((status & NOTE_ON_STATUS) === NOTE_ON_STATUS) {
+    } else if (status >> 4 === NOTE_ON_STATUS) {
       return {
         type: 'noteon',
         channel: (CHANNEL_MASK & status) + 1,
@@ -173,7 +173,7 @@ export const parseMidiInput = (input: any): MidiMessageWithRaw => {
         velocity: data[2],
         ...common,
       }
-    } else if ((status & NOTE_OFF_STATUS) === NOTE_OFF_STATUS) {
+    } else if (status >> 4 === NOTE_OFF_STATUS) {
       return {
         type: 'noteoff',
         channel: (CHANNEL_MASK & status) + 1,
@@ -181,7 +181,7 @@ export const parseMidiInput = (input: any): MidiMessageWithRaw => {
         velocity: data[2],
         ...common,
       }
-    } else if ((status & CONTROL_CHANGE_STATUS) === CONTROL_CHANGE_STATUS) {
+    } else if (status >> 4 === CONTROL_CHANGE_STATUS) {
       return {
         type: 'cc',
         channel: (CHANNEL_MASK & status) + 1,
@@ -189,7 +189,7 @@ export const parseMidiInput = (input: any): MidiMessageWithRaw => {
         data: data[2],
         ...common,
       }
-    } else if ((status & PROGRAM_CHANGE_STATUS) === PROGRAM_CHANGE_STATUS) {
+    } else if (status >> 4 === PROGRAM_CHANGE_STATUS) {
       return {
         type: 'pc',
         channel: (CHANNEL_MASK & status) + 1,

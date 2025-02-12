@@ -1,5 +1,4 @@
 import { atom, getDefaultStore, PrimitiveAtom, useAtomValue } from 'jotai'
-import { atomWithStorage, createJSONStorage } from 'jotai/utils'
 import { Option, pipe, Schema } from 'effect'
 import React from 'react'
 import { useAtom } from 'jotai/index'
@@ -53,13 +52,8 @@ const emptyEmitter = (): MidiEmitter => ({
   },
 })
 
-const storageAtom = <A>(name: string, ifEmpty: A): PrimitiveAtom<A> =>
-  atomWithStorage<A>(name, ifEmpty, AtomStorage.storage(), {
-    getOnInit: true,
-  })
-
 const selectedAtom = (name: string): PrimitiveAtom<Option.Option<string>> =>
-  storageAtom<Option.Option<string>>(name, Option.none())
+  AtomStorage.atom<Option.Option<string>>(name, Option.none())
 
 const atoms = {
   deviceManager: atom<MidiDeviceManager>(MidiDeviceManager.empty),
@@ -73,7 +67,7 @@ const atoms = {
     },
   },
   controller: {
-    enabled: storageAtom<boolean>('controller-enabled', false),
+    enabled: AtomStorage.atom<boolean>('controller-enabled', false),
     emitter: atom<MidiEmitter>(emptyEmitter()),
     listener: atom<MidiListener>(EventEmitter<MidiEventRecord>()),
     selected: {

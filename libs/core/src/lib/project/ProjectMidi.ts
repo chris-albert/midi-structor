@@ -12,9 +12,8 @@ import {
 import { atom, getDefaultStore, useAtom, useAtomValue, useSetAtom, WritableAtom } from 'jotai'
 import { parseAbletonUIMessage } from './AbletonUIMessage'
 import * as t from 'io-ts'
-import { atomWithStorage, splitAtom } from 'jotai/utils'
-import { createJSONStorage } from 'jotai/utils'
 import React from 'react'
+import { AtomStorage } from '../storage/AtomStorage'
 
 const store = getDefaultStore()
 
@@ -48,24 +47,11 @@ export type ProjectImportStatus = 'none' | 'importing' | 'finalizing' | 'done' |
 const atoms = {
   initArrangement: atom<InitArrangement>([]),
   importStatus: atom<ProjectImportStatus>('none'),
-  projectsConfig: atomWithStorage<ProjectsConfig>(
-    'projects-config',
-    defaultProjectsConfig(),
-    createJSONStorage(),
-    {
-      getOnInit: true,
-    },
-  ),
+  projectsConfig: AtomStorage.atom<ProjectsConfig>('projects-config', defaultProjectsConfig()),
   project: {
-    active: atomWithStorage('active-project', 'default'),
+    active: AtomStorage.atom('active-project', 'default'),
     arrangement: (name: string): WritableAtom<UIArrangement, Array<UIArrangement>, void> =>
-      atomWithStorage<UIArrangement>(`arrangement-${name}`, emptyArrangement(), createJSONStorage(), {
-        getOnInit: true,
-      }),
-    // widgets: (name: string) =>
-    //   atomWithStorage<Widgets>(`widgets-${name}`, emptyWidgets, createJSONStorage(), {
-    //     getOnInit: true,
-    //   }),
+      AtomStorage.atom<UIArrangement>(`arrangement-${name}`, emptyArrangement()),
   },
   realTime: {
     beats: atom(0),

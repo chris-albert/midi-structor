@@ -1,6 +1,7 @@
 import { SyncStorage, SyncStringStorage } from 'jotai/vanilla/utils/atomWithStorage'
-import { createJSONStorage } from 'jotai/utils'
+import { atomWithStorage, createJSONStorage } from 'jotai/utils'
 import * as fs from 'fs'
+import { PrimitiveAtom } from 'jotai/index'
 
 const safeEnv = (name: string, ifEmpty: string): string => {
   try {
@@ -39,6 +40,11 @@ const storage = <A>(): SyncStorage<A> => {
   }
 }
 
+const atom = <A>(name: string, ifEmpty: A): PrimitiveAtom<A> =>
+  atomWithStorage<A>(name, ifEmpty, storage(), {
+    getOnInit: true,
+  })
+
 export const AtomStorage = {
-  storage,
+  atom,
 }

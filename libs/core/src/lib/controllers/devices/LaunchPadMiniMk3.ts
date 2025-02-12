@@ -1,5 +1,5 @@
 import { MidiEmitter, MidiListener } from '../../midi/GlobalMidi'
-import { SysExMessage } from '../../midi/MidiMessage'
+import { MidiMessage, SysExMessage } from '../../midi/MidiMessage'
 import _ from 'lodash'
 import { Controller } from '../Controller'
 import { Color } from '../Color'
@@ -31,6 +31,9 @@ export const LaunchPadMiniMk3 = (emitter: MidiEmitter, listener: MidiListener) =
         }
       })
       emitter.send(sysex(sysexArr))
+    },
+    listenFilter: (m: MidiMessage): boolean => {
+      return !((m.type === 'noteon' && m.velocity === 0) || (m.type === 'cc' && m.data === 0))
     },
     listener,
     targets: MidiTarget.notes({ from: 11, to: 99 }),

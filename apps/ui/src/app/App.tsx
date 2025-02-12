@@ -26,8 +26,6 @@ const darkTheme = createTheme({
 function App() {
   MidiAccess.useAccess()
 
-  ProjectMidi.useProjectListener()
-
   ProjectHooks.useOnStatusChange((status) => {
     if (status === 'importing') {
       toast.info('Importing new project.')
