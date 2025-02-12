@@ -23,7 +23,7 @@ jobs:
       - name: Build Project
         env:
           CI: false
-        run: npx nx build ui --no-cloud
+        run: npx nx build ui --base 'https://chris-albert.github.io/midi-structor/' --no-cloud
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v4
