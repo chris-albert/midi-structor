@@ -1,6 +1,6 @@
 import React from 'react'
 import './styles.scss'
-import { createTheme, CssBaseline, ThemeProvider } from '@mui/material'
+import { Box, createTheme, CssBaseline, ThemeProvider } from '@mui/material'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { Layout } from './pages/Layout'
 import { IndexPage } from './pages/IndexPage'
