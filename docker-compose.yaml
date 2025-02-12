@@ -1,0 +1,7 @@
+services:
+  app:
+    container_name: midi-structor-ui
+    ports:
+      - '80:80'
+    build:
+      context: .

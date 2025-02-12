@@ -25,3 +25,8 @@ npx nx build ui --base './' --no-cloud
 npx nx build agent --no-cloud
 ```
 
+## Running Docker locally
+```
+npx nx build ui --base './' --no-cloud
+docker-compose up --build
+```

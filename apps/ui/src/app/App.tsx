@@ -39,11 +39,10 @@ function App() {
   return (
     <div className='App'>
       <QueryClientProvider client={queryClient}>
-        <BrowserRouter>
+        <BrowserRouter basename={window.location.pathname.replace(/(\/[^/]+)$/, '')}>
           <ThemeProvider theme={darkTheme}>
             <ToastContainer position='bottom-right' />
             <CssBaseline />
-            <Box>Hi yea, whats going on</Box>
             <Routes>
               <Route
                 path='/'
