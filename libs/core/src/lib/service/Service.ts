@@ -3,6 +3,7 @@ import _ from 'lodash'
 import { MidiEmitter, MidiListener } from '../midi/GlobalMidi'
 import { AgentMidi } from '../midi/AgentMidi'
 import { v4 } from 'uuid'
+import { useMutation, UseMutationResult, useQuery, useQueryClient, UseQueryResult } from 'react-query'
 
 export namespace Service {
   export const build = <A extends Service>(obj: A): A => obj
@@ -16,6 +17,18 @@ export namespace Service {
 
   export type Impl<S extends Service> = {
     [Target in keyof S]: (req: S[Target]['request']['Type']) => Promise<S[Target]['response']['Type']>
+  }
+
+  export type QueryImpl<S extends Service> = {
+    [Target in keyof S as `useQuery${string & Target}`]: (
+      req: S[Target]['request']['Type'],
+    ) => UseQueryResult<S[Target]['response']['Type']>
+  } & {
+    [Target in keyof S as `useMutate${string & Target}`]: () => UseMutationResult<
+      S[Target]['response']['Type'],
+      unknown,
+      S[Target]['request']['Type']
+    >
   }
 
   export type Handler<S extends Impl<any>, K extends keyof S> = S[K]
@@ -45,6 +58,7 @@ export namespace Service {
         const handler = (
           req: S[typeof target]['request']['Type'],
         ): Promise<S[typeof target]['response']['Type']> => {
+          console.log('Service.Client', target)
           const obj = {
             target,
             ...req,
@@ -59,6 +73,43 @@ export namespace Service {
         return [target, handler]
       }),
     ) as Impl<S>
+  }
+  export const Query = <S extends Service>(
+    impl: Impl<S>,
+    invalidations: { [P in keyof S]?: keyof S },
+  ): QueryImpl<S> => {
+    return _.fromPairs([
+      ..._.map(impl, (handler, target) => {
+        const queryHandler = (
+          req: S[typeof target]['request']['Type'],
+        ): UseQueryResult<S[typeof target]['response']['Type']> => {
+          return useQuery({
+            queryKey: [target, req],
+            queryFn: handler,
+          })
+        }
+        return [`useQuery${target}`, queryHandler]
+      }),
+      ..._.map(impl, (handler, target) => {
+        const mutationHandler = (): UseMutationResult<
+          S[typeof target]['response']['Type'],
+          unknown,
+          S[typeof target]['request']['Type']
+        > => {
+          const queryClient = useQueryClient()
+          return useMutation({
+            mutationFn: handler,
+            onSuccess: () => {
+              const invalidation = invalidations[target]
+              if (invalidation !== undefined) {
+                queryClient.invalidateQueries({ queryKey: [invalidation] })
+              }
+            },
+          })
+        }
+        return [`useMutate${target}`, mutationHandler]
+      }),
+    ]) as QueryImpl<S>
   }
 
   export const MidiProtocol =

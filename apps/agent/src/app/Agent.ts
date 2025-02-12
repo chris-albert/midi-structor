@@ -15,7 +15,6 @@ import _ from 'lodash'
 
 const buildListener = (name: string) => (): MidiListener => {
   const emitter = EventEmitter<MidiEventRecord>()
-  console.log('Building listener for ', name)
   const input = new easymidi.Input(name)
   input.on('sysex', (rawMessage: any) => {
     try {

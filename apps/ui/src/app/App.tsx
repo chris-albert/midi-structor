@@ -6,13 +6,13 @@ import { Layout } from './pages/Layout'
 import { IndexPage } from './pages/IndexPage'
 import { SettingsPage } from './pages/SettingsPage'
 import { toast, ToastContainer } from 'react-toastify'
-
 import 'react-toastify/dist/ReactToastify.css'
 import { ArrangementComponent } from './components/arrangement/ArrangementComponent'
 import { ControllersPage } from './pages/ControllersPage'
 import { MidiPage } from './pages/MidiPage'
-import { ProjectMidi, Midi, ControllerMidi, ProjectHooks } from '@midi-structor/core'
+import { ProjectHooks } from '@midi-structor/core'
 import { MidiAccess } from './midi/MidiAccess'
+import { QueryClient, QueryClientProvider } from 'react-query'
 
 const darkTheme = createTheme({
   palette: {
@@ -22,6 +22,8 @@ const darkTheme = createTheme({
     },
   },
 })
+
+const queryClient = new QueryClient()
 
 function App() {
   MidiAccess.useAccess()
@@ -36,38 +38,40 @@ function App() {
 
   return (
     <div className='App'>
-      <BrowserRouter>
-        <ThemeProvider theme={darkTheme}>
-          <ToastContainer position='bottom-right' />
-          <CssBaseline />
-          <Routes>
-            <Route
-              path='/'
-              element={<Layout />}>
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          <ThemeProvider theme={darkTheme}>
+            <ToastContainer position='bottom-right' />
+            <CssBaseline />
+            <Routes>
               <Route
-                index
-                element={<IndexPage />}
-              />
-              <Route
-                path='arrangement'
-                element={<ArrangementComponent />}
-              />
-              <Route
-                path='midi'
-                element={<MidiPage />}
-              />
-              <Route
-                path='controllers'
-                element={<ControllersPage />}
-              />
-              <Route
-                path='settings'
-                element={<SettingsPage />}
-              />
-            </Route>
-          </Routes>
-        </ThemeProvider>
-      </BrowserRouter>
+                path='/'
+                element={<Layout />}>
+                <Route
+                  index
+                  element={<IndexPage />}
+                />
+                <Route
+                  path='arrangement'
+                  element={<ArrangementComponent />}
+                />
+                <Route
+                  path='midi'
+                  element={<MidiPage />}
+                />
+                <Route
+                  path='controllers'
+                  element={<ControllersPage />}
+                />
+                <Route
+                  path='settings'
+                  element={<SettingsPage />}
+                />
+              </Route>
+            </Routes>
+          </ThemeProvider>
+        </BrowserRouter>
+      </QueryClientProvider>
     </div>
   )
 }
