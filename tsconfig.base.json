@@ -17,7 +17,8 @@
     "strict": true,
     "paths": {
       "@midi-structor/agent": ["apps/agent/src/index.ts"],
-      "@midi-structor/core": ["libs/core/src/index.ts"]
+      "@midi-structor/core": ["libs/core/src/index.ts"],
+      "@midi-structor/electron": ["apps/electron/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp", ",.nx", ".idea", "dist"]

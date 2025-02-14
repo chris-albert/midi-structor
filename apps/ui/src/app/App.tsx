@@ -1,18 +1,12 @@
 import React from 'react'
 import './styles.scss'
 import { Box, createTheme, CssBaseline, ThemeProvider } from '@mui/material'
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import { Layout } from './pages/Layout'
-import { IndexPage } from './pages/IndexPage'
-import { SettingsPage } from './pages/SettingsPage'
 import { toast, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import { ArrangementComponent } from './components/arrangement/ArrangementComponent'
-import { ControllersPage } from './pages/ControllersPage'
-import { MidiPage } from './pages/MidiPage'
 import { ProjectHooks } from '@midi-structor/core'
 import { MidiAccess } from './midi/MidiAccess'
 import { QueryClient, QueryClientProvider } from 'react-query'
+import { AppRouter } from './AppRouter'
 
 const darkTheme = createTheme({
   palette: {
@@ -36,41 +30,16 @@ function App() {
     }
   })
 
+  console.log('basename', window.location.pathname.replace(/(\/[^/]+)$/, ''))
+
   return (
     <div className='App'>
       <QueryClientProvider client={queryClient}>
-        <BrowserRouter basename={window.location.pathname.replace(/(\/[^/]+)$/, '')}>
-          <ThemeProvider theme={darkTheme}>
-            <ToastContainer position='bottom-right' />
-            <CssBaseline />
-            <Routes>
-              <Route
-                path='/'
-                element={<Layout />}>
-                <Route
-                  index
-                  element={<IndexPage />}
-                />
-                <Route
-                  path='arrangement'
-                  element={<ArrangementComponent />}
-                />
-                <Route
-                  path='midi'
-                  element={<MidiPage />}
-                />
-                <Route
-                  path='controllers'
-                  element={<ControllersPage />}
-                />
-                <Route
-                  path='settings'
-                  element={<SettingsPage />}
-                />
-              </Route>
-            </Routes>
-          </ThemeProvider>
-        </BrowserRouter>
+        <ThemeProvider theme={darkTheme}>
+          <ToastContainer position='bottom-right' />
+          <CssBaseline />
+          <AppRouter />
+        </ThemeProvider>
       </QueryClientProvider>
     </div>
   )

@@ -1,0 +1,24 @@
+{
+  "name": "@midi-structor/electron",
+  "version": "0.0.1",
+  "private": true,
+  "type": "commonjs",
+  "main": "./src/index.js",
+  "types": "./src/index.d.ts",
+  "dependencies": {
+    "copyfiles": "^2.4.1",
+    "electron": "^34.1.1",
+    "electron-log": "^5.3.0",
+    "electron-updater": "^6.3.9",
+    "tslib": "^2.3.0",
+    "typescript": "^5.7.3"
+  },
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w",
+    "lint": "eslint -c .eslintrc --ext .ts ./src",
+    "predist": "copyfiles -u 1 src/assets/**/* ../../dist/apps/electron/",
+    "preserve": "tsc",
+    "serve": "electron ../../dist/apps/electron/src/index.js"
+  }
+}

@@ -1,1 +1,5 @@
-npx nx run-many --parallel --target=serve --projects=ui,agent
+npx nx run-many \
+  --parallel \
+  --target=serve \
+  --projects=ui,agent \
+  --no-cloud
