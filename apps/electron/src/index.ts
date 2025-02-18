@@ -59,16 +59,6 @@ const createWindow = async () => {
     return path.join(RESOURCES_PATH, ...paths)
   }
 
-  // const win = new BrowserWindow({
-  //   width: 800,
-  //   height: 600,
-  //   // webPreferences: {
-  //   //   preload: path.join(__dirname, 'preload.js')
-  //   // }
-  // })
-  //
-  // win.loadFile('../assets/index.html')
-
   mainWindow = new BrowserWindow({
     show: true,
     width: 1024,
@@ -93,7 +83,7 @@ const createWindow = async () => {
     } else {
       mainWindow.show()
     }
-  })g
+  })
 
   mainWindow.on('closed', () => {
     mainWindow = null

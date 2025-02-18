@@ -30,8 +30,6 @@ function App() {
     }
   })
 
-  console.log('basename', window.location.pathname.replace(/(\/[^/]+)$/, ''))
-
   return (
     <div className='App'>
       <QueryClientProvider client={queryClient}>

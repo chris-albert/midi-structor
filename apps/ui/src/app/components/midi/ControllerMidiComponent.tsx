@@ -1,50 +1,37 @@
 import React from 'react'
 import { Box, Card, CardContent, CardHeader, FormControlLabel, Switch } from '@mui/material'
-import { SelectComponent, SelectItem } from '../SelectComponent'
 import { ControllerBrowserModeComponent } from './ControllerBrowserModeComponent'
-import { ControllerAgentModeComponent } from './ControllerAgentModeComponent'
-
-type ControllerMode = 'browser' | 'agent'
-
-const selectItems: Array<SelectItem<ControllerMode>> = [
-  {
-    label: 'Browser',
-    value: 'browser',
-  },
-  {
-    label: 'Agent',
-    value: 'agent',
-  },
-]
+import { Midi } from '@midi-structor/core'
 
 export type ControllerMidiComponentProps = {}
 
 export const ControllerMidiComponent: React.FC<ControllerMidiComponentProps> = ({}) => {
-  const [mode, setMode] = React.useState<ControllerMode>('browser')
+  const enabled = Midi.useControllerEnabled()
+  const onEnabled = (enabled: boolean) => {
+    Midi.setControllerEnabled(enabled)
+  }
 
   return (
     <Box>
       <Card>
         <CardHeader
-          sx={{ p: 1 }}
           title='Controller Setup'
           action={
-            <Box sx={{ display: 'flex' }}>
-              <SelectComponent
-                items={selectItems}
-                label='Controller Mode'
-                activeLabel={mode === 'browser' ? 'Browser' : 'Agent'}
-                onChange={(v) => {
-                  if (v !== undefined) {
-                    setMode(v)
-                  }
-                }}
+            <Box sx={{ display: 'flex', ml: 2 }}>
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={enabled}
+                    onChange={(d) => onEnabled(d.target.checked)}
+                  />
+                }
+                label='Enabled'
               />
             </Box>
           }
         />
         <CardContent>
-          {mode === 'browser' ? <ControllerBrowserModeComponent /> : <ControllerAgentModeComponent />}
+          <ControllerBrowserModeComponent />
         </CardContent>
       </Card>
     </Box>

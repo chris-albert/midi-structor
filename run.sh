@@ -1,5 +1,5 @@
 npx nx run-many \
   --parallel \
   --target=serve \
-  --projects=ui,agent \
+  --projects=ui \
   --no-cloud

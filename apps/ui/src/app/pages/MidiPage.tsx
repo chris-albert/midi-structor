@@ -32,7 +32,7 @@ export const MidiPage: React.FC<MidiPageProps> = () => {
             </CardContent>
           </Card>
         </Box>
-        <Box sx={{ width: '100%' }}>
+        <Box>
           <ControllerMidiComponent />
         </Box>
       </Box>
