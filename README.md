@@ -24,6 +24,12 @@ Building electron:
 npx nx make electron --no-cloud
 ```
 
+Making MacOSX icons
+```
+brew install makeicns
+makeicns -512 midi-structor-logo-512.png
+```
+
 ## Deploying
 
 ### UI

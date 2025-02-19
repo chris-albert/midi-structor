@@ -1,5 +1,6 @@
 {
   "name": "@midi-structor/electron",
+  "productName": "MIDI Structor",
   "version": "0.0.1",
   "private": true,
   "type": "commonjs",
@@ -9,8 +10,7 @@
     "electron-log": "^5.3.0",
     "electron-squirrel-startup": "^1.0.1",
     "electron-updater": "^6.3.9",
-    "tslib": "^2.3.0",
-    "typescript": "^5.7.3"
+    "tslib": "^2.3.0"
   },
   "scripts": {
     "build": "tsc",
@@ -21,9 +21,7 @@
     "serve": "electron ../../dist/apps/electron/src/index.js",
     "package": "electron-forge package",
     "start": "electron-forge start ",
-    "make": "DEBUG=electron-packager electron-forge make",
-    "pack:main": "NODE_ENV=production TS_NODE_TRANSPILE_ONLY=true webpack --config webpack.main.config.js",
-    "pack:renderer": "webpack --config webpack.renderer.config.js"
+    "make": "DEBUG=electron-packager electron-forge make"
   },
   "devDependencies": {
     "@electron-forge/cli": "^7.7.0",
@@ -37,8 +35,12 @@
     "@electron-forge/plugin-local-electron": "^7.7.0",
     "@electron-forge/plugin-webpack": "^7.7.0",
     "@electron/fuses": "^1.8.0",
+    "@vercel/webpack-asset-relocator-loader": "1.7.3",
     "css-loader": "^7.1.2",
     "electron": "^34.2.0",
-    "ts-loader": "^9.5.2"
+    "fork-ts-checker-webpack-plugin": "^9.0.2",
+    "ts-loader": "^9.5.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.3"
   }
 }
