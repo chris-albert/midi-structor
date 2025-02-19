@@ -16,17 +16,12 @@ npx nx serve electron --no-cloud
 
 Running electron
 ```
-//First we have to build the UI with correct paths
-npx nx build ui --no-cloud --base './'
-
-//Then we can run the electron code
 ./electron.sh
 ```
 
 Building electron:
 ```
-
-
+npx nx make electron --no-cloud
 ```
 
 ## Deploying

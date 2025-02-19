@@ -1,16 +1,16 @@
 import path from 'path'
 import { app, BrowserWindow, shell, ipcMain } from 'electron'
-import log from 'electron-log'
+// import log from 'electron-log'
 import MenuBuilder from './menu'
-import { autoUpdater } from 'electron-updater'
+// import { autoUpdater } from 'electron-updater'
 
 console.log('electron-app')
 
 class AppUpdater {
   constructor() {
-    log.transports.file.level = 'info'
-    autoUpdater.logger = log
-    autoUpdater.checkForUpdatesAndNotify()
+    // log.transports.file.level = 'info'
+    // autoUpdater.logger = log
+    // autoUpdater.checkForUpdatesAndNotify()
   }
 }
 
@@ -23,27 +23,27 @@ ipcMain.on('ipc-example', async (event, arg) => {
 })
 
 if (process.env['NODE_ENV'] === 'production') {
-  const sourceMapSupport = require('source-map-support')
-  sourceMapSupport.install()
+  // const sourceMapSupport = require('source-map-support')
+  // sourceMapSupport.install()
 }
 
 const isDebug = process.env['NODE_ENV'] === 'development' || process.env['DEBUG_PROD'] === 'true'
 
 if (isDebug) {
-  require('electron-debug')()
+  // require('electron-debug')()
 }
 
 const installExtensions = async () => {
-  const installer = require('electron-devtools-installer')
-  const forceDownload = !!process.env['UPGRADE_EXTENSIONS']
-  const extensions = ['REACT_DEVELOPER_TOOLS']
-
-  return installer
-    .default(
-      extensions.map((name) => installer[name]),
-      forceDownload,
-    )
-    .catch(console.log)
+  // const installer = require('electron-devtools-installer')
+  // const forceDownload = !!process.env['UPGRADE_EXTENSIONS']
+  // const extensions = ['REACT_DEVELOPER_TOOLS']
+  //
+  // return installer
+  //   .default(
+  //     extensions.map((name) => installer[name]),
+  //     forceDownload,
+  //   )
+  //   .catch(console.log)
 }
 
 const createWindow = async () => {
@@ -63,7 +63,7 @@ const createWindow = async () => {
     show: true,
     width: 1024,
     height: 728,
-    icon: getAssetPath('icon.png'),
+    icon: path.join(__dirname, 'assets/midi-structor-logo.png'),
     webPreferences: {
       // preload: app.isPackaged
       //   ? path.join(__dirname, 'preload.js')
