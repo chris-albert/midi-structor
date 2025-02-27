@@ -1,6 +1,6 @@
 import React from 'react'
 import './styles.scss'
-import { Box, createTheme, CssBaseline, ThemeProvider } from '@mui/material'
+import { createTheme, CssBaseline, ThemeProvider } from '@mui/material'
 import { toast, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { ProjectHooks } from '@midi-structor/core'

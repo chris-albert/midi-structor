@@ -22,7 +22,8 @@ export const useActiveClip = (track: UITrack): UIClip => {
 
 const useArrangementAtom = () => {
   const activeProject = useAtomValue(ProjectMidi.atoms.project.active)
-  return React.useMemo(() => ProjectMidi.atoms.project.arrangement(activeProject), [activeProject])
+  // return React.useMemo(() => ProjectMidi.atoms.project.arrangement(activeProject), [activeProject])
+  return ProjectMidi.atoms.project.arrangement(activeProject)
 }
 
 const useArrangement = () => useAtomValue(useArrangementAtom())

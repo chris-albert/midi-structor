@@ -34,6 +34,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({}) => {
     const res = E.flatMap(json, Widgets.decode)
     E.match<any, Widgets, void>(
       (err: any) => {
+        console.log('widgets error', err)
         toast.error('Invalid widgets: ' + PathReporter.report(E.left(err)).join(', '))
       },
       (widgets) => {

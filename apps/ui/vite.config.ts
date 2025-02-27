@@ -1,8 +1,8 @@
 /// <reference types='vitest' />
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
-import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
-import { nxCopyAssetsPlugin } from '@nx/vite/plugins/nx-copy-assets.plugin';
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin'
+import { nxCopyAssetsPlugin } from '@nx/vite/plugins/nx-copy-assets.plugin'
 import checker from 'vite-plugin-checker'
 
 export default defineConfig({
@@ -23,9 +23,17 @@ export default defineConfig({
     checker({
       typescript: {
         tsconfigPath: './tsconfig.app.json',
-      }
-    }),],
+      },
+    }),
+  ],
   build: {
+    rollupOptions: {
+      output: {
+        entryFileNames: `assets/[name].js`,
+        chunkFileNames: `assets/[name].js`,
+        assetFileNames: `assets/[name].[ext]`,
+      },
+    },
     outDir: '../../dist/apps/ui',
     emptyOutDir: true,
     reportCompressedSize: true,
@@ -33,4 +41,4 @@ export default defineConfig({
       transformMixedEsModules: true,
     },
   },
-});
+})

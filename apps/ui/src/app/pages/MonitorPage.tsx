@@ -7,7 +7,7 @@ import { MidiMessageDetail } from '../components/MidiMessageDetail'
 export type MonitorPageProps = {}
 
 export const MonitorPage: React.FC<MonitorPageProps> = () => {
-  const maxMessages = 25
+  const maxMessages = 100
 
   const dawListener = Midi.useDawListener()
   const controllerListener = Midi.useControllerListener()

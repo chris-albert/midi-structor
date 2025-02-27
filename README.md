@@ -1,27 +1,24 @@
 # MIDI Structor
 
+Prereqs:
+```
+yarn install
+nvm use
+```
 
+Running web app locally:
 ```
 ./run.sh
 ```
 
-Running agent
-```
-npx nx serve agent --no-cloud
-
-npx nx build core --no-cloud
-
-npx nx serve electron --no-cloud
-```
-
 Running electron
 ```
-./electron.sh
+./electron-run.sh
 ```
 
-Building electron:
+Building electron, including bundling the ui:
 ```
-npx nx make electron --no-cloud
+./electron-make.sh
 ```
 
 Making MacOSX icons

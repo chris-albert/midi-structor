@@ -8,6 +8,7 @@ import type IForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
 import type { ModuleOptions, Configuration } from 'webpack'
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const ForkTsCheckerWebpackPlugin: typeof IForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
 import * as path from 'path'
 
 const rules: Required<ModuleOptions>['rules'] = [
@@ -43,6 +44,14 @@ const rules: Required<ModuleOptions>['rules'] = [
 const plugins = [
   new ForkTsCheckerWebpackPlugin({
     logger: 'webpack-infrastructure',
+  }),
+  new CopyWebpackPlugin({
+    patterns: [
+      {
+        from: path.resolve(__dirname, '../../dist/apps/ui/assets/index.css'),
+        to: path.resolve(__dirname, '.webpack/renderer/main_window/index.css'),
+      },
+    ],
   }),
 ]
 
@@ -101,7 +110,7 @@ const config: ForgeConfig = {
         entryPoints: [
           {
             html: './src/index.html',
-            js: './src/react.js', //'./src/renderer.ts',
+            js: '../../dist/apps/ui/assets/index.js',
             name: 'main_window',
             preload: {
               js: './src/preload.ts',

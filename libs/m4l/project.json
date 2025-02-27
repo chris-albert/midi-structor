@@ -1,0 +1,9 @@
+{
+  "name": "m4l",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/m4l/src",
+  "projectType": "library",
+  "tags": [],
+  "// targets": "to see all targets run: nx show project m4l --web",
+  "targets": {}
+}

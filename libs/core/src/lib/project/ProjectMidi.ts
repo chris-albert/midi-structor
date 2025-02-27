@@ -10,6 +10,7 @@ import {
   UIArrangement,
 } from './UIStateDisplay'
 import { atom, getDefaultStore, useAtom, useAtomValue, useSetAtom, WritableAtom } from 'jotai'
+import { atomFamily } from 'jotai/utils'
 import { parseAbletonUIMessage } from './AbletonUIMessage'
 import * as t from 'io-ts'
 import React from 'react'
@@ -50,8 +51,9 @@ const atoms = {
   projectsConfig: AtomStorage.atom<ProjectsConfig>('projects-config', defaultProjectsConfig()),
   project: {
     active: AtomStorage.atom('active-project', 'default'),
-    arrangement: (name: string): WritableAtom<UIArrangement, Array<UIArrangement>, void> =>
+    arrangement: atomFamily((name: string) =>
       AtomStorage.atom<UIArrangement>(`arrangement-${name}`, emptyArrangement()),
+    ),
   },
   realTime: {
     beats: atom(0),
