@@ -78,14 +78,7 @@ export const Nav: React.FC<NavProps> = () => {
               xs={4}
               container
               justifyContent='right'>
-              {/*Right*/}
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <Box>
-                  <IconButton onClick={() => {}}>
-                    <RefreshIcon />
-                  </IconButton>
-                </Box>
-
                 <ProjectsSelectComponent />
               </Box>
             </Grid>
