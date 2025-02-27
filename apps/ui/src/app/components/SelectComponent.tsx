@@ -1,6 +1,18 @@
 import React, { ReactElement } from 'react'
-import { InputLabel, Select, MenuItem, FormControl, SelectChangeEvent } from '@mui/material'
+import {
+  InputLabel,
+  Select,
+  MenuItem,
+  FormControl,
+  SelectChangeEvent,
+  Box,
+  TextField,
+  InputAdornment,
+  OutlinedInput,
+} from '@mui/material'
 import _ from 'lodash'
+import AddCircleIcon from '@mui/icons-material/AddCircle'
+import IconButton from '@mui/material/IconButton'
 
 export type SelectItem<A = string> = {
   label: string
@@ -13,6 +25,7 @@ export type SelectComponentProps<A> = {
   onChange: (a: A | undefined) => void
   activeLabel?: string
   containEmpty?: boolean
+  onNew?: (label: string) => void
 }
 
 export const SelectComponent = <A,>({
@@ -21,8 +34,10 @@ export const SelectComponent = <A,>({
   onChange,
   activeLabel,
   containEmpty = false,
+  onNew,
 }: SelectComponentProps<A>): ReactElement<any, any> => {
   const [value, setValue] = React.useState<number | ''>('')
+  const [newLabel, setNewLabel] = React.useState('')
 
   React.useEffect(() => {
     if (activeLabel !== undefined) {
@@ -66,6 +81,25 @@ export const SelectComponent = <A,>({
             {item.label}
           </MenuItem>
         ))}
+        {onNew !== undefined ? (
+          <Box sx={{ p: 1 }}>
+            <OutlinedInput
+              size='small'
+              placeholder='Add new'
+              onChange={(e) => setNewLabel(e.target.value)}
+              endAdornment={
+                <InputAdornment position='end'>
+                  <IconButton
+                    onClick={() => {
+                      onNew(newLabel)
+                    }}>
+                    <AddCircleIcon />
+                  </IconButton>
+                </InputAdornment>
+              }
+            />
+          </Box>
+        ) : null}
       </Select>
     </FormControl>
   )

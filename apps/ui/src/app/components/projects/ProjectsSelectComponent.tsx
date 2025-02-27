@@ -18,7 +18,7 @@ export const ProjectsSelectComponent: React.FC<ProjectsSelectComponentProps> = (
       _.map(projectsConfig.projects, (p, key) => ({
         label: p.name,
         value: key,
-      })),
+      }))
     )
   }, [projectsConfig])
 
@@ -39,6 +39,9 @@ export const ProjectsSelectComponent: React.FC<ProjectsSelectComponentProps> = (
         items={items}
         onChange={onProjectSelect}
         activeLabel={activeProjectLabel}
+        onNew={() => {
+          console.log('add new label')
+        }}
       />
     </Box>
   )
