@@ -12,6 +12,7 @@ export type SelectComponentProps<A> = {
   items: Array<SelectItem<A>>
   onChange: (a: A | undefined) => void
   activeLabel?: string
+  containEmpty?: boolean
 }
 
 export const SelectComponent = <A,>({
@@ -19,6 +20,7 @@ export const SelectComponent = <A,>({
   items,
   onChange,
   activeLabel,
+  containEmpty = false,
 }: SelectComponentProps<A>): ReactElement<any, any> => {
   const [value, setValue] = React.useState<number | ''>('')
 
@@ -56,7 +58,7 @@ export const SelectComponent = <A,>({
         label={label}
         onChange={onChangeLocal}
         autoWidth>
-        <MenuItem value=''>--</MenuItem>
+        {containEmpty ? <MenuItem value=''>--</MenuItem> : null}
         {items.map((item, index) => (
           <MenuItem
             key={`${label}-menu-item-${index}`}

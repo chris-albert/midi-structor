@@ -9,10 +9,9 @@ type ControllerGridComponentProps = {
 
 export const ControllerGridComponent: React.FC<ControllerGridComponentProps> = ({ controller }) => {
   const buttonSize = 75
-  const controllerEmitter = Midi.useControllerEmitter()
 
   const onClick = (pad: ControllerPad) => {
-    controllerEmitter.send(pad.message(5))
+    controller.controller
   }
 
   return (

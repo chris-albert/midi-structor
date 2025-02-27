@@ -10,7 +10,7 @@ export const Layout: React.FC<LayoutProps> = ({}) => {
   const isAllowed = Midi.useMidiAllowed()
 
   return (
-    <Box>
+    <Box sx={{ height: '100%' }}>
       <Nav />
       {isAllowed ? <Outlet /> : null}
     </Box>
