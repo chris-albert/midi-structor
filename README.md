@@ -11,6 +11,11 @@ Running web app locally:
 ./run.sh
 ```
 
+Dumb nx error, clean up 
+```
+npx nx reset
+```
+
 Running electron
 ```
 ./electron-run.sh

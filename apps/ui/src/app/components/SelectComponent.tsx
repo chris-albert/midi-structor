@@ -1,18 +1,9 @@
 import React, { ReactElement } from 'react'
-import {
-  InputLabel,
-  Select,
-  MenuItem,
-  FormControl,
-  SelectChangeEvent,
-  Box,
-  TextField,
-  InputAdornment,
-  OutlinedInput,
-} from '@mui/material'
+import { InputLabel, Select, MenuItem, FormControl, SelectChangeEvent, Box, Button } from '@mui/material'
 import _ from 'lodash'
-import AddCircleIcon from '@mui/icons-material/AddCircle'
+import { SelectNewItemComponent } from './SelectNewItemComponent'
 import IconButton from '@mui/material/IconButton'
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
 
 export type SelectItem<A = string> = {
   label: string
@@ -26,6 +17,7 @@ export type SelectComponentProps<A> = {
   activeLabel?: string
   containEmpty?: boolean
   onNew?: (label: string) => void
+  onDelete?: (label: string) => void
 }
 
 export const SelectComponent = <A,>({
@@ -35,9 +27,14 @@ export const SelectComponent = <A,>({
   activeLabel,
   containEmpty = false,
   onNew,
+  onDelete,
 }: SelectComponentProps<A>): ReactElement<any, any> => {
   const [value, setValue] = React.useState<number | ''>('')
-  const [newLabel, setNewLabel] = React.useState('')
+  const [isEdit, setIsEdit] = React.useState(false)
+
+  const handleClick = () => {
+    setIsEdit((e) => !e)
+  }
 
   React.useEffect(() => {
     if (activeLabel !== undefined) {
@@ -71,33 +68,64 @@ export const SelectComponent = <A,>({
         id='demo-simple-select'
         value={value}
         label={label}
+        onClose={() => setIsEdit(false)}
         onChange={onChangeLocal}
         autoWidth>
         {containEmpty ? <MenuItem value=''>--</MenuItem> : null}
-        {items.map((item, index) => (
-          <MenuItem
-            key={`${label}-menu-item-${index}`}
-            value={index}>
-            {item.label}
-          </MenuItem>
-        ))}
-        {onNew !== undefined ? (
-          <Box sx={{ p: 1 }}>
-            <OutlinedInput
-              size='small'
-              placeholder='Add new'
-              onChange={(e) => setNewLabel(e.target.value)}
-              endAdornment={
-                <InputAdornment position='end'>
+        {items.map((item, index) =>
+          isEdit ? (
+            <Box
+              key={`${label}-menu-edit-${index}`}
+              sx={{
+                pl: 2,
+                pr: 1,
+                display: 'flex',
+                justifyContent: 'space-between',
+              }}>
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                }}>
+                {item.label}
+              </Box>
+              <Box>
+                {onDelete !== undefined ? (
                   <IconButton
+                    size='small'
                     onClick={() => {
-                      onNew(newLabel)
+                      onDelete(label)
                     }}>
-                    <AddCircleIcon />
+                    <DeleteOutlineIcon color='error' />
                   </IconButton>
-                </InputAdornment>
-              }
-            />
+                ) : null}
+              </Box>
+            </Box>
+          ) : (
+            <MenuItem
+              key={`${label}-menu-item-${index}`}
+              value={index}>
+              <Box>{item.label}</Box>
+            </MenuItem>
+          )
+        )}
+        {onNew !== undefined ? (
+          <Box>
+            {isEdit ? <SelectNewItemComponent onNew={onNew} /> : null}
+            <Box
+              sx={{
+                p: 0,
+                pt: 1,
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Button
+                size='small'
+                onClick={handleClick}>
+                Edit
+              </Button>
+            </Box>
           </Box>
         ) : null}
       </Select>

@@ -39,9 +39,10 @@ export const ProjectsSelectComponent: React.FC<ProjectsSelectComponentProps> = (
         items={items}
         onChange={onProjectSelect}
         activeLabel={activeProjectLabel}
-        onNew={() => {
-          console.log('add new label')
+        onNew={(newLabel) => {
+          console.log('add new label', newLabel)
         }}
+        onDelete={(deleteLabel) => {}}
       />
     </Box>
   )
