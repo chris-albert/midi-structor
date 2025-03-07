@@ -5,6 +5,7 @@ import _ from 'lodash'
 import { focusAtom } from 'jotai-optics'
 import { splitAtom } from 'jotai/utils'
 import { emptyTrack, UIArrangement, UIClip, UITrack } from './UIStateDisplay'
+import { useListAtom } from '../../../../../apps/ui/src/app/hooks/ListAtom'
 
 const isClipActive = (clip: UIClip, beat: number): boolean => {
   return beat >= clip.startTime && (clip.endTime === undefined || beat < clip.endTime)
@@ -51,12 +52,20 @@ const useProjectsConfig = () => useAtom(ProjectMidi.atoms.projectsConfig)
 const useActiveProjectLabel = () => {
   const activeProject = useAtomValue(ProjectMidi.atoms.project.active)
   const projects = useAtomValue(ProjectMidi.atoms.projectsConfig)
-  const project = _.get(projects.projects, activeProject, undefined)
+  const project = _.find(projects.projects, (p) => p.key === activeProject)
   if (project !== undefined) {
-    return project.name
+    return project.label
   } else {
     return undefined
   }
+}
+
+const useProjectsListAtom = () => {
+  const projects = React.useMemo(
+    () => focusAtom(ProjectMidi.atoms.projectsConfig, (o) => o.prop('projects')),
+    [ProjectMidi.atoms.projectsConfig]
+  )
+  return useListAtom(projects)
 }
 
 const useSetActiveProject = () => useSetAtom(ProjectMidi.atoms.project.active)
@@ -82,6 +91,7 @@ export const ProjectHooks = {
   useActiveClip,
   useArrangement,
   useProjectsConfig,
+  useProjectsListAtom,
   useActiveProjectLabel,
   useSetActiveProject,
   useTracks,

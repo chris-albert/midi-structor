@@ -19,23 +19,25 @@ import { AtomStorage } from '../storage/AtomStorage'
 const store = getDefaultStore()
 
 export const ProjectConfig = t.type({
-  name: t.string,
+  label: t.string,
+  key: t.string,
 })
 
 export type ProjectConfig = t.TypeOf<typeof ProjectConfig>
 
 export const ProjectsConfig = t.type({
-  projects: t.record(t.string, ProjectConfig),
+  projects: t.array(ProjectConfig),
 })
 
 export type ProjectsConfig = t.TypeOf<typeof ProjectsConfig>
 
 const defaultProjectsConfig: () => ProjectsConfig = () => ({
-  projects: {
-    default: {
-      name: 'Default',
+  projects: [
+    {
+      label: 'Default',
+      key: 'default',
     },
-  },
+  ],
 })
 
 export type TimeSignature = {
@@ -52,7 +54,7 @@ const atoms = {
   project: {
     active: AtomStorage.atom('active-project', 'default'),
     arrangement: atomFamily((name: string) =>
-      AtomStorage.atom<UIArrangement>(`arrangement-${name}`, emptyArrangement()),
+      AtomStorage.atom<UIArrangement>(`arrangement-${name}`, emptyArrangement())
     ),
   },
   realTime: {

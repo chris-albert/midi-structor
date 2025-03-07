@@ -2,7 +2,7 @@ import React from 'react'
 import { Box } from '@mui/material'
 import { SelectComponent, SelectItem } from '../SelectComponent'
 import _ from 'lodash'
-import { ProjectHooks } from '@midi-structor/core'
+import { ProjectConfig, ProjectHooks } from '@midi-structor/core'
 
 export type ProjectsSelectComponentProps = {}
 
@@ -10,21 +10,22 @@ export const ProjectsSelectComponent: React.FC<ProjectsSelectComponentProps> = (
   const [projectsConfig] = ProjectHooks.useProjectsConfig()
   const setActiveProject = ProjectHooks.useSetActiveProject()
 
-  const [items, setItems] = React.useState<Array<SelectItem<string>>>([])
+  const [items, setItems] = React.useState<Array<SelectItem<ProjectConfig>>>([])
   const activeProjectLabel = ProjectHooks.useActiveProjectLabel()
+  const projects = ProjectHooks.useProjectsListAtom()
 
   React.useEffect(() => {
     setItems(
-      _.map(projectsConfig.projects, (p, key) => ({
-        label: p.name,
-        value: key,
+      _.map(projectsConfig.projects, (p) => ({
+        label: p.label,
+        value: p,
       }))
     )
   }, [projectsConfig])
 
-  const onProjectSelect = (input: string | undefined) => {
+  const onProjectSelect = (input: ProjectConfig | undefined) => {
     if (input !== undefined) {
-      setActiveProject(input)
+      setActiveProject(input.key)
     }
   }
 
@@ -40,9 +41,14 @@ export const ProjectsSelectComponent: React.FC<ProjectsSelectComponentProps> = (
         onChange={onProjectSelect}
         activeLabel={activeProjectLabel}
         onNew={(newLabel) => {
-          console.log('add new label', newLabel)
+          projects.add({
+            label: newLabel,
+            key: _.replace(_.toLower(newLabel), ' ', '-'),
+          })
         }}
-        onDelete={(deleteLabel) => {}}
+        onDelete={(deleteItem) => {
+          projects.remove(deleteItem)
+        }}
       />
     </Box>
   )

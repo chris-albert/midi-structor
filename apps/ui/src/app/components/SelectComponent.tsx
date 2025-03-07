@@ -17,7 +17,7 @@ export type SelectComponentProps<A> = {
   activeLabel?: string
   containEmpty?: boolean
   onNew?: (label: string) => void
-  onDelete?: (label: string) => void
+  onDelete?: (item: A) => void
 }
 
 export const SelectComponent = <A,>({
@@ -94,7 +94,7 @@ export const SelectComponent = <A,>({
                   <IconButton
                     size='small'
                     onClick={() => {
-                      onDelete(label)
+                      onDelete(item.value)
                     }}>
                     <DeleteOutlineIcon color='error' />
                   </IconButton>

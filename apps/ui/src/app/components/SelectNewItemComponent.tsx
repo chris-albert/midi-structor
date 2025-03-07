@@ -14,6 +14,7 @@ export const SelectNewItemComponent: React.FC<SelectNewItemComponentProps> = ({ 
     <Box sx={{ p: 1 }}>
       <OutlinedInput
         size='small'
+        value={newLabel}
         placeholder='Add new'
         onChange={(e) => setNewLabel(e.target.value)}
         endAdornment={
@@ -21,6 +22,7 @@ export const SelectNewItemComponent: React.FC<SelectNewItemComponentProps> = ({ 
             <IconButton
               onClick={() => {
                 onNew(newLabel)
+                setNewLabel('')
               }}>
               <AddCircleIcon />
             </IconButton>
