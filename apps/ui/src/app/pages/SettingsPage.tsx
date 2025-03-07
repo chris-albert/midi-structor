@@ -29,7 +29,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({}) => {
   const onWidgetsSave = () => {
     const json = E.tryCatch(
       () => JSON.parse(rawWidgets),
-      (e) => e,
+      (e) => e
     )
     const res = E.flatMap(json, Widgets.decode)
     E.match<any, Widgets, void>(
@@ -40,14 +40,14 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({}) => {
       (widgets) => {
         setWidgets(widgets)
         toast.success('Widgets saved')
-      },
+      }
     )(res)
   }
 
   const onProjectsSave = () => {
     const json = E.tryCatch(
       () => JSON.parse(rawProjects),
-      (e) => e,
+      (e) => e
     )
     const res = E.flatMap(json, ProjectsConfig.decode)
     E.match<any, ProjectsConfig, void>(
@@ -57,7 +57,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({}) => {
       (projects) => {
         setProjects(projects)
         toast.success('Projects saved')
-      },
+      }
     )(res)
   }
 
@@ -68,27 +68,27 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({}) => {
         p: 2,
         gap: 2,
       }}>
-      <Card>
-        <CardHeader
-          title='Projects'
-          action={
-            <Button
-              onClick={onProjectsSave}
-              variant='outlined'
-              size='small'>
-              Save
-            </Button>
-          }
-        />
-        <CardContent>
-          <JSONEditor
-            height='800px'
-            value={rawProjects}
-            readonly={false}
-            onChange={setRawProjects}
-          />
-        </CardContent>
-      </Card>
+      {/*<Card>*/}
+      {/*  <CardHeader*/}
+      {/*    title='Projects'*/}
+      {/*    action={*/}
+      {/*      <Button*/}
+      {/*        onClick={onProjectsSave}*/}
+      {/*        variant='outlined'*/}
+      {/*        size='small'>*/}
+      {/*        Save*/}
+      {/*      </Button>*/}
+      {/*    }*/}
+      {/*  />*/}
+      {/*  <CardContent>*/}
+      {/*    <JSONEditor*/}
+      {/*      height='800px'*/}
+      {/*      value={rawProjects}*/}
+      {/*      readonly={false}*/}
+      {/*      onChange={setRawProjects}*/}
+      {/*    />*/}
+      {/*  </CardContent>*/}
+      {/*</Card>*/}
       <Card>
         <CardHeader title='Arrangement' />
         <CardContent>
