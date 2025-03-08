@@ -5,7 +5,7 @@ import _ from 'lodash'
 import { focusAtom } from 'jotai-optics'
 import { splitAtom } from 'jotai/utils'
 import { emptyTrack, UIArrangement, UIClip, UITrack } from './UIStateDisplay'
-import { useListAtom } from '../../../../../apps/ui/src/app/hooks/ListAtom'
+import { useListAtom } from '../hooks/ListAtom'
 
 const isClipActive = (clip: UIClip, beat: number): boolean => {
   return beat >= clip.startTime && (clip.endTime === undefined || beat < clip.endTime)
