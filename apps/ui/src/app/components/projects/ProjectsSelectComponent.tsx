@@ -7,7 +7,6 @@ import { ProjectConfig, ProjectHooks } from '@midi-structor/core'
 export type ProjectsSelectComponentProps = {}
 
 export const ProjectsSelectComponent: React.FC<ProjectsSelectComponentProps> = ({}) => {
-  const [projectsConfig] = ProjectHooks.useProjectsConfig()
   const setActiveProject = ProjectHooks.useSetActiveProject()
 
   const [items, setItems] = React.useState<Array<SelectItem<ProjectConfig>>>([])
@@ -16,12 +15,12 @@ export const ProjectsSelectComponent: React.FC<ProjectsSelectComponentProps> = (
 
   React.useEffect(() => {
     setItems(
-      _.map(projectsConfig.projects, (p) => ({
+      _.map(projects.values, (p) => ({
         label: p.label,
         value: p,
       }))
     )
-  }, [projectsConfig])
+  }, [projects.values])
 
   const onProjectSelect = (input: ProjectConfig | undefined) => {
     if (input !== undefined) {
