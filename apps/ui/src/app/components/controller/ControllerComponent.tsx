@@ -6,6 +6,7 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import { SelectComponent, SelectItem } from '../SelectComponent'
 import { VirtualControllerComponent } from './VirtualControllerComponent'
 import { RealControllerComponent } from './RealControllerComponent'
+import { PrimitiveAtom } from 'jotai'
 
 const selectTypeItems: Array<SelectItem<ConfiguredControllerType>> = [
   {
@@ -19,12 +20,11 @@ const selectTypeItems: Array<SelectItem<ConfiguredControllerType>> = [
 ]
 
 export type ControllerComponentProps = {
-  controller: ConfiguredController
+  controllerAtom: PrimitiveAtom<ConfiguredController>
 }
 
-export const ControllerComponent: React.FC<ControllerComponentProps> = ({ controller }) => {
-  const removeController = ConfiguredController.useRemoveController()
-  const updateController = ConfiguredController.useUpdateController(controller)
+export const ControllerComponent: React.FC<ControllerComponentProps> = ({ controllerAtom }) => {
+  const controller = ConfiguredController.useController(controllerAtom)
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -50,7 +50,7 @@ export const ControllerComponent: React.FC<ControllerComponentProps> = ({ contro
               items={selectTypeItems}
               onChange={(type) => {
                 if (type !== undefined) {
-                  updateController({ ...controller, type })
+                  controller.setType(type)
                 }
               }}
             />
@@ -58,7 +58,7 @@ export const ControllerComponent: React.FC<ControllerComponentProps> = ({ contro
           <IconButton
             aria-label='delete'
             onClick={() => {
-              removeController(controller)
+              controller.remove()
             }}>
             <DeleteIcon color='error' />
           </IconButton>

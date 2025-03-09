@@ -2,13 +2,13 @@ import React from 'react'
 import { TabItem, TabsComponent } from '../TabsComponent'
 import { Box } from '@mui/material'
 import AddCircleIcon from '@mui/icons-material/AddCircle'
-import { StringAvatarComponent } from '../StringAvatarComponent'
 import { AddControllerComponent } from './AddControllerComponent'
 import { ConfiguredController } from '@midi-structor/core'
 import { ControllerComponent } from './ControllerComponent'
+import { ControllerAvatarComponent } from './ControllerAvatarComponent'
 
 const addTabItem: TabItem = {
-  icon: <AddCircleIcon />,
+  icon: () => <AddCircleIcon />,
   content: () => <AddControllerComponent />,
 }
 
@@ -19,13 +19,8 @@ export const ControllersComponent: React.FC<ControllersComponentProps> = ({}) =>
 
   const controllersTabs: Array<TabItem> = [
     ...controllers.map((controller) => ({
-      icon: (
-        <StringAvatarComponent
-          label={controller.name}
-          size={35}
-        />
-      ),
-      content: () => <ControllerComponent controller={controller} />,
+      icon: () => <ControllerAvatarComponent controllerAtom={controller} />,
+      content: () => <ControllerComponent controllerAtom={controller} />,
     })),
     addTabItem,
   ]

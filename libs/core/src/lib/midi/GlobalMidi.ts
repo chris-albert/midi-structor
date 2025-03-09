@@ -11,7 +11,7 @@ import { AtomStorage } from '../storage/AtomStorage'
 export const MidiType = Schema.Union(
   Schema.Literal('daw'),
   Schema.Literal('controller'),
-  Schema.Literal('agent'),
+  Schema.Literal('agent')
 )
 export type MidiType = typeof MidiType.Type
 
@@ -52,7 +52,7 @@ const emptyEmitter = (): MidiEmitter => ({
   },
 })
 
-const selectedAtom = (name: string): PrimitiveAtom<Option.Option<string>> =>
+export const selectedAtom = (name: string): PrimitiveAtom<Option.Option<string>> =>
   AtomStorage.atom<Option.Option<string>>(name, Option.none())
 
 const atoms = {
@@ -91,7 +91,7 @@ const onSelectedInput = (selection: MidiSelection) => {
   const maybeListener = pipe(store.get(selection.selected.input), Option.flatMap(deviceManager().getInput))
   store.set(
     selection.listener,
-    Option.getOrElse(maybeListener, () => MidiDeviceManager.emptyListener()),
+    Option.getOrElse(maybeListener, () => MidiDeviceManager.emptyListener())
   )
 }
 
@@ -99,7 +99,7 @@ const onSelectedOutput = (selection: MidiSelection) => {
   const maybeEmitter = pipe(store.get(selection.selected.output), Option.flatMap(deviceManager().getOutput))
   store.set(
     selection.emitter,
-    Option.getOrElse(maybeEmitter, () => MidiDeviceManager.emptyEmitter()),
+    Option.getOrElse(maybeEmitter, () => MidiDeviceManager.emptyEmitter())
   )
 }
 

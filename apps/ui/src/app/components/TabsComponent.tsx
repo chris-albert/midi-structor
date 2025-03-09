@@ -3,7 +3,7 @@ import { Tabs, Tab, Box } from '@mui/material'
 
 export type TabItem = {
   label?: string
-  icon?: string | React.ReactElement
+  icon?: () => string | React.ReactElement
   content: () => React.ReactElement
 }
 
@@ -34,7 +34,7 @@ export const TabsComponent: React.FC<TabsComponentProps> = ({ orientation, tabs 
           <Tab
             key={`tab-${index}`}
             label={tab.label}
-            icon={tab.icon}
+            icon={tab.icon !== undefined ? tab.icon() : undefined}
           />
         ))}
       </Tabs>

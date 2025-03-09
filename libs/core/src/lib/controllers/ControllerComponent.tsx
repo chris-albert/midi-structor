@@ -11,6 +11,7 @@ export const ControllerComponent: React.FC<ControllerComponentProps> = ({}) => {
   const emitter = Midi.useControllerEmitter()
   const listener = Midi.useControllerListener()
   const enabled = Midi.useControllerEnabled()
+
   ProjectMidi.useProjectListener()
 
   ProjectHooks.useOnStatusChange((status) => {
