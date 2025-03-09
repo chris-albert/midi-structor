@@ -1,11 +1,12 @@
 import { atomFamily, splitAtom } from 'jotai/utils'
-import { useAtomValue, useSetAtom, useAtom, atom, WritableAtom, PrimitiveAtom } from 'jotai'
+import { useAtomValue, useAtom, PrimitiveAtom } from 'jotai'
 import { AtomStorage } from '../storage/AtomStorage'
 import { ProjectMidi } from '../project/ProjectMidi'
 import { Option } from 'effect'
 import React from 'react'
 import { focusAtom } from 'jotai-optics'
-import _ from 'lodash'
+import { OpticFor_ } from 'optics-ts'
+import { Midi, MidiDeviceSelection } from '../midi/GlobalMidi'
 
 export type ConfiguredControllerType = 'virtual' | 'real'
 
@@ -72,14 +73,19 @@ const useControllerName = (controller: PrimitiveAtom<ConfiguredController>) => {
   return useAtomValue(nameAtom)
 }
 
+const useSafeFocus = <A, K extends keyof A>(atom: PrimitiveAtom<A>, key: K) => {
+  const selectFunc = React.useCallback((o: OpticFor_<A>) => o.prop(key), [key])
+  return focusAtom(atom, selectFunc)
+}
+
 const useController = (controller: PrimitiveAtom<ConfiguredController>) => {
   const controllerValue = useAtomValue(controller)
-  const [name] = useAtom(focusAtom(controller, (s) => s.prop('name')))
-  const [type, setType] = useAtom(focusAtom(controller, (s) => s.prop('type')))
-  const [enabled, setEnabled] = useAtom(focusAtom(controller, (s) => s.prop('enabled')))
-  const selected = focusAtom(controller, (s) => s.prop('selected'))
-  const [input, setInput] = useAtom(focusAtom(selected, (s) => s.prop('input')))
-  const [output, setOutput] = useAtom(focusAtom(selected, (s) => s.prop('output')))
+  const [name] = useAtom(useSafeFocus(controller, 'name'))
+  const [type, setType] = useAtom(useSafeFocus(controller, 'type'))
+  const [enabled, setEnabled] = useAtom(useSafeFocus(controller, 'enabled'))
+  const selected = useSafeFocus(controller, 'selected')
+  const [input, setInput] = useAtom(useSafeFocus(selected, 'input'))
+  const [output, setOutput] = useAtom(useSafeFocus(selected, 'output'))
   const removeController = useRemoveController()
 
   const remove = () => {
@@ -100,8 +106,37 @@ const useController = (controller: PrimitiveAtom<ConfiguredController>) => {
   }
 }
 
+export type ControllerMidiDeviceSelections = {
+  input: MidiDeviceSelection
+  output: MidiDeviceSelection
+}
+
+const useMidiDeviceSelection = (
+  controllerAtom: PrimitiveAtom<ConfiguredController>
+): ControllerMidiDeviceSelections => {
+  const controller = useController(controllerAtom)
+  const manager = Midi.useDeviceManager()
+
+  const input: MidiDeviceSelection = {
+    type: 'input',
+    devices: manager.inputs,
+    setSelected: (n) => controller.setInput(Option.fromNullable(n)),
+    selected: Option.getOrUndefined(controller.input),
+  }
+
+  const output: MidiDeviceSelection = {
+    type: 'output',
+    devices: manager.outputs,
+    setSelected: (n) => controller.setOutput(Option.fromNullable(n)),
+    selected: Option.getOrUndefined(controller.output),
+  }
+
+  return { input, output }
+}
+
 export const ConfiguredController = {
   useController,
+  useMidiDeviceSelection,
   useControllerName,
   useAddController,
   useControllersValue,

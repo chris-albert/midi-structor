@@ -1,20 +1,21 @@
 import React from 'react'
 import { Box } from '@mui/material'
-import { MidiSelectComponent } from './MidiSelectComponent'
+import { PrimitiveAtom } from 'jotai/index'
+import { ConfiguredController } from '@midi-structor/core'
+import { MidiDeviceSelectionComponent } from './MidiDeviceSelectionComponent'
 
-export type ControllerBrowserModeComponentProps = {}
+export type ControllerBrowserModeComponentProps = {
+  controllerAtom: PrimitiveAtom<ConfiguredController>
+}
 
-export const ControllerBrowserModeComponent: React.FC<ControllerBrowserModeComponentProps> = ({}) => {
+export const ControllerBrowserModeComponent: React.FC<ControllerBrowserModeComponentProps> = ({
+  controllerAtom,
+}) => {
+  const deviceSelection = ConfiguredController.useMidiDeviceSelection(controllerAtom)
   return (
     <Box>
-      <MidiSelectComponent
-        midiType='controller'
-        midiDeviceType='input'
-      />
-      <MidiSelectComponent
-        midiType='controller'
-        midiDeviceType='output'
-      />
+      <MidiDeviceSelectionComponent midiDevices={deviceSelection.input} />
+      <MidiDeviceSelectionComponent midiDevices={deviceSelection.output} />
     </Box>
   )
 }

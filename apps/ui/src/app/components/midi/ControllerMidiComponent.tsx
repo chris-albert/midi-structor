@@ -1,14 +1,17 @@
 import React from 'react'
 import { Box, Card, CardContent, CardHeader, FormControlLabel, Switch } from '@mui/material'
 import { ControllerBrowserModeComponent } from './ControllerBrowserModeComponent'
-import { Midi } from '@midi-structor/core'
+import { ConfiguredController, Midi } from '@midi-structor/core'
+import { PrimitiveAtom } from 'jotai/index'
 
-export type ControllerMidiComponentProps = {}
+export type ControllerMidiComponentProps = {
+  controllerAtom: PrimitiveAtom<ConfiguredController>
+}
 
-export const ControllerMidiComponent: React.FC<ControllerMidiComponentProps> = ({}) => {
-  const enabled = Midi.useControllerEnabled()
+export const ControllerMidiComponent: React.FC<ControllerMidiComponentProps> = ({ controllerAtom }) => {
+  const controller = ConfiguredController.useController(controllerAtom)
   const onEnabled = (enabled: boolean) => {
-    Midi.setControllerEnabled(enabled)
+    controller.setEnabled(enabled)
   }
 
   return (
@@ -21,7 +24,7 @@ export const ControllerMidiComponent: React.FC<ControllerMidiComponentProps> = (
               <FormControlLabel
                 control={
                   <Switch
-                    checked={enabled}
+                    checked={controller.enabled}
                     onChange={(d) => onEnabled(d.target.checked)}
                   />
                 }
@@ -31,7 +34,7 @@ export const ControllerMidiComponent: React.FC<ControllerMidiComponentProps> = (
           }
         />
         <CardContent>
-          <ControllerBrowserModeComponent />
+          <ControllerBrowserModeComponent controllerAtom={controllerAtom} />
         </CardContent>
       </Card>
     </Box>

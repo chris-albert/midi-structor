@@ -32,9 +32,6 @@ export const MidiPage: React.FC<MidiPageProps> = () => {
             </CardContent>
           </Card>
         </Box>
-        <Box>
-          <ControllerMidiComponent />
-        </Box>
       </Box>
       <MonitorPage />
     </Box>

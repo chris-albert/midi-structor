@@ -156,6 +156,8 @@ const useMidiAllowed = () => {
   return useAtomValue(atoms.deviceManager).isAllowed
 }
 
+const useDeviceManager = () => useAtomValue(atoms.deviceManager)
+
 const runInit = () => {
   selectionInit('daw')
   selectionInit('controller')
@@ -175,6 +177,7 @@ export const Midi = {
   getSelected,
   getControllerEnabled,
   setControllerEnabled,
+  useDeviceManager,
   //Hooks
   useControllerEnabled: () => useAtomValue(atoms.controller.enabled),
   useDawEmitter: () => useAtomValue(atoms.daw.emitter),
