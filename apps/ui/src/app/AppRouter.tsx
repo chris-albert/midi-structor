@@ -41,7 +41,15 @@ export const AppRouter: React.FC<AppRouterProps> = ({}) => {
     </Routes>
   )
   if (IS_ELECTRON) {
-    return <HashRouter>{routes}</HashRouter>
+    return (
+      <HashRouter
+        future={{
+          v7_relativeSplatPath: true,
+          v7_startTransition: true,
+        }}>
+        {routes}
+      </HashRouter>
+    )
   } else {
     return (
       <BrowserRouter basename={window.location.pathname.replace(/(\/[^/]+)$/, '')}>{routes}</BrowserRouter>
