@@ -18,7 +18,6 @@ export class ControllerPad extends Data.Class<{
 }
 
 export class ControllerUI extends Data.Class<{
-  controller: Controller
   pads: Array<Array<ControllerPad>>
 }> {
   private noteLookup: Record<number, ControllerPad> = _.fromPairs(
@@ -29,10 +28,10 @@ export class ControllerUI extends Data.Class<{
             Note: ({ note }) => [note, p],
             CC: () => undefined,
             PC: () => undefined,
-          })(p.target),
-        ),
-      ),
-    ),
+          })(p.target)
+        )
+      )
+    )
   )
 
   foreach(f: (pad: ControllerPad) => void): void {
@@ -47,17 +46,6 @@ export class ControllerUI extends Data.Class<{
       }
     }
     return Option.none()
-  }
-
-  clear() {
-    this.controller.render(
-      _.flatMap(this.pads, (padRow) =>
-        _.map(padRow, (pad) => ({
-          target: pad.target,
-          color: Color.BLACK,
-        })),
-      ),
-    )
   }
 }
 

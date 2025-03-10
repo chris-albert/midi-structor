@@ -10,7 +10,7 @@ export const ControllerGridComponent: React.FC<ControllerGridComponentProps> = (
   const buttonSize = 75
 
   const onClick = (pad: ControllerPad) => {
-    controller.controller
+    console.log('pad', pad)
   }
 
   return (

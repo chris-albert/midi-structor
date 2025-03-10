@@ -20,6 +20,7 @@ type InfiniteBitsControllerComponentProps = {
 export const InfiniteBitsControllerComponent: React.FC<InfiniteBitsControllerComponentProps> = ({
   controller,
 }) => {
+  console.log('InfiniteBitsControllerComponent')
   return (
     <controller model={controller}>
       <StopWidget target={MidiTarget.cc(19)} />

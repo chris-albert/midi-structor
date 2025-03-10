@@ -2,12 +2,12 @@ import { atomFamily, splitAtom } from 'jotai/utils'
 import { useAtomValue, useAtom, PrimitiveAtom } from 'jotai'
 import { AtomStorage } from '../storage/AtomStorage'
 import { ProjectMidi } from '../project/ProjectMidi'
-import { Option } from 'effect'
+import { Option, pipe } from 'effect'
 import React from 'react'
 import { focusAtom } from 'jotai-optics'
 import { OpticFor_ } from 'optics-ts'
 import { Midi, MidiDeviceSelection, MidiEmitter, MidiListener } from '../midi/GlobalMidi'
-import { emptyEmitter, emptyListener } from '../midi/MidiDeviceManager'
+import { MidiDeviceManager } from '../midi/MidiDeviceManager'
 import { MidiMessage } from '../midi/MidiMessage'
 
 export type ConfiguredControllerType = 'virtual' | 'real'
@@ -156,38 +156,44 @@ export type ConfiguredControllerIO = {
   enabled: boolean
 }
 
-const useIO = (controller: ConfiguredController): ConfiguredControllerIO => {
-  if (controller.type === 'virtual') {
-    return {
-      emitter: {
-        send: (message: MidiMessage) => {
-          // console.log('Virtual send', message)
-        },
+const useRealIO = (controller: RealConfiguredController): ConfiguredControllerIO => {
+  const manager = Midi.useDeviceManager()
+
+  const inputListener = pipe(controller.selected.input, Option.flatMap(manager.getInput))
+  const outputEmitter = pipe(controller.selected.output, Option.flatMap(manager.getOutput))
+
+  return {
+    emitter: Option.getOrElse(outputEmitter, () => MidiDeviceManager.emptyEmitter()),
+    listener: Option.getOrElse(inputListener, () => MidiDeviceManager.emptyListener()),
+    enabled: controller.enabled,
+  }
+}
+
+const useVirtualIO = (controller: VirtualConfiguredController): ConfiguredControllerIO => {
+  return {
+    emitter: {
+      send: (message: MidiMessage) => {
+        // console.log('Virtual send', message)
       },
-      listener: {
-        on: () => () => {
-          console.log('Virtual on')
-        },
+    },
+    listener: {
+      on: () => () => {
+        console.log('Virtual on')
       },
-      enabled: true,
-    }
-  } else {
-    return {
-      emitter: emptyEmitter(),
-      listener: emptyListener(),
-      enabled: true,
-    }
+    },
+    enabled: true,
   }
 }
 
 const useListeners = (): MidiListener => {
-  return emptyListener()
+  return MidiDeviceManager.emptyListener()
 }
 
 export const ConfiguredController = {
   useController,
   useControllers,
-  useIO,
+  useRealIO,
+  useVirtualIO,
   useListeners,
   useRealController,
   useMidiDeviceSelection,

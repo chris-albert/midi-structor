@@ -151,7 +151,7 @@ const instance = Reconciler({
     props: Props,
     rootContainer: Container,
     hostContext: HostContext,
-    internalHandle: ReactReconciler.OpaqueHandle,
+    internalHandle: ReactReconciler.OpaqueHandle
   ): Instance {
     log('createInstance', type, props, rootContainer, hostContext, internalHandle)
     const instance = typeInstance(type, props)
@@ -163,7 +163,7 @@ const instance = Reconciler({
     text: string,
     rootContainer: Container,
     hostContext: HostContext,
-    internalHandle: ReactReconciler.OpaqueHandle,
+    internalHandle: ReactReconciler.OpaqueHandle
   ): TextInstance {
     throw new Error('ReactMidi does not support text instances.')
   },
@@ -209,7 +209,7 @@ const instance = Reconciler({
     type: Type,
     props: Props,
     rootContainer: Container,
-    hostContext: HostContext,
+    hostContext: HostContext
   ): boolean {
     log('finalizeInitialChildren', instance, type, props, rootContainer, hostContext)
     return true
@@ -221,7 +221,7 @@ const instance = Reconciler({
     oldProps: Props,
     newProps: Props,
     rootContainer: Container,
-    hostContext: HostContext,
+    hostContext: HostContext
   ): UpdatePayload | null {
     log('prepareUpdate', instance, type, oldProps, newProps, rootContainer, hostContext)
     if (!_.isEqual(oldProps, newProps)) {
@@ -237,7 +237,7 @@ const instance = Reconciler({
     type: Type,
     prevProps: Props,
     nextProps: Props,
-    internalHandle: OpaqueHandle,
+    internalHandle: OpaqueHandle
   ): void {
     log('commitUpdate', instance, updatePayload, type, prevProps, nextProps)
     commit(updatePayload)
@@ -255,7 +255,7 @@ const instance = Reconciler({
   insertBefore(
     parentInstance: Instance,
     child: Instance | TextInstance,
-    beforeChild: Instance | TextInstance | SuspenseInstance,
+    beforeChild: Instance | TextInstance | SuspenseInstance
   ): void {
     log('insertBefore', parentInstance, child, beforeChild)
   },
