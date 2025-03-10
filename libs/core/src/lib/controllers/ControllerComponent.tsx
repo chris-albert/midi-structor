@@ -1,29 +1,17 @@
 import React from 'react'
-import { Midi } from '../midi/GlobalMidi'
 import { InfiniteBitsControllerComponent } from './InfiniteBitsControllerComponent'
 import { LaunchPadMiniMk3 } from './devices/LaunchPadMiniMk3'
-import { ProjectMidi } from '../project/ProjectMidi'
-import { ProjectHooks } from '../project/ProjectHooks'
+import { ConfiguredController } from './ConfiguredController'
 
-export type ControllerComponentProps = {}
+export type ControllerComponentProps = {
+  controller: ConfiguredController
+}
 
-export const ControllerComponent: React.FC<ControllerComponentProps> = ({}) => {
-  const emitter = Midi.useControllerEmitter()
-  const listener = Midi.useControllerListener()
-  const enabled = Midi.useControllerEnabled()
+export const ControllerComponent: React.FC<ControllerComponentProps> = ({ controller }) => {
+  const io = ConfiguredController.useIO(controller)
 
-  ProjectMidi.useProjectListener()
-
-  ProjectHooks.useOnStatusChange((status) => {
-    if (status === 'importing') {
-      console.log('Importing new project.')
-    } else if (status === 'done') {
-      console.log(`Successfully imported project!`)
-    }
-  })
-
-  if (enabled) {
-    return <InfiniteBitsControllerComponent controller={LaunchPadMiniMk3(emitter, listener)} />
+  if (io.enabled) {
+    return <InfiniteBitsControllerComponent controller={LaunchPadMiniMk3(io.emitter, io.listener)} />
   } else {
     return null
   }

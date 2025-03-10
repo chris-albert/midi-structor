@@ -1,5 +1,5 @@
 import React from 'react'
-import { MidiInput, MidiMessageWithRaw, Midi } from '@midi-structor/core'
+import { MidiInput, MidiMessageWithRaw, Midi, ConfiguredController } from '@midi-structor/core'
 import { Box, Button, Card, CardContent, Grid } from '@mui/material'
 import _ from 'lodash'
 import { MidiMessageDetail } from '../components/MidiMessageDetail'
@@ -10,7 +10,7 @@ export const MonitorPage: React.FC<MonitorPageProps> = () => {
   const maxMessages = 100
 
   const dawListener = Midi.useDawListener()
-  const controllerListener = Midi.useControllerListener()
+  const controllerListener = ConfiguredController.useListeners()
   const agentListener = Midi.useAgentListener()
   const [messages, setMessages] = React.useState<Array<[MidiMessageWithRaw, number]>>([])
   const [totalCount, setTotalCount] = React.useState(0)

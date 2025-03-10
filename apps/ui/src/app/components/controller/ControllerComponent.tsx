@@ -66,7 +66,7 @@ export const ControllerComponent: React.FC<ControllerComponentProps> = ({ contro
       </Box>
       <Divider />
       {controller.type === 'virtual' ? (
-        <VirtualControllerComponent />
+        <VirtualControllerComponent controller={controller.controller} />
       ) : (
         <RealControllerComponent controllerAtom={controllerAtom as PrimitiveAtom<RealConfiguredController>} />
       )}

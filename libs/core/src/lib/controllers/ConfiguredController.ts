@@ -6,7 +6,8 @@ import { Option } from 'effect'
 import React from 'react'
 import { focusAtom } from 'jotai-optics'
 import { OpticFor_ } from 'optics-ts'
-import { Midi, MidiDeviceSelection } from '../midi/GlobalMidi'
+import { Midi, MidiDeviceSelection, MidiEmitter, MidiListener } from '../midi/GlobalMidi'
+import { emptyEmitter, emptyListener } from '../midi/MidiDeviceManager'
 
 export type ConfiguredControllerType = 'virtual' | 'real'
 
@@ -101,35 +102,22 @@ const useController = (controller: PrimitiveAtom<ConfiguredController>) => {
     enabled,
     setEnabled,
     remove,
+    controller: controllerValue,
   }
 }
 
 const useRealController = (controller: PrimitiveAtom<RealConfiguredController>) => {
-  const baesController = useController(controller as PrimitiveAtom<ConfiguredController>)
-  const controllerValue = useAtomValue(controller)
-  const [name] = useAtom(useSafeFocus(controller, 'name'))
-  const [type, setType] = useAtom(useSafeFocus(controller, 'type'))
-  const [enabled, setEnabled] = useAtom(useSafeFocus(controller, 'enabled'))
+  const baseController = useController(controller as PrimitiveAtom<ConfiguredController>)
   const selected = useSafeFocus(controller, 'selected')
   const [input, setInput] = useAtom(useSafeFocus(selected, 'input'))
   const [output, setOutput] = useAtom(useSafeFocus(selected, 'output'))
-  const removeController = useRemoveController()
-
-  const remove = () => {
-    removeController(controllerValue)
-  }
 
   return {
-    name,
-    type,
-    setType,
-    enabled,
-    setEnabled,
+    ...baseController,
     input,
     setInput,
     output,
     setOutput,
-    remove,
   }
 }
 
@@ -161,8 +149,29 @@ const useMidiDeviceSelection = (
   return { input, output }
 }
 
+export type ConfiguredControllerIO = {
+  emitter: MidiEmitter
+  listener: MidiListener
+  enabled: boolean
+}
+
+const useIO = (controller: ConfiguredController): ConfiguredControllerIO => {
+  return {
+    emitter: emptyEmitter(),
+    listener: emptyListener(),
+    enabled: true,
+  }
+}
+
+const useListeners = (): MidiListener => {
+  return emptyListener()
+}
+
 export const ConfiguredController = {
   useController,
+  useControllers,
+  useIO,
+  useListeners,
   useRealController,
   useMidiDeviceSelection,
   useControllerName,

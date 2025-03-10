@@ -1,8 +1,8 @@
-import { ReactControllerApp } from './ReactControllerApp'
+import { ReactControllersApp } from './ReactControllersApp'
 
 const ControllerListener = () => {
-  console.log('Controller Init')
-  ReactControllerApp()
+  console.log('Controllers Init')
+  ReactControllersApp()
 }
 
 let isInit = false

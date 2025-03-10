@@ -2,15 +2,15 @@ import React from 'react'
 import { Box } from '@mui/material'
 import { ControllerGridComponent } from './ControllerGridComponent'
 import { LaunchPadMiniMk3UI } from './LaunchPadMiniMk3UI'
-import { Midi, LaunchPadMiniMk3 } from '@midi-structor/core'
+import { LaunchPadMiniMk3, ConfiguredController } from '@midi-structor/core'
 
-export type LaunchpadMiniComponentProps = {}
+export type LaunchpadMiniComponentProps = {
+  controller: ConfiguredController
+}
 
-export const LaunchpadMiniComponent: React.FC<LaunchpadMiniComponentProps> = ({}) => {
-  const emitter = Midi.useControllerEmitter()
-  const listener = Midi.useControllerListener()
-  const controller = LaunchPadMiniMk3(emitter, listener)
-  const controllerUI = LaunchPadMiniMk3UI(controller)
+export const LaunchpadMiniComponent: React.FC<LaunchpadMiniComponentProps> = ({ controller }) => {
+  const io = ConfiguredController.useIO(controller)
+  const controllerUI = LaunchPadMiniMk3UI(LaunchPadMiniMk3(io.emitter, io.listener))
 
   return (
     <Box

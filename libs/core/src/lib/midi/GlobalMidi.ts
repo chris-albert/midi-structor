@@ -66,15 +66,6 @@ const atoms = {
       output: selectedAtom('daw-midi-output-selected'),
     },
   },
-  controller: {
-    enabled: AtomStorage.atom<boolean>('controller-enabled', false),
-    emitter: atom<MidiEmitter>(emptyEmitter()),
-    listener: atom<MidiListener>(EventEmitter<MidiEventRecord>()),
-    selected: {
-      input: selectedAtom('controller-midi-input-selected'),
-      output: selectedAtom('controller-midi-output-selected'),
-    },
-  },
   agent: {
     emitter: atom<MidiEmitter>(emptyEmitter()),
     listener: atom<MidiListener>(EventEmitter<MidiEventRecord>()),
@@ -103,8 +94,7 @@ const onSelectedOutput = (selection: MidiSelection) => {
   )
 }
 
-const getByType = (type: MidiType): MidiSelection =>
-  type === 'daw' ? atoms.daw : type === 'controller' ? atoms.controller : atoms.agent
+const getByType = (type: MidiType): MidiSelection => (type === 'daw' ? atoms.daw : atoms.agent)
 
 const getSelectedAtom = (type: MidiType, deviceType: MidiDeviceType): PrimitiveAtom<Option.Option<string>> =>
   deviceType === 'input' ? getByType(type).selected.input : getByType(type).selected.output
@@ -126,14 +116,6 @@ const setSelected = (name: Option.Option<string>, midiType: MidiType, deviceType
 
 const getSelected = (midiType: MidiType, deviceType: MidiDeviceType) =>
   store.get(getSelectedAtom(midiType, deviceType))
-
-const getControllerEnabled = () => {
-  return store.get(atoms.controller.enabled)
-}
-
-const setControllerEnabled = (enabled: boolean) => {
-  return store.set(atoms.controller.enabled, enabled)
-}
 
 const useMidiDevices = (midiType: MidiType, deviceType: MidiDeviceType): MidiDeviceSelection => {
   const manager = useAtomValue(atoms.deviceManager)
@@ -175,15 +157,10 @@ export const Midi = {
   useMidiAllowed,
   setSelected,
   getSelected,
-  getControllerEnabled,
-  setControllerEnabled,
   useDeviceManager,
   //Hooks
-  useControllerEnabled: () => useAtomValue(atoms.controller.enabled),
   useDawEmitter: () => useAtomValue(atoms.daw.emitter),
-  useControllerEmitter: () => useAtomValue(atoms.controller.emitter),
   useDawListener: () => useAtomValue(atoms.daw.listener),
-  useControllerListener: () => useAtomValue(atoms.controller.listener),
   useAgentListener: () => useAtomValue(atoms.agent.listener),
   useAgentEmitter: () => useAtomValue(atoms.agent.emitter),
   //Temporary exports
