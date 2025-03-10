@@ -1,6 +1,5 @@
 import React from 'react'
 import { Box } from '@mui/material'
-import { Midi } from '@midi-structor/core'
 import { ControllerPad, ControllerUI } from './ControllerUI'
 
 type ControllerGridComponentProps = {

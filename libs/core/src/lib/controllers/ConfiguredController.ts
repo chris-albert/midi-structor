@@ -8,6 +8,7 @@ import { focusAtom } from 'jotai-optics'
 import { OpticFor_ } from 'optics-ts'
 import { Midi, MidiDeviceSelection, MidiEmitter, MidiListener } from '../midi/GlobalMidi'
 import { emptyEmitter, emptyListener } from '../midi/MidiDeviceManager'
+import { MidiMessage } from '../midi/MidiMessage'
 
 export type ConfiguredControllerType = 'virtual' | 'real'
 
@@ -156,10 +157,26 @@ export type ConfiguredControllerIO = {
 }
 
 const useIO = (controller: ConfiguredController): ConfiguredControllerIO => {
-  return {
-    emitter: emptyEmitter(),
-    listener: emptyListener(),
-    enabled: true,
+  if (controller.type === 'virtual') {
+    return {
+      emitter: {
+        send: (message: MidiMessage) => {
+          // console.log('Virtual send', message)
+        },
+      },
+      listener: {
+        on: () => () => {
+          console.log('Virtual on')
+        },
+      },
+      enabled: true,
+    }
+  } else {
+    return {
+      emitter: emptyEmitter(),
+      listener: emptyListener(),
+      enabled: true,
+    }
   }
 }
 
