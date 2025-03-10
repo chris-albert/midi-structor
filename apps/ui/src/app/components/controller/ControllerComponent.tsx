@@ -1,5 +1,5 @@
 import React from 'react'
-import { ConfiguredController, ConfiguredControllerType } from '@midi-structor/core'
+import { ConfiguredController, ConfiguredControllerType, RealConfiguredController } from '@midi-structor/core'
 import { Box, Button, Divider, Typography } from '@mui/material'
 import IconButton from '@mui/material/IconButton'
 import DeleteIcon from '@mui/icons-material/Delete'
@@ -68,7 +68,7 @@ export const ControllerComponent: React.FC<ControllerComponentProps> = ({ contro
       {controller.type === 'virtual' ? (
         <VirtualControllerComponent />
       ) : (
-        <RealControllerComponent controllerAtom={controllerAtom} />
+        <RealControllerComponent controllerAtom={controllerAtom as PrimitiveAtom<RealConfiguredController>} />
       )}
     </Box>
   )

@@ -10,15 +10,24 @@ import { Midi, MidiDeviceSelection } from '../midi/GlobalMidi'
 
 export type ConfiguredControllerType = 'virtual' | 'real'
 
-export type ConfiguredController = {
+export type ConfiguredControllerBase = {
   name: string
-  type: ConfiguredControllerType
   enabled: boolean
+}
+
+export type RealConfiguredController = {
+  type: 'real'
   selected: {
     input: Option.Option<string>
     output: Option.Option<string>
   }
-}
+} & ConfiguredControllerBase
+
+export type VirtualConfiguredController = {
+  type: 'virtual'
+} & ConfiguredControllerBase
+
+export type ConfiguredController = RealConfiguredController | VirtualConfiguredController
 
 export type ConfiguredControllers = Array<ConfiguredController>
 
@@ -26,10 +35,6 @@ const defaultConfiguredController = (name: string): ConfiguredController => ({
   name,
   type: 'virtual',
   enabled: false,
-  selected: {
-    input: Option.none(),
-    output: Option.none(),
-  },
 })
 
 const atoms = {
@@ -83,6 +88,28 @@ const useController = (controller: PrimitiveAtom<ConfiguredController>) => {
   const [name] = useAtom(useSafeFocus(controller, 'name'))
   const [type, setType] = useAtom(useSafeFocus(controller, 'type'))
   const [enabled, setEnabled] = useAtom(useSafeFocus(controller, 'enabled'))
+  const removeController = useRemoveController()
+
+  const remove = () => {
+    removeController(controllerValue)
+  }
+
+  return {
+    name,
+    type,
+    setType,
+    enabled,
+    setEnabled,
+    remove,
+  }
+}
+
+const useRealController = (controller: PrimitiveAtom<RealConfiguredController>) => {
+  const baesController = useController(controller as PrimitiveAtom<ConfiguredController>)
+  const controllerValue = useAtomValue(controller)
+  const [name] = useAtom(useSafeFocus(controller, 'name'))
+  const [type, setType] = useAtom(useSafeFocus(controller, 'type'))
+  const [enabled, setEnabled] = useAtom(useSafeFocus(controller, 'enabled'))
   const selected = useSafeFocus(controller, 'selected')
   const [input, setInput] = useAtom(useSafeFocus(selected, 'input'))
   const [output, setOutput] = useAtom(useSafeFocus(selected, 'output'))
@@ -112,9 +139,9 @@ export type ControllerMidiDeviceSelections = {
 }
 
 const useMidiDeviceSelection = (
-  controllerAtom: PrimitiveAtom<ConfiguredController>
+  controllerAtom: PrimitiveAtom<RealConfiguredController>
 ): ControllerMidiDeviceSelections => {
-  const controller = useController(controllerAtom)
+  const controller = useRealController(controllerAtom)
   const manager = Midi.useDeviceManager()
 
   const input: MidiDeviceSelection = {
@@ -136,6 +163,7 @@ const useMidiDeviceSelection = (
 
 export const ConfiguredController = {
   useController,
+  useRealController,
   useMidiDeviceSelection,
   useControllerName,
   useAddController,

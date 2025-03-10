@@ -1,15 +1,15 @@
 import React from 'react'
 import { Box, Card, CardContent, CardHeader, FormControlLabel, Switch } from '@mui/material'
 import { ControllerBrowserModeComponent } from './ControllerBrowserModeComponent'
-import { ConfiguredController, Midi } from '@midi-structor/core'
+import { ConfiguredController, RealConfiguredController } from '@midi-structor/core'
 import { PrimitiveAtom } from 'jotai/index'
 
 export type ControllerMidiComponentProps = {
-  controllerAtom: PrimitiveAtom<ConfiguredController>
+  controllerAtom: PrimitiveAtom<RealConfiguredController>
 }
 
 export const ControllerMidiComponent: React.FC<ControllerMidiComponentProps> = ({ controllerAtom }) => {
-  const controller = ConfiguredController.useController(controllerAtom)
+  const controller = ConfiguredController.useRealController(controllerAtom)
   const onEnabled = (enabled: boolean) => {
     controller.setEnabled(enabled)
   }
