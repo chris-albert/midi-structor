@@ -48,10 +48,10 @@ const atoms = {
   controllers: atomFamily((name: string) =>
     AtomStorage.atom<ConfiguredControllers>(`controllers-${name}`, [])
   ),
-  virtualEventEmitter: atomFamily((name: string) => {
-    console.log('Creating virtual event emitter', name)
-    return atom<VirtualStore>({})
-  }),
+  virtualStore: atomFamily((name: string) => atom<VirtualStore>({})),
+  virtualListener: atomFamily((name: string) =>
+    atom<EventEmitter<MidiEventRecord>>(EventEmitter<MidiEventRecord>())
+  ),
 }
 
 const useControllers = () => {
@@ -179,11 +179,11 @@ const useRealIO = (controller: RealConfiguredController): ConfiguredControllerIO
 }
 
 const useVirtualStore = (controller: VirtualConfiguredController) => {
-  return useAtomValue(atoms.virtualEventEmitter(controller.name))
+  return useAtomValue(atoms.virtualStore(controller.name))
 }
 
 const useVirtualSetStore = (controller: VirtualConfiguredController) => {
-  const setStore = useSetAtom(atoms.virtualEventEmitter(controller.name))
+  const setStore = useSetAtom(atoms.virtualStore(controller.name))
 
   const onMessage = (message: MidiMessage) => {
     if (message.type === 'sysex') {
@@ -198,21 +198,20 @@ const useVirtualSetStore = (controller: VirtualConfiguredController) => {
   }
 }
 
+const useVirtualListener = (controller: VirtualConfiguredController) =>
+  useAtomValue(atoms.virtualListener(controller.name))
+
 const useVirtualIO = (controller: VirtualConfiguredController): ConfiguredControllerIO => {
   const store = useVirtualSetStore(controller)
+  const listener = useVirtualListener(controller)
 
   return {
     emitter: {
       send: (message: MidiMessage) => {
         store.onMessage(message)
-        // emitter.listener.emit({ raw: [] as any, time: new Date(), ...message })
       },
     },
-    listener: {
-      on: (e, cb) => () => {
-        // emitter.emitter.on(e, cb)
-      },
-    },
+    listener,
     enabled: controller.enabled,
   }
 }
@@ -227,6 +226,7 @@ export const ConfiguredController = {
   useRealIO,
   useVirtualIO,
   useVirtualStore,
+  useVirtualListener,
   useListeners,
   useRealController,
   useMidiDeviceSelection,
