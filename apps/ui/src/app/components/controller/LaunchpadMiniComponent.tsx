@@ -2,10 +2,10 @@ import React from 'react'
 import { Box } from '@mui/material'
 import { ControllerGridComponent } from './ControllerGridComponent'
 import { LaunchPadMiniMk3UI } from './LaunchPadMiniMk3UI'
-import { ConfiguredController } from '@midi-structor/core'
+import { VirtualConfiguredController } from '@midi-structor/core'
 
 export type LaunchpadMiniComponentProps = {
-  controller: ConfiguredController
+  controller: VirtualConfiguredController
 }
 
 export const LaunchpadMiniComponent: React.FC<LaunchpadMiniComponentProps> = ({ controller }) => {
@@ -20,7 +20,10 @@ export const LaunchpadMiniComponent: React.FC<LaunchpadMiniComponentProps> = ({ 
         p: 2,
       }}>
       <Box>
-        <ControllerGridComponent controller={controllerUI} />
+        <ControllerGridComponent
+          controllerUI={controllerUI}
+          controller={controller}
+        />
       </Box>
     </Box>
   )

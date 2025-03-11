@@ -1,7 +1,7 @@
 const fromRGB = (red: number, green: number, blue: number): Color =>
   0x1000000 + ((red << 16) | (green << 8) | (blue << 0))
 
-const toHex = (color: Color): string => color.toString(16)
+const toHex = (color: Color): string => color.toString(16).slice(1)
 
 const toRGB = (color: Color): [number, number, number] => [
   (color >> 16) & 255,

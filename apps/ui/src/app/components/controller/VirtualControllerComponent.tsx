@@ -1,10 +1,10 @@
 import React from 'react'
 import { Box } from '@mui/material'
 import { LaunchpadMiniComponent } from './LaunchpadMiniComponent'
-import { ConfiguredController } from '@midi-structor/core'
+import { VirtualConfiguredController } from '@midi-structor/core'
 
 export type VirtualControllerComponentProps = {
-  controller: ConfiguredController
+  controller: VirtualConfiguredController
 }
 
 export const VirtualControllerComponent: React.FC<VirtualControllerComponentProps> = ({ controller }) => {

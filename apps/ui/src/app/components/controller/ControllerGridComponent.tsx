@@ -1,16 +1,36 @@
 import React from 'react'
 import { Box } from '@mui/material'
 import { ControllerPad, ControllerUI } from './ControllerUI'
+import { Color, ConfiguredController, MidiTarget, VirtualConfiguredController } from '@midi-structor/core'
 
-type ControllerGridComponentProps = {
-  controller: ControllerUI
+type PadWithState = {
+  pad: ControllerPad
+  color: number
 }
 
-export const ControllerGridComponent: React.FC<ControllerGridComponentProps> = ({ controller }) => {
+type ControllerGridComponentProps = {
+  controllerUI: ControllerUI
+  controller: VirtualConfiguredController
+}
+
+export const ControllerGridComponent: React.FC<ControllerGridComponentProps> = ({
+  controllerUI,
+  controller,
+}) => {
   const buttonSize = 75
+  const padStore = ConfiguredController.useVirtualStore(controller)
+
+  const pads: Array<Array<PadWithState>> = React.useMemo(() => {
+    return controllerUI.pads.map((padRow, ri) =>
+      padRow.map((pad, ci) => ({
+        pad,
+        color: padStore[MidiTarget.toValue(pad.target)] || 0,
+      }))
+    )
+  }, [padStore, controllerUI.pads])
 
   const onClick = (pad: ControllerPad) => {
-    console.log('pad', pad)
+    const message = MidiTarget.toMessage(pad.target, 127)
   }
 
   return (
@@ -20,7 +40,7 @@ export const ControllerGridComponent: React.FC<ControllerGridComponentProps> = (
         gap: '1rem',
         flexDirection: 'column',
       }}>
-      {controller.pads.map((padRow, ri) => (
+      {pads.map((padRow, ri) => (
         <Box
           sx={{
             display: 'flex',
@@ -33,15 +53,16 @@ export const ControllerGridComponent: React.FC<ControllerGridComponentProps> = (
               sx={{
                 width: `${buttonSize}px`,
                 height: `${buttonSize}px`,
+                backgroundColor: `#${Color.toHex(pad.color)}`,
                 border: '1px solid white',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 cursor: 'pointer',
               }}
-              onClick={() => onClick(pad)}
+              onClick={() => onClick(pad.pad)}
               key={ci}>
-              {pad.content}
+              {pad.pad.content}
             </Box>
           ))}
         </Box>

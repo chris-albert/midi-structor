@@ -1,5 +1,5 @@
 import { atomFamily, splitAtom } from 'jotai/utils'
-import { useAtomValue, useAtom, PrimitiveAtom } from 'jotai'
+import { useAtomValue, useAtom, PrimitiveAtom, atom, useSetAtom } from 'jotai'
 import { AtomStorage } from '../storage/AtomStorage'
 import { ProjectMidi } from '../project/ProjectMidi'
 import { Option, pipe } from 'effect'
@@ -9,6 +9,9 @@ import { OpticFor_ } from 'optics-ts'
 import { Midi, MidiDeviceSelection, MidiEmitter, MidiListener } from '../midi/GlobalMidi'
 import { MidiDeviceManager } from '../midi/MidiDeviceManager'
 import { MidiMessage } from '../midi/MidiMessage'
+import { EventEmitter } from '../EventEmitter'
+import { MidiEventRecord } from '../midi/MidiDevice'
+import { Color } from './Color'
 
 export type ConfiguredControllerType = 'virtual' | 'real'
 
@@ -36,13 +39,19 @@ export type ConfiguredControllers = Array<ConfiguredController>
 const defaultConfiguredController = (name: string): ConfiguredController => ({
   name,
   type: 'virtual',
-  enabled: false,
+  enabled: true,
 })
+
+export type VirtualStore = Record<string, Color>
 
 const atoms = {
   controllers: atomFamily((name: string) =>
     AtomStorage.atom<ConfiguredControllers>(`controllers-${name}`, [])
   ),
+  virtualEventEmitter: atomFamily((name: string) => {
+    console.log('Creating virtual event emitter', name)
+    return atom<VirtualStore>({})
+  }),
 }
 
 const useControllers = () => {
@@ -169,19 +178,42 @@ const useRealIO = (controller: RealConfiguredController): ConfiguredControllerIO
   }
 }
 
+const useVirtualStore = (controller: VirtualConfiguredController) => {
+  return useAtomValue(atoms.virtualEventEmitter(controller.name))
+}
+
+const useVirtualSetStore = (controller: VirtualConfiguredController) => {
+  const setStore = useSetAtom(atoms.virtualEventEmitter(controller.name))
+
+  const onMessage = (message: MidiMessage) => {
+    if (message.type === 'sysex') {
+      const [target, red, green, blue] = message.body.slice(6)
+      const color = Color.fromRGB(red * 2, green * 2, blue * 2)
+      setStore((s) => ({ ...s, [`${target}`]: color }))
+    }
+  }
+
+  return {
+    onMessage,
+  }
+}
+
 const useVirtualIO = (controller: VirtualConfiguredController): ConfiguredControllerIO => {
+  const store = useVirtualSetStore(controller)
+
   return {
     emitter: {
       send: (message: MidiMessage) => {
-        // console.log('Virtual send', message)
+        store.onMessage(message)
+        // emitter.listener.emit({ raw: [] as any, time: new Date(), ...message })
       },
     },
     listener: {
-      on: () => () => {
-        console.log('Virtual on')
+      on: (e, cb) => () => {
+        // emitter.emitter.on(e, cb)
       },
     },
-    enabled: true,
+    enabled: controller.enabled,
   }
 }
 
@@ -194,6 +226,7 @@ export const ConfiguredController = {
   useControllers,
   useRealIO,
   useVirtualIO,
+  useVirtualStore,
   useListeners,
   useRealController,
   useMidiDeviceSelection,

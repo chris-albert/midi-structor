@@ -22,7 +22,6 @@ export const InfiniteBitsControllerComponent: React.FC<InfiniteBitsControllerCom
   controller,
   name,
 }) => {
-  console.log('InfiniteBitsControllerComponent')
   return (
     <controller
       model={controller}
@@ -34,12 +33,12 @@ export const InfiniteBitsControllerComponent: React.FC<InfiniteBitsControllerCom
       <BeatsWidget targets={MidiTarget.notes({ from: 81, to: 88 })} />
       <TimeSigNoteCountWidget targets={MidiTarget.notes({ from: 61, to: 68 })} />
       <TimeSigNoteLengthWidget targets={MidiTarget.notes({ from: 51, to: 58 })} />
-      <SongsWidget
-        targets={MidiTarget.notes({ from: 11, to: 18 })}
-        trackName='Songs'
-        fromClip={0}
-        toClip={7}
-      />
+      {/*<SongsWidget*/}
+      {/*  targets={MidiTarget.notes({ from: 11, to: 18 })}*/}
+      {/*  trackName='Songs'*/}
+      {/*  fromClip={0}*/}
+      {/*  toClip={7}*/}
+      {/*/>*/}
       <BarTrackerWidget
         targets={MidiTarget.notes({ from: 71, to: 78 })}
         trackName='Bars'
@@ -49,11 +48,11 @@ export const InfiniteBitsControllerComponent: React.FC<InfiniteBitsControllerCom
         trackName='Parts'
         parentTrackName='Songs'
       />
-      <KeyBoardWidget
-        topTargets={MidiTarget.notes({ from: 31, to: 38 })}
-        bottomTargets={MidiTarget.notes({ from: 21, to: 28 })}
-        trackName='Notes'
-      />
+      {/*<KeyBoardWidget*/}
+      {/*  topTargets={MidiTarget.notes({ from: 31, to: 38 })}*/}
+      {/*  bottomTargets={MidiTarget.notes({ from: 21, to: 28 })}*/}
+      {/*  trackName='Notes'*/}
+      {/*/>*/}
     </controller>
   )
 }
