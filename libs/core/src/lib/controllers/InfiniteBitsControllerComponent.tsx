@@ -15,14 +15,18 @@ import { Controller } from './Controller'
 
 type InfiniteBitsControllerComponentProps = {
   controller: Controller
+  name: string
 }
 
 export const InfiniteBitsControllerComponent: React.FC<InfiniteBitsControllerComponentProps> = ({
   controller,
+  name,
 }) => {
   console.log('InfiniteBitsControllerComponent')
   return (
-    <controller model={controller}>
+    <controller
+      model={controller}
+      name={name}>
       <StopWidget target={MidiTarget.cc(19)} />
       <PlayWidget target={MidiTarget.cc(29)} />
       <PlayStopWidget target={MidiTarget.cc(89)} />

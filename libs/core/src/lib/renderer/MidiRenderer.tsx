@@ -5,7 +5,7 @@ import { ReactNode } from 'react'
 
 const render = (node: ReactNode) => {
   console.log('Rendering MidiReconciler')
-  const info = { root: undefined }
+  const info = { controllers: [] }
   const container = MidiReconciler.instance.createContainer(
     info,
     0,
@@ -14,7 +14,7 @@ const render = (node: ReactNode) => {
     null,
     'Midi',
     console.error,
-    null,
+    null
   )
   MidiReconciler.instance.updateContainer(node, container, null, () => {
     console.log('Done rendering wooohoooo', info)

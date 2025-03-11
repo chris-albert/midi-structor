@@ -15,7 +15,12 @@ const RealControllerComponent: React.FC<RealControllerComponentProps> = ({ contr
   const io = ConfiguredController.useRealIO(controller)
 
   if (io.enabled) {
-    return <InfiniteBitsControllerComponent controller={LaunchPadMiniMk3(io.emitter, io.listener)} />
+    return (
+      <InfiniteBitsControllerComponent
+        controller={LaunchPadMiniMk3(io.emitter, io.listener)}
+        name={controller.name}
+      />
+    )
   } else {
     return null
   }
@@ -29,7 +34,12 @@ const VirtualControllerComponent: React.FC<VirtualControllerComponentProps> = ({
   const io = ConfiguredController.useVirtualIO(controller)
 
   if (io.enabled) {
-    return <InfiniteBitsControllerComponent controller={LaunchPadMiniMk3(io.emitter, io.listener)} />
+    return (
+      <InfiniteBitsControllerComponent
+        controller={LaunchPadMiniMk3(io.emitter, io.listener)}
+        name={controller.name}
+      />
+    )
   } else {
     return null
   }

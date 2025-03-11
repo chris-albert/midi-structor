@@ -30,24 +30,27 @@ export type PadProps = {
 type ControllerProps = {
   children: Array<Pad> | Pad | null
   model: ControllerModel
+  name: string
   enabled?: boolean
 }
 
 type Pad = {
   type: 'pad'
   props: PadProps
+  controller?: Controller
 }
 
 type Controller = {
   type: 'controller'
   props: ControllerProps
-  pads: Record<string, PadProps>
+  manager: ControllerManager
+  listener: ListenersManager
 }
 
 type Type = 'pad' | 'controller'
 type Props = PadProps | ControllerProps
 type Container = {
-  root: Controller | undefined
+  controllers: Array<Controller>
 }
 
 type Instance = Pad | Controller
@@ -55,27 +58,28 @@ type Instance = Pad | Controller
 type TextInstance = never
 type ChildSet = unknown
 type PublicInstance = unknown
-type HostContext = {
-  model: ControllerModel | undefined
-}
+type HostContext = {}
 type TimeoutHandle = unknown
 type UpdatePayload = Instance
 type SuspenseInstance = never
 
-const GlobalControllerManager = () => {
-  let controller: ControllerModel = ControllerModel.empty
+type ControllerManager = {
+  remove: () => void
+  render: (pads: Array<PadProps>) => void
+}
+
+const ControllerManager = (
+  controller: ControllerModel,
+  lisenersManager: ListenersManager
+): ControllerManager => {
+  controller.init()
+  controller.clear()
+  controller.on(lisenersManager.on)
 
   return {
     remove() {
       controller.clear()
       controller.off()
-      controller = ControllerModel.empty
-    },
-    set(c: ControllerModel) {
-      controller = c
-      controller.init()
-      controller.clear()
-      controller.on(Listeners.on)
     },
     render(pads: Array<PadProps>) {
       controller.render(pads)
@@ -83,33 +87,48 @@ const GlobalControllerManager = () => {
   }
 }
 
-const GlobalController = GlobalControllerManager()
-
-const commit = (instance: Instance) => {
+const commit = (instance: Instance, props: Props) => {
   if (instance.type === 'pad') {
-    GlobalController.render([instance.props])
+    const padProps = props as PadProps
+    instance.controller?.manager.render([padProps])
   } else if (instance.type === 'controller') {
   }
 }
 
-const typeInstance = (type: Type, props: Props): Instance => {
+const initInstance = (type: Type, props: Props): Instance => {
   if (type === 'pad') {
     return {
       type: 'pad',
       props: props as PadProps,
+      controller: undefined,
     }
   } else if (type === 'controller') {
+    const controllerProps = props as ControllerProps
+    const listener = ListenersManager()
     return {
       type: 'controller',
-      props: props as ControllerProps,
-      pads: {},
+      props: controllerProps,
+      manager: ControllerManager(controllerProps.model, listener),
+      listener,
     }
   } else {
     throw new Error(`Invalid React MIDI node ${type}`)
   }
 }
 
-const ListenersManager = () => {
+const appendPad = (controller: Controller, pad: Pad) => {
+  pad.controller = controller
+  if (pad.props.onClick !== undefined) {
+    controller.listener.add(pad.props.target, pad.props.onClick)
+  }
+}
+
+type ListenersManager = {
+  add: (target: MidiTarget, f: () => void) => void
+  on: (message: MidiMessage) => void
+}
+
+const ListenersManager = (): ListenersManager => {
   const listeners: Record<string, () => void> = {}
 
   return {
@@ -127,24 +146,6 @@ const ListenersManager = () => {
   }
 }
 
-const Listeners = ListenersManager()
-
-const initInstance = (instance: Instance) => {
-  if (instance.type === 'controller') {
-    GlobalController.set(instance.props.model)
-  } else if (instance.type === 'pad') {
-    if (instance.props.onClick !== undefined) {
-      Listeners.add(instance.props.target, instance.props.onClick)
-    }
-  }
-}
-
-const addInstance = (parentInstance: Instance, child: Instance) => {
-  if (parentInstance.type === 'controller' && child.type === 'pad') {
-    parentInstance.pads[MidiTarget.toKey(child.props.target)] = child.props
-  }
-}
-
 const instance = Reconciler({
   createInstance(
     type: Type,
@@ -153,66 +154,23 @@ const instance = Reconciler({
     hostContext: HostContext,
     internalHandle: ReactReconciler.OpaqueHandle
   ): Instance {
-    log('createInstance', type, props, rootContainer, hostContext, internalHandle)
-    const instance = typeInstance(type, props)
-    initInstance(instance)
-    return instance
-  },
-
-  createTextInstance(
-    text: string,
-    rootContainer: Container,
-    hostContext: HostContext,
-    internalHandle: ReactReconciler.OpaqueHandle
-  ): TextInstance {
-    throw new Error('ReactMidi does not support text instances.')
+    log('createInstance', type, props, rootContainer, hostContext)
+    initInstance(type, props)
+    return initInstance(type, props)
   },
 
   removeChildFromContainer(container: Container, child: Instance | TextInstance | SuspenseInstance): void {
     log('removeChildFromContainer', container, child)
     if (child.type === 'controller') {
-      GlobalController.remove()
+      child.manager.remove()
     }
-  },
-
-  appendChild(parentInstance: Instance, child: Instance | TextInstance): void {
-    log('appendChild', parentInstance, child)
-  },
-
-  appendChildToContainer(container: Container, child: Instance | TextInstance): void {
-    log('appendChildToContainer', container, child)
-    if (child.type === 'controller') {
-      container.root = child
-    }
-  },
-
-  appendChildToContainerChildSet(childSet: ChildSet, child: Instance | TextInstance): void {
-    log('appendChildToContainerChildSet', childSet, child)
   },
 
   appendInitialChild(parentInstance: Instance, child: Instance | TextInstance): void {
     log('appendInitialChild', parentInstance, child)
-    // addInstance(parentInstance, child)
-  },
-
-  getChildHostContext(parentHostContext: HostContext, type: Type, rootContainer: Container): HostContext {
-    log('getChildHostContext', parentHostContext, type, rootContainer)
-    return parentHostContext
-  },
-
-  finalizeContainerChildren(container: Container, newChildren: ChildSet): void {
-    log('finalizeContainerChildren')
-  },
-
-  finalizeInitialChildren(
-    instance: Instance,
-    type: Type,
-    props: Props,
-    rootContainer: Container,
-    hostContext: HostContext
-  ): boolean {
-    log('finalizeInitialChildren', instance, type, props, rootContainer, hostContext)
-    return true
+    if (parentInstance.type === 'controller' && child.type === 'pad') {
+      appendPad(parentInstance, child)
+    }
   },
 
   prepareUpdate(
@@ -225,7 +183,7 @@ const instance = Reconciler({
   ): UpdatePayload | null {
     log('prepareUpdate', instance, type, oldProps, newProps, rootContainer, hostContext)
     if (!_.isEqual(oldProps, newProps)) {
-      return typeInstance(type, newProps)
+      return instance
     } else {
       return null
     }
@@ -240,12 +198,66 @@ const instance = Reconciler({
     internalHandle: OpaqueHandle
   ): void {
     log('commitUpdate', instance, updatePayload, type, prevProps, nextProps)
-    commit(updatePayload)
+    commit(updatePayload, nextProps)
   },
 
   commitMount(instance: Instance, type: Type, props: Props, internalInstanceHandle: OpaqueHandle): void {
     log('commitMount', instance, type, props)
-    commit(instance)
+    commit(instance, props)
+  },
+
+  appendChildToContainer(container: Container, child: Instance | TextInstance): void {
+    log('appendChildToContainer', container, child)
+    if (child.type === 'controller') {
+      container.controllers.push(child)
+    }
+  },
+
+  /**
+   * No use under here
+   */
+
+  getRootHostContext(rootContainer: Container): HostContext | null {
+    log('getRootHostContext', rootContainer)
+
+    return {}
+  },
+
+  getChildHostContext(parentHostContext: HostContext, type: Type, rootContainer: Container): HostContext {
+    log('getChildHostContext', parentHostContext, type, rootContainer)
+    return parentHostContext
+  },
+
+  createTextInstance(
+    text: string,
+    rootContainer: Container,
+    hostContext: HostContext,
+    internalHandle: ReactReconciler.OpaqueHandle
+  ): TextInstance {
+    throw new Error('ReactMidi does not support text instances.')
+  },
+
+  finalizeContainerChildren(container: Container, newChildren: ChildSet): void {
+    log('finalizeContainerChildren')
+  },
+
+  appendChild(parentInstance: Instance, child: Instance | TextInstance): void {
+    log('appendChild', parentInstance, child)
+  },
+
+  appendChildToContainerChildSet(childSet: ChildSet, child: Instance | TextInstance): void {
+    log('appendChildToContainerChildSet', childSet, child)
+  },
+
+  finalizeInitialChildren(
+    instance: Instance,
+    type: Type,
+    props: Props,
+    rootContainer: Container,
+    hostContext: HostContext
+  ): boolean {
+    log('finalizeInitialChildren', instance, type, props, rootContainer, hostContext)
+    return true
   },
 
   removeChild(parentInstance: Instance, child: Instance | TextInstance | SuspenseInstance): void {
@@ -273,13 +285,7 @@ const instance = Reconciler({
     log('getPublicInstance')
     return undefined
   },
-  getRootHostContext(rootContainer: Container): HostContext | null {
-    if (rootContainer.root !== undefined) {
-      return { model: rootContainer.root.props.model }
-    } else {
-      return null
-    }
-  },
+
   isPrimaryRenderer: false,
   noTimeout: undefined,
   prepareForCommit(containerInfo: Container): Record<string, any> | null {
