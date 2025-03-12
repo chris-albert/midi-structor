@@ -5,7 +5,7 @@ import {
   RealConfiguredController,
   VirtualConfiguredController,
 } from '@midi-structor/core'
-import { Box, Button, Divider, Typography } from '@mui/material'
+import { Box, Button, Divider, FormControlLabel, Switch, Typography } from '@mui/material'
 import IconButton from '@mui/material/IconButton'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { SelectComponent, SelectItem } from '../SelectComponent'
@@ -39,7 +39,11 @@ export const ControllerComponent: React.FC<ControllerComponentProps> = ({ contro
           display: 'flex',
           justifyContent: 'space-between',
         }}>
-        <Box>
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+          }}>
           <Typography variant='h5'>{controller.name}</Typography>
         </Box>
         <Box
@@ -47,18 +51,35 @@ export const ControllerComponent: React.FC<ControllerComponentProps> = ({ contro
             display: 'flex',
             justifyContent: 'flex-end',
           }}>
-          <Box>
-            <SelectComponent
-              label='Type'
-              containEmpty={false}
-              activeLabel={controller.type}
-              items={selectTypeItems}
-              onChange={(type) => {
-                if (type !== undefined) {
-                  controller.setType(type)
+          <Box
+            sx={{
+              display: 'flex',
+            }}>
+            <Box sx={{ display: 'flex', mr: 2 }}>
+              <FormControlLabel
+                labelPlacement='start'
+                control={
+                  <Switch
+                    checked={controller.enabled}
+                    onChange={(d) => controller.setEnabled(d.target.checked)}
+                  />
                 }
-              }}
-            />
+                label='Enabled'
+              />
+            </Box>
+            <Box>
+              <SelectComponent
+                label='Type'
+                containEmpty={false}
+                activeLabel={controller.type}
+                items={selectTypeItems}
+                onChange={(type) => {
+                  if (type !== undefined) {
+                    controller.setType(type)
+                  }
+                }}
+              />
+            </Box>
           </Box>
           <IconButton
             aria-label='delete'
