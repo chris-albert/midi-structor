@@ -50,7 +50,7 @@ export const Nav: React.FC<NavProps> = () => {
             </List>
           </Box>
         </Drawer>
-        <Toolbar>
+        <Toolbar variant='dense'>
           <IconButton
             size='small'
             edge='start'

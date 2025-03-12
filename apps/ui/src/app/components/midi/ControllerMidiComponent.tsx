@@ -10,7 +10,11 @@ export type ControllerMidiComponentProps = {
 
 export const ControllerMidiComponent: React.FC<ControllerMidiComponentProps> = ({ controllerAtom }) => {
   return (
-    <Box>
+    <Box
+      sx={{
+        display: 'flex',
+        pt: 2,
+      }}>
       <Card>
         <CardHeader title='Controller Setup' />
         <CardContent>

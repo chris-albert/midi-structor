@@ -43,6 +43,7 @@ export const ControllerComponent: React.FC<ControllerComponentProps> = ({ contro
           sx={{
             display: 'flex',
             alignItems: 'center',
+            pl: 2,
           }}>
           <Typography variant='h5'>{controller.name}</Typography>
         </Box>

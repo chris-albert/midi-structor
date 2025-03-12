@@ -213,6 +213,12 @@ const instance = Reconciler({
     }
   },
 
+  insertInContainerBefore(
+    container: Container,
+    child: Instance | TextInstance,
+    beforeChild: Instance | TextInstance | SuspenseInstance
+  ): void {},
+
   /**
    * No use under here
    */
