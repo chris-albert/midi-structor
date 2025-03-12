@@ -35,7 +35,7 @@ export class Controller extends Data.Class<{
       _.map(this.targets, (target) => ({
         target,
         color: Color.BLACK,
-      })),
+      }))
     )
   }
 

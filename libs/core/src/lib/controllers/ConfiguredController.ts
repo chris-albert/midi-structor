@@ -8,10 +8,11 @@ import { focusAtom } from 'jotai-optics'
 import { OpticFor_ } from 'optics-ts'
 import { Midi, MidiDeviceSelection, MidiEmitter, MidiListener } from '../midi/GlobalMidi'
 import { MidiDeviceManager } from '../midi/MidiDeviceManager'
-import { MidiMessage } from '../midi/MidiMessage'
+import { MidiMessage, SysExMessage } from '../midi/MidiMessage'
 import { EventEmitter } from '../EventEmitter'
 import { MidiEventRecord } from '../midi/MidiDevice'
 import { Color } from './Color'
+import { symbolSerializable } from 'effect/Schema'
 
 export type ConfiguredControllerType = 'virtual' | 'real'
 
@@ -182,14 +183,32 @@ const useVirtualStore = (controller: VirtualConfiguredController) => {
   return useAtomValue(atoms.virtualStore(controller.name))
 }
 
+const colorsFromSysex = (sysex: SysExMessage): Array<[string, Color]> => {
+  const colors: Array<[string, Color]> = []
+  const colorsArray = sysex.body.slice(5)
+  while (colorsArray.length >= 4) {
+    colorsArray.shift()
+    const target = colorsArray.shift()
+    const red = colorsArray.shift()
+    const green = colorsArray.shift()
+    const blue = colorsArray.shift()
+    const color = Color.fromRGB(red * 2, green * 2, blue * 2)
+    colors.push([`${target}`, color])
+  }
+  return colors
+}
+
 const useVirtualSetStore = (controller: VirtualConfiguredController) => {
   const setStore = useSetAtom(atoms.virtualStore(controller.name))
 
   const onMessage = (message: MidiMessage) => {
     if (message.type === 'sysex') {
-      const [target, red, green, blue] = message.body.slice(6)
-      const color = Color.fromRGB(red * 2, green * 2, blue * 2)
-      setStore((s) => ({ ...s, [`${target}`]: color }))
+      const colors = colorsFromSysex(message)
+      const newStore: VirtualStore = {}
+      colors.forEach((color) => {
+        newStore[color[0]] = color[1]
+      })
+      setStore((s) => ({ ...s, ...newStore }))
     }
   }
 

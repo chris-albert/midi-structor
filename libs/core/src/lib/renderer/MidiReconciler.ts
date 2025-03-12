@@ -70,11 +70,11 @@ type ControllerManager = {
 
 const ControllerManager = (
   controller: ControllerModel,
-  lisenersManager: ListenersManager
+  listenersManager: ListenersManager
 ): ControllerManager => {
   controller.init()
   controller.clear()
-  controller.on(lisenersManager.on)
+  controller.on(listenersManager.on)
 
   return {
     remove() {
@@ -261,7 +261,7 @@ const instance = Reconciler({
   },
 
   removeChild(parentInstance: Instance, child: Instance | TextInstance | SuspenseInstance): void {
-    log('removeChild', parentInstance, child)
+    console.log('removeChild', parentInstance, child)
   },
 
   insertBefore(
