@@ -155,8 +155,8 @@ const instance = Reconciler({
     internalHandle: ReactReconciler.OpaqueHandle
   ): Instance {
     log('createInstance', type, props, rootContainer, hostContext)
-    initInstance(type, props)
-    return initInstance(type, props)
+    const instance = initInstance(type, props)
+    return instance
   },
 
   removeChildFromContainer(container: Container, child: Instance | TextInstance | SuspenseInstance): void {
@@ -171,6 +171,10 @@ const instance = Reconciler({
     if (parentInstance.type === 'controller' && child.type === 'pad') {
       appendPad(parentInstance, child)
     }
+  },
+
+  appendChild(parentInstance: Instance, child: Instance | TextInstance): void {
+    console.log('appendChild', parentInstance, child)
   },
 
   prepareUpdate(
@@ -213,6 +217,17 @@ const instance = Reconciler({
     }
   },
 
+  insertBefore(
+    parentInstance: Instance,
+    child: Instance | TextInstance,
+    beforeChild: Instance | TextInstance | SuspenseInstance
+  ): void {
+    log('insertBefore', parentInstance, child, beforeChild)
+    if (parentInstance.type === 'controller' && child.type === 'pad') {
+      appendPad(parentInstance, child)
+    }
+  },
+
   insertInContainerBefore(
     container: Container,
     child: Instance | TextInstance,
@@ -247,10 +262,6 @@ const instance = Reconciler({
     log('finalizeContainerChildren')
   },
 
-  appendChild(parentInstance: Instance, child: Instance | TextInstance): void {
-    log('appendChild', parentInstance, child)
-  },
-
   appendChildToContainerChildSet(childSet: ChildSet, child: Instance | TextInstance): void {
     log('appendChildToContainerChildSet', childSet, child)
   },
@@ -268,14 +279,6 @@ const instance = Reconciler({
 
   removeChild(parentInstance: Instance, child: Instance | TextInstance | SuspenseInstance): void {
     log('removeChild', parentInstance, child)
-  },
-
-  insertBefore(
-    parentInstance: Instance,
-    child: Instance | TextInstance,
-    beforeChild: Instance | TextInstance | SuspenseInstance
-  ): void {
-    log('insertBefore', parentInstance, child, beforeChild)
   },
 
   /**

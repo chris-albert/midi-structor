@@ -55,7 +55,6 @@ const init = (): ForeverBeat => {
       //assume 8th notes
       millisPerHalfBeat = (60 / bpm / 4) * 1000
     }
-    console.log('millisPerHalfBeat', millisPerHalfBeat)
   }
   calcMillisPerHalfBeat()
 
