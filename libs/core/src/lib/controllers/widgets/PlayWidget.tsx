@@ -10,6 +10,7 @@ type PlayWidgetProps = {
 
 export const PlayWidget: React.FC<PlayWidgetProps> = ({ target }) => {
   const dawEmitter = Midi.useDawEmitter()
+
   return (
     <pad
       color={Color.GREEN}

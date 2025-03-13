@@ -10,6 +10,7 @@ type StopWidgetProps = {
 
 export const StopWidget: React.FC<StopWidgetProps> = ({ target }) => {
   const dawEmitter = Midi.useDawEmitter()
+
   return (
     <pad
       color={Color.RED}

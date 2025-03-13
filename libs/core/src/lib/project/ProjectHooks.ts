@@ -1,4 +1,4 @@
-import { useAtom, useAtomValue, useSetAtom, WritableAtom } from 'jotai'
+import { atom, useAtom, useAtomValue, useSetAtom, WritableAtom } from 'jotai'
 import { ProjectImportStatus, ProjectMidi } from './ProjectMidi'
 import React from 'react'
 import _ from 'lodash'
@@ -6,6 +6,7 @@ import { focusAtom } from 'jotai-optics'
 import { splitAtom } from 'jotai/utils'
 import { emptyTrack, UIArrangement, UIClip, UITrack } from './UIStateDisplay'
 import { useListAtom } from '../hooks/ListAtom'
+import { Color } from '../controllers/Color'
 
 const isClipActive = (clip: UIClip, beat: number): boolean => {
   return beat >= clip.startTime && (clip.endTime === undefined || beat < clip.endTime)
@@ -81,6 +82,54 @@ const useTimeSignature = () => useAtomValue(ProjectMidi.atoms.realTime.timeSigna
 const useTempo = () => useAtomValue(ProjectMidi.atoms.realTime.tempo)
 const useIsPlaying = () => useAtomValue(ProjectMidi.atoms.realTime.isPlaying)
 
+type ForeverBeatParams = {
+  beat: number
+  halfBeat: boolean
+}
+
+type ForeverBeatCallback = (p: ForeverBeatParams) => void
+
+const foreverCallbacksAtom = atom<Array<ForeverBeatCallback>>([])
+
+const useForeverBeat = () => {
+  const isPlaying = useIsPlaying()
+  const beat = useBarBeats()
+  const [halfBeat, setHalfBeat] = React.useState(false)
+  const [foreverCallbacks, setForeverCallbacks] = useAtom(foreverCallbacksAtom)
+
+  React.useEffect(() => {
+    if (isPlaying) {
+      setHalfBeat(false)
+      const timer = setTimeout(() => {
+        setHalfBeat(true)
+      }, 100)
+      return () => clearTimeout(timer)
+    }
+  }, [beat, isPlaying])
+
+  // React.useEffect(() => {
+  //   foreverCallbacks.forEach((cb) => cb({ beat, halfBeat }))
+  // }, [halfBeat, foreverCallbacks])
+
+  const onTick = (f: ForeverBeatCallback) => {
+    setForeverCallbacks((cbs) => [...cbs, f])
+    return () => {
+      setForeverCallbacks((cbs) => cbs.filter((cb) => cb !== f))
+    }
+  }
+
+  return { onTick }
+}
+
+const useBeatFlashing = (f: (isDownBeat: boolean) => void, enabled: boolean = true) => {
+  const [isDownBeat, setIsDownBeat] = React.useState(false)
+
+  React.useEffect(() => {
+    if (enabled) {
+    }
+  }, [enabled])
+}
+
 export const ProjectHooks = {
   useOnStatusChange,
   useBeat,
@@ -100,4 +149,5 @@ export const ProjectHooks = {
   useTracksAtoms: () => {
     return useAtomValue(splitAtom(useTracksAtom()))
   },
+  useForeverBeat,
 }

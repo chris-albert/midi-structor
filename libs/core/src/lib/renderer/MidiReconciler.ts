@@ -267,7 +267,7 @@ const instance = Reconciler({
   },
 
   removeChild(parentInstance: Instance, child: Instance | TextInstance | SuspenseInstance): void {
-    console.log('removeChild', parentInstance, child)
+    log('removeChild', parentInstance, child)
   },
 
   insertBefore(
