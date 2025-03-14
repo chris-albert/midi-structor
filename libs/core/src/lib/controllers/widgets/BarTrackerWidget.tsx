@@ -134,9 +134,14 @@ import { UIClipsOps } from '../../project/UIStateDisplay'
 export type BarTrackerWidgetProps = {
   targets: Array<MidiTarget>
   trackName: string
+  color?: Color
 }
 
-export const BarTrackerWidget: React.FC<BarTrackerWidgetProps> = ({ targets, trackName }) => {
+export const BarTrackerWidget: React.FC<BarTrackerWidgetProps> = ({
+  targets,
+  trackName,
+  color = Color.GREEN,
+}) => {
   const track = ProjectHooks.useTrack(trackName)
   const beat = ProjectHooks.useBeat()
   const barBeat = ProjectHooks.useBarBeats()
@@ -181,7 +186,7 @@ export const BarTrackerWidget: React.FC<BarTrackerWidgetProps> = ({ targets, tra
   const pads = targets.map((target, i) => (
     <Pad
       key={`bar-tracker-${i}`}
-      color={i < barCount ? Color.GREEN : Color.BLACK}
+      color={i < barCount ? color : Color.BLACK}
       target={target}
     />
   ))

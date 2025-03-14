@@ -6,14 +6,15 @@ import { TX_MESSAGE } from '../../project/AbletonUIMessage'
 
 type StopWidgetProps = {
   target: MidiTarget
+  color?: Color
 }
 
-export const StopWidget: React.FC<StopWidgetProps> = ({ target }) => {
+export const StopWidget: React.FC<StopWidgetProps> = ({ target, color = Color.RED }) => {
   const dawEmitter = Midi.useDawEmitter()
 
   return (
     <pad
-      color={Color.RED}
+      color={color}
       target={target}
       onClick={() => dawEmitter.send(TX_MESSAGE.stop())}
     />

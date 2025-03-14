@@ -6,14 +6,15 @@ import { TX_MESSAGE } from '../../project/AbletonUIMessage'
 
 type PlayWidgetProps = {
   target: MidiTarget
+  color?: Color
 }
 
-export const PlayWidget: React.FC<PlayWidgetProps> = ({ target }) => {
+export const PlayWidget: React.FC<PlayWidgetProps> = ({ target, color = Color.GREEN }) => {
   const dawEmitter = Midi.useDawEmitter()
 
   return (
     <pad
-      color={Color.GREEN}
+      color={color}
       target={target}
       onClick={() => dawEmitter.send(TX_MESSAGE.play())}
     />

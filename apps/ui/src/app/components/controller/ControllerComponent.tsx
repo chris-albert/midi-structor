@@ -12,6 +12,8 @@ import { SelectComponent, SelectItem } from '../SelectComponent'
 import { VirtualControllerComponent } from './VirtualControllerComponent'
 import { RealControllerComponent } from './RealControllerComponent'
 import { PrimitiveAtom } from 'jotai'
+import SettingsIcon from '@mui/icons-material/Settings'
+import { ControllerEditRawComponent } from './ControllerEditRawComponent'
 
 const selectTypeItems: Array<SelectItem<ConfiguredControllerType>> = [
   {
@@ -31,8 +33,10 @@ export type ControllerComponentProps = {
 export const ControllerComponent: React.FC<ControllerComponentProps> = ({ controllerAtom }) => {
   const controller = ConfiguredController.useController(controllerAtom)
 
+  const [isEdit, setIsEdit] = React.useState(false)
+
   return (
-    <Box sx={{ width: '100%' }}>
+    <Box sx={{ width: '100%', mt: -2 }}>
       <Box
         sx={{
           width: '100%',
@@ -68,6 +72,14 @@ export const ControllerComponent: React.FC<ControllerComponentProps> = ({ contro
                 label='Enabled'
               />
             </Box>
+            <Box
+              sx={{
+                display: 'flex',
+              }}>
+              <IconButton onClick={() => setIsEdit((e) => !e)}>
+                <SettingsIcon />
+              </IconButton>
+            </Box>
             <Box>
               <SelectComponent
                 label='Type'
@@ -92,7 +104,9 @@ export const ControllerComponent: React.FC<ControllerComponentProps> = ({ contro
         </Box>
       </Box>
       <Divider />
-      {controller.type === 'virtual' ? (
+      {isEdit ? (
+        <ControllerEditRawComponent controllerAtom={controllerAtom} />
+      ) : controller.type === 'virtual' ? (
         <VirtualControllerComponent controller={controller.controller as VirtualConfiguredController} />
       ) : (
         <RealControllerComponent controllerAtom={controllerAtom as PrimitiveAtom<RealConfiguredController>} />

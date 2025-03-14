@@ -1,4 +1,4 @@
-import { Data } from 'effect'
+import { Data, Schema } from 'effect'
 import { MidiMessage } from './MidiMessage'
 
 export type MidiTarget = Data.TaggedEnum<{
@@ -8,6 +8,18 @@ export type MidiTarget = Data.TaggedEnum<{
 }>
 
 const _MidiTarget = Data.taggedEnum<MidiTarget>()
+
+const MidiTargetSchema = Schema.Union(
+  Schema.TaggedStruct('Note', {
+    note: Schema.Number,
+  }),
+  Schema.TaggedStruct('CC', {
+    controllerNumber: Schema.Number,
+  }),
+  Schema.TaggedStruct('PC', {
+    programNumber: Schema.Number,
+  })
+)
 
 const notes = ({ from, to }: { from: number; to: number }): Array<MidiTarget> => {
   const arr: Array<MidiTarget> = []
@@ -76,4 +88,5 @@ export const MidiTarget = {
   toMessage,
   toValue,
   match: _MidiTarget.$match,
+  Schema: MidiTargetSchema,
 }

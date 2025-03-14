@@ -1,3 +1,5 @@
+import { Schema } from 'effect'
+
 const fromRGB = (red: number, green: number, blue: number): Color =>
   0x1000000 + ((red << 16) | (green << 8) | (blue << 0))
 
@@ -8,6 +10,12 @@ const toRGB = (color: Color): [number, number, number] => [
   (color >> 8) & 255,
   color & 255,
 ]
+
+const ColorSchema = Schema.Union(
+  Schema.String,
+  Schema.Number,
+  Schema.Tuple(Schema.Number, Schema.Number, Schema.Number)
+)
 
 export type Color = number
 
@@ -20,4 +28,5 @@ export const Color = {
   GREEN: fromRGB(0, 255, 0),
   BLUE: fromRGB(0, 0, 255),
   PURPLE: fromRGB(128, 0, 128),
+  Schema: ColorSchema,
 }
