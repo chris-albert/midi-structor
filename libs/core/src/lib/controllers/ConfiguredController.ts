@@ -20,14 +20,14 @@ export type ConfiguredControllerBase = {
   name: string
   enabled: boolean
   config: ControllerConfig
-}
-
-export type RealConfiguredController = {
-  type: 'real'
   selected: {
     input: Option.Option<string>
     output: Option.Option<string>
   }
+}
+
+export type RealConfiguredController = {
+  type: 'real'
 } & ConfiguredControllerBase
 
 export type VirtualConfiguredController = {
@@ -43,6 +43,10 @@ const defaultConfiguredController = (name: string): ConfiguredController => ({
   type: 'virtual',
   enabled: true,
   config: ControllerConfig.empty(),
+  selected: {
+    input: Option.none(),
+    output: Option.none(),
+  },
 })
 
 export type VirtualStore = Record<string, Color>

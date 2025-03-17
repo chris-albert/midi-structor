@@ -4,40 +4,40 @@ import { Color } from './Color'
 
 export const StopWidget = Schema.TaggedStruct('stop', {
   target: MidiTarget.Schema,
-  color: Schema.optional(Color.Schema),
+  color: Color.Schema,
 })
 
 export const PlayWidget = Schema.TaggedStruct('play', {
   target: MidiTarget.Schema,
-  color: Schema.optional(Color.Schema),
+  color: Color.Schema,
 })
 
 export const PlayStopWidget = Schema.TaggedStruct('play-stop', {
   target: MidiTarget.Schema,
-  playColor: Schema.optional(Color.Schema),
-  stopColor: Schema.optional(Color.Schema),
+  playColor: Color.Schema,
+  stopColor: Color.Schema,
 })
 
 export const MetronomeWidget = Schema.TaggedStruct('metronome', {
   target: MidiTarget.Schema,
-  oneColor: Schema.optional(Color.Schema),
-  restColor: Schema.optional(Color.Schema),
+  oneColor: Color.Schema,
+  restColor: Color.Schema,
 })
 
 export const BeatsWidget = Schema.TaggedStruct('beats', {
   targets: Schema.Array(MidiTarget.Schema),
-  oneColor: Schema.optional(Color.Schema),
-  restColor: Schema.optional(Color.Schema),
+  oneColor: Color.Schema,
+  restColor: Color.Schema,
 })
 
 export const TimeSigCountWidget = Schema.TaggedStruct('time-sig-count', {
   targets: Schema.Array(MidiTarget.Schema),
-  color: Schema.optional(Color.Schema),
+  color: Color.Schema,
 })
 
 export const TimeSigLengthWidget = Schema.TaggedStruct('time-sig-length', {
   targets: Schema.Array(MidiTarget.Schema),
-  color: Schema.optional(Color.Schema),
+  color: Color.Schema,
 })
 
 export const NavClipsWidget = Schema.TaggedStruct('nav-clips', {
@@ -50,7 +50,7 @@ export const NavClipsWidget = Schema.TaggedStruct('nav-clips', {
 export const BarTrackerWidget = Schema.TaggedStruct('bar-tracker', {
   targets: Schema.Array(MidiTarget.Schema),
   trackName: Schema.String,
-  color: Schema.optional(Color.Schema),
+  color: Color.Schema,
 })
 
 export const TrackSectionsWidget = Schema.TaggedStruct('track-sections', {
@@ -65,7 +65,7 @@ export const KeyBoardWidget = Schema.TaggedStruct('keyboard', {
   trackName: Schema.String,
 })
 
-export const ControllerWidgets = Schema.Union(
+export const ControllerWidget = Schema.Union(
   StopWidget,
   PlayWidget,
   PlayStopWidget,
@@ -79,8 +79,10 @@ export const ControllerWidgets = Schema.Union(
   KeyBoardWidget
 )
 
+export type ControllerWidget = typeof ControllerWidget.Type
+
 export const ControllerConfigSchema = Schema.Struct({
-  widgets: Schema.Array(ControllerWidgets),
+  widgets: Schema.Array(ControllerWidget),
 })
 
 const empty = (): ControllerConfig => ({

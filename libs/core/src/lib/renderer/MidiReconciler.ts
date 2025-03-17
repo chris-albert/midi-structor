@@ -5,6 +5,7 @@ import { MidiTarget } from '../midi/MidiTarget'
 import { Controller as ControllerModel, messageToKey } from '../controllers/Controller'
 import { Color } from '../controllers/Color'
 import { MidiMessage } from '../midi/MidiMessage'
+import React from 'react'
 
 const SHOW_VERBOSE_LOGS = false
 
@@ -28,7 +29,7 @@ export type PadProps = {
 }
 
 type ControllerProps = {
-  children: Array<Pad> | Pad | null
+  children?: Array<Pad | React.ReactElement | undefined> | Pad
   model: ControllerModel
   name: string
   enabled?: boolean

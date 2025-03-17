@@ -1,11 +1,11 @@
 import React from 'react'
-import { InfiniteBitsControllerComponent } from './InfiniteBitsControllerComponent'
 import { LaunchPadMiniMk3 } from './devices/LaunchPadMiniMk3'
 import {
   ConfiguredController,
   RealConfiguredController,
   VirtualConfiguredController,
 } from './ConfiguredController'
+import { ControllerConfigComponent } from './ControllerConfigComponent'
 
 type RealControllerComponentProps = {
   controller: RealConfiguredController
@@ -16,9 +16,10 @@ const RealControllerComponent: React.FC<RealControllerComponentProps> = ({ contr
 
   if (io.enabled) {
     return (
-      <InfiniteBitsControllerComponent
+      <ControllerConfigComponent
         controller={LaunchPadMiniMk3(io.emitter, io.listener)}
         name={controller.name}
+        config={controller.config}
       />
     )
   } else {
@@ -35,9 +36,10 @@ const VirtualControllerComponent: React.FC<VirtualControllerComponentProps> = ({
 
   if (io.enabled) {
     return (
-      <InfiniteBitsControllerComponent
+      <ControllerConfigComponent
         controller={LaunchPadMiniMk3(io.emitter, io.listener)}
         name={controller.name}
+        config={controller.config}
       />
     )
   } else {

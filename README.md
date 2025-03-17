@@ -4,6 +4,7 @@ Prereqs:
 ```
 yarn install
 nvm use
+npx nx reset
 ```
 
 Running web app locally:

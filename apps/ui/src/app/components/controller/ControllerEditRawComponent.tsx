@@ -12,9 +12,11 @@ export type ControllerEditRawComponentProps = {
 
 export const ControllerEditRawComponent: React.FC<ControllerEditRawComponentProps> = ({ controllerAtom }) => {
   const controller = ConfiguredController.useController(controllerAtom)
-  const [rawControllerConfig, setRawControllerConfig] = React.useState(
-    JSON.stringify(controller.config, null, 2)
-  )
+  const [rawControllerConfig, setRawControllerConfig] = React.useState('')
+
+  React.useEffect(() => {
+    setRawControllerConfig(JSON.stringify(controller.config, null, 2))
+  }, [controller.config])
 
   const onSave = () => {
     Either.match(JsonUtil.parseSchema(rawControllerConfig, ControllerConfig.Schema), {
