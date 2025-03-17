@@ -1,9 +1,9 @@
 import React from 'react'
-import { ConfiguredController, ControllerConfig, JsonUtil } from '@midi-structor/core'
+import { ConfiguredController, ControllerConfig } from '@midi-structor/core'
 import { PrimitiveAtom } from 'jotai/index'
 import { Box, Button, Card, CardContent, CardHeader } from '@mui/material'
 import { JSONEditor } from '../JSONEditor'
-import { Either, Schema } from 'effect'
+import { Either } from 'effect'
 import { toast } from 'react-toastify'
 
 export type ControllerEditRawComponentProps = {
@@ -19,7 +19,7 @@ export const ControllerEditRawComponent: React.FC<ControllerEditRawComponentProp
   }, [controller.config])
 
   const onSave = () => {
-    Either.match(JsonUtil.parseSchema(rawControllerConfig, ControllerConfig.Schema), {
+    Either.match(ControllerConfig.parse(rawControllerConfig), {
       onRight: (config) => {
         controller.setConfig(config)
         toast.success('Successfully saved config')

@@ -1,6 +1,8 @@
-import { Schema } from 'effect'
+import { Either, Schema } from 'effect'
 import { MidiTarget } from '../midi/MidiTarget'
 import { Color } from './Color'
+import _ from 'lodash'
+import { JsonUtil } from '../util/JsonUtil'
 
 export const StopWidget = Schema.TaggedStruct('stop', {
   target: MidiTarget.Schema,
@@ -85,6 +87,72 @@ export const ControllerConfigSchema = Schema.Struct({
   widgets: Schema.Array(ControllerWidget),
 })
 
+const getTargets = (widget: ControllerWidget): Array<MidiTarget> => {
+  if (widget._tag === 'stop') {
+    return [widget.target]
+  } else if (widget._tag === 'play') {
+    return [widget.target]
+  } else if (widget._tag === 'play-stop') {
+    return [widget.target]
+  } else if (widget._tag === 'metronome') {
+    return [widget.target]
+  } else if (widget._tag === 'beats') {
+    return [...widget.targets]
+  } else if (widget._tag === 'time-sig-count') {
+    return [...widget.targets]
+  } else if (widget._tag === 'time-sig-length') {
+    return [...widget.targets]
+  } else if (widget._tag === 'nav-clips') {
+    return [...widget.targets]
+  } else if (widget._tag === 'bar-tracker') {
+    return [...widget.targets]
+  } else if (widget._tag === 'track-sections') {
+    return [...widget.targets]
+  } else if (widget._tag === 'keyboard') {
+    return [...widget.topTargets, ...widget.bottomTargets]
+  } else {
+    return []
+  }
+}
+
+const collectTargets = (config: ControllerConfig): Array<MidiTarget> => config.widgets.flatMap(getTargets)
+
+const duplicateTargets = (config: ControllerConfig): Either.Either<ControllerConfig, string> => {
+  const targets = collectTargets(config)
+  const lookup: Record<string, number> = {}
+  targets.forEach((target) => {
+    const key = MidiTarget.toKey(target)
+    const l = lookup[key]
+    if (l === undefined) {
+      lookup[key] = 1
+    } else {
+      lookup[key] = l + 1
+    }
+  })
+  const duplicates: Array<string> = []
+  _.forEach(lookup, (count, key) => {
+    if (count > 1) {
+      duplicates.push(key)
+    }
+  })
+  if (_.isEmpty(duplicates)) {
+    return Either.right(config)
+  } else {
+    return Either.left(`Midi targets duplicated ${duplicates}`)
+  }
+}
+
+const validate = (config: ControllerConfig): Either.Either<ControllerConfig, string> => {
+  const targets = duplicateTargets(config)
+  return targets
+}
+
+const parse = (str: string): Either.Either<ControllerConfig, string> => {
+  const a = Either.mapLeft(JsonUtil.parseSchema(str, ControllerConfigSchema), (p) => `${p}`)
+  const b = Either.flatMap(a, validate)
+  return b
+}
+
 const empty = (): ControllerConfig => ({
   widgets: [],
 })
@@ -94,4 +162,5 @@ export type ControllerConfig = typeof ControllerConfigSchema.Type
 export const ControllerConfig = {
   Schema: ControllerConfigSchema,
   empty,
+  parse,
 }
