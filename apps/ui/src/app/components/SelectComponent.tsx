@@ -16,6 +16,7 @@ export type SelectComponentProps<A> = {
   onChange: (a: A | undefined) => void
   activeLabel?: string
   containEmpty?: boolean
+  noItemsLabel?: string
   onNew?: (label: string) => void
   onDelete?: (item: A) => void
 }
@@ -26,6 +27,7 @@ export const SelectComponent = <A,>({
   onChange,
   activeLabel,
   containEmpty = false,
+  noItemsLabel,
   onNew,
   onDelete,
 }: SelectComponentProps<A>): ReactElement<any, any> => {
@@ -72,6 +74,9 @@ export const SelectComponent = <A,>({
         onChange={onChangeLocal}
         autoWidth>
         {containEmpty ? <MenuItem value=''>--</MenuItem> : null}
+        {noItemsLabel !== undefined && items.length === 0 ? (
+          <MenuItem value=''>{noItemsLabel}</MenuItem>
+        ) : null}
         {items.map((item, index) =>
           isEdit ? (
             <Box

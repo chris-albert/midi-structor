@@ -21,7 +21,7 @@ export const MidiDeviceSelectionComponent: React.FC<MidiDeviceSelectionComponent
           label: name,
           value: name,
         }
-      }),
+      })
     )
   }, [midiDevices.devices])
 
@@ -41,6 +41,7 @@ export const MidiDeviceSelectionComponent: React.FC<MidiDeviceSelectionComponent
         items={items}
         onChange={onMidiSelect}
         activeLabel={midiDevices.selected}
+        noItemsLabel={`No MIDI ${_.capitalize(midiDevices.type)}`}
       />
       <StatusLedComponent on={false} />
     </Box>
