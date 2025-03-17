@@ -12,13 +12,14 @@ import { MidiMessage, SysExMessage } from '../midi/MidiMessage'
 import { EventEmitter } from '../EventEmitter'
 import { MidiEventRecord } from '../midi/MidiDevice'
 import { Color } from './Color'
-import { symbolSerializable } from 'effect/Schema'
+import { ControllerConfig } from './ControllerConfig'
 
 export type ConfiguredControllerType = 'virtual' | 'real'
 
 export type ConfiguredControllerBase = {
   name: string
   enabled: boolean
+  config: ControllerConfig
 }
 
 export type RealConfiguredController = {
@@ -41,6 +42,7 @@ const defaultConfiguredController = (name: string): ConfiguredController => ({
   name,
   type: 'virtual',
   enabled: true,
+  config: ControllerConfig.empty(),
 })
 
 export type VirtualStore = Record<string, Color>
@@ -100,6 +102,7 @@ const useController = (controller: PrimitiveAtom<ConfiguredController>) => {
   const [name] = useAtom(useSafeFocus(controller, 'name'))
   const [type, setType] = useAtom(useSafeFocus(controller, 'type'))
   const [enabled, setEnabled] = useAtom(useSafeFocus(controller, 'enabled'))
+  const [config, setConfig] = useAtom(useSafeFocus(controller, 'config'))
   const removeController = useRemoveController()
 
   const remove = () => {
@@ -112,6 +115,8 @@ const useController = (controller: PrimitiveAtom<ConfiguredController>) => {
     setType,
     enabled,
     setEnabled,
+    config,
+    setConfig,
     remove,
     controller: controllerValue,
   }

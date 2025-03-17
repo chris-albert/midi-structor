@@ -11,16 +11,20 @@ const toRGB = (color: Color): [number, number, number] => [
   color & 255,
 ]
 
-const ColorSchema = Schema.Union(
-  Schema.String,
-  Schema.Number,
-  Schema.Tuple(Schema.Number, Schema.Number, Schema.Number)
-)
+const fromHex = (hex: string): Color => {
+  const red = hex.substring(0, 2)
+  const green = hex.substring(2, 4)
+  const blue = hex.substring(4, 6)
+  return fromRGB(parseInt(red, 16), parseInt(green, 16), parseInt(blue, 16))
+}
+
+const ColorSchema = Schema.String
 
 export type Color = number
 
 export const Color = {
   fromRGB,
+  fromHex,
   toHex,
   toRGB,
   BLACK: fromRGB(0, 0, 0),
