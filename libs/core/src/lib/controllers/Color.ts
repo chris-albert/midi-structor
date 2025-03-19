@@ -32,5 +32,6 @@ export const Color = {
   GREEN: fromRGB(0, 255, 0),
   BLUE: fromRGB(0, 0, 255),
   PURPLE: fromRGB(128, 0, 128),
+  YELLOW: fromRGB(255, 255, 0),
   Schema: ColorSchema,
 }

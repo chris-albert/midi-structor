@@ -13,6 +13,9 @@ import { SongsWidget } from './widgets/SongsWidget'
 import { BarTrackerWidget } from './widgets/BarTrackerWidget'
 import { TrackSectionsWidget } from './widgets/TrackSectionsWidget'
 import { KeyBoardWidget } from './widgets/KeyBoardWidget'
+import { RecordWidget } from './widgets/RecordWidget'
+import { MetronomeControlWidget } from './widgets/MetronomeControlWidget'
+import { LoopControlWidget } from './widgets/LoopControlWidget'
 
 const getWidgetComponent = (widget: ControllerWidget, index: number): React.ReactElement | undefined => {
   if (widget._tag === 'stop') {
@@ -31,6 +34,14 @@ const getWidgetComponent = (widget: ControllerWidget, index: number): React.Reac
         color={Color.fromHex(widget.color)}
       />
     )
+  } else if (widget._tag === 'record') {
+    return (
+      <RecordWidget
+        key={`play-${index}`}
+        target={widget.target}
+        color={Color.fromHex(widget.color)}
+      />
+    )
   } else if (widget._tag === 'play-stop') {
     return (
       <PlayStopWidget
@@ -38,6 +49,22 @@ const getWidgetComponent = (widget: ControllerWidget, index: number): React.Reac
         target={widget.target}
         playColor={Color.fromHex(widget.playColor)}
         stopColor={Color.fromHex(widget.stopColor)}
+      />
+    )
+  } else if (widget._tag === 'loop-control') {
+    return (
+      <LoopControlWidget
+        key={`play-stop-${index}`}
+        target={widget.target}
+        color={Color.fromHex(widget.color)}
+      />
+    )
+  } else if (widget._tag === 'metronome-control') {
+    return (
+      <MetronomeControlWidget
+        key={`metronome-control-${index}`}
+        target={widget.target}
+        color={Color.fromHex(widget.color)}
       />
     )
   } else if (widget._tag === 'metronome') {

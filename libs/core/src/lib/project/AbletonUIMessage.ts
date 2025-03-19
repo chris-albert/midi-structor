@@ -111,12 +111,30 @@ const RX_STATUS: Record<string, MessageParser> = {
       }
     },
   },
+  METRONOME_STATE: {
+    statusByte: 0x0d,
+    parse: (input: Array<any>) => {
+      return {
+        type: 'metronome-state',
+        value: _.toNumber(input[0]) === 1,
+      }
+    },
+  },
+  LOOP_STATE: {
+    statusByte: 0x0e,
+    parse: (input: Array<any>) => {
+      return {
+        type: 'loop-state',
+        value: _.toNumber(input[0]) === 1,
+      }
+    },
+  },
 }
 
 const RX_STATUS_LOOKUP: Record<number, MessageParser> = _.fromPairs(
   _.map(RX_STATUS, (messageParser) => {
     return [messageParser.statusByte, messageParser]
-  }),
+  })
 )
 
 export type BeatMessage = {
@@ -179,6 +197,16 @@ export type InitDoneMessage = {
   type: 'init-done'
 }
 
+export type MetronomeStateMessage = {
+  type: 'metronome-state'
+  value: boolean
+}
+
+export type LoopStateMessage = {
+  type: 'loop-state'
+  value: boolean
+}
+
 export type AbletonUIMessage =
   | BeatMessage
   | InitProjectMessage
@@ -190,11 +218,13 @@ export type AbletonUIMessage =
   | TempoMessage
   | IsPlayingMessage
   | InitCueMessage
+  | MetronomeStateMessage
+  | LoopStateMessage
 
 const parseSysExBody = (body: Array<number>): [number, Array<string>] => {
   const str = _.join(
     _.map(body, (value) => String.fromCharCode(value)),
-    '',
+    ''
   )
   const splitStr = _.split(str, String.fromCharCode(DATA_DELIMITER))
 
@@ -245,5 +275,14 @@ export const TX_MESSAGE = {
   },
   jumpBy: (beat: number) => {
     return TX_MESSAGE.base(0x54, beat)
+  },
+  record: () => {
+    return TX_MESSAGE.base(0x55, 1)
+  },
+  metronome: (isOn: boolean) => {
+    return TX_MESSAGE.base(0x56, isOn ? 1 : 0)
+  },
+  loop: (isOn: boolean) => {
+    return TX_MESSAGE.base(0x57, isOn ? 1 : 0)
   },
 }

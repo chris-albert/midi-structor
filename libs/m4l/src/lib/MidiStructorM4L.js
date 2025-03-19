@@ -13,6 +13,8 @@ var STATUS = {
   TEMPO: 0x0a,
   IS_PLAYING: 0x0b,
   CUE: 0x0c,
+  METRO_STATE: 0x0d,
+  LOOP: 0x0e,
 }
 
 var SYSEX = {
@@ -78,6 +80,12 @@ var Message = {
   cue: function (cuePoint) {
     return sysex([STATUS.CUE, cuePoint.id, cuePoint.name, cuePoint.time, cuePoint.index])
   },
+  metroState: function (state) {
+    return sysex([STATUS.METRO_STATE, state])
+  },
+  loop: function (state) {
+    return sysex([STATUS.LOOP, state])
+  },
 }
 
 inlets = 1
@@ -118,7 +126,28 @@ function forEach(arr, func) {
   }
 }
 
+function metronomeState(state) {
+  post('metronomeState', state[1], '\n')
+  outlet(0, Message.metroState(state[1]))
+}
+
+function loopState(state) {
+  post('loopState', state[1], '\n')
+  outlet(0, Message.loop(state[1]))
+}
+
+var metroObserver = null
+var loopObserver = null
+function setupObservers() {
+  metroObserver = new LiveAPI(metronomeState, 'live_set')
+  metroObserver.property = 'metronome'
+  loopObserver = new LiveAPI(loopState, 'live_set')
+  loopObserver.property = 'loop'
+}
+
 function init() {
+  setupObservers()
+
   post('Parsing tracks\n')
   tracks = parseTracks()
   cues = parseCues()

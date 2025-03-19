@@ -66,6 +66,8 @@ const atoms = {
     }),
     tempo: atom(0),
     isPlaying: atom(false),
+    metronomeState: atom(false),
+    loopState: atom(false),
   },
 }
 
@@ -81,6 +83,8 @@ const useProjectListener = () => {
   const setTimeSignature = useSetAtom(atoms.realTime.timeSignature)
   const setTempo = useSetAtom(atoms.realTime.tempo)
   const setIsPlaying = useSetAtom(atoms.realTime.isPlaying)
+  const setMetronomeState = useSetAtom(atoms.realTime.metronomeState)
+  const setLoopState = useSetAtom(atoms.realTime.loopState)
 
   React.useEffect(() => {
     if (importStatus === 'finalizing') {
@@ -119,6 +123,10 @@ const useProjectListener = () => {
           setTempo(msg.value)
         } else if (msg.type === 'is-playing') {
           setIsPlaying(msg.value)
+        } else if (msg.type === 'metronome-state') {
+          setMetronomeState(msg.value)
+        } else if (msg.type === 'loop-state') {
+          setLoopState(msg.value)
         }
       }
     })

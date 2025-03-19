@@ -14,6 +14,21 @@ export const PlayWidget = Schema.TaggedStruct('play', {
   color: Color.Schema,
 })
 
+export const RecordWidget = Schema.TaggedStruct('record', {
+  target: MidiTarget.Schema,
+  color: Color.Schema,
+})
+
+export const MetronomeControlWidget = Schema.TaggedStruct('metronome-control', {
+  target: MidiTarget.Schema,
+  color: Color.Schema,
+})
+
+export const LoopControlWidget = Schema.TaggedStruct('loop-control', {
+  target: MidiTarget.Schema,
+  color: Color.Schema,
+})
+
 export const PlayStopWidget = Schema.TaggedStruct('play-stop', {
   target: MidiTarget.Schema,
   playColor: Color.Schema,
@@ -70,7 +85,10 @@ export const KeyBoardWidget = Schema.TaggedStruct('keyboard', {
 export const ControllerWidget = Schema.Union(
   StopWidget,
   PlayWidget,
+  RecordWidget,
   PlayStopWidget,
+  MetronomeControlWidget,
+  LoopControlWidget,
   MetronomeWidget,
   BeatsWidget,
   TimeSigCountWidget,
@@ -92,9 +110,15 @@ const getTargets = (widget: ControllerWidget): Array<MidiTarget> => {
     return [widget.target]
   } else if (widget._tag === 'play') {
     return [widget.target]
+  } else if (widget._tag === 'record') {
+    return [widget.target]
   } else if (widget._tag === 'play-stop') {
     return [widget.target]
+  } else if (widget._tag === 'metronome-control') {
+    return [widget.target]
   } else if (widget._tag === 'metronome') {
+    return [widget.target]
+  } else if (widget._tag === 'loop-control') {
     return [widget.target]
   } else if (widget._tag === 'beats') {
     return [...widget.targets]

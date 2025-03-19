@@ -175,7 +175,7 @@ const instance = Reconciler({
   },
 
   appendChild(parentInstance: Instance, child: Instance | TextInstance): void {
-    console.log('appendChild', parentInstance, child)
+    log('appendChild', parentInstance, child)
   },
 
   prepareUpdate(

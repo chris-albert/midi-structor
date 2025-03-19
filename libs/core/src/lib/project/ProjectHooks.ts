@@ -1,4 +1,4 @@
-import { useAtom, useAtomValue, useSetAtom, WritableAtom } from 'jotai'
+import { getDefaultStore, useAtom, useAtomValue, useSetAtom, WritableAtom } from 'jotai'
 import { ProjectImportStatus, ProjectMidi } from './ProjectMidi'
 import React from 'react'
 import _ from 'lodash'
@@ -6,6 +6,8 @@ import { focusAtom } from 'jotai-optics'
 import { splitAtom } from 'jotai/utils'
 import { emptyTrack, UIArrangement, UIClip, UITrack } from './UIStateDisplay'
 import { useListAtom } from '../hooks/ListAtom'
+
+const store = getDefaultStore()
 
 const isClipActive = (clip: UIClip, beat: number): boolean => {
   return beat >= clip.startTime && (clip.endTime === undefined || beat < clip.endTime)
@@ -80,6 +82,14 @@ const useBarBeats = () => useAtomValue(ProjectMidi.atoms.realTime.barBeats)
 const useTimeSignature = () => useAtomValue(ProjectMidi.atoms.realTime.timeSignature)
 const useTempo = () => useAtomValue(ProjectMidi.atoms.realTime.tempo)
 const useIsPlaying = () => useAtomValue(ProjectMidi.atoms.realTime.isPlaying)
+const useMetronomeState = () => useAtomValue(ProjectMidi.atoms.realTime.metronomeState)
+const getMetronomeState = () => {
+  return store.get(ProjectMidi.atoms.realTime.metronomeState)
+}
+const useLoopState = () => useAtomValue(ProjectMidi.atoms.realTime.loopState)
+const getLoopState = () => {
+  return store.get(ProjectMidi.atoms.realTime.loopState)
+}
 
 export const ProjectHooks = {
   useOnStatusChange,
@@ -97,6 +107,10 @@ export const ProjectHooks = {
   useTracks,
   useTrack,
   useTrackOrUndefined,
+  useMetronomeState,
+  getMetronomeState,
+  useLoopState,
+  getLoopState,
   useTracksAtoms: () => {
     return useAtomValue(splitAtom(useTracksAtom()))
   },
