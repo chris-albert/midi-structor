@@ -9,7 +9,7 @@ export const EventEmitter = <A extends Record<any, { type: string }>>(): EventEm
   buildEmitter<A>(new NodeEventEmitter())
 
 export const buildEmitter = <A extends Record<any, { type: string }>>(
-  emitter: NodeEventEmitter,
+  emitter: NodeEventEmitter
 ): EventEmitter<A> => ({
   on: <N extends keyof A & string>(n: N, f: (a: A[N]) => void) => {
     emitter.on(n, f)

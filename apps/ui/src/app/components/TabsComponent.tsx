@@ -38,7 +38,12 @@ export const TabsComponent: React.FC<TabsComponentProps> = ({ orientation, tabs 
           />
         ))}
       </Tabs>
-      <Box sx={{ p: 2, flexGrow: 1 }}>{tabs.length > selected ? tabs[selected].content() : null}</Box>
+      <Box sx={{ p: 2, flexGrow: 1 }}>
+        {
+          // @ts-ignore
+          tabs.length > selected ? tabs[selected].content() : null
+        }
+      </Box>
     </Box>
   )
 }

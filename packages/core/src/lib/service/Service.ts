@@ -21,7 +21,7 @@ export namespace Service {
 
   export type QueryImpl<S extends Service> = {
     [Target in keyof S as `useQuery${string & Target}`]: (
-      req: S[Target]['request']['Type'],
+      req: S[Target]['request']['Type']
     ) => UseQueryResult<S[Target]['response']['Type']>
   } & {
     [Target in keyof S as `useMutate${string & Target}`]: () => UseMutationResult<
@@ -42,7 +42,10 @@ export namespace Service {
         const req = Schema.decodeEither(endpoint.request)(message)
         return Either.match(req, {
           onLeft: (error) => Promise.reject(`Unable to decode request ${error.message}`),
-          onRight: (request) => impl[target](request).then((r) => ({ requestId, ...r })),
+          onRight: (request) => {
+            throw new Error('ahhh')
+          },
+          // impl[target](request).then((r) => ({ requestId, ...r })),
         })
       }
       return Promise.reject(`No routes found for ${target}`)
@@ -56,7 +59,7 @@ export namespace Service {
     return _.fromPairs(
       _.map(service, (endpoint, target) => {
         const handler = (
-          req: S[typeof target]['request']['Type'],
+          req: S[typeof target]['request']['Type']
         ): Promise<S[typeof target]['response']['Type']> => {
           console.log('Service.Client', target)
           const obj = {
@@ -67,21 +70,21 @@ export namespace Service {
             Either.match(Schema.decodeUnknownEither(endpoint.response)(res), {
               onLeft: (error) => Promise.reject(`Unable to decode response ${error}`),
               onRight: (result) => Promise.resolve(result),
-            }),
+            })
           )
         }
         return [target, handler]
-      }),
+      })
     ) as Impl<S>
   }
   export const Query = <S extends Service>(
     impl: Impl<S>,
-    invalidations: { [P in keyof S]?: keyof S },
+    invalidations: { [P in keyof S]?: keyof S }
   ): QueryImpl<S> => {
     return _.fromPairs([
       ..._.map(impl, (handler, target) => {
         const queryHandler = (
-          req: S[typeof target]['request']['Type'],
+          req: S[typeof target]['request']['Type']
         ): UseQueryResult<S[typeof target]['response']['Type']> => {
           return useQuery({
             queryKey: [target, req],

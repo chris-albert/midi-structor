@@ -1,0 +1,25 @@
+{
+  "name": "@midi-structor/core",
+  "type": "module",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "tsc --watch",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "react": "18.3.1",
+    "react-reconciler": "0.28.0",
+    "jotai": "^2.11.0",
+    "jotai-optics": "^0.4.0",
+    "effect": "^3.12.4",
+    "io-ts": "^2.2.20"
+  },
+  "devDependencies": {
+    "@midi-structor/typescript-config": "workspace:*",
+    "typescript": "^5.7.3"
+  },
+  "exports": {
+    ".": "./src/index.ts"
+  }
+}

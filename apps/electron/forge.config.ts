@@ -4,11 +4,14 @@ import { AutoUnpackNativesPlugin } from '@electron-forge/plugin-auto-unpack-nati
 import { WebpackPlugin } from '@electron-forge/plugin-webpack'
 import { FusesPlugin } from '@electron-forge/plugin-fuses'
 import { FuseV1Options, FuseVersion } from '@electron/fuses'
-import type IForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
-import type { ModuleOptions, Configuration } from 'webpack'
+// import type IForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
+import type { ModuleOptions, Configuration, WebpackPluginInstance } from 'webpack'
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const ForkTsCheckerWebpackPlugin: typeof IForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
+
+// const ForkTsCheckerWebpackPlugin: typeof IForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
+// import * as ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
+// import * as CopyWebpackPlugin from 'copy-webpack-plugin'
 import * as path from 'path'
 
 const rules: Required<ModuleOptions>['rules'] = [
@@ -41,14 +44,14 @@ const rules: Required<ModuleOptions>['rules'] = [
   },
 ]
 
-const plugins = [
-  new ForkTsCheckerWebpackPlugin({
-    logger: 'webpack-infrastructure',
-  }),
+const plugins: Array<WebpackPluginInstance> = [
+  // new ForkTsCheckerWebpackPlugin({
+  //   logger: 'webpack-infrastructure',
+  // }),
   new CopyWebpackPlugin({
     patterns: [
       {
-        from: path.resolve(__dirname, '../../dist/apps/ui/assets/index.css'),
+        from: path.resolve(__dirname, '../ui/dist/assets/index.css'),
         to: path.resolve(__dirname, '.webpack/renderer/main_window/index.css'),
       },
     ],
@@ -110,7 +113,7 @@ const config: ForgeConfig = {
         entryPoints: [
           {
             html: './src/index.html',
-            js: '../../dist/apps/ui/assets/index.js',
+            js: '../ui/dist/assets/index.js',
             name: 'main_window',
             preload: {
               js: './src/preload.ts',

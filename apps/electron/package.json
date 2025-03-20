@@ -3,15 +3,7 @@
   "productName": "MIDI Structor",
   "version": "0.0.1",
   "private": true,
-  "type": "commonjs",
   "main": ".webpack/main",
-  "dependencies": {
-    "copyfiles": "^2.4.1",
-    "electron-log": "^5.3.0",
-    "electron-squirrel-startup": "^1.0.1",
-    "electron-updater": "^6.3.9",
-    "tslib": "^2.3.0"
-  },
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",
@@ -21,7 +13,15 @@
     "serve": "electron ../../dist/apps/electron/src/index.js",
     "package": "electron-forge package",
     "start": "electron-forge start ",
-    "make": "DEBUG=electron-packager electron-forge make"
+    "make": "DEBUG=electron-packager electron-forge make",
+    "makeraw": "DEBUG=electron-packager tsc node_modules/@electron-forge/cli/src/electron-forge-make"
+  },
+  "dependencies": {
+    "copyfiles": "^2.4.1",
+    "electron-log": "^5.3.2",
+    "electron-squirrel-startup": "^1.0.1",
+    "electron-updater": "^6.3.9",
+    "tslib": "^2.8.1"
   },
   "devDependencies": {
     "@electron-forge/cli": "^7.7.0",
@@ -34,13 +34,16 @@
     "@electron-forge/plugin-fuses": "^7.7.0",
     "@electron-forge/plugin-local-electron": "^7.7.0",
     "@electron-forge/plugin-webpack": "^7.7.0",
+    "@electron-forge/shared-types": "^7.7.0",
     "@electron/fuses": "^1.8.0",
+    "@midi-structor/typescript-config": "workspace:*",
     "@vercel/webpack-asset-relocator-loader": "1.7.3",
     "css-loader": "^7.1.2",
-    "electron": "^34.2.0",
+    "electron": "^34.3.4",
     "fork-ts-checker-webpack-plugin": "^9.0.2",
     "ts-loader": "^9.5.2",
     "ts-node": "^10.9.2",
-    "typescript": "^5.7.3"
+    "typescript": "^5.8.2",
+    "webpack": "^5.98.0"
   }
 }

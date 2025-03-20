@@ -18,12 +18,12 @@ jobs:
           node-version: "18.20"
 
       - name: Install Node.js dependencies
-        run: yarn install
+        run: pnpm install
 
       - name: Build Project
         env:
           CI: false
-        run: npx nx build ui --base 'https://chris-albert.github.io/midi-structor/' --no-cloud
+        run: pnpm ui-deploy
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v4

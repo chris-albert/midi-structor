@@ -6,6 +6,7 @@ import ArrowRightIcon from '@mui/icons-material/ArrowRight'
 import { Box } from '@mui/material'
 import { MidiTarget } from '@midi-structor/core'
 import { ControllerPad, ControllerUI, midiFromRowCol } from './ControllerUI'
+import React from 'react'
 
 export const LaunchPadMiniMk3UI = () =>
   new ControllerUI({

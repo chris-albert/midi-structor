@@ -1,28 +1,23 @@
 /// <reference types='vitest' />
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin'
-import { nxCopyAssetsPlugin } from '@nx/vite/plugins/nx-copy-assets.plugin'
 import checker from 'vite-plugin-checker'
+import { nodePolyfills } from 'vite-plugin-node-polyfills'
 
 export default defineConfig({
   root: __dirname,
   cacheDir: '../../node_modules/.vite/apps/ui',
+  base: 'https://chris-albert.github.io/midi-structor/',
   server: {
     port: 3000,
     host: 'localhost',
   },
-  preview: {
-    port: 4300,
-    host: 'localhost',
-  },
   plugins: [
     react(),
-    nxViteTsPaths(),
-    nxCopyAssetsPlugin(['*.md']),
+    nodePolyfills(),
     checker({
       typescript: {
-        tsconfigPath: './tsconfig.app.json',
+        tsconfigPath: './tsconfig.json',
       },
     }),
   ],
@@ -34,7 +29,6 @@ export default defineConfig({
         assetFileNames: `assets/[name].[ext]`,
       },
     },
-    outDir: '../../dist/apps/ui',
     emptyOutDir: true,
     reportCompressedSize: true,
     commonjsOptions: {

@@ -1,7 +1,6 @@
 {
   "extends": "@midi-structor/typescript-config/base.json",
   "compilerOptions": {
-    "jsx": "react",
     "outDir": "dist",
     "rootDir": "src"
   },

@@ -47,3 +47,4 @@ vitest.config.*.timestamp*
 .webpack
 
 apps/electron/out
+.turbo

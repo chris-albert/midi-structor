@@ -3,8 +3,8 @@ import { MidiTarget } from '../../midi/MidiTarget'
 import { Color } from '../Color'
 import { Midi } from '../../midi/GlobalMidi'
 import { TX_MESSAGE } from '../../project/AbletonUIMessage'
-import { ProjectHooks } from '@midi-structor/core'
 import { Pad } from '../pads/Pad'
+import { ProjectHooks } from '../../project/ProjectHooks'
 
 export type MetronomeControlWidgetProps = {
   target: MidiTarget

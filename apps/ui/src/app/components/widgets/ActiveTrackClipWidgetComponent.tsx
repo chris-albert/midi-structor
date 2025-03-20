@@ -17,6 +17,8 @@ export const ActiveTrackClipWidgetComponent: React.FC<ActiveTrackClipWidgetCompo
   const track = React.useMemo(() => {
     if (trackName !== undefined) {
       return _.find(tracks, (t) => t.name === trackName)
+    } else {
+      return undefined
     }
   }, [trackName])
 
