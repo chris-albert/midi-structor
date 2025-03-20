@@ -2,28 +2,17 @@
 
 https://docs.cycling74.com/legacy/max8/vignettes/live_object_model
 
-## Switching to `turborepo`
+## This project uses `turborepo` and `pnpm`
 
 Prereqs:
 ```
-yarn install
 nvm use
-npx nx reset
+pnpm install
 ```
 
 Running web app locally:
 ```
 ./run.sh
-```
-
-Dumb nx error, clean up 
-```
-npx nx reset
-```
-
-Running electron
-```
-./electron-run.sh
 ```
 
 Building electron, including bundling the ui:
@@ -35,22 +24,4 @@ Making MacOSX icons
 ```
 brew install makeicns
 makeicns -512 midi-structor-logo-512.png
-```
-
-## Deploying
-
-### UI
-```
-npx nx build ui --base './' --no-cloud
-```
-
-### Agent
-```
-npx nx build agent --no-cloud
-```
-
-## Running Docker locally
-```
-npx nx build ui --base './' --no-cloud
-docker-compose up --build
 ```

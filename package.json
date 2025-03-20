@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "license": "MIT",
   "scripts": {
-    "ui-deploy": "turbo run @midi-structor/ui#build"
+    "ui-dev": "turbo run @midi-structor/ui#dev",
+    "ui-deploy": "turbo run @midi-structor/ui#build",
+    "electron-make": "turbo run @midi-structor/electron#make"
   },
   "private": true,
   "dependencies": {

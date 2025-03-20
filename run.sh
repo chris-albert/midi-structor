@@ -1,2 +1,1 @@
-#npx nx serve ui --no-cloud
-pnpm ui
+pnpm ui-dev
