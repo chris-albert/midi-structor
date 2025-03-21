@@ -16,6 +16,7 @@ import { KeyBoardWidget } from './widgets/KeyBoardWidget'
 import { RecordWidget } from './widgets/RecordWidget'
 import { MetronomeControlWidget } from './widgets/MetronomeControlWidget'
 import { LoopControlWidget } from './widgets/LoopControlWidget'
+import { Option } from 'effect'
 
 const getWidgetComponent = (widget: ControllerWidget, index: number): React.ReactElement | undefined => {
   if (widget._tag === 'stop') {
@@ -109,6 +110,7 @@ const getWidgetComponent = (widget: ControllerWidget, index: number): React.Reac
         trackName={widget.trackName}
         fromClip={widget.fromClip}
         toClip={widget.toClip}
+        sort={widget.sort ? widget.sort : 'order'}
       />
     )
   } else if (widget._tag === 'bar-tracker') {

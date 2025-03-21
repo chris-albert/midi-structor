@@ -12,9 +12,10 @@ type SongsWidgetProps = {
   trackName: string
   fromClip: number
   toClip: number
+  sort: 'alphabetical' | 'order'
 }
 
-export const SongsWidget: React.FC<SongsWidgetProps> = ({ targets, trackName, fromClip, toClip }) => {
+export const SongsWidget: React.FC<SongsWidgetProps> = ({ targets, trackName, fromClip, toClip, sort }) => {
   const dawEmitter = Midi.useDawEmitter()
   const arrangement = ProjectHooks.useArrangement()
   const track = ProjectHooks.useTrack(trackName)
@@ -24,7 +25,9 @@ export const SongsWidget: React.FC<SongsWidgetProps> = ({ targets, trackName, fr
     return _.fromPairs(_.map(arrangement.cues, (cue) => [cue.time, cue]))
   }, [arrangement.cues])
 
-  const realClips: Array<UIRealClip> = track.clips.filter((c) => c.type === 'real') as Array<UIRealClip>
+  const unsortedClips: Array<UIRealClip> = track.clips.filter((c) => c.type === 'real') as Array<UIRealClip>
+  const realClips: Array<UIRealClip> =
+    sort === 'alphabetical' ? unsortedClips.sort((l, r) => l.name.localeCompare(r.name)) : unsortedClips
 
   const clips = React.useMemo(() => {
     const tmpClips: Array<NavigateableClip & { target: MidiTarget }> = []

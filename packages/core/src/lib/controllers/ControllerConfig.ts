@@ -62,6 +62,7 @@ export const NavClipsWidget = Schema.TaggedStruct('nav-clips', {
   trackName: Schema.String,
   fromClip: Schema.Number,
   toClip: Schema.Number,
+  sort: Schema.optional(Schema.Literal('alphabetical', 'order')),
 })
 
 export const BarTrackerWidget = Schema.TaggedStruct('bar-tracker', {
