@@ -38,6 +38,7 @@ export const InfiniteBitsControllerComponent: React.FC<InfiniteBitsControllerCom
         trackName='Songs'
         fromClip={0}
         toClip={7}
+        sort='order'
       />
       <BarTrackerWidget
         targets={MidiTarget.notes({ from: 71, to: 78 })}
