@@ -9,8 +9,8 @@ on:
         required: true
 
 jobs:
-  deploy:
-    runs-on: ubuntu-latest
+  release:
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@master
 
