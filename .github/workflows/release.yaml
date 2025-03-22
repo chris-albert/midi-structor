@@ -1,12 +1,9 @@
 name: 'Release App'
 
 on:
-  workflow_dispatch:
-    inputs:
-      version:
-        description: 'Release Version to Create'
-        type: string
-        required: true
+  push:
+    tags:
+      - "v*.*.*"
 
 jobs:
   release:
