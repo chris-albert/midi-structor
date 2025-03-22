@@ -29,7 +29,7 @@ jobs:
         run: pnpm electron-make
 
       - name: Rename release file
-        run: mv ./apps/electron/out/make/MIDI Structor-0.0.0-arm64.dmg ./apps/electron/out/make/MIDI Structor ${{ github.ref_name }} arm64.dmg
+        run: mv "./apps/electron/out/make/MIDI Structor-0.0.0-arm64.dmg" "./apps/electron/out/make/MIDI Structor ${{ github.ref_name }} arm64.dmg"
 
       - name: Release
         uses: softprops/action-gh-release@v2
