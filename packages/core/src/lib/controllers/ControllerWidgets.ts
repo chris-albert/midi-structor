@@ -16,6 +16,7 @@ import { TimeSigNoteLengthWidget } from './widgets/TimeSigNoteLengthWidget'
 import { BarTrackerWidget } from './widgets/BarTrackerWidget'
 import { TrackSectionsWidget } from './widgets/TrackSectionsWidget'
 import { KeyBoardWidget } from './widgets/KeyBoardWidget'
+import { ButtonWidget } from './widgets/ButtonWidget'
 
 const AllControllerWidgets: Array<ControllerWidget<any>> = [
   PlayWidget,
@@ -32,6 +33,7 @@ const AllControllerWidgets: Array<ControllerWidget<any>> = [
   BarTrackerWidget,
   TrackSectionsWidget,
   KeyBoardWidget,
+  ButtonWidget,
 ]
 
 type WidgetsSchemas<A extends Array<{ schema: Schema.Schema<any> }>> = {
