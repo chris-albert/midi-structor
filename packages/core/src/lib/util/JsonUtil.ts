@@ -10,7 +10,7 @@ const parseEither = (str: string): Either.Either<any, string> => {
 }
 
 const parseSchema = <A>(str: string, schema: Schema.Schema<A>): Either.Either<A, string | ParseError> => {
-  return Either.flatMap(parseEither(str), Schema.decodeUnknownEither(schema))
+  return Either.flatMap(parseEither(str), Schema.decodeUnknownEither<A, A>(schema))
 }
 
 export const JsonUtil = {

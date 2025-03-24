@@ -13,13 +13,14 @@ type RealControllerComponentProps = {
 
 const RealControllerComponent: React.FC<RealControllerComponentProps> = ({ controller }) => {
   const io = ConfiguredController.useRealIO(controller)
+  const widgets = ConfiguredController.useResolvedWidgets(controller.config)
 
   if (io.enabled) {
     return (
       <ControllerConfigComponent
         controller={LaunchPadMiniMk3(io.emitter, io.listener)}
         name={controller.name}
-        config={controller.config}
+        widgets={widgets}
       />
     )
   } else {
@@ -33,13 +34,14 @@ type VirtualControllerComponentProps = {
 
 const VirtualControllerComponent: React.FC<VirtualControllerComponentProps> = ({ controller }) => {
   const io = ConfiguredController.useVirtualIO(controller)
+  const widgets = ConfiguredController.useResolvedWidgets(controller.config)
 
   if (io.enabled) {
     return (
       <ControllerConfigComponent
         controller={LaunchPadMiniMk3(io.emitter, io.listener)}
         name={controller.name}
-        config={controller.config}
+        widgets={widgets}
       />
     )
   } else {

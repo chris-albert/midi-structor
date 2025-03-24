@@ -3,20 +3,25 @@ import { Color } from '../Color'
 import { MidiTarget } from '../../midi/MidiTarget'
 import { Midi } from '../../midi/GlobalMidi'
 import { TX_MESSAGE } from '../../project/AbletonUIMessage'
+import { ControllerWidget } from '../ControllerWidget'
+import { Schema } from 'effect'
 
-type PlayWidgetProps = {
-  target: MidiTarget
-  color?: Color
-}
+export const PlayWidget = ControllerWidget({
+  name: 'play',
+  schema: Schema.TaggedStruct('play', {
+    target: MidiTarget.Schema,
+    color: Color.Schema,
+  }),
+  targets: (w) => [w.target],
+  component: ({ target, color }) => {
+    const dawEmitter = Midi.useDawEmitter()
 
-export const PlayWidget: React.FC<PlayWidgetProps> = ({ target, color = Color.GREEN }) => {
-  const dawEmitter = Midi.useDawEmitter()
-
-  return (
-    <pad
-      color={color}
-      target={target}
-      onClick={() => dawEmitter.send(TX_MESSAGE.play())}
-    />
-  )
-}
+    return (
+      <pad
+        color={color}
+        target={target}
+        onClick={() => dawEmitter.send(TX_MESSAGE.play())}
+      />
+    )
+  },
+})

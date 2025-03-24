@@ -1,32 +1,24 @@
-import React from 'react'
 import { StopWidget } from './StopWidget'
 import { PlayWidget } from './PlayWidget'
 import { MidiTarget } from '../../midi/MidiTarget'
 import { ProjectHooks } from '../../project/ProjectHooks'
 import { Color } from '../Color'
+import { ControllerWidget } from '../ControllerWidget'
+import { Schema } from 'effect'
 
-type PlayStopWidgetProps = {
-  target: MidiTarget
-  playColor?: Color
-  stopColor?: Color
-}
+export const PlayStopWidget = ControllerWidget({
+  name: 'play-stop',
+  schema: Schema.TaggedStruct('play-stop', {
+    target: MidiTarget.Schema,
+    playColor: Color.Schema,
+    stopColor: Color.Schema,
+  }),
+  targets: (w) => [w.target],
+  component: ({ target, playColor, stopColor }) => {
+    const isPlaying = ProjectHooks.useIsPlaying()
 
-export const PlayStopWidget: React.FC<PlayStopWidgetProps> = ({
-  target,
-  playColor = Color.GREEN,
-  stopColor = Color.RED,
-}) => {
-  const isPlaying = ProjectHooks.useIsPlaying()
-
-  return isPlaying ? (
-    <StopWidget
-      target={target}
-      color={stopColor}
-    />
-  ) : (
-    <PlayWidget
-      target={target}
-      color={playColor}
-    />
-  )
-}
+    return isPlaying
+      ? StopWidget.component({ _tag: 'stop', target, color: stopColor })
+      : PlayWidget.component({ _tag: 'play', target, color: playColor })
+  },
+})

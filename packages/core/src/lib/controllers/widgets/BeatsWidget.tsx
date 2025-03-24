@@ -3,36 +3,37 @@ import _ from 'lodash'
 import { Color } from '../Color'
 import { MidiTarget } from '../../midi/MidiTarget'
 import { ProjectHooks } from '../../project/ProjectHooks'
-
-type BeatsWidgetProps = {
-  targets: Array<MidiTarget>
-  oneColor?: Color
-  restColor?: Color
-}
+import { ControllerWidget } from '../ControllerWidget'
+import { Schema } from 'effect'
 
 const color = (beat: number, index: number, oneColor: Color, restColor: Color): Color => {
   const padBeat = index + 1
   if (padBeat <= beat) {
-    return padBeat === 1 ? Color.GREEN : Color.RED
+    return padBeat === 1 ? oneColor : restColor
   } else {
     return Color.BLACK
   }
 }
 
-export const BeatsWidget: React.FC<BeatsWidgetProps> = ({
-  targets,
-  oneColor = Color.GREEN,
-  restColor = Color.RED,
-}) => {
-  const beat = ProjectHooks.useBarBeats()
+export const BeatsWidget = ControllerWidget({
+  name: 'beats',
+  schema: Schema.TaggedStruct('beats', {
+    targets: Schema.Array(MidiTarget.Schema),
+    oneColor: Color.Schema,
+    restColor: Color.Schema,
+  }),
+  targets: (w) => [...w.targets],
+  component: ({ targets, oneColor, restColor }) => {
+    const beat = ProjectHooks.useBarBeats()
 
-  const pads = _.map(targets, (target, index) => (
-    <pad
-      key={`beat-${index}`}
-      color={color(beat, index, oneColor, restColor)}
-      target={target}
-    />
-  ))
+    const pads = _.map(targets, (target, index) => (
+      <pad
+        key={`beat-${index}`}
+        color={color(beat, index, oneColor, restColor)}
+        target={target}
+      />
+    ))
 
-  return <>{pads}</>
-}
+    return <>{pads}</>
+  },
+})

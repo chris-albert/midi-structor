@@ -4,6 +4,10 @@ import { Color } from '../Color'
 import { MidiTarget } from '../../midi/MidiTarget'
 import { ProjectHooks } from '../../project/ProjectHooks'
 import { UIClipsOps } from '../../project/UIStateDisplay'
+import { ControllerWidget } from '../ControllerWidget'
+import { Midi } from '../../midi/GlobalMidi'
+import { TX_MESSAGE } from '../../project/AbletonUIMessage'
+import { Schema } from 'effect'
 
 /**
  * | GB  | BB | DIFF | Count |
@@ -131,65 +135,64 @@ import { UIClipsOps } from '../../project/UIStateDisplay'
  *      Math.floor(((DIFF + .5) * 2) / TSC)
  */
 
-export type BarTrackerWidgetProps = {
-  targets: Array<MidiTarget>
-  trackName: string
-  color?: Color
-}
+export const BarTrackerWidget = ControllerWidget({
+  name: 'bar-tracker',
+  schema: Schema.TaggedStruct('bar-tracker', {
+    targets: Schema.Array(MidiTarget.Schema),
+    trackName: Schema.String,
+    color: Color.Schema,
+  }),
+  targets: (w) => [...w.targets],
+  component: ({ targets, trackName, color }) => {
+    const track = ProjectHooks.useTrack(trackName)
+    const beat = ProjectHooks.useBeat()
+    const barBeat = ProjectHooks.useBarBeats()
+    const activeClip = ProjectHooks.useActiveClip(track)
+    const timeSig = ProjectHooks.useTimeSignature()
 
-export const BarTrackerWidget: React.FC<BarTrackerWidgetProps> = ({
-  targets,
-  trackName,
-  color = Color.GREEN,
-}) => {
-  const track = ProjectHooks.useTrack(trackName)
-  const beat = ProjectHooks.useBeat()
-  const barBeat = ProjectHooks.useBarBeats()
-  const activeClip = ProjectHooks.useActiveClip(track)
-  const timeSig = ProjectHooks.useTimeSignature()
+    const [barsSinceStart, setBarsSinceStart] = React.useState(0)
 
-  const [barsSinceStart, setBarsSinceStart] = React.useState(0)
-
-  const count = React.useMemo(() => {
-    if (activeClip.type === 'real') {
-      const count = Number(activeClip.name)
-      if (!isNaN(count)) {
-        return count
+    const count = React.useMemo(() => {
+      if (activeClip.type === 'real') {
+        const count = Number(activeClip.name)
+        if (!isNaN(count)) {
+          return count
+        }
       }
-    }
-    return 0
-  }, [activeClip])
+      return 0
+    }, [activeClip])
 
-  React.useEffect(() => {
-    if (barBeat === 1) {
-      if (UIClipsOps.isReal(activeClip)) {
-        const diff = Math.floor(beat - activeClip.startTime)
-        if (timeSig.noteLength === 4) {
-          setBarsSinceStart(Math.floor(diff / timeSig.noteCount))
-        } else if (timeSig.noteLength === 8) {
-          if (timeSig.noteCount % 2 === 0) {
-            setBarsSinceStart(Math.floor(diff / (timeSig.noteCount / 2)))
-          } else {
-            if (diff % timeSig.noteCount === 0) {
-              setBarsSinceStart(Math.floor(diff / timeSig.noteCount) * 2)
+    React.useEffect(() => {
+      if (barBeat === 1) {
+        if (UIClipsOps.isReal(activeClip)) {
+          const diff = Math.floor(beat - activeClip.startTime)
+          if (timeSig.noteLength === 4) {
+            setBarsSinceStart(Math.floor(diff / timeSig.noteCount))
+          } else if (timeSig.noteLength === 8) {
+            if (timeSig.noteCount % 2 === 0) {
+              setBarsSinceStart(Math.floor(diff / (timeSig.noteCount / 2)))
             } else {
-              setBarsSinceStart(Math.floor(((diff + 0.5) * 2) / timeSig.noteCount))
+              if (diff % timeSig.noteCount === 0) {
+                setBarsSinceStart(Math.floor(diff / timeSig.noteCount) * 2)
+              } else {
+                setBarsSinceStart(Math.floor(((diff + 0.5) * 2) / timeSig.noteCount))
+              }
             }
           }
         }
       }
-    }
-  }, [barBeat, beat, activeClip, timeSig])
+    }, [barBeat, beat, activeClip, timeSig])
 
-  const barCount = (barsSinceStart % count) + 1
+    const barCount = (barsSinceStart % count) + 1
 
-  const pads = targets.map((target, i) => (
-    <Pad
-      key={`bar-tracker-${i}`}
-      color={i < barCount ? color : Color.BLACK}
-      target={target}
-    />
-  ))
+    const pads = targets.map((target, i) => (
+      <Pad
+        key={`bar-tracker-${i}`}
+        color={i < barCount ? color : Color.BLACK}
+        target={target}
+      />
+    ))
 
-  return <>{pads}</>
-}
+    return <>{pads}</>
+  },
+})

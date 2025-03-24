@@ -1,38 +1,38 @@
 import React from 'react'
 import { Color } from '../Color'
 import { MidiTarget } from '../../midi/MidiTarget'
-import { ProjectHooks } from '../../project/ProjectHooks'
 import { ForeverBeat } from '../../hooks/ForeverBeat'
+import { ControllerWidget } from '../ControllerWidget'
+import { Schema } from 'effect'
 
-type MetronomeWidgetProps = {
-  target: MidiTarget
-  oneColor?: Color
-  restColor?: Color
-}
+export const MetronomeWidget = ControllerWidget({
+  name: 'metronome',
+  schema: Schema.TaggedStruct('metronome', {
+    target: MidiTarget.Schema,
+    oneColor: Color.Schema,
+    restColor: Color.Schema,
+  }),
+  targets: (w) => [w.target],
+  component: ({ target, oneColor, restColor }) => {
+    const [color, setColor] = React.useState(Color.BLACK)
 
-export const MetronomeWidget: React.FC<MetronomeWidgetProps> = ({
-  target,
-  oneColor = Color.GREEN,
-  restColor = Color.RED,
-}) => {
-  const [color, setColor] = React.useState(Color.BLACK)
+    React.useEffect(
+      () =>
+        ForeverBeat.onTick((p) => {
+          if (!p.halfBeat && p.isPlaying) {
+            setColor(p.beat === 1 ? oneColor : restColor)
+          } else {
+            setColor(Color.BLACK)
+          }
+        }),
+      []
+    )
 
-  React.useEffect(
-    () =>
-      ForeverBeat.onTick((p) => {
-        if (!p.halfBeat && p.isPlaying) {
-          setColor(p.beat === 1 ? oneColor : restColor)
-        } else {
-          setColor(Color.BLACK)
-        }
-      }),
-    []
-  )
-
-  return (
-    <pad
-      color={color}
-      target={target}
-    />
-  )
-}
+    return (
+      <pad
+        color={color}
+        target={target}
+      />
+    )
+  },
+})

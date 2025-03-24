@@ -4,6 +4,8 @@ import { Color } from '../Color'
 import { MidiTarget } from '../../midi/MidiTarget'
 import { ProjectHooks } from '../../project/ProjectHooks'
 import { UIClip } from '../../project/UIStateDisplay'
+import { ControllerWidget } from '../ControllerWidget'
+import { Schema } from 'effect'
 
 const validInParent =
   (parentClip: UIClip) =>
@@ -13,44 +15,43 @@ const validInParent =
     )
   }
 
-export type TrackSectionsWidgetProps = {
-  targets: Array<MidiTarget>
-  trackName: string
-  parentTrackName?: string
-}
+export const TrackSectionsWidget = ControllerWidget({
+  name: 'track-sections',
+  schema: Schema.TaggedStruct('track-sections', {
+    targets: Schema.Array(MidiTarget.Schema),
+    trackName: Schema.String,
+    parentTrackName: Schema.String,
+  }),
+  targets: (w) => [...w.targets],
+  component: ({ targets, trackName, parentTrackName = '' }) => {
+    const track = ProjectHooks.useTrack(trackName)
+    const activeClip = ProjectHooks.useActiveClip(track)
+    const parentTrack = ProjectHooks.useTrack(parentTrackName)
+    const parentActiveClip = ProjectHooks.useActiveClip(parentTrack)
 
-export const TrackSectionsWidget: React.FC<TrackSectionsWidgetProps> = ({
-  targets,
-  trackName,
-  parentTrackName = '',
-}) => {
-  const track = ProjectHooks.useTrack(trackName)
-  const activeClip = ProjectHooks.useActiveClip(track)
-  const parentTrack = ProjectHooks.useTrack(parentTrackName)
-  const parentActiveClip = ProjectHooks.useActiveClip(parentTrack)
+    const visibleClips: Array<UIClip> = React.useMemo(() => {
+      const tmpClips: Array<UIClip> = []
+      track.clips.forEach((clip) => {
+        if (clip.startTime >= activeClip.startTime) {
+          tmpClips.push(clip)
+        }
+      })
+      return tmpClips.filter(validInParent(parentActiveClip))
+    }, [track, activeClip, parentActiveClip])
 
-  const visibleClips: Array<UIClip> = React.useMemo(() => {
-    const tmpClips: Array<UIClip> = []
-    track.clips.forEach((clip) => {
-      if (clip.startTime >= activeClip.startTime) {
-        tmpClips.push(clip)
-      }
+    const pads = targets.map((target, index) => {
+      const clip = visibleClips?.[index]
+
+      const color = clip !== undefined && clip.type === 'real' ? clip.color : Color.BLACK
+      return (
+        <Pad
+          key={`track-sections-${index}`}
+          color={color}
+          target={target}
+        />
+      )
     })
-    return tmpClips.filter(validInParent(parentActiveClip))
-  }, [track, activeClip, parentActiveClip])
 
-  const pads = targets.map((target, index) => {
-    const clip = visibleClips?.[index]
-
-    const color = clip !== undefined && clip.type === 'real' ? clip.color : Color.BLACK
-    return (
-      <Pad
-        key={`track-sections-${index}`}
-        color={color}
-        target={target}
-      />
-    )
-  })
-
-  return <>{pads}</>
-}
+    return <>{pads}</>
+  },
+})
