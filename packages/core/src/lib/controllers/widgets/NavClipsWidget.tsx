@@ -14,12 +14,10 @@ export const NavClipsWidget = ControllerWidget({
   schema: Schema.TaggedStruct('nav-clips', {
     targets: Schema.Array(MidiTarget.Schema),
     trackName: Schema.String,
-    fromClip: Schema.Number,
-    toClip: Schema.Number,
     sort: Schema.optional(Schema.Literal('alphabetical', 'order')),
   }),
   targets: (s) => [...s.targets],
-  component: ({ targets, trackName, fromClip, toClip, sort }) => {
+  component: ({ targets, trackName, sort }) => {
     const dawEmitter = Midi.useDawEmitter()
     const arrangement = ProjectHooks.useArrangement()
     const track = ProjectHooks.useTrack(trackName)
@@ -35,9 +33,8 @@ export const NavClipsWidget = ControllerWidget({
 
     const clips = React.useMemo(() => {
       const tmpClips: Array<NavigateableClip & { target: MidiTarget }> = []
-      for (let index = fromClip; index <= toClip; index++) {
-        const targetIndex = index - fromClip
-        const target = targets?.[targetIndex]
+      for (let index = 0; index < realClips.length; index++) {
+        const target = targets?.[index]
         const clip = realClips?.[index]
         if (clip !== undefined && target !== undefined) {
           const cue = cueHash?.[clip.startTime]
@@ -47,7 +44,7 @@ export const NavClipsWidget = ControllerWidget({
         }
       }
       return tmpClips
-    }, [track, cueHash, targets, fromClip, toClip])
+    }, [track, cueHash, targets])
 
     const onClick = (clip: NavigateableClip) => {
       dawEmitter.send(TX_MESSAGE.jumpToCue(clip.cue.index))

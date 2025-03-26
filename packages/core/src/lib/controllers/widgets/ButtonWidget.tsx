@@ -23,7 +23,9 @@ export const ButtonWidget = ControllerWidget({
         isFlashing={isFlashing}
         color={color}
         target={target}
-        onClick={() => dawEmitter.send(MidiTarget.toMessage(message, 127))}
+        onClick={() => {
+          // dawEmitter.send(MidiTarget.toMessage(message, 127))
+        }}
       />
     )
   },

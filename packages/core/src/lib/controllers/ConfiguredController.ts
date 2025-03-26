@@ -180,12 +180,25 @@ export type ConfiguredControllerIO = {
 const useRealIO = (controller: RealConfiguredController): ConfiguredControllerIO => {
   const manager = Midi.useDeviceManager()
 
-  const inputListener = pipe(controller.selected.input, Option.flatMap(manager.getInput))
-  const outputEmitter = pipe(controller.selected.output, Option.flatMap(manager.getOutput))
+  const listener = React.useMemo(
+    () =>
+      Option.getOrElse(pipe(controller.selected.input, Option.flatMap(manager.getInput)), () =>
+        MidiDeviceManager.emptyListener()
+      ),
+    [controller]
+  )
+
+  const emitter = React.useMemo(
+    () =>
+      Option.getOrElse(pipe(controller.selected.output, Option.flatMap(manager.getOutput)), () =>
+        MidiDeviceManager.emptyEmitter()
+      ),
+    [controller]
+  )
 
   return {
-    emitter: Option.getOrElse(outputEmitter, () => MidiDeviceManager.emptyEmitter()),
-    listener: Option.getOrElse(inputListener, () => MidiDeviceManager.emptyListener()),
+    emitter,
+    listener,
     enabled: controller.enabled,
   }
 }

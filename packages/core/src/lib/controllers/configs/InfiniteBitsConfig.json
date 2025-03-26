@@ -223,44 +223,36 @@
       "targets": [
         {
           "_tag": "Note",
-          "note": 31
+          "note": 11
         },
         {
           "_tag": "Note",
-          "note": 32
+          "note": 12
         },
         {
           "_tag": "Note",
-          "note": 33
+          "note": 13
         },
         {
           "_tag": "Note",
-          "note": 34
+          "note": 14
         },
         {
           "_tag": "Note",
-          "note": 35
+          "note": 15
         },
         {
           "_tag": "Note",
-          "note": 36
+          "note": 16
         },
         {
           "_tag": "Note",
-          "note": 37
+          "note": 17
         },
         {
           "_tag": "Note",
-          "note": 38
-        }
-      ],
-      "trackName": "Songs",
-      "fromClip": 16,
-      "toClip": 23
-    },
-    {
-      "_tag": "nav-clips",
-      "targets": [
+          "note": 18
+        },
         {
           "_tag": "Note",
           "note": 21
@@ -292,51 +284,41 @@
         {
           "_tag": "Note",
           "note": 28
+        },
+        {
+          "_tag": "Note",
+          "note": 31
+        },
+        {
+          "_tag": "Note",
+          "note": 32
+        },
+        {
+          "_tag": "Note",
+          "note": 33
+        },
+        {
+          "_tag": "Note",
+          "note": 34
+        },
+        {
+          "_tag": "Note",
+          "note": 35
+        },
+        {
+          "_tag": "Note",
+          "note": 36
+        },
+        {
+          "_tag": "Note",
+          "note": 37
+        },
+        {
+          "_tag": "Note",
+          "note": 38
         }
       ],
-      "trackName": "Songs",
-      "fromClip": 8,
-      "toClip": 15
-    },
-    {
-      "_tag": "nav-clips",
-      "targets": [
-        {
-          "_tag": "Note",
-          "note": 11
-        },
-        {
-          "_tag": "Note",
-          "note": 12
-        },
-        {
-          "_tag": "Note",
-          "note": 13
-        },
-        {
-          "_tag": "Note",
-          "note": 14
-        },
-        {
-          "_tag": "Note",
-          "note": 15
-        },
-        {
-          "_tag": "Note",
-          "note": 16
-        },
-        {
-          "_tag": "Note",
-          "note": 17
-        },
-        {
-          "_tag": "Note",
-          "note": 18
-        }
-      ],
-      "trackName": "Songs",
-      "fromClip": 0,
-      "toClip": 7
+      "trackName": "Songs"
     }
   ]
 }

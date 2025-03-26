@@ -3,14 +3,23 @@ import { Schema } from 'effect'
 const fromRGB = (red: number, green: number, blue: number): Color =>
   0x1000000 + ((red << 16) | (green << 8) | (blue << 0))
 
-const toHex = (color: Color): string => color.toString(16).slice(1)
+const toHex = (color: Color): string => {
+  const hex = color.toString(16)
+  if (hex.length > 6) {
+    return hex.substring(1, 7)
+  } else {
+    return hex
+  }
+}
 
-const toRGB = (color: Color): [number, number, number] => [
-  (color >> 16) & 255,
-  (color >> 8) & 255,
-  color & 255,
-]
-
+const toRGB = (color: Color): [number, number, number] => {
+  const hex = toHex(color)
+  return [
+    parseInt(hex.substring(0, 2), 16),
+    parseInt(hex.substring(2, 4), 16),
+    parseInt(hex.substring(4, 6), 16),
+  ]
+}
 const fromHex = (hex: string): Color => {
   const red = hex.substring(0, 2)
   const green = hex.substring(2, 4)

@@ -79,6 +79,7 @@ const ControllerManager = (
 
   return {
     remove() {
+      console.log('Controller cleanup', controller)
       controller.clear()
       controller.off()
     },
@@ -214,7 +215,7 @@ const instance = Reconciler({
   appendChildToContainer(container: Container, child: Instance | TextInstance): void {
     log('appendChildToContainer', container, child)
     if (child.type === 'controller') {
-      container.controllers.push(child)
+      // container.controllers.push(child)
     }
   },
 

@@ -11,7 +11,28 @@ const sysex = (body: Array<number>): SysExMessage => ({
   body,
 })
 
-export const LaunchPadMiniMk3 = (emitter: MidiEmitter, listener: MidiListener) =>
+const COLOR_SCALE = 0.5
+const COLOR_FIX = false
+
+const fixColor = (color: Color, fixColor: boolean): Color => {
+  if (fixColor) {
+    //find max channel
+    const [r, g, b] = Color.toRGB(color)
+    if (r > g && r > b) {
+      return Color.fromRGB(r, Math.floor(g * COLOR_SCALE), Math.floor(b * COLOR_SCALE))
+    } else if (g > r && g > b) {
+      return Color.fromRGB(Math.floor(r * COLOR_SCALE), g, Math.floor(b * COLOR_SCALE))
+    } else if (b > r && b > g) {
+      return Color.fromRGB(Math.floor(r * COLOR_SCALE), Math.floor(g * COLOR_SCALE), b)
+    } else {
+      return color
+    }
+  } else {
+    return color
+  }
+}
+
+export const LaunchPadMiniMk3 = (emitter: MidiEmitter, listener: MidiListener, virtual: boolean = false) =>
   new Controller({
     init: () => {
       emitter.send(sysex([32, 41, 2, 13, 14, 1]))
@@ -20,13 +41,13 @@ export const LaunchPadMiniMk3 = (emitter: MidiEmitter, listener: MidiListener) =
       const sysexArr = [32, 41, 2, 13, 3]
       _.forEach(pads, (pad) => {
         if (pad.color !== undefined) {
-          const [r, g, b] = Color.toRGB(pad.color)
+          const [r, g, b] = Color.toRGB(fixColor(pad.color, !virtual))
           sysexArr.push(
             3,
             MidiTarget.toValue(pad.target),
             Math.floor(r / 2),
             Math.floor(g / 2),
-            Math.floor(b / 2),
+            Math.floor(b / 2)
           )
         }
       })

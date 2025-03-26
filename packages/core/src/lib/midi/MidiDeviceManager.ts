@@ -9,7 +9,9 @@ export const emptyEmitter = (): MidiEmitter => ({
 })
 
 export const emptyListener = (): MidiListener => ({
-  on: () => () => {},
+  on: (m) => () => {
+    console.log('Empty listener', m)
+  },
 })
 
 export type MidiDeviceManager = {
