@@ -4,7 +4,7 @@ import { Box, Divider, FormControlLabel, Switch, Typography } from '@mui/materia
 import IconButton from '@mui/material/IconButton'
 import { PrimitiveAtom } from 'jotai'
 import SettingsIcon from '@mui/icons-material/Settings'
-import { ControllerEditRawComponent } from './ControllerEditRawComponent'
+import { ControllerEditComponent } from './ControllerEditComponent'
 import { ControllerHomeComponent } from './ControllerHomeComponent'
 
 export type ControllerComponentProps = {
@@ -41,18 +41,18 @@ export const ControllerComponent: React.FC<ControllerComponentProps> = ({ contro
             sx={{
               display: 'flex',
             }}>
-            <Box sx={{ display: 'flex', mr: 2 }}>
-              <FormControlLabel
-                labelPlacement='start'
-                control={
-                  <Switch
-                    checked={controller.enabled}
-                    onChange={(d) => controller.setEnabled(d.target.checked)}
-                  />
-                }
-                label='Enabled'
-              />
-            </Box>
+            {/*<Box sx={{ display: 'flex', mr: 2 }}>*/}
+            {/*  <FormControlLabel*/}
+            {/*    labelPlacement='start'*/}
+            {/*    control={*/}
+            {/*      <Switch*/}
+            {/*        checked={controller.enabled}*/}
+            {/*        onChange={(d) => controller.setEnabled(d.target.checked)}*/}
+            {/*      />*/}
+            {/*    }*/}
+            {/*    label='Enabled'*/}
+            {/*  />*/}
+            {/*</Box>*/}
             <Box
               sx={{
                 display: 'flex',
@@ -66,7 +66,7 @@ export const ControllerComponent: React.FC<ControllerComponentProps> = ({ contro
       </Box>
       <Divider />
       {isEdit ? (
-        <ControllerEditRawComponent controllerAtom={controllerAtom} />
+        <ControllerEditComponent controllerAtom={controllerAtom} />
       ) : (
         <ControllerHomeComponent controllerAtom={controllerAtom} />
       )}

@@ -1,7 +1,6 @@
 import React from 'react'
 import { ConfiguredController, ControllerDevices } from '@midi-structor/core'
 import { PrimitiveAtom } from 'jotai/index'
-import { Card, CardContent, CardHeader } from '@mui/material'
 import { SelectComponent, SelectItem } from '../SelectComponent'
 
 export type DeviceSelectorComponentProps = {
@@ -17,16 +16,11 @@ export const DeviceSelectorComponent: React.FC<DeviceSelectorComponentProps> = (
   }))
 
   return (
-    <Card>
-      <CardHeader title='Device Setup' />
-      <CardContent>
-        <SelectComponent
-          label='Device'
-          activeLabel={controller.device}
-          items={deviceItems}
-          onChange={(d) => controller.setDevice(d || '')}
-        />
-      </CardContent>
-    </Card>
+    <SelectComponent
+      label='Device'
+      activeLabel={controller.device}
+      items={deviceItems}
+      onChange={(d) => controller.setDevice(d || '')}
+    />
   )
 }

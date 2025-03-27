@@ -13,7 +13,7 @@ export const ControllerBrowserModeComponent: React.FC<ControllerBrowserModeCompo
 }) => {
   const deviceSelection = ConfiguredController.useMidiDeviceSelection(controllerAtom)
   return (
-    <Box>
+    <Box sx={{ width: '100%' }}>
       <MidiDeviceSelectionComponent midiDevices={deviceSelection.input} />
       <MidiDeviceSelectionComponent midiDevices={deviceSelection.output} />
     </Box>

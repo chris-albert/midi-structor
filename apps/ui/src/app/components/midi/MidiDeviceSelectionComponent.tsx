@@ -32,9 +32,9 @@ export const MidiDeviceSelectionComponent: React.FC<MidiDeviceSelectionComponent
   return (
     <Box
       sx={{
+        width: '100%',
         display: 'flex',
         alignItems: 'center',
-        pr: 1,
       }}>
       <SelectComponent
         label={`MIDI ${_.capitalize(midiDevices.type)}`}

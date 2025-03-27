@@ -62,7 +62,7 @@ export const SelectComponent = <A,>({
 
   return (
     <FormControl
-      sx={{ m: 1, minWidth: 140 }}
+      sx={{ m: 1, minWidth: 140, width: '100%' }}
       size='small'>
       <InputLabel id='demo-simple-select-label'>{label}</InputLabel>
       <Select
@@ -72,7 +72,7 @@ export const SelectComponent = <A,>({
         label={label}
         onClose={() => setIsEdit(false)}
         onChange={onChangeLocal}
-        autoWidth>
+        fullWidth>
         {containEmpty ? <MenuItem value=''>--</MenuItem> : null}
         {noItemsLabel !== undefined && items.length === 0 ? (
           <MenuItem value=''>{noItemsLabel}</MenuItem>

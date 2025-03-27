@@ -95,7 +95,7 @@ const useSafeFocus = <A, K extends keyof A>(atom: PrimitiveAtom<A>, key: K) => {
 
 const useController = (controller: PrimitiveAtom<ConfiguredController>) => {
   const controllerValue = useAtomValue(controller)
-  const [name] = useAtom(useSafeFocus(controller, 'name'))
+  const [name, setName] = useAtom(useSafeFocus(controller, 'name'))
   const [enabled, setEnabled] = useAtom(useSafeFocus(controller, 'enabled'))
   const [config, setConfig] = useAtom(useSafeFocus(controller, 'config'))
   const [device, setDevice] = useAtom(useSafeFocus(controller, 'device'))
@@ -107,6 +107,7 @@ const useController = (controller: PrimitiveAtom<ConfiguredController>) => {
 
   return {
     name,
+    setName,
     enabled,
     setEnabled,
     config,
