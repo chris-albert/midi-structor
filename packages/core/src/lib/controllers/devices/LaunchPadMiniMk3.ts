@@ -4,6 +4,7 @@ import _ from 'lodash'
 import { Controller } from '../Controller'
 import { Color } from '../Color'
 import { MidiTarget } from '../../midi/MidiTarget'
+import { ControllerDevice } from './ControllerDevice'
 
 const sysex = (body: Array<number>): SysExMessage => ({
   type: 'sysex',
@@ -32,7 +33,7 @@ const fixColor = (color: Color, fixColor: boolean): Color => {
   }
 }
 
-export const LaunchPadMiniMk3 = (emitter: MidiEmitter, listener: MidiListener, virtual: boolean = false) =>
+const controller = (emitter: MidiEmitter, listener: MidiListener, virtual: boolean) =>
   new Controller({
     init: () => {
       emitter.send(sysex([32, 41, 2, 13, 14, 1]))
@@ -59,3 +60,8 @@ export const LaunchPadMiniMk3 = (emitter: MidiEmitter, listener: MidiListener, v
     listener,
     targets: MidiTarget.notes({ from: 11, to: 99 }),
   })
+
+export const LaunchPadMiniMk3 = ControllerDevice.of({
+  name: 'Launchpad Mini [MK3]',
+  controller,
+})

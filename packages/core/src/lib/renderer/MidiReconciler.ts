@@ -79,7 +79,6 @@ const ControllerManager = (
 
   return {
     remove() {
-      console.log('Controller cleanup', controller)
       controller.clear()
       controller.off()
     },

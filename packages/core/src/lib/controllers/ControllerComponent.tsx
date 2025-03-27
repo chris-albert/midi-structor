@@ -18,7 +18,7 @@ const RealControllerComponent: React.FC<RealControllerComponentProps> = ({ contr
   if (io.enabled) {
     return (
       <ControllerConfigComponent
-        controller={LaunchPadMiniMk3(io.emitter, io.listener, false)}
+        controller={LaunchPadMiniMk3.controller(io.emitter, io.listener, false)}
         name={controller.name}
         widgets={widgets}
       />
@@ -39,7 +39,7 @@ const VirtualControllerComponent: React.FC<VirtualControllerComponentProps> = ({
   if (io.enabled) {
     return (
       <ControllerConfigComponent
-        controller={LaunchPadMiniMk3(io.emitter, io.listener, true)}
+        controller={LaunchPadMiniMk3.controller(io.emitter, io.listener, true)}
         name={controller.name}
         widgets={widgets}
       />
