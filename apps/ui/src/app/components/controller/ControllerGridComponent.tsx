@@ -1,7 +1,7 @@
 import React from 'react'
 import { Box } from '@mui/material'
 import { ControllerPad, ControllerUI } from './ControllerUI'
-import { Color, ConfiguredController, MidiTarget, VirtualConfiguredController } from '@midi-structor/core'
+import { Color, ConfiguredController, MidiTarget } from '@midi-structor/core'
 
 type PadWithState = {
   pad: ControllerPad
@@ -10,7 +10,7 @@ type PadWithState = {
 
 type ControllerGridComponentProps = {
   controllerUI: ControllerUI
-  controller: VirtualConfiguredController
+  controller: ConfiguredController
 }
 
 export const ControllerGridComponent: React.FC<ControllerGridComponentProps> = ({

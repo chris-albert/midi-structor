@@ -1,30 +1,11 @@
 import React from 'react'
-import {
-  ConfiguredController,
-  ConfiguredControllerType,
-  RealConfiguredController,
-  VirtualConfiguredController,
-} from '@midi-structor/core'
-import { Box, Button, Divider, FormControlLabel, Switch, Typography } from '@mui/material'
+import { ConfiguredController } from '@midi-structor/core'
+import { Box, Divider, FormControlLabel, Switch, Typography } from '@mui/material'
 import IconButton from '@mui/material/IconButton'
-import DeleteIcon from '@mui/icons-material/Delete'
-import { SelectComponent, SelectItem } from '../SelectComponent'
-import { VirtualControllerComponent } from './VirtualControllerComponent'
-import { RealControllerComponent } from './RealControllerComponent'
 import { PrimitiveAtom } from 'jotai'
 import SettingsIcon from '@mui/icons-material/Settings'
 import { ControllerEditRawComponent } from './ControllerEditRawComponent'
-
-const selectTypeItems: Array<SelectItem<ConfiguredControllerType>> = [
-  {
-    label: 'virtual',
-    value: 'virtual',
-  },
-  {
-    label: 'real',
-    value: 'real',
-  },
-]
+import { ControllerHomeComponent } from './ControllerHomeComponent'
 
 export type ControllerComponentProps = {
   controllerAtom: PrimitiveAtom<ConfiguredController>
@@ -80,36 +61,14 @@ export const ControllerComponent: React.FC<ControllerComponentProps> = ({ contro
                 <SettingsIcon />
               </IconButton>
             </Box>
-            <Box>
-              <SelectComponent
-                label='Type'
-                containEmpty={false}
-                activeLabel={controller.type}
-                items={selectTypeItems}
-                onChange={(type) => {
-                  if (type !== undefined) {
-                    controller.setType(type)
-                  }
-                }}
-              />
-            </Box>
           </Box>
-          <IconButton
-            aria-label='delete'
-            onClick={() => {
-              controller.remove()
-            }}>
-            <DeleteIcon color='error' />
-          </IconButton>
         </Box>
       </Box>
       <Divider />
       {isEdit ? (
         <ControllerEditRawComponent controllerAtom={controllerAtom} />
-      ) : controller.type === 'virtual' ? (
-        <VirtualControllerComponent controller={controller.controller as VirtualConfiguredController} />
       ) : (
-        <RealControllerComponent controllerAtom={controllerAtom as PrimitiveAtom<RealConfiguredController>} />
+        <ControllerHomeComponent controllerAtom={controllerAtom} />
       )}
     </Box>
   )

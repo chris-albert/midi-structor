@@ -15,36 +15,26 @@ import { Color } from './Color'
 import { ControllerConfig } from './ControllerConfig'
 import { ResolvedControllerWidget } from './ControllerWidget'
 import { ControllerWidgets } from './ControllerWidgets'
+import { ControllerDevices } from './devices/ControllerDevices'
 
-export type ConfiguredControllerType = 'virtual' | 'real'
-
-export type ConfiguredControllerBase = {
+export type ConfiguredController = {
   name: string
   enabled: boolean
   config: ControllerConfig
+  device: string
   selected: {
     input: Option.Option<string>
     output: Option.Option<string>
   }
 }
 
-export type RealConfiguredController = {
-  type: 'real'
-} & ConfiguredControllerBase
-
-export type VirtualConfiguredController = {
-  type: 'virtual'
-} & ConfiguredControllerBase
-
-export type ConfiguredController = RealConfiguredController | VirtualConfiguredController
-
 export type ConfiguredControllers = Array<ConfiguredController>
 
 const defaultConfiguredController = (name: string): ConfiguredController => ({
   name,
-  type: 'virtual',
   enabled: true,
   config: ControllerConfig.empty(),
+  device: ControllerDevices.defaultDevice.name,
   selected: {
     input: Option.none(),
     output: Option.none(),
@@ -106,9 +96,9 @@ const useSafeFocus = <A, K extends keyof A>(atom: PrimitiveAtom<A>, key: K) => {
 const useController = (controller: PrimitiveAtom<ConfiguredController>) => {
   const controllerValue = useAtomValue(controller)
   const [name] = useAtom(useSafeFocus(controller, 'name'))
-  const [type, setType] = useAtom(useSafeFocus(controller, 'type'))
   const [enabled, setEnabled] = useAtom(useSafeFocus(controller, 'enabled'))
   const [config, setConfig] = useAtom(useSafeFocus(controller, 'config'))
+  const [device, setDevice] = useAtom(useSafeFocus(controller, 'device'))
   const removeController = useRemoveController()
 
   const remove = () => {
@@ -117,18 +107,18 @@ const useController = (controller: PrimitiveAtom<ConfiguredController>) => {
 
   return {
     name,
-    type,
-    setType,
     enabled,
     setEnabled,
     config,
     setConfig,
+    device,
+    setDevice,
     remove,
     controller: controllerValue,
   }
 }
 
-const useRealController = (controller: PrimitiveAtom<RealConfiguredController>) => {
+const useRealController = (controller: PrimitiveAtom<ConfiguredController>) => {
   const baseController = useController(controller as PrimitiveAtom<ConfiguredController>)
   const selected = useSafeFocus(controller, 'selected')
   const [input, setInput] = useAtom(useSafeFocus(selected, 'input'))
@@ -149,7 +139,7 @@ export type ControllerMidiDeviceSelections = {
 }
 
 const useMidiDeviceSelection = (
-  controllerAtom: PrimitiveAtom<RealConfiguredController>
+  controllerAtom: PrimitiveAtom<ConfiguredController>
 ): ControllerMidiDeviceSelections => {
   const controller = useRealController(controllerAtom)
   const manager = Midi.useDeviceManager()
@@ -177,7 +167,7 @@ export type ConfiguredControllerIO = {
   enabled: boolean
 }
 
-const useRealIO = (controller: RealConfiguredController): ConfiguredControllerIO => {
+const useRealIO = (controller: ConfiguredController): ConfiguredControllerIO => {
   const manager = Midi.useDeviceManager()
 
   const listener = React.useMemo(
@@ -203,7 +193,7 @@ const useRealIO = (controller: RealConfiguredController): ConfiguredControllerIO
   }
 }
 
-const useVirtualStore = (controller: VirtualConfiguredController) => {
+const useVirtualStore = (controller: ConfiguredController) => {
   return useAtomValue(atoms.virtualStore(controller.name))
 }
 
@@ -222,7 +212,7 @@ const colorsFromSysex = (sysex: SysExMessage): Array<[string, Color]> => {
   return colors
 }
 
-const useVirtualSetStore = (controller: VirtualConfiguredController) => {
+const useVirtualSetStore = (controller: ConfiguredController) => {
   const setStore = useSetAtom(atoms.virtualStore(controller.name))
 
   const onMessage = (message: MidiMessage) => {
@@ -241,10 +231,10 @@ const useVirtualSetStore = (controller: VirtualConfiguredController) => {
   }
 }
 
-const useVirtualListener = (controller: VirtualConfiguredController) =>
+const useVirtualListener = (controller: ConfiguredController) =>
   useAtomValue(atoms.virtualListener(controller.name))
 
-const useVirtualIO = (controller: VirtualConfiguredController): ConfiguredControllerIO => {
+const useVirtualIO = (controller: ConfiguredController): ConfiguredControllerIO => {
   const store = useVirtualSetStore(controller)
   const listener = useVirtualListener(controller)
 
@@ -254,6 +244,29 @@ const useVirtualIO = (controller: VirtualConfiguredController): ConfiguredContro
         store.onMessage(message)
       },
     },
+    listener,
+    enabled: controller.enabled,
+  }
+}
+
+const useIO = (controller: ConfiguredController) => {
+  const real = useRealIO(controller)
+  const virtual = useVirtualIO(controller)
+
+  const emitter: MidiEmitter = {
+    send: (message: MidiMessage) => {
+      real.emitter.send(message)
+      virtual.emitter.send(message)
+    },
+  }
+  const listener = EventEmitter<MidiEventRecord>()
+
+  real.listener.on('*', listener.emit)
+
+  virtual.listener.on('*', listener.emit)
+
+  return {
+    emitter,
     listener,
     enabled: controller.enabled,
   }
@@ -270,6 +283,7 @@ const useResolvedWidgets = (controllerConfig: ControllerConfig): Array<ResolvedC
 export const ConfiguredController = {
   useController,
   useControllers,
+  useIO,
   useRealIO,
   useVirtualIO,
   useVirtualStore,

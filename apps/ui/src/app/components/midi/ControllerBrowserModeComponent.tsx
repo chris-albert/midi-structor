@@ -1,11 +1,11 @@
 import React from 'react'
 import { Box } from '@mui/material'
 import { PrimitiveAtom } from 'jotai/index'
-import { ConfiguredController, RealConfiguredController } from '@midi-structor/core'
+import { ConfiguredController } from '@midi-structor/core'
 import { MidiDeviceSelectionComponent } from './MidiDeviceSelectionComponent'
 
 export type ControllerBrowserModeComponentProps = {
-  controllerAtom: PrimitiveAtom<RealConfiguredController>
+  controllerAtom: PrimitiveAtom<ConfiguredController>
 }
 
 export const ControllerBrowserModeComponent: React.FC<ControllerBrowserModeComponentProps> = ({
