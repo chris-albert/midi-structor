@@ -1,6 +1,6 @@
 import React from 'react'
 import { ConfiguredController } from '@midi-structor/core'
-import { Box, Divider, FormControlLabel, Switch, Typography } from '@mui/material'
+import { Box, Divider, Typography } from '@mui/material'
 import IconButton from '@mui/material/IconButton'
 import { PrimitiveAtom } from 'jotai'
 import SettingsIcon from '@mui/icons-material/Settings'
@@ -28,7 +28,6 @@ export const ControllerComponent: React.FC<ControllerComponentProps> = ({ contro
           sx={{
             display: 'flex',
             alignItems: 'center',
-            pl: 2,
           }}>
           <Typography variant='h5'>{controller.name}</Typography>
         </Box>
@@ -41,18 +40,6 @@ export const ControllerComponent: React.FC<ControllerComponentProps> = ({ contro
             sx={{
               display: 'flex',
             }}>
-            {/*<Box sx={{ display: 'flex', mr: 2 }}>*/}
-            {/*  <FormControlLabel*/}
-            {/*    labelPlacement='start'*/}
-            {/*    control={*/}
-            {/*      <Switch*/}
-            {/*        checked={controller.enabled}*/}
-            {/*        onChange={(d) => controller.setEnabled(d.target.checked)}*/}
-            {/*      />*/}
-            {/*    }*/}
-            {/*    label='Enabled'*/}
-            {/*  />*/}
-            {/*</Box>*/}
             <Box
               sx={{
                 display: 'flex',

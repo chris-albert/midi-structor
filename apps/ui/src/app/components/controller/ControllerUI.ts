@@ -1,12 +1,7 @@
-import { Color, Controller, MidiMessage, MidiTarget } from '@midi-structor/core'
+import { MidiMessage, MidiTarget } from '@midi-structor/core'
 import { Data, Option } from 'effect'
 import React from 'react'
 import _ from 'lodash'
-
-export type ControllerPadColor = {
-  target: MidiTarget
-  color: number | undefined
-}
 
 export class ControllerPad extends Data.Class<{
   target: MidiTarget
