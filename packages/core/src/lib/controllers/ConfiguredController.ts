@@ -22,6 +22,7 @@ export type ConfiguredController = {
   enabled: boolean
   config: ControllerConfig
   device: string
+  color?: string
   selected: {
     input: Option.Option<string>
     output: Option.Option<string>
@@ -99,6 +100,7 @@ const useController = (controller: PrimitiveAtom<ConfiguredController>) => {
   const [enabled, setEnabled] = useAtom(useSafeFocus(controller, 'enabled'))
   const [config, setConfig] = useAtom(useSafeFocus(controller, 'config'))
   const [device, setDevice] = useAtom(useSafeFocus(controller, 'device'))
+  const [color, setColor] = useAtom(useSafeFocus(controller, 'color'))
   const removeController = useRemoveController()
 
   const remove = () => {
@@ -114,6 +116,8 @@ const useController = (controller: PrimitiveAtom<ConfiguredController>) => {
     setConfig,
     device,
     setDevice,
+    color,
+    setColor,
     remove,
     controller: controllerValue,
   }

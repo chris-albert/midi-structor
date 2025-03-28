@@ -26,7 +26,7 @@ export const TabsComponent: React.FC<TabsComponentProps> = ({ orientation, tabs 
   return (
     <Box sx={{ flexGrow: 1, display: 'flex', height: '100%' }}>
       <Tabs
-        sx={{ borderRight: 1, borderColor: 'divider' }}
+        sx={{ borderRight: 1, borderColor: 'divider', minWidth: '90px' }}
         orientation={orientation}
         value={selected}
         onChange={handleChange}>

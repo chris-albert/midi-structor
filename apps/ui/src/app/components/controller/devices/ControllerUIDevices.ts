@@ -2,7 +2,7 @@ import { ControllerUIDevice } from './ControllerUIDevice'
 import { Option } from 'effect'
 import { LaunchPadMiniMk3UI } from './LaunchPadMiniMk3UI'
 import _ from 'lodash'
-import { MIDIStructorDeviceUI } from './MIDIStructorDeviceUI'
+import { MIDIStructorDeviceUI } from './midistructor/MIDIStructorDeviceUI'
 
 const all: Array<ControllerUIDevice> = [LaunchPadMiniMk3UI, MIDIStructorDeviceUI]
 

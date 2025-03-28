@@ -7,6 +7,8 @@ import { ControllerBrowserModeComponent } from '../midi/ControllerBrowserModeCom
 import DeleteIcon from '@mui/icons-material/Delete'
 import { ControllerEditRawComponent } from './ControllerEditRawComponent'
 import { ControllerNameComponent } from './ControllerNameComponent'
+import { MuiColorInput } from 'mui-color-input'
+import { stringToColor } from '../StringAvatarComponent'
 
 export type ControllerEditComponentProps = {
   controllerAtom: PrimitiveAtom<ConfiguredController>
@@ -32,6 +34,17 @@ export const ControllerEditComponent: React.FC<ControllerEditComponentProps> = (
               />
             }
             label='Enabled'
+          />
+        </Box>
+        <Box sx={{ ml: 1 }}>
+          <MuiColorInput
+            label='Color'
+            size='small'
+            format='hex'
+            value={controller.color || stringToColor(controller.name)}
+            onChange={(n, c) => {
+              controller.setColor(n)
+            }}
           />
         </Box>
         <Typography variant='h6'>MIDI</Typography>

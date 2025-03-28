@@ -1,7 +1,7 @@
 import React from 'react'
 import { Avatar } from '@mui/material'
 
-function stringToColor(string: string) {
+export function stringToColor(string: string) {
   let hash = 0
   let i
 
@@ -21,14 +21,14 @@ function stringToColor(string: string) {
   return color
 }
 
-function stringAvatar(name: string, size: number) {
+function stringAvatar(name: string, size: number, color: string) {
   const split = name.split(' ')
 
   return {
     sx: {
       width: size,
       height: size,
-      bgcolor: stringToColor(name),
+      bgcolor: color,
     },
     // @ts-ignore
     children: split.length > 1 ? `${name.split(' ')[0][0]}${name.split(' ')[1][0]}` : name.substring(0, 2),
@@ -37,9 +37,10 @@ function stringAvatar(name: string, size: number) {
 
 export type StringAvatarComponentProps = {
   label: string
+  color: string
   size?: number
 }
 
-export const StringAvatarComponent: React.FC<StringAvatarComponentProps> = ({ label, size = 25 }) => {
-  return <Avatar {...stringAvatar(label, size)} />
+export const StringAvatarComponent: React.FC<StringAvatarComponentProps> = ({ label, size = 25, color }) => {
+  return <Avatar {...stringAvatar(label, size, color)} />
 }
