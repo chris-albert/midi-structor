@@ -4,7 +4,7 @@ import { ControllerDevice } from './ControllerDevice'
 import { Option } from 'effect'
 import { MIDIStructorUI } from './MIDIStructorUI'
 
-const allDevices: Array<ControllerDevice> = [LaunchPadMiniMk3, MIDIStructorUI]
+const allDevices: Array<ControllerDevice> = [LaunchPadMiniMk3, MIDIStructorUI.device]
 
 const deviceLookup: Record<string, ControllerDevice> = _.keyBy(allDevices, 'name')
 

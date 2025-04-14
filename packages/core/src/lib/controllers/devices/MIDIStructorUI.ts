@@ -12,7 +12,11 @@ const controller = (emitter: MidiEmitter, listener: MidiListener, virtual: boole
     targets: [],
   })
 
-export const MIDIStructorUI = ControllerDevice.of({
+const device = ControllerDevice.of({
   name: 'MIDI Structor UI',
   controller,
 })
+
+export const MIDIStructorUI = {
+  device,
+}

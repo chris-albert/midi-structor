@@ -9,7 +9,24 @@ export type ControllerWidget<A> = {
   component: (a: A) => React.ReactElement
 }
 
-export const ControllerWidget = <A,>(props: ControllerWidget<A>): ControllerWidget<A> => props
+type ControllerWidgetProps<A extends Schema.Struct.Fields> = {
+  name: string
+  schema: Schema.Struct<A>
+  targets: (a: Schema.Struct.Type<A>) => Array<MidiTarget>
+  component: (a: Schema.Struct.Type<A>) => React.ReactElement
+}
+
+export const ControllerWidget = <A extends Schema.Struct.Fields>(
+  props: ControllerWidgetProps<A>
+): ControllerWidget<Schema.Struct.Type<A>> => ({
+  name: props.name,
+  schema: Schema.TaggedStruct(props.name, props.schema.fields) as any as Schema.Schema<
+    Schema.Struct.Type<A>,
+    any
+  >,
+  targets: props.targets,
+  component: props.component,
+})
 
 export type ResolvedControllerWidget = {
   name: string

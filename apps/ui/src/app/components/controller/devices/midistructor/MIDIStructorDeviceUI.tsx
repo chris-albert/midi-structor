@@ -4,7 +4,7 @@ import { MIDIStructorUI } from '@midi-structor/core'
 import { MidiStructorComponent } from './MidiStructorComponent'
 
 export const MIDIStructorDeviceUI = ControllerUIDevice.of({
-  controller: MIDIStructorUI,
+  controller: MIDIStructorUI.device,
   component: (configuredController) => {
     return <MidiStructorComponent configuredController={configuredController} />
   },
