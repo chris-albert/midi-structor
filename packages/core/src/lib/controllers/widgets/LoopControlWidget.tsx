@@ -10,7 +10,7 @@ import { Schema } from 'effect'
 
 export const LoopControlWidget = ControllerWidget({
   name: 'loop-control',
-  schema: Schema.TaggedStruct('loop-control', {
+  schema: Schema.Struct({
     target: MidiTarget.Schema,
     color: Color.Schema,
   }),

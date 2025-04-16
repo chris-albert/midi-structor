@@ -7,7 +7,7 @@ import { Schema } from 'effect'
 
 export const TimeSigNoteCountWidget = ControllerWidget({
   name: 'time-sig-count',
-  schema: Schema.TaggedStruct('time-sig-count', {
+  schema: Schema.Struct({
     targets: Schema.Array(MidiTarget.Schema),
     color: Color.Schema,
   }),

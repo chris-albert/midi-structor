@@ -1,0 +1,18 @@
+{
+  "widgets": [
+    {
+      "_tag": "play-stop",
+      "target": {
+        "_tag": "CC",
+        "controllerNumber": 1
+      },
+      "color": "FF0000",
+      "ui": {
+        "borderSizePx": 1,
+        "borderColor": "white",
+        "visible": true,
+        "label": "Play/Stop"
+      }
+    }
+  ]
+}

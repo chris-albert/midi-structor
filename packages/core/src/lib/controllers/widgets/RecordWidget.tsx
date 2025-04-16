@@ -8,7 +8,7 @@ import { Schema } from 'effect'
 
 export const RecordWidget = ControllerWidget({
   name: 'record',
-  schema: Schema.TaggedStruct('record', {
+  schema: Schema.Struct({
     target: MidiTarget.Schema,
     color: Color.Schema,
   }),

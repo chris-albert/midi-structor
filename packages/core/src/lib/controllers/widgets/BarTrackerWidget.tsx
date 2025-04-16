@@ -137,7 +137,7 @@ import { Schema } from 'effect'
 
 export const BarTrackerWidget = ControllerWidget({
   name: 'bar-tracker',
-  schema: Schema.TaggedStruct('bar-tracker', {
+  schema: Schema.Struct({
     targets: Schema.Array(MidiTarget.Schema),
     trackName: Schema.String,
     color: Color.Schema,

@@ -10,7 +10,7 @@ import { Schema } from 'effect'
 
 export const MetronomeControlWidget = ControllerWidget({
   name: 'metronome-control',
-  schema: Schema.TaggedStruct('metronome-control', {
+  schema: Schema.Struct({
     target: MidiTarget.Schema,
     color: Color.Schema,
   }),

@@ -11,7 +11,7 @@ import { Pad } from '../pads/Pad'
 
 export const NavClipsWidget = ControllerWidget({
   name: 'nav-clips',
-  schema: Schema.TaggedStruct('nav-clips', {
+  schema: Schema.Struct({
     targets: Schema.Array(MidiTarget.Schema),
     trackName: Schema.String,
     sort: Schema.optional(Schema.Literal('alphabetical', 'order')),

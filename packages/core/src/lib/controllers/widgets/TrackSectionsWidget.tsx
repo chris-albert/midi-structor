@@ -17,7 +17,7 @@ const validInParent =
 
 export const TrackSectionsWidget = ControllerWidget({
   name: 'track-sections',
-  schema: Schema.TaggedStruct('track-sections', {
+  schema: Schema.Struct({
     targets: Schema.Array(MidiTarget.Schema),
     trackName: Schema.String,
     parentTrackName: Schema.String,

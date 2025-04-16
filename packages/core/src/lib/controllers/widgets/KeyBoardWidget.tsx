@@ -12,7 +12,7 @@ const notes = ['c', 'd', 'e', 'f', 'g', 'a', 'b', 'c']
 
 export const KeyBoardWidget = ControllerWidget({
   name: 'keyboard',
-  schema: Schema.TaggedStruct('keyboard', {
+  schema: Schema.Struct({
     topTargets: Schema.Array(MidiTarget.Schema),
     bottomTargets: Schema.Array(MidiTarget.Schema),
     trackName: Schema.String,

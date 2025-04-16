@@ -8,7 +8,7 @@ import { Schema } from 'effect'
 
 export const StopWidget = ControllerWidget({
   name: 'stop',
-  schema: Schema.TaggedStruct('stop', {
+  schema: Schema.Struct({
     target: MidiTarget.Schema,
     color: Color.Schema,
   }),

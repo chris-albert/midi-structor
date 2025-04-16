@@ -18,7 +18,7 @@ export const PlayStopWidget = ControllerWidget({
     const isPlaying = ProjectHooks.useIsPlaying()
 
     return isPlaying
-      ? StopWidget.component({ _tag: 'stop', target, color: stopColor })
-      : PlayWidget.component({ _tag: 'play', target, color: playColor })
+      ? StopWidget.component({ target, color: stopColor })
+      : PlayWidget.component({ target, color: playColor })
   },
 })

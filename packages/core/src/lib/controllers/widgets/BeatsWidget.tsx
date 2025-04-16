@@ -17,7 +17,7 @@ const color = (beat: number, index: number, oneColor: Color, restColor: Color): 
 
 export const BeatsWidget = ControllerWidget({
   name: 'beats',
-  schema: Schema.TaggedStruct('beats', {
+  schema: Schema.Struct({
     targets: Schema.Array(MidiTarget.Schema),
     oneColor: Color.Schema,
     restColor: Color.Schema,
