@@ -1,6 +1,6 @@
 import React from 'react'
 import { PrimitiveAtom } from 'jotai/index'
-import { ConfiguredController } from '@midi-structor/core'
+import { ConfiguredController, ControllerDevice } from '@midi-structor/core'
 import { Box, Button, Divider, FormControlLabel, Switch, Typography } from '@mui/material'
 import { DeviceSelectorComponent } from './DeviceSelectorComponent'
 import { ControllerBrowserModeComponent } from '../midi/ControllerBrowserModeComponent'
@@ -12,9 +12,13 @@ import { stringToColor } from '../StringAvatarComponent'
 
 export type ControllerEditComponentProps = {
   controllerAtom: PrimitiveAtom<ConfiguredController>
+  device: ControllerDevice
 }
 
-export const ControllerEditComponent: React.FC<ControllerEditComponentProps> = ({ controllerAtom }) => {
+export const ControllerEditComponent: React.FC<ControllerEditComponentProps> = ({
+  controllerAtom,
+  device,
+}) => {
   const controller = ConfiguredController.useController(controllerAtom)
 
   return (
@@ -67,7 +71,10 @@ export const ControllerEditComponent: React.FC<ControllerEditComponentProps> = (
         </Box>
       </Box>
       <Box sx={{ width: '50%' }}>
-        <ControllerEditRawComponent controllerAtom={controllerAtom} />
+        <ControllerEditRawComponent
+          controllerAtom={controllerAtom}
+          device={device}
+        />
       </Box>
     </Box>
   )

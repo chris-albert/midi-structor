@@ -282,7 +282,8 @@ const useListeners = (): MidiListener => {
 }
 
 const useResolvedWidgets = (controllerConfig: ControllerConfig): Array<ResolvedControllerWidget> => {
-  return ControllerWidgets.resolve(controllerConfig)
+  return []
+  // return ControllerWidgets.resolve(controllerConfig)
 }
 
 export const ConfiguredController = {

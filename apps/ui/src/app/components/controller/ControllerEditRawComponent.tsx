@@ -1,5 +1,5 @@
 import React from 'react'
-import { ConfiguredController, ControllerConfig } from '@midi-structor/core'
+import { ConfiguredController, ControllerConfig, ControllerDevice } from '@midi-structor/core'
 import { PrimitiveAtom } from 'jotai/index'
 import { Button, Card, CardContent, CardHeader } from '@mui/material'
 import { JSONEditor } from '../JSONEditor'
@@ -8,9 +8,13 @@ import { toast } from 'react-toastify'
 
 export type ControllerEditRawComponentProps = {
   controllerAtom: PrimitiveAtom<ConfiguredController>
+  device: ControllerDevice
 }
 
-export const ControllerEditRawComponent: React.FC<ControllerEditRawComponentProps> = ({ controllerAtom }) => {
+export const ControllerEditRawComponent: React.FC<ControllerEditRawComponentProps> = ({
+  controllerAtom,
+  device,
+}) => {
   const controller = ConfiguredController.useController(controllerAtom)
   const [rawControllerConfig, setRawControllerConfig] = React.useState('')
 
@@ -22,7 +26,7 @@ export const ControllerEditRawComponent: React.FC<ControllerEditRawComponentProp
   }, [controller.config])
 
   const onSave = () => {
-    Either.match(ControllerConfig.parse(rawControllerConfig), {
+    Either.match(ControllerConfig.parse(rawControllerConfig, device), {
       onRight: (config) => {
         controller.setConfig(config)
         toast.success('Successfully saved config')

@@ -2,10 +2,10 @@ import { Either, Schema } from 'effect'
 import { MidiTarget } from '../midi/MidiTarget'
 import _ from 'lodash'
 import { ResolvedControllerWidget } from './ControllerWidget'
-import { ControllerWidgets } from './ControllerWidgets'
+import { ControllerDevice } from './devices/ControllerDevice'
 
 export const ControllerConfigSchema = Schema.Struct({
-  widgets: Schema.Array(ControllerWidgets.schema),
+  widgets: Schema.Array(Schema.Any),
 })
 
 const collectTargets = (widgets: Array<ResolvedControllerWidget>): Array<MidiTarget> =>
@@ -39,17 +39,20 @@ const duplicateTargets = (
   }
 }
 
-const validate = (config: ControllerConfig): Either.Either<ControllerConfig, string> => {
-  const resolvedWidgets = ControllerWidgets.resolve(config)
+const validate = (
+  config: ControllerConfig,
+  device: ControllerDevice
+): Either.Either<ControllerConfig, string> => {
+  const resolvedWidgets = device.widgets.resolve(config)
   const targets = duplicateTargets(config, resolvedWidgets)
   return targets
 }
 
-const parse = (str: string): Either.Either<ControllerConfig, string> => {
+const parse = (str: string, device: ControllerDevice): Either.Either<ControllerConfig, string> => {
   const decoded = Schema.decodeUnknownEither(Schema.parseJson(ControllerConfigSchema))(str)
   return Either.flatMap(
     Either.mapLeft(decoded, (p) => `${p}`),
-    validate
+    (c) => validate(c, device)
   )
 }
 

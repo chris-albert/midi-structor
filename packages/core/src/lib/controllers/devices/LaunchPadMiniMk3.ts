@@ -5,6 +5,22 @@ import { Controller } from '../Controller'
 import { Color } from '../Color'
 import { MidiTarget } from '../../midi/MidiTarget'
 import { ControllerDevice } from './ControllerDevice'
+import { ControllerWidgets } from '../ControllerWidgets'
+import { PlayWidget } from '../widgets/PlayWidget'
+import { StopWidget } from '../widgets/StopWidget'
+import { RecordWidget } from '../widgets/RecordWidget'
+import { MetronomeControlWidget } from '../widgets/MetronomeControlWidget'
+import { LoopControlWidget } from '../widgets/LoopControlWidget'
+import { PlayStopWidget } from '../widgets/PlayStopWidget'
+import { MetronomeWidget } from '../widgets/MetronomeWidget'
+import { BeatsWidget } from '../widgets/BeatsWidget'
+import { TimeSigNoteCountWidget } from '../widgets/TimeSigNoteCountWidget'
+import { TimeSigNoteLengthWidget } from '../widgets/TimeSigNoteLengthWidget'
+import { NavClipsWidget } from '../widgets/NavClipsWidget'
+import { BarTrackerWidget } from '../widgets/BarTrackerWidget'
+import { TrackSectionsWidget } from '../widgets/TrackSectionsWidget'
+import { KeyBoardWidget } from '../widgets/KeyBoardWidget'
+import { ButtonWidget } from '../widgets/ButtonWidget'
 
 const sysex = (body: Array<number>): SysExMessage => ({
   type: 'sysex',
@@ -64,4 +80,21 @@ const controller = (emitter: MidiEmitter, listener: MidiListener, virtual: boole
 export const LaunchPadMiniMk3 = ControllerDevice.of({
   name: 'Launchpad Mini [MK3]',
   controller,
+  widgets: ControllerWidgets([
+    PlayWidget,
+    StopWidget,
+    RecordWidget,
+    MetronomeControlWidget,
+    LoopControlWidget,
+    PlayStopWidget,
+    MetronomeWidget,
+    BeatsWidget,
+    TimeSigNoteCountWidget,
+    TimeSigNoteLengthWidget,
+    NavClipsWidget,
+    BarTrackerWidget,
+    TrackSectionsWidget,
+    KeyBoardWidget,
+    ButtonWidget,
+  ]),
 })

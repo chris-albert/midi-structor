@@ -1,7 +1,8 @@
 import React from 'react'
-import { LaunchPadMiniMk3 } from './devices/LaunchPadMiniMk3'
 import { ConfiguredController } from './ConfiguredController'
 import { ControllerConfigComponent } from './ControllerConfigComponent'
+import { ControllerDevices } from './devices/ControllerDevices'
+import { Option } from 'effect'
 
 export type ControllerComponentProps = {
   controller: ConfiguredController
@@ -9,14 +10,14 @@ export type ControllerComponentProps = {
 
 export const ControllerComponent: React.FC<ControllerComponentProps> = ({ controller }) => {
   const io = ConfiguredController.useIO(controller)
-  const widgets = ConfiguredController.useResolvedWidgets(controller.config)
+  const device = ControllerDevices.findByName(controller.device)
 
-  if (io.enabled) {
+  if (io.enabled && Option.isSome(device)) {
     return (
       <ControllerConfigComponent
-        controller={LaunchPadMiniMk3.controller(io.emitter, io.listener, false)}
+        controller={device.value.controller(io.emitter, io.listener, false)}
         name={controller.name}
-        widgets={widgets}
+        widgets={device.value.widgets.resolve(controller.config)}
       />
     )
   } else {

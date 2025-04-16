@@ -2,6 +2,7 @@ import { MidiEmitter, MidiListener } from '../../midi/GlobalMidi'
 import { Controller } from '../Controller'
 import { ControllerDevice } from './ControllerDevice'
 import { MidiMessage } from '../../midi/MidiMessage'
+import { ControllerWidgets } from '../ControllerWidgets'
 
 const controller = (emitter: MidiEmitter, listener: MidiListener, virtual: boolean) =>
   new Controller({
@@ -15,6 +16,7 @@ const controller = (emitter: MidiEmitter, listener: MidiListener, virtual: boole
 const device = ControllerDevice.of({
   name: 'MIDI Structor UI',
   controller,
+  widgets: ControllerWidgets([]),
 })
 
 export const MIDIStructorUI = {
