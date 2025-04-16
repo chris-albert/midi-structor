@@ -9,7 +9,7 @@ import { NavigateableClip, UIRealClip } from '../../project/UIStateDisplay'
 import { TX_MESSAGE } from '../../project/AbletonUIMessage'
 import { Pad } from '../pads/Pad'
 
-export const NavClipsWidget = ControllerWidget({
+export const NavClipsWidget = ControllerWidget.of({
   name: 'nav-clips',
   schema: Schema.Struct({
     targets: Schema.Array(MidiTarget.Schema),

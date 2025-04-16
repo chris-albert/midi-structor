@@ -6,7 +6,7 @@ import { TX_MESSAGE } from '../../project/AbletonUIMessage'
 import { ControllerWidget } from '../ControllerWidget'
 import { Schema } from 'effect'
 
-export const StopWidget = ControllerWidget({
+export const StopWidget = ControllerWidget.of({
   name: 'stop',
   schema: Schema.Struct({
     target: MidiTarget.Schema,

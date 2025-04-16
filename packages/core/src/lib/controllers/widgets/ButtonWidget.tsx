@@ -6,7 +6,7 @@ import { Midi } from '../../midi/GlobalMidi'
 import { Schema } from 'effect'
 import { Pad } from '../pads/Pad'
 
-export const ButtonWidget = ControllerWidget({
+export const ButtonWidget = ControllerWidget.of({
   name: 'button',
   schema: Schema.TaggedStruct('button', {
     target: MidiTarget.Schema,

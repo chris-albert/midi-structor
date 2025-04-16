@@ -135,7 +135,7 @@ import { Schema } from 'effect'
  *      Math.floor(((DIFF + .5) * 2) / TSC)
  */
 
-export const BarTrackerWidget = ControllerWidget({
+export const BarTrackerWidget = ControllerWidget.of({
   name: 'bar-tracker',
   schema: Schema.Struct({
     targets: Schema.Array(MidiTarget.Schema),

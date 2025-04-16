@@ -5,7 +5,7 @@ import { ProjectHooks } from '../../project/ProjectHooks'
 import { ControllerWidget } from '../ControllerWidget'
 import { Schema } from 'effect'
 
-export const TimeSigNoteLengthWidget = ControllerWidget({
+export const TimeSigNoteLengthWidget = ControllerWidget.of({
   name: 'time-sig-length',
   schema: Schema.Struct({
     targets: Schema.Array(MidiTarget.Schema),

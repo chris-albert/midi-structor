@@ -6,7 +6,7 @@ import { TX_MESSAGE } from '../../project/AbletonUIMessage'
 import { ControllerWidget } from '../ControllerWidget'
 import { Schema } from 'effect'
 
-export const RecordWidget = ControllerWidget({
+export const RecordWidget = ControllerWidget.of({
   name: 'record',
   schema: Schema.Struct({
     target: MidiTarget.Schema,

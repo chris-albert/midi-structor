@@ -1,4 +1,4 @@
-import { Either, Schema } from 'effect'
+import { Either, Schema, Option } from 'effect'
 import { MidiTarget } from '../midi/MidiTarget'
 import _ from 'lodash'
 import { ResolvedControllerWidget } from './ControllerWidget'
@@ -48,12 +48,27 @@ const validate = (
   return targets
 }
 
+const schema = (device: ControllerDevice): Schema.Schema<ControllerConfig> =>
+  Schema.Struct({
+    widgets: Schema.Array(device.widgets.schema),
+  })
+
 const parse = (str: string, device: ControllerDevice): Either.Either<ControllerConfig, string> => {
-  const decoded = Schema.decodeUnknownEither(Schema.parseJson(ControllerConfigSchema))(str)
+  const decoded = Schema.decodeUnknownEither(Schema.parseJson(schema(device)))(str)
   return Either.flatMap(
-    Either.mapLeft(decoded, (p) => `${p}`),
+    Either.mapLeft(decoded, (p) => {
+      console.error('error decoding', p)
+      return `${p}`
+    }),
     (c) => validate(c, device)
   )
+}
+
+const stringify = (config: ControllerConfig, device: ControllerDevice): string => {
+  return Option.match(Schema.encodeOption(schema(device))(config), {
+    onSome: (c) => JSON.stringify(c, null, 2),
+    onNone: () => 'Error decoding controller config',
+  })
 }
 
 const empty = (): ControllerConfig => ({
@@ -63,7 +78,7 @@ const empty = (): ControllerConfig => ({
 export type ControllerConfig = typeof ControllerConfigSchema.Type
 
 export const ControllerConfig = {
-  Schema: ControllerConfigSchema,
   empty,
   parse,
+  stringify,
 }

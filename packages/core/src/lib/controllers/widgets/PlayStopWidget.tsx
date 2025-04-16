@@ -6,9 +6,9 @@ import { Color } from '../Color'
 import { ControllerWidget } from '../ControllerWidget'
 import { Schema } from 'effect'
 
-export const PlayStopWidget = ControllerWidget({
+export const PlayStopWidget = ControllerWidget.of({
   name: 'play-stop',
-  schema: Schema.TaggedStruct('play-stop', {
+  schema: Schema.Struct({
     target: MidiTarget.Schema,
     playColor: Color.Schema,
     stopColor: Color.Schema,

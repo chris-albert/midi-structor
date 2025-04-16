@@ -15,7 +15,7 @@ const validInParent =
     )
   }
 
-export const TrackSectionsWidget = ControllerWidget({
+export const TrackSectionsWidget = ControllerWidget.of({
   name: 'track-sections',
   schema: Schema.Struct({
     targets: Schema.Array(MidiTarget.Schema),

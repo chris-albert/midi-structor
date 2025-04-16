@@ -19,10 +19,7 @@ export const ControllerEditRawComponent: React.FC<ControllerEditRawComponentProp
   const [rawControllerConfig, setRawControllerConfig] = React.useState('')
 
   React.useEffect(() => {
-    Option.match(Schema.encodeOption(ControllerConfig.Schema)(controller.config), {
-      onSome: (c) => setRawControllerConfig(JSON.stringify(c, null, 2)),
-      onNone: () => setRawControllerConfig('Error decoding controller config'),
-    })
+    setRawControllerConfig(ControllerConfig.stringify(controller.config, device))
   }, [controller.config])
 
   const onSave = () => {

@@ -8,7 +8,7 @@ import { TX_MESSAGE } from '../../project/AbletonUIMessage'
 import { ControllerWidget } from '../ControllerWidget'
 import { Schema } from 'effect'
 
-export const LoopControlWidget = ControllerWidget({
+export const LoopControlWidget = ControllerWidget.of({
   name: 'loop-control',
   schema: Schema.Struct({
     target: MidiTarget.Schema,

@@ -6,12 +6,12 @@
         "_tag": "CC",
         "controllerNumber": 1
       },
-      "color": "FF0000",
-      "ui": {
-        "borderSizePx": 1,
-        "borderColor": "white",
-        "visible": true,
-        "label": "Play/Stop"
+      "playColor": "00FF00",
+      "stopColor": "FF0000",
+      "label": "Play/Stop",
+      "border": {
+        "sizePx": 5,
+        "color": "red"
       }
     }
   ]

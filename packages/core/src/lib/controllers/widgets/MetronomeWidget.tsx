@@ -5,7 +5,7 @@ import { ForeverBeat } from '../../hooks/ForeverBeat'
 import { ControllerWidget } from '../ControllerWidget'
 import { Schema } from 'effect'
 
-export const MetronomeWidget = ControllerWidget({
+export const MetronomeWidget = ControllerWidget.of({
   name: 'metronome',
   schema: Schema.Struct({
     target: MidiTarget.Schema,

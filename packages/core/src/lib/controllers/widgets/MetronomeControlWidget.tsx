@@ -8,7 +8,7 @@ import { ProjectHooks } from '../../project/ProjectHooks'
 import { ControllerWidget } from '../ControllerWidget'
 import { Schema } from 'effect'
 
-export const MetronomeControlWidget = ControllerWidget({
+export const MetronomeControlWidget = ControllerWidget.of({
   name: 'metronome-control',
   schema: Schema.Struct({
     target: MidiTarget.Schema,

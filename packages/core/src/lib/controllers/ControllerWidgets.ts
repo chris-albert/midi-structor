@@ -5,7 +5,9 @@ import { Option, Schema } from 'effect'
 
 export const ControllerWidgets = (widgets: Array<ControllerWidget<any>>) => {
   const lookup = _.fromPairs(_.map(widgets, (widget) => [widget.name, widget]))
-  const schema: Schema.Schema<any> = Schema.Union(...widgets.map((w) => w.schema))
+  const schema: Schema.Schema<any> = Schema.Union(
+    ...widgets.map((w) => w.schema as any as Schema.Schema<any>)
+  )
 
   const resolve = (config: ControllerConfig): Array<ResolvedControllerWidget> => {
     return config.widgets.flatMap((w: any) => {

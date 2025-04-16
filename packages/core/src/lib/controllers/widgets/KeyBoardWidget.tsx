@@ -10,7 +10,7 @@ import { Schema } from 'effect'
 const accidentalNotes = [undefined, 'c#', 'd#', undefined, 'f#', 'g#', 'a#']
 const notes = ['c', 'd', 'e', 'f', 'g', 'a', 'b', 'c']
 
-export const KeyBoardWidget = ControllerWidget({
+export const KeyBoardWidget = ControllerWidget.of({
   name: 'keyboard',
   schema: Schema.Struct({
     topTargets: Schema.Array(MidiTarget.Schema),
