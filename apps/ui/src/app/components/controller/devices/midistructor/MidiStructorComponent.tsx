@@ -4,14 +4,19 @@ import { editWidgetsAtom } from '../../../../model/Widgets'
 import { Box, Button, Drawer } from '@mui/material'
 import { AddWidgetComponent } from '../../../AddWidgetComponent'
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
-import { WidgetsComponent } from '../../../WidgetsComponent'
-import { ConfiguredController } from '@midi-structor/core'
+// import { WidgetsComponent } from '../../../WidgetsComponent'
+import { ConfiguredController, ControllerDevice } from '@midi-structor/core'
+import { WidgetsComponent } from './WidgetsComponent'
 
 export type MidiStructorComponentProps = {
   configuredController: ConfiguredController
+  device: ControllerDevice
 }
 
-export const MidiStructorComponent: React.FC<MidiStructorComponentProps> = ({ configuredController }) => {
+export const MidiStructorComponent: React.FC<MidiStructorComponentProps> = ({
+  configuredController,
+  device,
+}) => {
   const [widgetOpen, setWidgetOpen] = React.useState(false)
   const [editWidgets, setEditWidgets] = useAtom(editWidgetsAtom)
 
@@ -45,7 +50,11 @@ export const MidiStructorComponent: React.FC<MidiStructorComponentProps> = ({ co
         </Button>
       </Box>
       <Box>
-        <WidgetsComponent />
+        <WidgetsComponent
+          configuredController={configuredController}
+          device={device}
+          isEdit={editWidgets}
+        />
       </Box>
     </Box>
   )
