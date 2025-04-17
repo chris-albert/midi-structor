@@ -13,8 +13,6 @@ import { EventEmitter } from '../EventEmitter'
 import { MidiEventRecord } from '../midi/MidiDevice'
 import { Color } from './Color'
 import { ControllerConfig } from './ControllerConfig'
-import { ResolvedControllerWidget } from './ControllerWidget'
-import { ControllerWidgets } from './ControllerWidgets'
 import { ControllerDevices } from './devices/ControllerDevices'
 
 export type ConfiguredController = {
@@ -281,11 +279,6 @@ const useListeners = (): MidiListener => {
   return MidiDeviceManager.emptyListener()
 }
 
-const useResolvedWidgets = (controllerConfig: ControllerConfig): Array<ResolvedControllerWidget> => {
-  return []
-  // return ControllerWidgets.resolve(controllerConfig)
-}
-
 export const ConfiguredController = {
   useController,
   useControllers,
@@ -300,5 +293,4 @@ export const ConfiguredController = {
   useControllerName,
   useAddController,
   useControllersValue,
-  useResolvedWidgets,
 }

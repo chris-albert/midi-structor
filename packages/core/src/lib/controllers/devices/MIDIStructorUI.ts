@@ -6,6 +6,7 @@ import { ControllerWidgets } from '../ControllerWidgets'
 import { PlayStopWidget } from '../widgets/PlayStopWidget'
 import { Schema } from 'effect'
 import { ControllerWidget } from '../ControllerWidget'
+import { BeatsWidget } from '../widgets/BeatsWidget'
 
 const UIBaseSchema = Schema.Struct({
   label: Schema.optional(Schema.String),
@@ -27,7 +28,10 @@ const controller = (emitter: MidiEmitter, listener: MidiListener, virtual: boole
     targets: [],
   })
 
-const widgets = ControllerWidgets([ControllerWidget.intersect(PlayStopWidget, UIBaseSchema)])
+const widgets = ControllerWidgets([
+  ControllerWidget.intersect(PlayStopWidget, UIBaseSchema),
+  ControllerWidget.intersect(BeatsWidget, UIBaseSchema),
+])
 
 const device = ControllerDevice.of({
   name: 'MIDI Structor UI',
