@@ -1,15 +1,17 @@
 import React from 'react'
-import { ResolvedControllerWidget } from '@midi-structor/core'
+import { MidiEmitter, MIDIStructorUIWidgets } from '@midi-structor/core'
 import { Box } from '@mui/material'
 import _ from 'lodash'
 import { WidgetComponent } from './WidgetComponent'
+import { OnClick } from './MidiStructorComponent'
 
 export type WidgetsComponentProps = {
-  widgets: Array<ResolvedControllerWidget>
+  widgets: MIDIStructorUIWidgets
   isEdit: boolean
+  onClick: OnClick
 }
 
-export const WidgetsComponent: React.FC<WidgetsComponentProps> = ({ widgets, isEdit }) => {
+export const WidgetsComponent: React.FC<WidgetsComponentProps> = ({ widgets, isEdit, onClick }) => {
   return (
     <Box
       sx={{
@@ -19,7 +21,7 @@ export const WidgetsComponent: React.FC<WidgetsComponentProps> = ({ widgets, isE
       }}>
       {_.map(widgets, (widget, i) => (
         <Box
-          key={`${widget.name}-${i}`}
+          key={`${widget._tag}-${i}`}
           sx={
             {
               //   ...(widget.name === 'spacer' && widget.isLineBreaking
@@ -30,7 +32,10 @@ export const WidgetsComponent: React.FC<WidgetsComponentProps> = ({ widgets, isE
               //     : {}),
             }
           }>
-          <WidgetComponent widget={widget} />
+          <WidgetComponent
+            widget={widget}
+            onClick={onClick}
+          />
         </Box>
       ))}
     </Box>

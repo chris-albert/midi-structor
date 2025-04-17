@@ -1,28 +1,44 @@
 import React from 'react'
-import { Schema } from 'effect'
+import { Schema, SchemaAST } from 'effect'
 import { MidiTarget } from '../midi/MidiTarget'
 
-export type ControllerWidget<A extends Schema.Struct.Fields> = {
-  name: string
+export type ControllerWidget<K extends SchemaAST.LiteralValue = any, A extends Schema.Struct.Fields = any> = {
+  name: K
+  schema: Schema.TaggedStruct<K, A>
+  targets: (a: Schema.Struct.Type<A>) => Array<MidiTarget>
+  component: (a: Schema.Struct.Type<A>) => React.ReactElement
+}
+
+export type ControllerWidgetProps<
+  K extends SchemaAST.LiteralValue = any,
+  A extends Schema.Struct.Fields = any
+> = {
+  name: K
   schema: Schema.Struct<A>
   targets: (a: Schema.Struct.Type<A>) => Array<MidiTarget>
   component: (a: Schema.Struct.Type<A>) => React.ReactElement
 }
 
-const of = <A extends Schema.Struct.Fields>(props: ControllerWidget<A>): ControllerWidget<A> => ({
+const of = <K extends SchemaAST.LiteralValue, A extends Schema.Struct.Fields>(
+  props: ControllerWidgetProps<K, A>
+): ControllerWidget<K, A> => ({
   name: props.name,
-  schema: Schema.TaggedStruct(props.name, props.schema.fields) as Schema.Struct<A>,
+  schema: Schema.TaggedStruct(props.name, props.schema.fields),
   targets: props.targets,
   component: props.component,
 })
 
-const intersect = <A extends Schema.Struct.Fields, B extends Schema.Struct.Fields>(
-  widget: ControllerWidget<A>,
+const intersect = <
+  K extends SchemaAST.LiteralValue,
+  A extends Schema.Struct.Fields,
+  B extends Schema.Struct.Fields
+>(
+  widget: ControllerWidget<K, A>,
   bSchema: Schema.Struct<B>
-): ControllerWidget<A & B> =>
+): ControllerWidget<K, A & B> =>
   of({
     name: widget.name,
-    schema: Schema.Struct({ ...widget.schema.fields, ...bSchema.fields }) as any as Schema.Struct<A & B>,
+    schema: Schema.Struct({ ...widget.schema.fields, ...bSchema.fields }) as Schema.Struct<A & B>,
     targets: (f) => widget.targets(f as Schema.Struct.Type<A>),
     component: (f) => widget.component(f as Schema.Struct.Type<A>),
   })
@@ -32,15 +48,15 @@ export const ControllerWidget = {
   intersect,
 }
 
-export type ResolvedControllerWidget = {
+export type ResolvedControllerWidget<A = any> = {
   name: string
   targets: () => Array<MidiTarget>
   component: () => React.ReactElement
-  widget: any
+  widget: A
 }
 
-export type ControllerWidgetType<A extends ControllerWidget<any>> = A['schema']['Type']
+export type ControllerWidgetType<A extends ControllerWidget> = A['schema']['Type']
 
-export type ControllerWidgetsType<A extends Array<ControllerWidget<any>>> = {
+export type ControllerWidgetsType<A extends Array<ControllerWidget>> = {
   [K in keyof A]: ControllerWidgetType<A[K]>
 }

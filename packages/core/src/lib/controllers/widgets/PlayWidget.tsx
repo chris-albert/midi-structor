@@ -16,6 +16,8 @@ export const PlayWidget = ControllerWidget.of({
   component: ({ target, color }) => {
     const dawEmitter = Midi.useDawEmitter()
 
+    console.log('play widget')
+
     return (
       <pad
         color={color}

@@ -5,9 +5,8 @@ import { MidiMessage } from '../../midi/MidiMessage'
 import { ControllerWidgets } from '../ControllerWidgets'
 import { PlayStopWidget } from '../widgets/PlayStopWidget'
 import { Schema } from 'effect'
-import { ControllerWidget, ControllerWidgetsType, ControllerWidgetType } from '../ControllerWidget'
+import { ControllerWidget, ControllerWidgetsType } from '../ControllerWidget'
 import { BeatsWidget } from '../widgets/BeatsWidget'
-import { MidiTarget } from '../../midi/MidiTarget'
 
 const UIBaseSchema = Schema.Struct({
   label: Schema.optional(Schema.String),
@@ -32,31 +31,23 @@ const controller = (emitter: MidiEmitter, listener: MidiListener, virtual: boole
     targets: [],
   })
 
-const w = [
-  ControllerWidget.intersect(PlayStopWidget, UIBaseSchema),
-  ControllerWidget.intersect(BeatsWidget, UIBaseSchema),
-]
-
-type MIDIStructorUIWidgets = ControllerWidgetsType<typeof w>
-
-// const doStuff = (widgets: MIDIStructorUIWidgets) => {
-//   widgets.map((w) => {
-//     if (w._tag === 'play-stop') {
-//       w.playColor
-//     }
-//   })
-// }
-
 const widgets = ControllerWidgets([
   ControllerWidget.intersect(PlayStopWidget, UIBaseSchema),
   ControllerWidget.intersect(BeatsWidget, UIBaseSchema),
 ])
+
+type ElementType<T> = T extends (infer U)[] ? U : never
+
+export type MIDIStructorUIWidgets = ControllerWidgetsType<typeof widgets.widgets>
+export type MIDIStructorUIWidget = ElementType<MIDIStructorUIWidgets>
 
 const device = ControllerDevice.of({
   name: 'MIDI Structor UI',
   controller,
   widgets,
 })
+
+export type MidiStructorUIDevice = typeof device
 
 export const MIDIStructorUI = {
   device,

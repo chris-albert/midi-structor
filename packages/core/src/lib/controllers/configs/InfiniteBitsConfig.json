@@ -17,6 +17,15 @@
       "color": "00FF00"
     },
     {
+      "_tag": "play-stop",
+      "target": {
+        "_tag": "CC",
+        "controllerNumber": 89
+      },
+      "playColor": "00FF00",
+      "stopColor": "FF0000"
+    },
+    {
       "_tag": "metronome",
       "target": {
         "_tag": "CC",

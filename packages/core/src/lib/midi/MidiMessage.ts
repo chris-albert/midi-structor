@@ -326,8 +326,15 @@ const sysex = (body: Array<number>, manufacturer = 0): SysExMessage => ({
 const jsonSysex = (msg: any, manufacturer = 0): SysExMessage =>
   sysex(charCodesFromString(JSON.stringify(msg)), manufacturer)
 
+const raw = (msg: MidiMessage): MidiMessageWithRaw => ({
+  raw: [] as any,
+  time: new Date(),
+  ...msg,
+})
+
 export const MidiMessage = {
   schema: Message,
   sysex,
   jsonSysex,
+  raw,
 }

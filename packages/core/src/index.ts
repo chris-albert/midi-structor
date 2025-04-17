@@ -24,3 +24,6 @@ export * from './lib/controllers/ControllerConfig'
 export * from './lib/util/JsonUtil'
 export * from './lib/controllers/devices/ControllerDevices'
 export * from './lib/controllers/devices/ControllerDevice'
+
+// Widgets
+export * from './lib/controllers/widgets/PlayStopWidget'
