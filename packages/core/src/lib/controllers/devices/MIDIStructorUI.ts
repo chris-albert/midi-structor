@@ -22,8 +22,12 @@ const UIBaseSchema = Schema.Struct({
 const controller = (emitter: MidiEmitter, listener: MidiListener, virtual: boolean) =>
   new Controller({
     init: (widgets) => {
-      console.log('MidiStructor UI widgets', widgets)
-      widgets.forEach((widget) => emitter.send(MidiMessage.jsonSysex(widget)))
+      const uiWidgets = {
+        _tag: 'midi-structor-ui-init',
+        widgets: widgets.map((w) => w.widget),
+      }
+      console.log('MidiStructor UI widgets', uiWidgets)
+      emitter.send(MidiMessage.jsonSysex(uiWidgets))
     },
     render: (pads) => {},
     listenFilter: (m: MidiMessage): boolean => true,
