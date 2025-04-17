@@ -16,8 +16,6 @@ export const StopWidget = ControllerWidget.of({
   component: ({ target, color }) => {
     const dawEmitter = Midi.useDawEmitter()
 
-    console.log('stop widget')
-
     return (
       <pad
         color={color}

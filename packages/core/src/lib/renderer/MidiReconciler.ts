@@ -91,6 +91,9 @@ const commit = (instance: Instance, props: Props) => {
   if (instance.type === 'pad') {
     const padProps = props as PadProps
     instance.controller?.manager.render([padProps])
+    if (instance.controller !== undefined && padProps.onClick !== undefined) {
+      instance.controller.listener.add(padProps.target, padProps.onClick)
+    }
   } else if (instance.type === 'controller') {
   }
 }
@@ -118,9 +121,6 @@ const initInstance = (type: Type, props: Props): Instance => {
 
 const appendPad = (controller: Controller, pad: Pad) => {
   pad.controller = controller
-  if (pad.props.onClick !== undefined) {
-    controller.listener.add(pad.props.target, pad.props.onClick)
-  }
 }
 
 type ListenersManager = {
