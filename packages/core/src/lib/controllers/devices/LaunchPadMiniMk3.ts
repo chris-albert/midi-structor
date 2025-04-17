@@ -1,5 +1,5 @@
 import { MidiEmitter, MidiListener } from '../../midi/GlobalMidi'
-import { MidiMessage, SysExMessage } from '../../midi/MidiMessage'
+import { MidiMessage } from '../../midi/MidiMessage'
 import _ from 'lodash'
 import { Controller } from '../Controller'
 import { Color } from '../Color'
@@ -22,14 +22,7 @@ import { TrackSectionsWidget } from '../widgets/TrackSectionsWidget'
 import { KeyBoardWidget } from '../widgets/KeyBoardWidget'
 import { ButtonWidget } from '../widgets/ButtonWidget'
 
-const sysex = (body: Array<number>): SysExMessage => ({
-  type: 'sysex',
-  manufacturer: 0,
-  body,
-})
-
 const COLOR_SCALE = 0.5
-const COLOR_FIX = false
 
 const fixColor = (color: Color, fixColor: boolean): Color => {
   if (fixColor) {
@@ -52,7 +45,7 @@ const fixColor = (color: Color, fixColor: boolean): Color => {
 const controller = (emitter: MidiEmitter, listener: MidiListener, virtual: boolean) =>
   new Controller({
     init: () => {
-      emitter.send(sysex([32, 41, 2, 13, 14, 1]))
+      emitter.send(MidiMessage.sysex([32, 41, 2, 13, 14, 1]))
     },
     render: (pads) => {
       const sysexArr = [32, 41, 2, 13, 3]
@@ -68,7 +61,7 @@ const controller = (emitter: MidiEmitter, listener: MidiListener, virtual: boole
           )
         }
       })
-      emitter.send(sysex(sysexArr))
+      emitter.send(MidiMessage.sysex(sysexArr))
     },
     listenFilter: (m: MidiMessage): boolean => {
       return !((m.type === 'noteon' && m.velocity === 0) || (m.type === 'cc' && m.data === 0))

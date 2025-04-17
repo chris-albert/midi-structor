@@ -1,20 +1,15 @@
 import React from 'react'
-import { ConfiguredController, ControllerDevice } from '@midi-structor/core'
+import { ResolvedControllerWidget } from '@midi-structor/core'
 import { Box } from '@mui/material'
 import _ from 'lodash'
 import { WidgetComponent } from './WidgetComponent'
 
 export type WidgetsComponentProps = {
-  configuredController: ConfiguredController
-  device: ControllerDevice
+  widgets: Array<ResolvedControllerWidget>
   isEdit: boolean
 }
 
-export const WidgetsComponent: React.FC<WidgetsComponentProps> = ({
-  configuredController,
-  device,
-  isEdit,
-}) => {
+export const WidgetsComponent: React.FC<WidgetsComponentProps> = ({ widgets, isEdit }) => {
   return (
     <Box
       sx={{
@@ -22,7 +17,7 @@ export const WidgetsComponent: React.FC<WidgetsComponentProps> = ({
         flexWrap: 'wrap',
         gap: 1,
       }}>
-      {_.map(device.widgets.resolve(configuredController.config), (widget, i) => (
+      {_.map(widgets, (widget, i) => (
         <Box
           key={`${widget.name}-${i}`}
           sx={

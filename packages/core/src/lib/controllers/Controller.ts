@@ -4,6 +4,7 @@ import { Color } from './Color'
 import { MidiTarget } from '../midi/MidiTarget'
 import { MidiMessage } from '../midi/MidiMessage'
 import { Midi, MidiListener } from '../midi/GlobalMidi'
+import { ResolvedControllerWidget } from './ControllerWidget'
 
 export const messageToKey = (message: MidiMessage): string => {
   if (message.type === 'noteon' && message.velocity > 0) {
@@ -22,7 +23,7 @@ export type TargetColor = {
 
 export class Controller extends Data.Class<{
   targets: Array<MidiTarget>
-  init: () => void
+  init: (widgets: Array<ResolvedControllerWidget>) => void
   render: (pads: Array<TargetColor>) => void
   listener: MidiListener
   listenFilter?: (m: MidiMessage) => boolean

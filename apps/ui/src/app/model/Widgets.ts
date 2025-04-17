@@ -207,7 +207,7 @@ export const ButtonWidget = t.intersection([
     fontSize: t.string,
     content: t.union([t.string, t.undefined]),
     textColor: t.union([t.string, t.undefined]),
-    midi: t.array(MidiMessage),
+    midi: t.array(MidiMessage.schema),
   }),
 ])
 

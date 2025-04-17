@@ -73,7 +73,6 @@ const ControllerManager = (
   controller: ControllerModel,
   listenersManager: ListenersManager
 ): ControllerManager => {
-  controller.init()
   controller.clear()
   controller.on(listenersManager.on)
 

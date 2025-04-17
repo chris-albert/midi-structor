@@ -3,7 +3,7 @@ import { ControllerWidget, ResolvedControllerWidget } from './ControllerWidget'
 import { ControllerConfig } from './ControllerConfig'
 import { Option, Schema } from 'effect'
 
-export const ControllerWidgets = <A extends Schema.Struct.Fields>(widgets: Array<ControllerWidget<any>>) => {
+export const ControllerWidgets = (widgets: Array<ControllerWidget<any>>) => {
   const lookup = _.fromPairs(_.map(widgets, (widget) => [widget.name, widget]))
   const schema: Schema.Schema<any> = Schema.Union(
     ...widgets.map((w) => w.schema as any as Schema.Schema<any>)
@@ -17,6 +17,7 @@ export const ControllerWidgets = <A extends Schema.Struct.Fields>(widgets: Array
             name: controllerWidget.name,
             targets: () => controllerWidget.targets(w),
             component: () => controllerWidget.component(w),
+            widget: w,
           } as ResolvedControllerWidget
         },
         onNone: () => {

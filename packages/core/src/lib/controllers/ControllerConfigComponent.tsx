@@ -21,6 +21,10 @@ export const ControllerConfigComponent: React.FC<ControllerConfigComponentProps>
   name,
   widgets,
 }) => {
+  React.useEffect(() => {
+    controller.init(widgets)
+  }, [])
+
   return (
     <controller
       model={controller}

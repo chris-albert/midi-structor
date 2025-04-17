@@ -4,7 +4,6 @@ import { editWidgetsAtom } from '../../../../model/Widgets'
 import { Box, Button, Drawer } from '@mui/material'
 import { AddWidgetComponent } from '../../../AddWidgetComponent'
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
-// import { WidgetsComponent } from '../../../WidgetsComponent'
 import { ConfiguredController, ControllerDevice } from '@midi-structor/core'
 import { WidgetsComponent } from './WidgetsComponent'
 
@@ -51,8 +50,7 @@ export const MidiStructorComponent: React.FC<MidiStructorComponentProps> = ({
       </Box>
       <Box>
         <WidgetsComponent
-          configuredController={configuredController}
-          device={device}
+          widgets={device.widgets.resolve(configuredController.config)}
           isEdit={editWidgets}
         />
       </Box>
