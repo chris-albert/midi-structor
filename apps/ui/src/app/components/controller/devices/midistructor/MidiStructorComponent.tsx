@@ -4,20 +4,15 @@ import { editWidgetsAtom } from '../../../../model/Widgets'
 import { Box, Button, Drawer } from '@mui/material'
 import { AddWidgetComponent } from '../../../AddWidgetComponent'
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
-import {
-  ConfiguredController,
-  MidiMessage,
-  MidiStructorUIDevice,
-  MIDIStructorUIWidgets,
-  MidiTarget,
-} from '@midi-structor/core'
+import { ConfiguredController, MidiMessage, MIDIStructorUIWidgets, MidiTarget } from '@midi-structor/core'
 import { WidgetsComponent } from './WidgetsComponent'
+import { MIDIStructorDeviceUI } from './MIDIStructorDeviceUI'
 
 export type OnClick = (target: MidiTarget) => void
 
 export type MidiStructorComponentProps = {
   configuredController: ConfiguredController
-  device: MidiStructorUIDevice
+  device: MIDIStructorDeviceUI
 }
 
 export const MidiStructorComponent: React.FC<MidiStructorComponentProps> = ({
@@ -30,9 +25,10 @@ export const MidiStructorComponent: React.FC<MidiStructorComponentProps> = ({
   const store = ConfiguredController.useVirtualStore(configuredController)
   const listener = ConfiguredController.useVirtualListener(configuredController)
 
-  const widgets: MIDIStructorUIWidgets = device.widgets
-    .resolve(configuredController.config)
-    .map((rw) => rw.widget)
+  // const widgets: MIDIStructorUIWidgets = device.widgets
+  //   .resolve(configuredController.config)
+  //   .map((rw) => rw.widget)
+  const widgets: MIDIStructorUIWidgets = []
 
   const onClick = (target: MidiTarget) => {
     listener.emit(MidiMessage.raw(MidiTarget.toMessage(target, 127)))

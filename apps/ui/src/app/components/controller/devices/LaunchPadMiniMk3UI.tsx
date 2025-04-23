@@ -181,11 +181,7 @@ type LaunchPadMiniColorMessage = {
   color: Color
 }
 
-type LaunchPadMiniInitMessage = {
-  type: 'init'
-}
-
-export type LaunchPadMiniMessage = LaunchPadMiniColorMessage | LaunchPadMiniInitMessage
+export type LaunchPadMiniMessage = LaunchPadMiniColorMessage
 
 const atomStore = atomFamily((name: string) => atom<UIMessageStore<LaunchPadMiniMessage>>({}))
 

@@ -1,5 +1,7 @@
 import * as t from 'io-ts'
 import _ from 'lodash'
+import { Either, Schema, Option } from 'effect'
+import { ParseError } from 'effect/ParseResult'
 
 const CHANNEL_MASK = 0x0f
 
@@ -309,8 +311,8 @@ const generateProgramChange = (message: ProgramChangeMessage): Uint8Array => {
   return arr as any as Uint8Array
 }
 
-const charCodesFromString = (str: string): Array<number> => {
-  const codes: Array<number> = []
+const charCodesFromString = (str: string, prefix: Array<number>): Array<number> => {
+  const codes: Array<number> = [...prefix]
   _.forEach(str, (s, i) => {
     codes.push(str.charCodeAt(i))
   })
@@ -323,8 +325,42 @@ const sysex = (body: Array<number>, manufacturer = 0): SysExMessage => ({
   body,
 })
 
-const jsonSysex = (msg: any, manufacturer = 0): SysExMessage =>
-  sysex(charCodesFromString(JSON.stringify(msg)), manufacturer)
+const jsonSysex = (msg: any, prefix: Array<number> = [], manufacturer = 0): SysExMessage =>
+  sysex(charCodesFromString(JSON.stringify(msg), prefix), manufacturer)
+
+const jsonSchemaSysex = <A>(
+  msg: A,
+  schema: Schema.Schema<A>,
+  prefix: Array<number> = [],
+  manufacturer = 0
+): SysExMessage =>
+  sysex(
+    charCodesFromString(
+      Option.match(Schema.encodeOption(schema)(msg), {
+        onSome: (c) => JSON.stringify(c),
+        onNone: () => 'Error encoding schema sysex',
+      }),
+      prefix
+    ),
+    manufacturer
+  )
+
+const stringFromCharCodes = (codes: Array<number>): string => {
+  const strs: Array<string> = []
+  _.forEach(codes, (code) => {
+    strs.push(String.fromCharCode(code))
+  })
+  return strs.join('')
+}
+
+const parseJsonSysex = <A>(
+  sysex: SysExMessage,
+  schema: Schema.Schema<A>,
+  skipControl = 0
+): Either.Either<A, ParseError> => {
+  const str = stringFromCharCodes(sysex.body.slice(skipControl))
+  return Schema.decodeUnknownEither(Schema.parseJson(schema))(str)
+}
 
 const raw = (msg: MidiMessage): MidiMessageWithRaw => ({
   raw: [] as any,
@@ -336,5 +372,7 @@ export const MidiMessage = {
   schema: Message,
   sysex,
   jsonSysex,
+  jsonSchemaSysex,
+  parseJsonSysex,
   raw,
 }

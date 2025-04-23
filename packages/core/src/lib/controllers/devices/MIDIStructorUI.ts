@@ -19,22 +19,6 @@ const UIBaseSchema = Schema.Struct({
   visible: Schema.optional(Schema.Boolean),
 })
 
-const controller = (emitter: MidiEmitter, listener: MidiListener, virtual: boolean) =>
-  new Controller({
-    init: (widgets) => {
-      const uiWidgets = {
-        _tag: 'midi-structor-ui-init',
-        widgets: widgets.map((w) => w.widget),
-      }
-      console.log('MidiStructor UI widgets', uiWidgets)
-      emitter.send(MidiMessage.jsonSysex(uiWidgets))
-    },
-    render: (pads) => {},
-    listenFilter: (m: MidiMessage): boolean => true,
-    listener,
-    targets: [],
-  })
-
 const widgets = ControllerWidgets([
   ControllerWidget.intersect(PlayStopWidget, UIBaseSchema),
   ControllerWidget.intersect(BeatsWidget, UIBaseSchema),
@@ -44,6 +28,29 @@ type ElementType<T> = T extends (infer U)[] ? U : never
 
 export type MIDIStructorUIWidgets = ControllerWidgetsType<typeof widgets.widgets>
 export type MIDIStructorUIWidget = ElementType<MIDIStructorUIWidgets>
+
+export const MidiStructorUIInit = Schema.TaggedStruct('init', {
+  widgets: Schema.Array(widgets.schema),
+})
+
+export const MidiStructorSysexControlCodes = {
+  init: 50,
+}
+
+const controller = (emitter: MidiEmitter, listener: MidiListener, virtual: boolean) =>
+  new Controller({
+    init: (widgets) => {
+      const uiWidgets = MidiStructorUIInit.make({ widgets: widgets.map((w) => w.widget) })
+      console.log('MidiStructor UI widgets', uiWidgets)
+      emitter.send(
+        MidiMessage.jsonSchemaSysex(uiWidgets, MidiStructorUIInit, [MidiStructorSysexControlCodes.init])
+      )
+    },
+    render: (pads) => {},
+    listenFilter: (m: MidiMessage): boolean => true,
+    listener,
+    targets: [],
+  })
 
 const device = ControllerDevice.of({
   name: 'MIDI Structor UI',
