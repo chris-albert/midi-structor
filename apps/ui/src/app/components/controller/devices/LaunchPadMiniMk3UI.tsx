@@ -4,11 +4,14 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
 import ArrowLeftIcon from '@mui/icons-material/ArrowLeft'
 import ArrowRightIcon from '@mui/icons-material/ArrowRight'
 import { Box } from '@mui/material'
-import { LaunchPadMiniMk3, MidiTarget } from '@midi-structor/core'
+import { Color, LaunchPadMiniMk3, MidiMessage, MidiTarget, SysExMessage } from '@midi-structor/core'
 import { ControllerPad, ControllerUI, midiFromRowCol } from '../ControllerUI'
 import React from 'react'
-import { ControllerUIDevice } from './ControllerUIDevice'
+import { ControllerUIDevice, UIMessageStore, UIStore } from './ControllerUIDevice'
 import { ControllerGridComponent } from '../ControllerGridComponent'
+import { atomFamily } from 'jotai/utils'
+import { atom, useSetAtom } from 'jotai'
+import _ from 'lodash'
 
 const controllerUI = new ControllerUI({
   pads: [
@@ -164,8 +167,55 @@ const controllerUI = new ControllerUI({
   ],
 })
 
+type LaunchPadMiniColorMessage = {
+  type: 'color'
+  color: Color
+}
+
+type LaunchPadMiniInitMessage = {
+  type: 'init'
+}
+
+type LaunchPadMiniMessage = LaunchPadMiniColorMessage | LaunchPadMiniInitMessage
+
+const atomStore = atomFamily((name: string) => atom<UIMessageStore<LaunchPadMiniMessage>>({}))
+
+const messagesFromSysex = (sysex: SysExMessage): Array<[string, LaunchPadMiniMessage]> => {
+  const colors: Array<[string, LaunchPadMiniMessage]> = []
+  const colorsArray = sysex.body.slice(5)
+  while (colorsArray.length >= 4) {
+    colorsArray.shift()
+    const target = colorsArray.shift()
+    const red = colorsArray.shift()
+    const green = colorsArray.shift()
+    const blue = colorsArray.shift()
+    const color = Color.fromRGB(red * 2, green * 2, blue * 2)
+    colors.push([MidiTarget.toKey(MidiTarget.cc(target)), { type: 'color', color }])
+  }
+  return colors
+}
+
+const useStore: UIStore<LaunchPadMiniMessage> = (name) => {
+  const setStore = useSetAtom(atomStore(name))
+  return {
+    usePut: (m: MidiMessage) => {
+      if (m.type === 'sysex') {
+        if (_.isEqual(m.body.slice(0, 5), [32, 41, 2, 13, 3])) {
+          const messages = messagesFromSysex(m)
+          const newStore: UIMessageStore<LaunchPadMiniMessage> = {}
+          messages.forEach((message) => {
+            newStore[message[0]] = message[1]
+          })
+          setStore((s) => ({ ...s, ...newStore }))
+        }
+      }
+    },
+    useGet: () => ({}),
+  }
+}
+
 export const LaunchPadMiniMk3UI = ControllerUIDevice.of({
-  controller: LaunchPadMiniMk3,
+  controller: LaunchPadMiniMk3.device,
   component: (configuredController) => {
     return (
       <ControllerGridComponent
@@ -174,4 +224,5 @@ export const LaunchPadMiniMk3UI = ControllerUIDevice.of({
       />
     )
   },
+  useStore,
 })

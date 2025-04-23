@@ -4,11 +4,11 @@ import { ControllerDevice } from './ControllerDevice'
 import { Option } from 'effect'
 import { MIDIStructorUI } from './MIDIStructorUI'
 
-const allDevices: Array<ControllerDevice> = [LaunchPadMiniMk3, MIDIStructorUI.device]
+const allDevices: Array<ControllerDevice> = [LaunchPadMiniMk3.device, MIDIStructorUI.device]
 
 const deviceLookup: Record<string, ControllerDevice> = _.keyBy(allDevices, 'name')
 
-const defaultDevice: ControllerDevice = LaunchPadMiniMk3
+const defaultDevice: ControllerDevice = LaunchPadMiniMk3.device
 
 const findByName = (name: string): Option.Option<ControllerDevice> =>
   Option.fromNullable(_.get(deviceLookup, name, undefined))

@@ -1,13 +1,33 @@
 import React from 'react'
-import { ConfiguredController, ControllerDevice } from '@midi-structor/core'
+import { ConfiguredController, ControllerDevice, MidiMessage } from '@midi-structor/core'
 
-export type ControllerUIDevice = {
-  controller: ControllerDevice
-  component: (controller: ConfiguredController) => React.ReactElement
+export type UIMessageStore<A> = Record<string, A>
+export type UIStore<A> = (name: string) => {
+  usePut: (m: MidiMessage) => void
+  useGet: () => UIMessageStore<A>
 }
 
-const of = (device: ControllerUIDevice): ControllerUIDevice => device
+export type ControllerUIDevice<A> = {
+  controller: ControllerDevice
+  component: (controller: ConfiguredController) => React.ReactElement
+  useStore: UIStore<A>
+}
+
+const of = <A>(
+  device: Omit<ControllerUIDevice<A>, 'useStore'> & { useStore?: UIStore<A> }
+): ControllerUIDevice<A> => ({
+  useStore: device.useStore || dummyStore(),
+  ...device,
+})
+
+const dummyStore =
+  <A>(): UIStore<A> =>
+  () => ({
+    usePut: (m) => {},
+    useGet: () => ({}),
+  })
 
 export const ControllerUIDevice = {
   of,
+  dummyStore,
 }

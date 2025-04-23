@@ -70,7 +70,7 @@ const controller = (emitter: MidiEmitter, listener: MidiListener, virtual: boole
     targets: MidiTarget.notes({ from: 11, to: 99 }),
   })
 
-export const LaunchPadMiniMk3 = ControllerDevice.of({
+const device = ControllerDevice.of({
   name: 'Launchpad Mini [MK3]',
   controller,
   widgets: ControllerWidgets([
@@ -91,3 +91,7 @@ export const LaunchPadMiniMk3 = ControllerDevice.of({
     ButtonWidget,
   ]),
 })
+
+export const LaunchPadMiniMk3 = {
+  device,
+}

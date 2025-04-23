@@ -14,6 +14,7 @@ import { MidiEventRecord } from '../midi/MidiDevice'
 import { Color } from './Color'
 import { ControllerConfig } from './ControllerConfig'
 import { ControllerDevices } from './devices/ControllerDevices'
+import _ from 'lodash'
 
 export type ConfiguredController = {
   name: string
@@ -220,12 +221,14 @@ const useVirtualSetStore = (controller: ConfiguredController) => {
 
   const onMessage = (message: MidiMessage) => {
     if (message.type === 'sysex') {
-      const colors = colorsFromSysex(message)
-      const newStore: VirtualStore = {}
-      colors.forEach((color) => {
-        newStore[color[0]] = color[1]
-      })
-      setStore((s) => ({ ...s, ...newStore }))
+      if (_.isEqual(message.body.slice(0, 5), [32, 41, 2, 13, 3])) {
+        const colors = colorsFromSysex(message)
+        const newStore: VirtualStore = {}
+        colors.forEach((color) => {
+          newStore[color[0]] = color[1]
+        })
+        setStore((s) => ({ ...s, ...newStore }))
+      }
     }
   }
 
