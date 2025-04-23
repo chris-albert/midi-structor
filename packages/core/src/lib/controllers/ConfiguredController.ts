@@ -216,6 +216,10 @@ const colorsFromSysex = (sysex: SysExMessage): Array<[string, Color]> => {
   return colors
 }
 
+// const useUIDevice = (controller: ConfiguredController) => {
+//   const a = ControllerUIDevices.findByName(controller.device)
+// }
+
 const useVirtualSetStore = (controller: ConfiguredController) => {
   const setStore = useSetAtom(atoms.virtualStore(controller.name))
 

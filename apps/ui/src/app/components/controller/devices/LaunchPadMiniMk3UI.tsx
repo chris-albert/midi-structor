@@ -10,8 +10,9 @@ import React from 'react'
 import { ControllerUIDevice, UIMessageStore, UIStore } from './ControllerUIDevice'
 import { ControllerGridComponent } from '../ControllerGridComponent'
 import { atomFamily } from 'jotai/utils'
-import { atom, useSetAtom } from 'jotai'
+import { atom, useSetAtom, useAtom } from 'jotai'
 import _ from 'lodash'
+import { useAtomValue } from 'jotai/index'
 
 const controllerUI = new ControllerUI({
   pads: [
@@ -210,7 +211,7 @@ const useStore: UIStore<LaunchPadMiniMessage> = (name) => {
         }
       }
     },
-    useGet: () => ({}),
+    useGet: () => useAtomValue(atomStore(name)),
   }
 }
 
