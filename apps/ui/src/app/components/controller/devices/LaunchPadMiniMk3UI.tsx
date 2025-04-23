@@ -185,9 +185,18 @@ type LaunchPadMiniInitMessage = {
   type: 'init'
 }
 
-type LaunchPadMiniMessage = LaunchPadMiniColorMessage | LaunchPadMiniInitMessage
+export type LaunchPadMiniMessage = LaunchPadMiniColorMessage | LaunchPadMiniInitMessage
 
 const atomStore = atomFamily((name: string) => atom<UIMessageStore<LaunchPadMiniMessage>>({}))
+
+const getTargetFromNum = (num: number): MidiTarget => {
+  const str = num.toString()
+  if (str.startsWith('9') || str.endsWith('9')) {
+    return MidiTarget.cc(num)
+  } else {
+    return MidiTarget.note(num)
+  }
+}
 
 const messagesFromSysex = (sysex: SysExMessage): Array<[string, LaunchPadMiniMessage]> => {
   const colors: Array<[string, LaunchPadMiniMessage]> = []
@@ -199,7 +208,7 @@ const messagesFromSysex = (sysex: SysExMessage): Array<[string, LaunchPadMiniMes
     const green = colorsArray.shift()
     const blue = colorsArray.shift()
     const color = Color.fromRGB(red * 2, green * 2, blue * 2)
-    colors.push([MidiTarget.toKey(MidiTarget.cc(target)), { type: 'color', color }])
+    colors.push([MidiTarget.toKey(getTargetFromNum(target)), { type: 'color', color }])
   }
   return colors
 }
@@ -207,7 +216,7 @@ const messagesFromSysex = (sysex: SysExMessage): Array<[string, LaunchPadMiniMes
 const useStore: UIStore<LaunchPadMiniMessage> = (name) => {
   const setStore = useSetAtom(atomStore(name))
   return {
-    usePut: (m: MidiMessage) => {
+    usePut: () => (m: MidiMessage) => {
       if (m.type === 'sysex') {
         if (_.isEqual(m.body.slice(0, 5), [32, 41, 2, 13, 3])) {
           const messages = messagesFromSysex(m)

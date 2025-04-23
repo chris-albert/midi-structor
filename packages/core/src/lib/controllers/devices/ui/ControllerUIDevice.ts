@@ -3,7 +3,7 @@ import { ConfiguredController, ControllerDevice, MidiMessage } from '@midi-struc
 
 export type UIMessageStore<A> = Record<string, A>
 export type UIStore<A> = (name: string) => {
-  usePut: (m: MidiMessage) => void
+  usePut: () => (m: MidiMessage) => void
   useGet: () => UIMessageStore<A>
 }
 
@@ -23,7 +23,7 @@ const of = <A>(
 const dummyStore =
   <A>(): UIStore<A> =>
   () => ({
-    usePut: (m) => {},
+    usePut: () => (m) => {},
     useGet: () => ({}),
   })
 

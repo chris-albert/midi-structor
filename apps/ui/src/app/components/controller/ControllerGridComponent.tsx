@@ -1,7 +1,8 @@
 import React from 'react'
 import { Box } from '@mui/material'
 import { ControllerPad, ControllerUI } from './ControllerUI'
-import { Color, ConfiguredController, MidiTarget } from '@midi-structor/core'
+import { Color, ConfiguredController, MidiTarget, UIMessageStore } from '@midi-structor/core'
+import { LaunchPadMiniMessage } from './devices/LaunchPadMiniMk3UI'
 
 type PadWithState = {
   pad: ControllerPad
@@ -13,19 +14,23 @@ type ControllerGridComponentProps = {
   controller: ConfiguredController
 }
 
+const getColor = (message: LaunchPadMiniMessage | undefined): Color =>
+  message !== undefined && message.type === 'color' ? message.color : 0
+
 export const ControllerGridComponent: React.FC<ControllerGridComponentProps> = ({
   controllerUI,
   controller,
 }) => {
   const buttonSize = 75
-  const padStore = ConfiguredController.useVirtualStore(controller)
+  // TODO: This casting here is dumb, need to guarantee this is correct
+  const padStore = ConfiguredController.useVirtualStore(controller) as UIMessageStore<LaunchPadMiniMessage>
   const listener = ConfiguredController.useVirtualListener(controller)
 
   const pads: Array<Array<PadWithState>> = React.useMemo(() => {
     return controllerUI.pads.map((padRow, ri) =>
       padRow.map((pad, ci) => ({
         pad,
-        color: padStore[MidiTarget.toValue(pad.target)] || 0,
+        color: getColor(padStore[MidiTarget.toKey(pad.target)]),
       }))
     )
   }, [padStore, controllerUI.pads])

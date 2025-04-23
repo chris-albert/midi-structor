@@ -203,8 +203,7 @@ const useUIStore = (controller: ConfiguredController) => {
 }
 
 const useVirtualStore = (controller: ConfiguredController) => {
-  // return useUIStore(controller).useGet()
-  return useAtomValue(atoms.virtualStore(controller.name))
+  return useUIStore(controller).useGet()
 }
 
 const colorsFromSysex = (sysex: SysExMessage): Array<[string, Color]> => {
@@ -235,29 +234,21 @@ const emptyVirtualSetStore: VirtualSetStore = {
 }
 
 const useVirtualSetStore = (controller: ConfiguredController): VirtualSetStore => {
-  const setStore = useSetAtom(atoms.virtualStore(controller.name))
-
-  // const a = ControllerUIDevices.useDevices().findByName(controller.device)
-  //
-  // Option.match(
-  //   ControllerUIDevices.useDevices().findByName(controller.device),
-  //   {
-  //     onSome: (devices) => devices.,
-  //     onNone: () => emptyVirtualSetStore
-  //   }
-  // )
+  // const setStore = useSetAtom(atoms.virtualStore(controller.name))
+  const putMessage = useUIStore(controller).usePut()
 
   const onMessage = (message: MidiMessage) => {
-    if (message.type === 'sysex') {
-      if (_.isEqual(message.body.slice(0, 5), [32, 41, 2, 13, 3])) {
-        const colors = colorsFromSysex(message)
-        const newStore: VirtualStore = {}
-        colors.forEach((color) => {
-          newStore[color[0]] = color[1]
-        })
-        setStore((s) => ({ ...s, ...newStore }))
-      }
-    }
+    putMessage(message)
+    // if (message.type === 'sysex') {
+    // if (_.isEqual(message.body.slice(0, 5), [32, 41, 2, 13, 3])) {
+    //   const colors = colorsFromSysex(message)
+    //   const newStore: VirtualStore = {}
+    //   colors.forEach((color) => {
+    //     newStore[color[0]] = color[1]
+    //   })
+    //   setStore((s) => ({ ...s, ...newStore }))
+    // }
+    // }
   }
 
   return {
