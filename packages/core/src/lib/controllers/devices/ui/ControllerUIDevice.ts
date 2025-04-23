@@ -9,7 +9,7 @@ export type UIStore<A> = (name: string) => {
 
 export type ControllerUIDevice<A> = {
   controller: ControllerDevice
-  component: (controller: ConfiguredController) => React.ReactElement
+  component: (controller: ConfiguredController, device: ControllerUIDevice<A>) => React.ReactElement
   useStore: UIStore<A>
 }
 

@@ -1,5 +1,5 @@
 import { atomFamily, splitAtom } from 'jotai/utils'
-import { useAtomValue, useAtom, PrimitiveAtom, atom, useSetAtom } from 'jotai'
+import { useAtomValue, useAtom, PrimitiveAtom, atom } from 'jotai'
 import { AtomStorage } from '../storage/AtomStorage'
 import { ProjectMidi } from '../project/ProjectMidi'
 import { Option, pipe } from 'effect'
@@ -8,13 +8,12 @@ import { focusAtom } from 'jotai-optics'
 import { OpticFor_ } from 'optics-ts'
 import { Midi, MidiDeviceSelection, MidiEmitter, MidiListener } from '../midi/GlobalMidi'
 import { MidiDeviceManager } from '../midi/MidiDeviceManager'
-import { MidiMessage, SysExMessage } from '../midi/MidiMessage'
+import { MidiMessage } from '../midi/MidiMessage'
 import { EventEmitter } from '../EventEmitter'
 import { MidiEventRecord } from '../midi/MidiDevice'
 import { Color } from './Color'
 import { ControllerConfig } from './ControllerConfig'
 import { ControllerDevices } from './devices/ControllerDevices'
-import _ from 'lodash'
 import { ControllerUIDevices } from './devices/ui/ControllerUIDevices'
 
 export type ConfiguredController = {
@@ -206,67 +205,17 @@ const useVirtualStore = (controller: ConfiguredController) => {
   return useUIStore(controller).useGet()
 }
 
-const colorsFromSysex = (sysex: SysExMessage): Array<[string, Color]> => {
-  const colors: Array<[string, Color]> = []
-  const colorsArray = sysex.body.slice(5)
-  while (colorsArray.length >= 4) {
-    colorsArray.shift()
-    const target = colorsArray.shift()
-    const red = colorsArray.shift()
-    const green = colorsArray.shift()
-    const blue = colorsArray.shift()
-    const color = Color.fromRGB(red * 2, green * 2, blue * 2)
-    colors.push([`${target}`, color])
-  }
-  return colors
-}
-
-// const useUIDevice = (controller: ConfiguredController) => {
-//   const a = ControllerUIDevices.findByName(controller.device)
-// }
-
-type VirtualSetStore = {
-  onMessage: (message: MidiMessage) => void
-}
-
-const emptyVirtualSetStore: VirtualSetStore = {
-  onMessage: (message: MidiMessage) => {},
-}
-
-const useVirtualSetStore = (controller: ConfiguredController): VirtualSetStore => {
-  // const setStore = useSetAtom(atoms.virtualStore(controller.name))
-  const putMessage = useUIStore(controller).usePut()
-
-  const onMessage = (message: MidiMessage) => {
-    putMessage(message)
-    // if (message.type === 'sysex') {
-    // if (_.isEqual(message.body.slice(0, 5), [32, 41, 2, 13, 3])) {
-    //   const colors = colorsFromSysex(message)
-    //   const newStore: VirtualStore = {}
-    //   colors.forEach((color) => {
-    //     newStore[color[0]] = color[1]
-    //   })
-    //   setStore((s) => ({ ...s, ...newStore }))
-    // }
-    // }
-  }
-
-  return {
-    onMessage,
-  }
-}
-
 const useVirtualListener = (controller: ConfiguredController) =>
   useAtomValue(atoms.virtualListener(controller.name))
 
 const useVirtualIO = (controller: ConfiguredController): ConfiguredControllerIO => {
-  const store = useVirtualSetStore(controller)
+  const putMessage = useUIStore(controller).usePut()
   const listener = useVirtualListener(controller)
 
   return {
     emitter: {
       send: (message: MidiMessage) => {
-        store.onMessage(message)
+        putMessage(message)
       },
     },
     listener,

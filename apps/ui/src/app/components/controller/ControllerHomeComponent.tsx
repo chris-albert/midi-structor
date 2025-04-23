@@ -15,7 +15,7 @@ export const ControllerHomeComponent: React.FC<ControllerHomeComponentProps> = (
   return (
     <Box sx={{ mt: 2 }}>
       {Option.getOrElse(
-        Option.map(devices.findByName(controller.device), (c) => c.component(controller.controller)),
+        Option.map(devices.findByName(controller.device), (c) => c.component(controller.controller, c)),
         () => null
       )}
     </Box>
