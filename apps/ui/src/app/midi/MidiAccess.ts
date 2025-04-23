@@ -13,6 +13,7 @@ import {
 import React from 'react'
 import _ from 'lodash'
 import { Option } from 'effect'
+import { AllControllerUIDevices } from '../components/controller/devices/AllControllerUIDevices'
 
 const mapToArray = (map: any): Array<any> => {
   const arr: Array<any> = []
@@ -67,6 +68,7 @@ const useAccess = () => {
     getMidiAccess(true)
       .then((manager) => {
         Midi.init(manager)
+        AllControllerUIDevices.init()
         ControllerMidi.init()
       })
       .catch(console.error)

@@ -10,6 +10,13 @@ export type ControllerDevice = {
 
 const of = (device: ControllerDevice): ControllerDevice => device
 
+const empty: ControllerDevice = {
+  name: 'empty',
+  controller: (e, l) => Controller.empty,
+  widgets: ControllerWidgets([]),
+}
+
 export const ControllerDevice = {
   of,
+  empty,
 }

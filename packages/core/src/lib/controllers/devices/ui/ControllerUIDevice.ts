@@ -27,7 +27,14 @@ const dummyStore =
     useGet: () => ({}),
   })
 
+const emptyDevice: ControllerUIDevice<{}> = {
+  controller: ControllerDevice.empty,
+  component: (c: ConfiguredController) => React.createElement('div'),
+  useStore: dummyStore<{}>(),
+}
+
 export const ControllerUIDevice = {
   of,
   dummyStore,
+  emptyDevice,
 }

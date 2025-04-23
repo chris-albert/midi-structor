@@ -4,13 +4,21 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
 import ArrowLeftIcon from '@mui/icons-material/ArrowLeft'
 import ArrowRightIcon from '@mui/icons-material/ArrowRight'
 import { Box } from '@mui/material'
-import { Color, LaunchPadMiniMk3, MidiMessage, MidiTarget, SysExMessage } from '@midi-structor/core'
+import {
+  Color,
+  LaunchPadMiniMk3,
+  MidiMessage,
+  MidiTarget,
+  SysExMessage,
+  ControllerUIDevice,
+  UIMessageStore,
+  UIStore,
+} from '@midi-structor/core'
 import { ControllerPad, ControllerUI, midiFromRowCol } from '../ControllerUI'
 import React from 'react'
-import { ControllerUIDevice, UIMessageStore, UIStore } from './ControllerUIDevice'
 import { ControllerGridComponent } from '../ControllerGridComponent'
 import { atomFamily } from 'jotai/utils'
-import { atom, useSetAtom, useAtom } from 'jotai'
+import { atom, useSetAtom } from 'jotai'
 import _ from 'lodash'
 import { useAtomValue } from 'jotai/index'
 

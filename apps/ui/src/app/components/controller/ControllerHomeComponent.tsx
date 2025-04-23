@@ -1,8 +1,7 @@
 import React from 'react'
 import { PrimitiveAtom } from 'jotai/index'
-import { ConfiguredController } from '@midi-structor/core'
+import { ConfiguredController, ControllerUIDevices } from '@midi-structor/core'
 import { Box } from '@mui/material'
-import { ControllerUIDevices } from './devices/ControllerUIDevices'
 import { Option } from 'effect'
 
 export type ControllerHomeComponentProps = {
@@ -11,13 +10,12 @@ export type ControllerHomeComponentProps = {
 
 export const ControllerHomeComponent: React.FC<ControllerHomeComponentProps> = ({ controllerAtom }) => {
   const controller = ConfiguredController.useController(controllerAtom)
+  const devices = ControllerUIDevices.useDevices()
 
   return (
     <Box sx={{ mt: 2 }}>
       {Option.getOrElse(
-        Option.map(ControllerUIDevices.findByName(controller.device), (c) =>
-          c.component(controller.controller)
-        ),
+        Option.map(devices.findByName(controller.device), (c) => c.component(controller.controller)),
         () => null
       )}
     </Box>

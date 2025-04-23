@@ -15,6 +15,7 @@ import { Color } from './Color'
 import { ControllerConfig } from './ControllerConfig'
 import { ControllerDevices } from './devices/ControllerDevices'
 import _ from 'lodash'
+import { ControllerUIDevices } from './devices/ui/ControllerUIDevices'
 
 export type ConfiguredController = {
   name: string
@@ -197,7 +198,12 @@ const useRealIO = (controller: ConfiguredController): ConfiguredControllerIO => 
   }
 }
 
+const useUIStore = (controller: ConfiguredController) => {
+  return ControllerUIDevices.useDevices().getByName(controller.device).useStore(controller.name)
+}
+
 const useVirtualStore = (controller: ConfiguredController) => {
+  // return useUIStore(controller).useGet()
   return useAtomValue(atoms.virtualStore(controller.name))
 }
 
@@ -220,8 +226,26 @@ const colorsFromSysex = (sysex: SysExMessage): Array<[string, Color]> => {
 //   const a = ControllerUIDevices.findByName(controller.device)
 // }
 
-const useVirtualSetStore = (controller: ConfiguredController) => {
+type VirtualSetStore = {
+  onMessage: (message: MidiMessage) => void
+}
+
+const emptyVirtualSetStore: VirtualSetStore = {
+  onMessage: (message: MidiMessage) => {},
+}
+
+const useVirtualSetStore = (controller: ConfiguredController): VirtualSetStore => {
   const setStore = useSetAtom(atoms.virtualStore(controller.name))
+
+  // const a = ControllerUIDevices.useDevices().findByName(controller.device)
+  //
+  // Option.match(
+  //   ControllerUIDevices.useDevices().findByName(controller.device),
+  //   {
+  //     onSome: (devices) => devices.,
+  //     onNone: () => emptyVirtualSetStore
+  //   }
+  // )
 
   const onMessage = (message: MidiMessage) => {
     if (message.type === 'sysex') {

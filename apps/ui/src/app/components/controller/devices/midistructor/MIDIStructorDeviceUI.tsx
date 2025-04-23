@@ -1,6 +1,5 @@
 import React from 'react'
-import { ControllerUIDevice } from '../ControllerUIDevice'
-import { MIDIStructorUI } from '@midi-structor/core'
+import { MIDIStructorUI, ControllerUIDevice } from '@midi-structor/core'
 import { MidiStructorComponent } from './MidiStructorComponent'
 
 const device = MIDIStructorUI.device
