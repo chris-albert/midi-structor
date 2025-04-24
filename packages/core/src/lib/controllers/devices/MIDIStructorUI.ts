@@ -7,6 +7,8 @@ import { PlayStopWidget } from '../widgets/PlayStopWidget'
 import { Schema } from 'effect'
 import { ControllerWidget, ControllerWidgetsType } from '../ControllerWidget'
 import { BeatsWidget } from '../widgets/BeatsWidget'
+import { MidiTarget } from '../../midi/MidiTarget'
+import { Color } from '../Color'
 
 const UIBaseSchema = Schema.Struct({
   label: Schema.optional(Schema.String),
@@ -26,27 +28,62 @@ const widgets = ControllerWidgets([
 
 type ElementType<T> = T extends (infer U)[] ? U : never
 
-export type MIDIStructorUIWidgets = ControllerWidgetsType<typeof widgets.widgets>
+export type MIDIStructorUIWidgets = ControllerWidgetsType<
+  typeof widgets.widgets
+>
 export type MIDIStructorUIWidget = ElementType<MIDIStructorUIWidgets>
 
 export const MidiStructorUIInit = Schema.TaggedStruct('init', {
   widgets: Schema.Array(widgets.schema),
 })
 
-export const MidiStructorSysexControlCodes = {
-  init: 50,
-}
+export const MIDIStructorPad = Schema.TaggedStruct('pad', {
+  target: MidiTarget.Schema,
+  color: Color.Schema,
+  label: Schema.optional(Schema.String),
+})
 
-const controller = (emitter: MidiEmitter, listener: MidiListener, virtual: boolean) =>
+export type MIDIStructorPad = typeof MIDIStructorPad.Type
+
+export const MIDIStructorMessage = Schema.Union(
+  MidiStructorUIInit,
+  MIDIStructorPad
+)
+export type MIDIStructorMessage = typeof MIDIStructorMessage.Type
+
+export const MidiStructorSysexControlCode = 50
+
+const controller = (
+  emitter: MidiEmitter,
+  listener: MidiListener,
+  virtual: boolean
+) =>
   new Controller({
     init: (widgets) => {
-      const uiWidgets = MidiStructorUIInit.make({ widgets: widgets.map((w) => w.widget) })
+      const uiWidgets = MidiStructorUIInit.make({
+        widgets: widgets.map((w) => w.widget),
+      })
       console.log('MidiStructor UI widgets', uiWidgets)
       emitter.send(
-        MidiMessage.jsonSchemaSysex(uiWidgets, MidiStructorUIInit, [MidiStructorSysexControlCodes.init])
+        MidiMessage.jsonSchemaSysex(uiWidgets, MidiStructorUIInit, [
+          MidiStructorSysexControlCode,
+        ])
       )
     },
-    render: (pads) => {},
+    render: (pads) => {
+      pads.forEach((pad) => {
+        emitter.send(
+          MidiMessage.jsonSchemaSysex(
+            MIDIStructorPad.make({
+              target: pad.target,
+              color: pad.color,
+            }),
+            MIDIStructorPad,
+            [MidiStructorSysexControlCode]
+          )
+        )
+      })
+    },
     listenFilter: (m: MidiMessage): boolean => true,
     listener,
     targets: [],

@@ -1,13 +1,30 @@
 import React from 'react'
-import { ControllerWidgetType, PlayStopWidget } from '@midi-structor/core'
+import {
+  ControllerWidgetType,
+  MIDIStructorPad,
+  PlayStopWidget,
+} from '@midi-structor/core'
 import { PlayButtonComponent } from '../../../../PlayButtonComponent'
 import { OnClick } from '../MidiStructorComponent'
+import { StopButtonComponent } from '../../../../StopButtonComponent'
+import { PadUIComponent } from './PadUIComponent'
 
 export type PlayStopWidgetComponentProps = {
   widget: ControllerWidgetType<typeof PlayStopWidget>
   onClick: OnClick
+  pad: MIDIStructorPad
 }
 
-export const PlayStopWidgetComponent: React.FC<PlayStopWidgetComponentProps> = ({ widget, onClick }) => {
-  return <PlayButtonComponent onPlay={() => onClick(widget.target)} />
+export const PlayStopWidgetComponent: React.FC<
+  PlayStopWidgetComponentProps
+> = ({ widget, onClick, pad }) => {
+  return (
+    <PadUIComponent>
+      {pad.color === widget.playColor ? (
+        <PlayButtonComponent onPlay={() => onClick(widget.target)} />
+      ) : (
+        <StopButtonComponent onStop={() => onClick(widget.target)} />
+      )}
+    </PadUIComponent>
+  )
 }

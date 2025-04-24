@@ -328,9 +328,9 @@ const sysex = (body: Array<number>, manufacturer = 0): SysExMessage => ({
 const jsonSysex = (msg: any, prefix: Array<number> = [], manufacturer = 0): SysExMessage =>
   sysex(charCodesFromString(JSON.stringify(msg), prefix), manufacturer)
 
-const jsonSchemaSysex = <A>(
+const jsonSchemaSysex = <A, B>(
   msg: A,
-  schema: Schema.Schema<A>,
+  schema: Schema.Schema<A, B>,
   prefix: Array<number> = [],
   manufacturer = 0
 ): SysExMessage =>
@@ -353,9 +353,9 @@ const stringFromCharCodes = (codes: Array<number>): string => {
   return strs.join('')
 }
 
-const parseJsonSysex = <A>(
+const parseJsonSysex = <A, B>(
   sysex: SysExMessage,
-  schema: Schema.Schema<A>,
+  schema: Schema.Schema<A, B>,
   skipControl = 0
 ): Either.Either<A, ParseError> => {
   const str = stringFromCharCodes(sysex.body.slice(skipControl))

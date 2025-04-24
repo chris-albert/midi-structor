@@ -2,31 +2,42 @@ import React from 'react'
 import {
   MIDIStructorUI,
   ControllerUIDevice,
-  MidiStructorUIInit,
   UIMessageStore,
   MidiMessage,
   UIStore,
-  MidiStructorSysexControlCodes,
   SysExMessage,
+  MidiTarget,
+  MidiStructorSysexControlCode,
+  MIDIStructorMessage,
 } from '@midi-structor/core'
 import { MidiStructorComponent } from './MidiStructorComponent'
 import { atomFamily } from 'jotai/utils'
 import { atom, useAtomValue, useSetAtom } from 'jotai'
 import { Either } from 'effect'
 
-type MIDIStructorMessage = typeof MidiStructorUIInit.Type
-type MIDIStructorStore = UIMessageStore<MIDIStructorMessage>
+export type MIDIStructorStore = UIMessageStore<MIDIStructorMessage>
 
 const atomStore = atomFamily((name: string) => atom<MIDIStructorStore>({}))
 
-const parseInit = (sysex: SysExMessage): any => {
-  return Either.match(MidiMessage.parseJsonSysex(sysex, MidiStructorUIInit, 1), {
-    onRight: (m) => m,
-    onLeft: (parseError) => {
-      console.error('Error parsing MIDIStructor UI widgets', parseError)
-      return {}
-    },
-  })
+const parseMessage = (sysex: SysExMessage): any => {
+  return Either.match(
+    MidiMessage.parseJsonSysex(sysex, MIDIStructorMessage, 1),
+    {
+      onRight: (m) => {
+        if (m._tag === 'init') {
+          return { init: m }
+        } else if (m._tag === 'pad') {
+          return { [MidiTarget.toKey(m.target)]: m }
+        } else {
+          return {}
+        }
+      },
+      onLeft: (parseError) => {
+        console.error('Error parsing MIDIStructor UI widgets', parseError)
+        return {}
+      },
+    }
+  )
 }
 
 const useStore: UIStore<MIDIStructorMessage> = (name) => {
@@ -34,8 +45,8 @@ const useStore: UIStore<MIDIStructorMessage> = (name) => {
   return {
     usePut: () => (m: MidiMessage) => {
       if (m.type === 'sysex') {
-        if (m.body[0] === MidiStructorSysexControlCodes.init) {
-          setStore((s) => ({ ...s, init: parseInit(m) }))
+        if (m.body[0] === MidiStructorSysexControlCode) {
+          setStore((s) => ({ ...s, ...parseMessage(m) }))
         }
       }
     },

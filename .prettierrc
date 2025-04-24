@@ -4,7 +4,7 @@
   "singleQuote": true,
   "jsxSingleQuote": true,
   "endOfLine": "lf",
-  "printWidth": 110,
+  "printWidth": 80,
   "bracketSameLine": true,
   "singleAttributePerLine": true
 }

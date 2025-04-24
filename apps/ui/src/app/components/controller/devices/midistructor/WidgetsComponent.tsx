@@ -4,14 +4,16 @@ import { Box } from '@mui/material'
 import _ from 'lodash'
 import { WidgetComponent } from './WidgetComponent'
 import { OnClick } from './MidiStructorComponent'
+import { MIDIStructorStore } from './MIDIStructorDeviceUI'
 
 export type WidgetsComponentProps = {
   widgets: MIDIStructorUIWidgets
   isEdit: boolean
   onClick: OnClick
+  store: MIDIStructorStore
 }
 
-export const WidgetsComponent: React.FC<WidgetsComponentProps> = ({ widgets, isEdit, onClick }) => {
+export const WidgetsComponent: React.FC<WidgetsComponentProps> = ({ widgets, isEdit, onClick, store }) => {
   return (
     <Box
       sx={{
@@ -35,6 +37,7 @@ export const WidgetsComponent: React.FC<WidgetsComponentProps> = ({ widgets, isE
           <WidgetComponent
             widget={widget}
             onClick={onClick}
+            store={store}
           />
         </Box>
       ))}

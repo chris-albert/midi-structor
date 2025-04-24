@@ -25,12 +25,12 @@ export const MidiStructorComponent: React.FC<MidiStructorComponentProps> = ({
   const store = device.useStore(configuredController.name).useGet()
   const widgets: MIDIStructorUIWidgets | undefined = React.useMemo(() => {
     const initMaybe = store['init']
-    if (initMaybe !== undefined) {
+    if (initMaybe !== undefined && initMaybe._tag === 'init') {
       return [...initMaybe.widgets]
     } else {
       return undefined
     }
-  }, [])
+  }, [store])
   const listener = ConfiguredController.useVirtualListener(configuredController)
 
   const onClick = (target: MidiTarget) => {
@@ -72,6 +72,7 @@ export const MidiStructorComponent: React.FC<MidiStructorComponentProps> = ({
             widgets={widgets}
             isEdit={editWidgets}
             onClick={onClick}
+            store={store}
           />
         ) : (
           <Box>
