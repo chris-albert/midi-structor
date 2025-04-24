@@ -24,12 +24,16 @@ export const BeatsWidgetComponent: React.FC<BeatsWidgetComponentProps> = ({
           key={i}
           sx={{
             border: '1px solid black',
-            height: 100,
             width: 100,
             backgroundColor: `#${Color.toHex(pad.color)}`,
+            display: 'flex',
           }}>
           <Typography
+            sx={{
+              width: '100%',
+            }}
             variant='h1'
+            lineHeight={1}
             align='center'>
             {i + 1}
           </Typography>
