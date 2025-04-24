@@ -1,7 +1,7 @@
 import React from 'react'
 import { useAtom } from 'jotai/index'
 import { editWidgetsAtom } from '../../../../model/Widgets'
-import { Box, Button, Drawer } from '@mui/material'
+import { Box, Button, Drawer, LinearProgress } from '@mui/material'
 import { AddWidgetComponent } from '../../../AddWidgetComponent'
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
 import { ConfiguredController, MidiMessage, MIDIStructorUIWidgets, MidiTarget } from '@midi-structor/core'
@@ -22,13 +22,16 @@ export const MidiStructorComponent: React.FC<MidiStructorComponentProps> = ({
   const [widgetOpen, setWidgetOpen] = React.useState(false)
   const [editWidgets, setEditWidgets] = useAtom(editWidgetsAtom)
 
-  const store = ConfiguredController.useVirtualStore(configuredController)
+  const store = device.useStore(configuredController.name).useGet()
+  const widgets: MIDIStructorUIWidgets | undefined = React.useMemo(() => {
+    const initMaybe = store['init']
+    if (initMaybe !== undefined) {
+      return [...initMaybe.widgets]
+    } else {
+      return undefined
+    }
+  }, [])
   const listener = ConfiguredController.useVirtualListener(configuredController)
-
-  // const widgets: MIDIStructorUIWidgets = device.widgets
-  //   .resolve(configuredController.config)
-  //   .map((rw) => rw.widget)
-  const widgets: MIDIStructorUIWidgets = []
 
   const onClick = (target: MidiTarget) => {
     listener.emit(MidiMessage.raw(MidiTarget.toMessage(target, 127)))
@@ -64,11 +67,18 @@ export const MidiStructorComponent: React.FC<MidiStructorComponentProps> = ({
         </Button>
       </Box>
       <Box>
-        <WidgetsComponent
-          widgets={widgets}
-          isEdit={editWidgets}
-          onClick={onClick}
-        />
+        {widgets !== undefined ? (
+          <WidgetsComponent
+            widgets={widgets}
+            isEdit={editWidgets}
+            onClick={onClick}
+          />
+        ) : (
+          <Box>
+            <Box>Loading Widgets...</Box>
+            <LinearProgress />
+          </Box>
+        )}
       </Box>
     </Box>
   )

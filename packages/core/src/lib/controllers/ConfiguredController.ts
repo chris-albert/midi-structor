@@ -201,10 +201,6 @@ const useUIStore = (controller: ConfiguredController) => {
   return ControllerUIDevices.useDevices().getByName(controller.device).useStore(controller.name)
 }
 
-const useVirtualStore = (controller: ConfiguredController) => {
-  return useUIStore(controller).useGet()
-}
-
 const useVirtualListener = (controller: ConfiguredController) =>
   useAtomValue(atoms.virtualListener(controller.name))
 
@@ -256,7 +252,6 @@ export const ConfiguredController = {
   useIO,
   useRealIO,
   useVirtualIO,
-  useVirtualStore,
   useVirtualListener,
   useListeners,
   useRealController,
