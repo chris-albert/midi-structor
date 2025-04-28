@@ -10,14 +10,18 @@
   "dependencies": {
     "color-convert": "^3.0.1",
     "effect": "^3.12.4",
+    "fs": "0.0.1-security",
     "io-ts": "^2.2.20",
     "jotai": "^2.11.0",
     "jotai-optics": "^0.4.0",
+    "promise-worker": "^2.0.1",
     "react": "18.3.1",
-    "react-reconciler": "0.28.0"
+    "react-reconciler": "0.28.0",
+    "worker-loader": "^3.0.8"
   },
   "devDependencies": {
     "@midi-structor/typescript-config": "workspace:*",
+    "@types/events": "^3.0.3",
     "typescript": "^5.7.3"
   },
   "exports": {

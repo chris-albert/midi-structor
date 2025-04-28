@@ -1,8 +1,20 @@
 import { ReactControllersApp } from './ReactControllersApp'
+import ControllerWorker from '../workers/controller/worker?worker'
+
+const USE_WORKER = false
+
+const usingWorker = () => {
+  console.log('Loading Worker Controller...')
+  new ControllerWorker()
+}
+
+const usingLocal = () => {
+  console.log('Loading Local Controller...')
+  ReactControllersApp()
+}
 
 const ControllerListener = () => {
-  console.log('Controllers Init')
-  ReactControllersApp()
+  const _ = USE_WORKER ? usingWorker() : usingLocal()
 }
 
 let isInit = false
