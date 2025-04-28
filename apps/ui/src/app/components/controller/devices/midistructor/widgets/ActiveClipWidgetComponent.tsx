@@ -28,7 +28,7 @@ export const ActiveClipWidgetComponent: React.FC<
         variant='h1'
         lineHeight={1}
         align='center'>
-        hi
+        {pad.options?.label || ''}
       </Typography>
     </PadUIComponent>
   )

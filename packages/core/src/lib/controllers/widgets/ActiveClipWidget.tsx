@@ -20,6 +20,9 @@ export const ActiveClipWidget = ControllerWidget.of({
       <pad
         target={target}
         color={activeClip.type === 'real' ? activeClip.color : Color.BLACK}
+        options={{
+          label: activeClip.type === 'real' ? activeClip.name : undefined,
+        }}
       />
     )
   },

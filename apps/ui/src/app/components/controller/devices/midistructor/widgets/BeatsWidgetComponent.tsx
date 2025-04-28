@@ -7,6 +7,7 @@ import {
 } from '@midi-structor/core'
 import { PadUIComponent } from './PadUIComponent'
 import { Box, Typography } from '@mui/material'
+import _ from 'lodash'
 
 export type BeatsWidgetComponentProps = {
   widget: ControllerWidgetType<typeof BeatsWidget>
@@ -17,9 +18,10 @@ export const BeatsWidgetComponent: React.FC<BeatsWidgetComponentProps> = ({
   widget,
   pads,
 }) => {
+  const totalBeats = _.head(pads)?.options?.timeSignature.noteCount || 8
   return (
     <PadUIComponent>
-      {pads.map((pad, i) => (
+      {pads.slice(0, totalBeats).map((pad, i) => (
         <Box
           key={i}
           sx={{

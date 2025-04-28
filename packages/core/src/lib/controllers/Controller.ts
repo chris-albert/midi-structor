@@ -19,6 +19,7 @@ export const messageToKey = (message: MidiMessage): string => {
 export type TargetColor = {
   target: MidiTarget
   color: number
+  options?: any
 }
 
 export class Controller extends Data.Class<{

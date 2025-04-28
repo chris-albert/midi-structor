@@ -2,7 +2,10 @@ import Reconciler, { OpaqueHandle } from 'react-reconciler'
 import ReactReconciler from 'react-reconciler'
 import _ from 'lodash'
 import { MidiTarget } from '../midi/MidiTarget'
-import { Controller as ControllerModel, messageToKey } from '../controllers/Controller'
+import {
+  Controller as ControllerModel,
+  messageToKey,
+} from '../controllers/Controller'
 import { Color } from '../controllers/Color'
 import { MidiMessage } from '../midi/MidiMessage'
 import React from 'react'
@@ -26,6 +29,7 @@ export type PadProps = {
   target: MidiTarget
   onClick?: () => void
   key?: string
+  options?: any
 }
 
 type ControllerProps = {
@@ -159,14 +163,20 @@ const instance = Reconciler({
     return instance
   },
 
-  removeChildFromContainer(container: Container, child: Instance | TextInstance | SuspenseInstance): void {
+  removeChildFromContainer(
+    container: Container,
+    child: Instance | TextInstance | SuspenseInstance
+  ): void {
     log('removeChildFromContainer', container, child)
     if (child.type === 'controller') {
       child.manager.remove()
     }
   },
 
-  appendInitialChild(parentInstance: Instance, child: Instance | TextInstance): void {
+  appendInitialChild(
+    parentInstance: Instance,
+    child: Instance | TextInstance
+  ): void {
     log('appendInitialChild', parentInstance, child)
     if (parentInstance.type === 'controller' && child.type === 'pad') {
       appendPad(parentInstance, child)
@@ -185,7 +195,15 @@ const instance = Reconciler({
     rootContainer: Container,
     hostContext: HostContext
   ): UpdatePayload | null {
-    log('prepareUpdate', instance, type, oldProps, newProps, rootContainer, hostContext)
+    log(
+      'prepareUpdate',
+      instance,
+      type,
+      oldProps,
+      newProps,
+      rootContainer,
+      hostContext
+    )
     if (!_.isEqual(oldProps, newProps)) {
       return instance
     } else {
@@ -205,12 +223,20 @@ const instance = Reconciler({
     commit(updatePayload, nextProps)
   },
 
-  commitMount(instance: Instance, type: Type, props: Props, internalInstanceHandle: OpaqueHandle): void {
+  commitMount(
+    instance: Instance,
+    type: Type,
+    props: Props,
+    internalInstanceHandle: OpaqueHandle
+  ): void {
     log('commitMount', instance, type, props)
     commit(instance, props)
   },
 
-  appendChildToContainer(container: Container, child: Instance | TextInstance): void {
+  appendChildToContainer(
+    container: Container,
+    child: Instance | TextInstance
+  ): void {
     log('appendChildToContainer', container, child)
     if (child.type === 'controller') {
       // container.controllers.push(child)
@@ -244,7 +270,11 @@ const instance = Reconciler({
     return {}
   },
 
-  getChildHostContext(parentHostContext: HostContext, type: Type, rootContainer: Container): HostContext {
+  getChildHostContext(
+    parentHostContext: HostContext,
+    type: Type,
+    rootContainer: Container
+  ): HostContext {
     log('getChildHostContext', parentHostContext, type, rootContainer)
     return parentHostContext
   },
@@ -262,7 +292,10 @@ const instance = Reconciler({
     log('finalizeContainerChildren')
   },
 
-  appendChildToContainerChildSet(childSet: ChildSet, child: Instance | TextInstance): void {
+  appendChildToContainerChildSet(
+    childSet: ChildSet,
+    child: Instance | TextInstance
+  ): void {
     log('appendChildToContainerChildSet', childSet, child)
   },
 
@@ -273,11 +306,21 @@ const instance = Reconciler({
     rootContainer: Container,
     hostContext: HostContext
   ): boolean {
-    log('finalizeInitialChildren', instance, type, props, rootContainer, hostContext)
+    log(
+      'finalizeInitialChildren',
+      instance,
+      type,
+      props,
+      rootContainer,
+      hostContext
+    )
     return true
   },
 
-  removeChild(parentInstance: Instance, child: Instance | TextInstance | SuspenseInstance): void {
+  removeChild(
+    parentInstance: Instance,
+    child: Instance | TextInstance | SuspenseInstance
+  ): void {
     log('removeChild', parentInstance, child)
   },
 
@@ -308,7 +351,10 @@ const instance = Reconciler({
   resetAfterCommit(containerInfo: Container): void {
     log('resetAfterCommit', containerInfo)
   },
-  scheduleTimeout(fn: (...args: unknown[]) => unknown, delay: number | undefined): TimeoutHandle {
+  scheduleTimeout(
+    fn: (...args: unknown[]) => unknown,
+    delay: number | undefined
+  ): TimeoutHandle {
     return undefined
   },
   shouldSetTextContent(type: Type, props: Props): boolean {

@@ -42,7 +42,7 @@ export const MidiStructorUIInit = Schema.TaggedStruct('init', {
 export const MIDIStructorPad = Schema.TaggedStruct('pad', {
   target: MidiTarget.Schema,
   color: Color.Schema,
-  label: Schema.optional(Schema.String),
+  options: Schema.optional(Schema.Any),
 })
 
 export type MIDIStructorPad = typeof MIDIStructorPad.Type
@@ -79,6 +79,7 @@ const controller = (
             MIDIStructorPad.make({
               target: pad.target,
               color: pad.color,
+              options: pad.options,
             }),
             MIDIStructorPad,
             [MidiStructorSysexControlCode]

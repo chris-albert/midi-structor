@@ -30,12 +30,14 @@ export const BeatsWidget = ControllerWidget.of({
   targets: (w) => [...w.targets],
   component: ({ targets, oneColor, restColor }) => {
     const beat = ProjectHooks.useBarBeats()
+    const timeSignature = ProjectHooks.useTimeSignature()
 
     const pads = _.map(targets, (target, index) => (
       <pad
         key={`beat-${index}`}
         color={color(beat, index, oneColor, restColor)}
         target={target}
+        options={{ timeSignature }}
       />
     ))
 
