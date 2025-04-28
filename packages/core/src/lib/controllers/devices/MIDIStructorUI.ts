@@ -9,6 +9,7 @@ import { ControllerWidget, ControllerWidgetsType } from '../ControllerWidget'
 import { BeatsWidget } from '../widgets/BeatsWidget'
 import { MidiTarget } from '../../midi/MidiTarget'
 import { Color } from '../Color'
+import { ActiveClipWidget } from '../widgets/ActiveClipWidget'
 
 const UIBaseSchema = Schema.Struct({
   label: Schema.optional(Schema.String),
@@ -24,6 +25,7 @@ const UIBaseSchema = Schema.Struct({
 const widgets = ControllerWidgets([
   ControllerWidget.intersect(PlayStopWidget, UIBaseSchema),
   ControllerWidget.intersect(BeatsWidget, UIBaseSchema),
+  ControllerWidget.intersect(ActiveClipWidget, UIBaseSchema),
 ])
 
 type ElementType<T> = T extends (infer U)[] ? U : never

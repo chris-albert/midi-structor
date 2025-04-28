@@ -9,6 +9,7 @@ import { Box } from '@mui/material'
 import { OnClick } from './MidiStructorComponent'
 import { MIDIStructorStore } from './MIDIStructorDeviceUI'
 import { BeatsWidgetComponent } from './widgets/BeatsWidgetComponent'
+import { ActiveClipWidgetComponent } from './widgets/ActiveClipWidgetComponent'
 
 const state = (store: MIDIStructorStore) => {
   const one = (target: MidiTarget): MIDIStructorPad => {
@@ -50,6 +51,14 @@ const getWidgetComponent = (
       <BeatsWidgetComponent
         widget={widget}
         pads={state(store).many(widget.targets)}
+      />
+    )
+  } else if (widget._tag === 'active-clip') {
+    return (
+      <ActiveClipWidgetComponent
+        widget={widget}
+        onClick={onClick}
+        pad={state(store).one(widget.target)}
       />
     )
   } else {

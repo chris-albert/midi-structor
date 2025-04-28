@@ -1,61 +1,62 @@
-{
-  "widgets": [
-    {
-      "_tag": "play-stop",
-      "target": {
-        "_tag": "CC",
-        "controllerNumber": 1
+  {
+    "widgets": [
+      {
+        "_tag": "play-stop",
+        "target": {
+          "_tag": "CC",
+          "controllerNumber": 1
+        },
+        "playColor": "00FF00",
+        "stopColor": "FF0000",
+        "label": "Play/Stop"
       },
-      "playColor": "00FF00",
-      "stopColor": "FF0000",
-      "label": "Play/Stop",
-      "border": {
-        "sizePx": 5,
-        "color": "red"
-      }
-    },
-    {
-      "_tag": "beats",
-      "targets": [
-        {
-          "_tag": "CC",
-          "controllerNumber": 10
-        },
-        {
-          "_tag": "CC",
-          "controllerNumber": 11
-        },
-        {
-          "_tag": "CC",
-          "controllerNumber": 12
-        },
-        {
-          "_tag": "CC",
-          "controllerNumber": 13
-        },
-        {
-          "_tag": "CC",
-          "controllerNumber": 14
-        },
-        {
-          "_tag": "CC",
-          "controllerNumber": 15
-        },
-        {
-          "_tag": "CC",
-          "controllerNumber": 16
-        },
-        {
-          "_tag": "CC",
-          "controllerNumber": 17
-        },
-        {
+      {
+        "_tag": "beats",
+        "targets": [
+          {
+            "_tag": "CC",
+            "controllerNumber": 10
+          },
+          {
+            "_tag": "CC",
+            "controllerNumber": 11
+          },
+          {
+            "_tag": "CC",
+            "controllerNumber": 12
+          },
+          {
+            "_tag": "CC",
+            "controllerNumber": 13
+          },
+          {
+            "_tag": "CC",
+            "controllerNumber": 14
+          },
+          {
+            "_tag": "CC",
+            "controllerNumber": 15
+          },
+          {
+            "_tag": "CC",
+            "controllerNumber": 16
+          },
+          {
+            "_tag": "CC",
+            "controllerNumber": 17
+          }
+        ],
+        "oneColor": "00FF00",
+        "restColor": "FF0000"
+      },
+      {
+        "_tag": "active-clip",
+        "target": {
           "_tag": "CC",
           "controllerNumber": 18
-        }
-      ],
-      "oneColor": "00FF00",
-      "restColor": "FF0000"
-    }
-  ]
-}
+        },
+        "trackName": "Songs",
+        "label": "Active"
+      }
+    ]
+  }

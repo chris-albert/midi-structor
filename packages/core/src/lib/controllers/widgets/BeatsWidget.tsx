@@ -6,7 +6,12 @@ import { ProjectHooks } from '../../project/ProjectHooks'
 import { ControllerWidget } from '../ControllerWidget'
 import { Schema } from 'effect'
 
-const color = (beat: number, index: number, oneColor: Color, restColor: Color): Color => {
+const color = (
+  beat: number,
+  index: number,
+  oneColor: Color,
+  restColor: Color
+): Color => {
   const padBeat = index + 1
   if (padBeat <= beat) {
     return padBeat === 1 ? oneColor : restColor

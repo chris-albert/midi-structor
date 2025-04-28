@@ -30,3 +30,4 @@ export * from './lib/controllers/devices/ui/ControllerUIDevice'
 // Widgets
 export * from './lib/controllers/widgets/PlayStopWidget'
 export * from './lib/controllers/widgets/BeatsWidget'
+export * from './lib/controllers/widgets/ActiveClipWidget'
