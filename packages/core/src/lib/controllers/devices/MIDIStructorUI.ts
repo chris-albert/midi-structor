@@ -1,15 +1,18 @@
 import { MidiEmitter, MidiListener } from '../../midi/GlobalMidi'
 import { Controller } from '../Controller'
 import { ControllerDevice } from './ControllerDevice'
-import { MidiMessage } from '../../midi/MidiMessage'
+import { MidiMessage, SysExMessage } from '../../midi/MidiMessage'
 import { ControllerWidgets } from '../ControllerWidgets'
 import { PlayStopWidget } from '../widgets/PlayStopWidget'
-import { Schema } from 'effect'
+import { Either, Schema } from 'effect'
 import { ControllerWidget, ControllerWidgetsType } from '../ControllerWidget'
 import { BeatsWidget } from '../widgets/BeatsWidget'
 import { MidiTarget } from '../../midi/MidiTarget'
 import { Color } from '../Color'
 import { ActiveClipWidget } from '../widgets/ActiveClipWidget'
+import { UIMessageStore, UIStore } from './ui/ControllerUIDevice'
+import { atomFamily } from 'jotai/utils'
+import { atom, useAtomValue, useSetAtom } from 'jotai'
 
 const UIBaseSchema = Schema.Struct({
   label: Schema.optional(Schema.String),
@@ -93,8 +96,57 @@ const controller = (
     },
     listenFilter: (m: MidiMessage): boolean => true,
     listener,
+    // listener: {
+    //   on: (name, cb) => {
+    //     console.log('MIDIStructorUI listening', name)
+    //     return listener.on(name, (m) => {
+    //       console.log('MIDIStructorUI message', m)
+    //       cb(m)
+    //     })
+    //     return () => {}
+    // },
+    // },
     targets: [],
   })
+
+export type MIDIStructorStore = UIMessageStore<MIDIStructorMessage>
+
+const atomStore = atomFamily((name: string) => atom<MIDIStructorStore>({}))
+
+const parseMessage = (sysex: SysExMessage): any => {
+  return Either.match(
+    MidiMessage.parseJsonSysex(sysex, MIDIStructorMessage, 1),
+    {
+      onRight: (m) => {
+        if (m._tag === 'init') {
+          return { init: m }
+        } else if (m._tag === 'pad') {
+          return { [MidiTarget.toKey(m.target)]: m }
+        } else {
+          return {}
+        }
+      },
+      onLeft: (parseError) => {
+        console.error('Error parsing MIDIStructor UI widgets', parseError)
+        return {}
+      },
+    }
+  )
+}
+
+const useStore: UIStore<MIDIStructorMessage> = (name) => {
+  const setStore = useSetAtom(atomStore(name))
+  return {
+    usePut: () => (m: MidiMessage) => {
+      if (m.type === 'sysex') {
+        if (m.body[0] === MidiStructorSysexControlCode) {
+          setStore((s) => ({ ...s, ...parseMessage(m) }))
+        }
+      }
+    },
+    useGet: () => useAtomValue(atomStore(name)),
+  }
+}
 
 const device = ControllerDevice.of({
   name: 'MIDI Structor UI',
@@ -106,4 +158,5 @@ export type MidiStructorUIDevice = typeof device
 
 export const MIDIStructorUI = {
   device,
+  useStore,
 }

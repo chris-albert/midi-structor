@@ -6,6 +6,7 @@ import { ArrangementComponent } from './components/arrangement/ArrangementCompon
 import { MidiPage } from './pages/MidiPage'
 import { ControllersPage } from './pages/ControllersPage'
 import { SettingsPage } from './pages/SettingsPage'
+import { UIPage } from './pages/UIPage'
 
 export type AppRouterProps = {}
 
@@ -37,6 +38,10 @@ export const AppRouter: React.FC<AppRouterProps> = ({}) => {
           path='settings'
           element={<SettingsPage />}
         />
+        <Route
+          path='ui'
+          element={<UIPage />}
+        />
       </Route>
     </Routes>
   )
@@ -52,7 +57,10 @@ export const AppRouter: React.FC<AppRouterProps> = ({}) => {
     )
   } else {
     return (
-      <BrowserRouter basename={window.location.pathname.replace(/(\/[^/]+)$/, '')}>{routes}</BrowserRouter>
+      <BrowserRouter
+        basename={window.location.pathname.replace(/(\/[^/]+)$/, '')}>
+        {routes}
+      </BrowserRouter>
     )
   }
 }

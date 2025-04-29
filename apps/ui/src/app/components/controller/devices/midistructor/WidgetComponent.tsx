@@ -1,13 +1,13 @@
 import React from 'react'
 import {
   MIDIStructorPad,
+  MIDIStructorStore,
   MIDIStructorUIWidget,
   MidiTarget,
 } from '@midi-structor/core'
 import { PlayStopWidgetComponent } from './widgets/PlayStopWidgetComponent'
 import { Box } from '@mui/material'
 import { OnClick } from './MidiStructorComponent'
-import { MIDIStructorStore } from './MIDIStructorDeviceUI'
 import { BeatsWidgetComponent } from './widgets/BeatsWidgetComponent'
 import { ActiveClipWidgetComponent } from './widgets/ActiveClipWidgetComponent'
 

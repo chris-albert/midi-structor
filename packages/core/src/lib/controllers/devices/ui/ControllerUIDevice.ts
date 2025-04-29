@@ -1,5 +1,9 @@
 import React from 'react'
-import { ConfiguredController, ControllerDevice, MidiMessage } from '@midi-structor/core'
+import {
+  ConfiguredController,
+  ControllerDevice,
+  MidiMessage,
+} from '@midi-structor/core'
 
 export type UIMessageStore<A> = Record<string, A>
 
@@ -10,7 +14,10 @@ export type UIStore<A> = (name: string) => {
 
 export type ControllerUIDevice<A> = {
   controller: ControllerDevice
-  component: (controller: ConfiguredController, device: ControllerUIDevice<A>) => React.ReactElement
+  component: (
+    controller: ConfiguredController,
+    device: ControllerUIDevice<A>
+  ) => React.ReactElement
   useStore: UIStore<A>
 }
 

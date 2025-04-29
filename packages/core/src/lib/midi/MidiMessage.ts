@@ -292,26 +292,42 @@ export const generateRawMidiMessage = (message: MidiMessage): Uint8Array => {
   }
 }
 
-const generateNoteMessage = (message: NoteOnMessage | NoteOffMessage): Uint8Array => {
+const generateNoteMessage = (
+  message: NoteOnMessage | NoteOffMessage
+): Uint8Array => {
   const status = message.type === 'noteon' ? NOTE_ON_STATUS : NOTE_OFF_STATUS
-  const arr = [status | (message.channel - 1), message.note, message.velocity]
+  const arr = [
+    (status << 4) + (message.channel - 1),
+    message.note,
+    message.velocity,
+  ]
 
   return arr as any as Uint8Array
 }
 
 const generateControlChange = (message: ControlChangeMessage): Uint8Array => {
-  const arr = [CONTROL_CHANGE_STATUS | (message.channel - 1), message.controllerNumber, message.data]
+  const arr = [
+    (CONTROL_CHANGE_STATUS << 4) + (message.channel - 1),
+    message.controllerNumber,
+    message.data,
+  ]
 
   return arr as any as Uint8Array
 }
 
 const generateProgramChange = (message: ProgramChangeMessage): Uint8Array => {
-  const arr = [PROGRAM_CHANGE_STATUS | (message.channel - 1), message.programNumber]
+  const arr = [
+    (PROGRAM_CHANGE_STATUS << 4) + (message.channel - 1),
+    message.programNumber,
+  ]
 
   return arr as any as Uint8Array
 }
 
-const charCodesFromString = (str: string, prefix: Array<number>): Array<number> => {
+const charCodesFromString = (
+  str: string,
+  prefix: Array<number>
+): Array<number> => {
   const codes: Array<number> = [...prefix]
   _.forEach(str, (s, i) => {
     codes.push(str.charCodeAt(i))
@@ -325,7 +341,11 @@ const sysex = (body: Array<number>, manufacturer = 0): SysExMessage => ({
   body,
 })
 
-const jsonSysex = (msg: any, prefix: Array<number> = [], manufacturer = 0): SysExMessage =>
+const jsonSysex = (
+  msg: any,
+  prefix: Array<number> = [],
+  manufacturer = 0
+): SysExMessage =>
   sysex(charCodesFromString(JSON.stringify(msg), prefix), manufacturer)
 
 const jsonSchemaSysex = <A, B>(

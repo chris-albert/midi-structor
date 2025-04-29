@@ -1,10 +1,9 @@
 import React from 'react'
-import { MidiEmitter, MIDIStructorUIWidgets } from '@midi-structor/core'
+import { MIDIStructorStore, MIDIStructorUIWidgets } from '@midi-structor/core'
 import { Box } from '@mui/material'
 import _ from 'lodash'
 import { WidgetComponent } from './WidgetComponent'
 import { OnClick } from './MidiStructorComponent'
-import { MIDIStructorStore } from './MIDIStructorDeviceUI'
 
 export type WidgetsComponentProps = {
   widgets: MIDIStructorUIWidgets
@@ -13,7 +12,12 @@ export type WidgetsComponentProps = {
   store: MIDIStructorStore
 }
 
-export const WidgetsComponent: React.FC<WidgetsComponentProps> = ({ widgets, isEdit, onClick, store }) => {
+export const WidgetsComponent: React.FC<WidgetsComponentProps> = ({
+  widgets,
+  isEdit,
+  onClick,
+  store,
+}) => {
   return (
     <Box
       sx={{

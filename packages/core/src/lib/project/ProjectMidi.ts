@@ -9,12 +9,13 @@ import {
   initTrack,
   UIArrangement,
 } from './UIStateDisplay'
-import { atom, getDefaultStore, useAtom, useAtomValue, useSetAtom, WritableAtom } from 'jotai'
+import { atom, getDefaultStore, useAtom, useAtomValue, useSetAtom } from 'jotai'
 import { atomFamily } from 'jotai/utils'
-import { parseAbletonUIMessage } from './AbletonUIMessage'
+import { AbletonUIMessage, parseAbletonUIMessage } from './AbletonUIMessage'
 import * as t from 'io-ts'
 import React from 'react'
 import { AtomStorage } from '../storage/AtomStorage'
+import { MIDIStructorUI } from '../controllers/devices/MIDIStructorUI'
 
 const store = getDefaultStore()
 
@@ -45,12 +46,20 @@ export type TimeSignature = {
   noteLength: number
 }
 
-export type ProjectImportStatus = 'none' | 'importing' | 'finalizing' | 'done' | 'error'
+export type ProjectImportStatus =
+  | 'none'
+  | 'importing'
+  | 'finalizing'
+  | 'done'
+  | 'error'
 
 const atoms = {
   initArrangement: atom<InitArrangement>([]),
   importStatus: atom<ProjectImportStatus>('none'),
-  projectsConfig: AtomStorage.atom<ProjectsConfig>('projects-config', defaultProjectsConfig()),
+  projectsConfig: AtomStorage.atom<ProjectsConfig>(
+    'projects-config',
+    defaultProjectsConfig()
+  ),
   project: {
     active: AtomStorage.atom('active-project', 'default'),
     arrangement: atomFamily((name: string) =>
@@ -71,9 +80,7 @@ const atoms = {
   },
 }
 
-const useProjectListener = () => {
-  const dawListener = Midi.useDawListener()
-
+const useAbletonUIMessages = () => {
   const [importStatus, setImportStatus] = useAtom(atoms.importStatus)
   const active = useAtomValue(atoms.project.active)
   const setArrangement = useSetAtom(atoms.project.arrangement(active))
@@ -94,40 +101,57 @@ const useProjectListener = () => {
     }
   }, [importStatus])
 
+  const onAbletonUIMessage = (msg: AbletonUIMessage) => {
+    if (msg.type === 'init-project') {
+      setImportStatus('importing')
+      setInitArrangement(initArrangement(msg))
+    } else if (msg.type === 'init-track') {
+      setInitArrangement(initTrack(msg))
+    } else if (msg.type === 'init-clip') {
+      setInitArrangement(initClip(msg))
+    } else if (msg.type === 'init-cue') {
+      setInitArrangement(initCue(msg))
+    } else if (msg.type === 'init-done') {
+      store.set(atoms.importStatus, 'finalizing')
+      setImportStatus('finalizing')
+    } else if (msg.type === 'beat') {
+      setBeats(msg.value)
+    } else if (msg.type === 'sig') {
+      setTimeSignature({
+        noteCount: msg.numer,
+        noteLength: msg.denom,
+      })
+    } else if (msg.type === 'bar-beat') {
+      setBarBeats(msg.value)
+    } else if (msg.type === 'tempo') {
+      setTempo(msg.value)
+    } else if (msg.type === 'is-playing') {
+      setIsPlaying(msg.value)
+    } else if (msg.type === 'metronome-state') {
+      setMetronomeState(msg.value)
+    } else if (msg.type === 'loop-state') {
+      setLoopState(msg.value)
+    }
+  }
+
+  return { onAbletonUIMessage }
+}
+
+const useGlobalMidiStructorStore = () =>
+  MIDIStructorUI.useStore('global:MIDIStructorUI')
+
+const useProjectListener = () => {
+  const dawListener = Midi.useDawListener()
+  const ableton = useAbletonUIMessages()
+  const onMidiStructor = useGlobalMidiStructorStore().usePut()
+
   React.useEffect(() => {
     return dawListener.on('sysex', (sysex) => {
       const msg = parseAbletonUIMessage(sysex)
       if (msg !== undefined) {
-        if (msg.type === 'init-project') {
-          setImportStatus('importing')
-          setInitArrangement(initArrangement(msg))
-        } else if (msg.type === 'init-track') {
-          setInitArrangement(initTrack(msg))
-        } else if (msg.type === 'init-clip') {
-          setInitArrangement(initClip(msg))
-        } else if (msg.type === 'init-cue') {
-          setInitArrangement(initCue(msg))
-        } else if (msg.type === 'init-done') {
-          store.set(atoms.importStatus, 'finalizing')
-          setImportStatus('finalizing')
-        } else if (msg.type === 'beat') {
-          setBeats(msg.value)
-        } else if (msg.type === 'sig') {
-          setTimeSignature({
-            noteCount: msg.numer,
-            noteLength: msg.denom,
-          })
-        } else if (msg.type === 'bar-beat') {
-          setBarBeats(msg.value)
-        } else if (msg.type === 'tempo') {
-          setTempo(msg.value)
-        } else if (msg.type === 'is-playing') {
-          setIsPlaying(msg.value)
-        } else if (msg.type === 'metronome-state') {
-          setMetronomeState(msg.value)
-        } else if (msg.type === 'loop-state') {
-          setLoopState(msg.value)
-        }
+        ableton.onAbletonUIMessage(msg)
+      } else {
+        onMidiStructor(sysex)
       }
     })
   }, [dawListener])
@@ -135,5 +159,6 @@ const useProjectListener = () => {
 
 export const ProjectMidi = {
   useProjectListener,
+  useGlobalMidiStructorStore,
   atoms,
 }

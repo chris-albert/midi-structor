@@ -4,25 +4,28 @@ import { editWidgetsAtom } from '../../../../model/Widgets'
 import { Box, Button, Drawer, LinearProgress } from '@mui/material'
 import { AddWidgetComponent } from '../../../AddWidgetComponent'
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
-import { ConfiguredController, MidiMessage, MIDIStructorUIWidgets, MidiTarget } from '@midi-structor/core'
+import {
+  MidiEmitter,
+  MIDIStructorStore,
+  MIDIStructorUIWidgets,
+  MidiTarget,
+} from '@midi-structor/core'
 import { WidgetsComponent } from './WidgetsComponent'
-import { MIDIStructorDeviceUI } from './MIDIStructorDeviceUI'
 
 export type OnClick = (target: MidiTarget) => void
 
 export type MidiStructorComponentProps = {
-  configuredController: ConfiguredController
-  device: MIDIStructorDeviceUI
+  store: MIDIStructorStore
+  midiEmitter: MidiEmitter
 }
 
 export const MidiStructorComponent: React.FC<MidiStructorComponentProps> = ({
-  configuredController,
-  device,
+  store,
+  midiEmitter,
 }) => {
   const [widgetOpen, setWidgetOpen] = React.useState(false)
   const [editWidgets, setEditWidgets] = useAtom(editWidgetsAtom)
 
-  const store = device.useStore(configuredController.name).useGet()
   const widgets: MIDIStructorUIWidgets | undefined = React.useMemo(() => {
     const initMaybe = store['init']
     if (initMaybe !== undefined && initMaybe._tag === 'init') {
@@ -31,10 +34,9 @@ export const MidiStructorComponent: React.FC<MidiStructorComponentProps> = ({
       return undefined
     }
   }, [store])
-  const listener = ConfiguredController.useVirtualListener(configuredController)
 
   const onClick = (target: MidiTarget) => {
-    listener.emit(MidiMessage.raw(MidiTarget.toMessage(target, 127)))
+    midiEmitter.send(MidiTarget.toMessage(target, 127))
   }
 
   return (

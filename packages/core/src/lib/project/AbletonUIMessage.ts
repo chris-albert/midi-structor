@@ -234,7 +234,6 @@ export const parseAbletonUIMessage = (
   message: SysExMessage
 ): AbletonUIMessage | undefined => {
   try {
-    console.log('parseAbletonUIMessage', message)
     if (message.manufacturer === MANUFACTURER_ID) {
       const [statusByte, body] = parseSysExBody(message.body)
       const parser = RX_STATUS_LOOKUP[statusByte]

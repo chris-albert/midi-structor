@@ -37,28 +37,39 @@ const buildEmitter = (output: any) => (): MidiEmitter => {
   return {
     send: (msg: MidiMessage) => {
       const raw = generateRawMidiMessage(msg)
-      console.debug('Sending midi message', raw)
+      console.debug('Sending midi message', raw, msg)
       output.send(raw)
     },
   }
 }
 
 const buildMidiDeviceManager = (access: any): MidiDeviceManager => {
-  const inputs = _.fromPairs(mapToArray(access.inputs).map((input) => [input.name, buildListener(input)]))
-  const outputs = _.fromPairs(mapToArray(access.outputs).map((output) => [output.name, buildEmitter(output)]))
+  const inputs = _.fromPairs(
+    mapToArray(access.inputs).map((input) => [input.name, buildListener(input)])
+  )
+  const outputs = _.fromPairs(
+    mapToArray(access.outputs).map((output) => [
+      output.name,
+      buildEmitter(output),
+    ])
+  )
 
   return {
     isAllowed: true,
     inputs: _.keys(inputs),
     outputs: _.keys(outputs),
-    getInput: (name: string) => Option.map(Option.fromNullable(inputs[name]), (l) => l()),
-    getOutput: (name: string) => Option.map(Option.fromNullable(outputs[name]), (e) => e()),
+    getInput: (name: string) =>
+      Option.map(Option.fromNullable(inputs[name]), (l) => l()),
+    getOutput: (name: string) =>
+      Option.map(Option.fromNullable(outputs[name]), (e) => e()),
   }
 }
 
 export function getMidiAccess(sysex = false): Promise<MidiDeviceManager> {
   const navigator: any = window.navigator
-  return typeof window !== 'undefined' && navigator && typeof navigator.requestMIDIAccess === 'function'
+  return typeof window !== 'undefined' &&
+    navigator &&
+    typeof navigator.requestMIDIAccess === 'function'
     ? navigator.requestMIDIAccess({ sysex }).then(buildMidiDeviceManager)
     : new Promise((resolve, reject) => reject(new Error('MIDI Not Available')))
 }
