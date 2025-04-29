@@ -22,6 +22,7 @@ export const ActiveClipWidgetComponent: React.FC<
     <PadUIComponent>
       <Typography
         sx={{
+          borderRadius: '5px',
           width: '100%',
           backgroundColor: `#${Color.toHex(pad.color)}`,
         }}

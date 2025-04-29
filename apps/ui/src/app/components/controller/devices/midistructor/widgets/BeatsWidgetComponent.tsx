@@ -25,9 +25,12 @@ export const BeatsWidgetComponent: React.FC<BeatsWidgetComponentProps> = ({
         <Box
           key={i}
           sx={{
+            borderRadius: '5px',
             border: '1px solid black',
             width: 100,
-            backgroundColor: `#${Color.toHex(pad.color)}`,
+            backgroundColor: `#${
+              pad.color === Color.BLACK ? '777777' : Color.toHex(pad.color)
+            }`,
             display: 'flex',
           }}>
           <Typography

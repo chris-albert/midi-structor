@@ -54,6 +54,7 @@ export const MIDIStructorMessage = Schema.Union(
 export type MIDIStructorMessage = typeof MIDIStructorMessage.Type
 
 export const MidiStructorSysexControlCode = 50
+export const MidiStructorUIManufacturer = 0x03
 
 const controller = (
   emitter: MidiEmitter,
@@ -67,9 +68,12 @@ const controller = (
       })
       console.log('MidiStructor UI widgets', uiWidgets)
       emitter.send(
-        MidiMessage.jsonSchemaSysex(uiWidgets, MidiStructorUIInit, [
-          MidiStructorSysexControlCode,
-        ])
+        MidiMessage.jsonSchemaSysex(
+          uiWidgets,
+          MidiStructorUIInit,
+          [MidiStructorSysexControlCode],
+          MidiStructorUIManufacturer
+        )
       )
     },
     render: (pads) => {

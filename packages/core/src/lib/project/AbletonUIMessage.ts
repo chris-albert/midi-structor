@@ -230,8 +230,11 @@ const parseSysExBody = (body: Array<number>): [number, Array<string>] => {
 
   return [_.toNumber(splitStr[0]), splitStr.splice(1)]
 }
-export const parseAbletonUIMessage = (message: SysExMessage): AbletonUIMessage | undefined => {
+export const parseAbletonUIMessage = (
+  message: SysExMessage
+): AbletonUIMessage | undefined => {
   try {
+    console.log('parseAbletonUIMessage', message)
     if (message.manufacturer === MANUFACTURER_ID) {
       const [statusByte, body] = parseSysExBody(message.body)
       const parser = RX_STATUS_LOOKUP[statusByte]
