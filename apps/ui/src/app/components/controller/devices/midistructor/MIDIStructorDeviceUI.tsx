@@ -7,6 +7,8 @@ import {
   MidiMessage,
 } from '@midi-structor/core'
 import { MidiStructorComponent } from './MidiStructorComponent'
+import { Box } from '@mui/material'
+import { MidiStructorEditWidgets } from './MidiStructorEditWidgets'
 
 type MIDIStructorDeviceUIComponentProps = {
   configuredController: ConfiguredController
@@ -24,10 +26,13 @@ const MIDIStructorDeviceUIComponent: React.FC<
   }
 
   return (
-    <MidiStructorComponent
-      store={store}
-      midiEmitter={midiEmitter}
-    />
+    <Box>
+      <MidiStructorEditWidgets />
+      <MidiStructorComponent
+        store={store}
+        midiEmitter={midiEmitter}
+      />
+    </Box>
   )
 }
 

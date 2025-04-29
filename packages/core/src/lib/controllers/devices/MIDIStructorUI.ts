@@ -56,6 +56,8 @@ export const MIDIStructorMessage = Schema.Union(
 )
 export type MIDIStructorMessage = typeof MIDIStructorMessage.Type
 
+export const MIDIStructorResend = Schema.TaggedStruct('resend', {})
+
 export const MidiStructorSysexControlCode = 50
 export const MidiStructorUIManufacturer = 0x03
 
@@ -96,16 +98,6 @@ const controller = (
     },
     listenFilter: (m: MidiMessage): boolean => true,
     listener,
-    // listener: {
-    //   on: (name, cb) => {
-    //     console.log('MIDIStructorUI listening', name)
-    //     return listener.on(name, (m) => {
-    //       console.log('MIDIStructorUI message', m)
-    //       cb(m)
-    //     })
-    //     return () => {}
-    // },
-    // },
     targets: [],
   })
 
