@@ -6,8 +6,8 @@ import { atom, getDefaultStore, useAtomValue } from 'jotai'
 const store = getDefaultStore()
 
 export type ControllerUIDevices = {
-  findByName: (name: string) => Option.Option<ControllerUIDevice<any>>
-  getByName: (name: string) => ControllerUIDevice<any>
+  findByName: (name: string) => Option.Option<ControllerUIDevice<any, any>>
+  getByName: (name: string) => ControllerUIDevice<any, any>
 }
 
 const emptyDevices: ControllerUIDevices = {
@@ -17,13 +17,18 @@ const emptyDevices: ControllerUIDevices = {
 
 const devicesAtom = atom<ControllerUIDevices>(emptyDevices)
 
-const init = (all: Array<ControllerUIDevice<any>>) => {
-  const lookup: Record<string, ControllerUIDevice<any>> = _.keyBy(all, (d) => d.controller.name)
+const init = (all: Array<ControllerUIDevice<any, any>>) => {
+  const lookup: Record<string, ControllerUIDevice<any, any>> = _.keyBy(
+    all,
+    (d) => d.controller.name
+  )
 
-  const findByName = (name: string): Option.Option<ControllerUIDevice<any>> =>
+  const findByName = (
+    name: string
+  ): Option.Option<ControllerUIDevice<any, any>> =>
     Option.fromNullable(_.get(lookup, name, undefined))
 
-  const getByName = (name: string): ControllerUIDevice<any> =>
+  const getByName = (name: string): ControllerUIDevice<any, any> =>
     Option.match(findByName(name), {
       onSome: (d) => d,
       onNone: () => ControllerUIDevice.emptyDevice,

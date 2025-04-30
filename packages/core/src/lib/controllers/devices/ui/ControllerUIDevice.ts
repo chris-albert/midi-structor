@@ -4,6 +4,7 @@ import {
   ControllerDevice,
   MidiMessage,
 } from '@midi-structor/core'
+import { ControllerWidget } from '../../ControllerWidget'
 
 export type UIMessageStore<A> = Record<string, A>
 
@@ -12,18 +13,20 @@ export type UIStore<A> = (name: string) => {
   useGet: () => UIMessageStore<A>
 }
 
-export type ControllerUIDevice<A> = {
-  controller: ControllerDevice
+export type ControllerUIDevice<A, Widgets extends Array<ControllerWidget>> = {
+  controller: ControllerDevice<Widgets>
   component: (
     controller: ConfiguredController,
-    device: ControllerUIDevice<A>
+    device: ControllerUIDevice<A, Widgets>
   ) => React.ReactElement
   useStore: UIStore<A>
 }
 
-const of = <A>(
-  device: Omit<ControllerUIDevice<A>, 'useStore'> & { useStore?: UIStore<A> }
-): ControllerUIDevice<A> => ({
+const of = <A, Widgets extends Array<ControllerWidget>>(
+  device: Omit<ControllerUIDevice<A, Widgets>, 'useStore'> & {
+    useStore?: UIStore<A>
+  }
+): ControllerUIDevice<A, Widgets> => ({
   useStore: device.useStore || dummyStore(),
   ...device,
 })
@@ -35,7 +38,7 @@ const dummyStore =
     useGet: () => ({}),
   })
 
-const emptyDevice: ControllerUIDevice<{}> = {
+const emptyDevice: ControllerUIDevice<{}, []> = {
   controller: ControllerDevice.empty,
   component: (c: ConfiguredController) => React.createElement('div'),
   useStore: dummyStore<{}>(),

@@ -1,7 +1,12 @@
 import React from 'react'
 import { Box } from '@mui/material'
 import { ControllerPad, ControllerUI } from './ControllerUI'
-import { Color, ConfiguredController, ControllerUIDevice, MidiTarget } from '@midi-structor/core'
+import {
+  Color,
+  ConfiguredController,
+  ControllerUIDevice,
+  MidiTarget,
+} from '@midi-structor/core'
 import { LaunchPadMiniMessage } from './devices/LaunchPadMiniMk3UI'
 
 type PadWithState = {
@@ -12,17 +17,15 @@ type PadWithState = {
 type ControllerGridComponentProps = {
   controllerUI: ControllerUI
   controller: ConfiguredController
-  device: ControllerUIDevice<LaunchPadMiniMessage>
+  device: ControllerUIDevice<LaunchPadMiniMessage, any>
 }
 
 const getColor = (message: LaunchPadMiniMessage | undefined): Color =>
   message !== undefined && message.type === 'color' ? message.color : 0
 
-export const ControllerGridComponent: React.FC<ControllerGridComponentProps> = ({
-  controllerUI,
-  controller,
-  device,
-}) => {
+export const ControllerGridComponent: React.FC<
+  ControllerGridComponentProps
+> = ({ controllerUI, controller, device }) => {
   const buttonSize = 75
   const padStore = device.useStore(controller.name).useGet()
   const listener = ConfiguredController.useVirtualListener(controller)
