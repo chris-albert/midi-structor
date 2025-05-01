@@ -2,7 +2,10 @@ import React from 'react'
 import { Schema, SchemaAST } from 'effect'
 import { MidiTarget } from '../midi/MidiTarget'
 
-export type ControllerWidget<K extends SchemaAST.LiteralValue = any, A extends Schema.Struct.Fields = any> = {
+export type ControllerWidget<
+  K extends SchemaAST.LiteralValue = any,
+  A extends Schema.Struct.Fields = any
+> = {
   name: K
   schema: Schema.TaggedStruct<K, A>
   targets: (a: Schema.Struct.Type<A>) => Array<MidiTarget>
@@ -38,7 +41,10 @@ const intersect = <
 ): ControllerWidget<K, A & B> =>
   of({
     name: widget.name,
-    schema: Schema.Struct({ ...widget.schema.fields, ...bSchema.fields }) as Schema.Struct<A & B>,
+    schema: Schema.Struct({
+      ...widget.schema.fields,
+      ...bSchema.fields,
+    }) as Schema.Struct<A & B>,
     targets: (f) => widget.targets(f as Schema.Struct.Type<A>),
     component: (f) => widget.component(f as Schema.Struct.Type<A>),
   })
@@ -55,7 +61,8 @@ export type ResolvedControllerWidget<A = any> = {
   widget: A
 }
 
-export type ControllerWidgetType<A extends ControllerWidget> = A['schema']['Type']
+export type ControllerWidgetType<A extends ControllerWidget> =
+  A['schema']['Type']
 
 export type ControllerWidgetsType<A extends Array<ControllerWidget>> = {
   [K in keyof A]: ControllerWidgetType<A[K]>
