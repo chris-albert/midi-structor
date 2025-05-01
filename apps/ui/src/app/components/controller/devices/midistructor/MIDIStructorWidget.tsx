@@ -1,6 +1,8 @@
 import React from 'react'
 import {
   ControllerWidget,
+  ControllerWidgetTarget,
+  ControllerWidgetTargets,
   ControllerWidgetType,
   MIDIStructorPad,
 } from '@midi-structor/core'
@@ -18,16 +20,39 @@ const UIBaseSchema = Schema.Struct({
   visible: Schema.optional(Schema.Boolean),
 })
 
+type ComponentWithPad<
+  K extends SchemaAST.LiteralValue,
+  A extends Schema.Struct.Fields
+> = (
+  widget: ControllerWidgetType<ControllerWidget<K, A>>,
+  onClick: OnClick,
+  pad: MIDIStructorPad
+) => React.ReactElement
+
+type ComponentWithPads<
+  K extends SchemaAST.LiteralValue,
+  A extends Schema.Struct.Fields
+> = (
+  widget: ControllerWidgetType<ControllerWidget<K, A>>,
+  onClick: OnClick,
+  pads: Array<MIDIStructorPad>
+) => React.ReactElement
+
+type WidgetComponent<
+  K extends SchemaAST.LiteralValue,
+  A extends Schema.Struct.Fields
+> = ControllerWidgetType<ControllerWidget<K, A>> extends ControllerWidgetTarget
+  ? ComponentWithPad<K, A>
+  : ControllerWidgetType<ControllerWidget<K, A>> extends ControllerWidgetTargets
+  ? ComponentWithPads<K, A>
+  : never
+
 export type MIDIStructorWidget<
   K extends SchemaAST.LiteralValue,
   A extends Schema.Struct.Fields
 > = {
   widget: ControllerWidget<K, A & typeof UIBaseSchema.fields>
-  Component: (
-    widget: ControllerWidgetType<ControllerWidget<K, A>>,
-    onClick: OnClick,
-    pad: MIDIStructorPad
-  ) => React.ReactElement
+  Component: WidgetComponent<K, A>
 }
 
 const of = <
@@ -35,11 +60,7 @@ const of = <
   A extends Schema.Struct.Fields
 >(opts: {
   widget: ControllerWidget<K, A>
-  Component: (
-    widget: ControllerWidgetType<ControllerWidget<K, A>>,
-    onClick: OnClick,
-    pad: MIDIStructorPad
-  ) => React.ReactElement
+  Component: WidgetComponent<K, A>
 }): MIDIStructorWidget<K, A> => ({
   widget: ControllerWidget.intersect(opts.widget, UIBaseSchema),
   Component: opts.Component,

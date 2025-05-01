@@ -67,3 +67,11 @@ export type ControllerWidgetType<A extends ControllerWidget> =
 export type ControllerWidgetsType<A extends Array<ControllerWidget>> = {
   [K in keyof A]: ControllerWidgetType<A[K]>
 }
+
+export type ControllerWidgetTarget = {
+  target: MidiTarget
+}
+
+export type ControllerWidgetTargets = {
+  targets: Readonly<Array<MidiTarget>>
+}

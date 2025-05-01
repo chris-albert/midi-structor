@@ -39,27 +39,22 @@ const getWidgetComponent = (
   store: MIDIStructorStore
 ): React.ReactElement => {
   if (widget._tag === 'play-stop') {
-    return (
-      <PlayStopWidgetComponent
-        widget={widget}
-        onClick={onClick}
-        pad={state(store).one(widget.target)}
-      />
+    return PlayStopWidgetComponent.Component(
+      widget,
+      onClick,
+      state(store).one(widget.target)
     )
   } else if (widget._tag === 'beats') {
-    return (
-      <BeatsWidgetComponent
-        widget={widget}
-        pads={state(store).many(widget.targets)}
-      />
+    return BeatsWidgetComponent.Component(
+      widget,
+      onClick,
+      state(store).many(widget.targets)
     )
   } else if (widget._tag === 'active-clip') {
-    return (
-      <ActiveClipWidgetComponent
-        widget={widget}
-        onClick={onClick}
-        pad={state(store).one(widget.target)}
-      />
+    return ActiveClipWidgetComponent.Component(
+      widget,
+      onClick,
+      state(store).one(widget.target)
     )
   } else {
     return <>Unknown Widget</>
