@@ -117,6 +117,46 @@
           }
         ],
         "label": "Songs"
+      },
+      {
+        "_tag": "track-sections",
+        "trackName": "Parts",
+        "parentTrackName": "Songs",
+        "targets": [
+          {
+            "_tag": "CC",
+            "controllerNumber": 30
+          },
+          {
+            "_tag": "CC",
+            "controllerNumber": 31
+          },
+          {
+            "_tag": "CC",
+            "controllerNumber": 32
+          },
+          {
+            "_tag": "CC",
+            "controllerNumber": 33
+          },
+          {
+            "_tag": "CC",
+            "controllerNumber": 34
+          },
+          {
+            "_tag": "CC",
+            "controllerNumber": 35
+          },
+          {
+            "_tag": "CC",
+            "controllerNumber": 36
+          },
+          {
+            "_tag": "CC",
+            "controllerNumber": 37
+          }
+        ],
+        "label": "Parts"
       }
     ]
   }

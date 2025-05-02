@@ -6,6 +6,7 @@ import { TempoWidgetComponent } from './TempoWidgetComponent'
 import { TimeSigWidgetComponent } from './TimeSigWidgetComponent'
 import { BeatWidgetComponent } from './BeatWidgetComponent'
 import { NavClipsWidgetComponent } from './NavClipsWidgetComponent'
+import { TrackSectionsWidgetComponent } from './TrackSectionsWidgetComponent'
 
 export const AllMidiStructorWidgets = MIDIStructorWidgets([
   PlayStopWidgetComponent,
@@ -15,4 +16,5 @@ export const AllMidiStructorWidgets = MIDIStructorWidgets([
   TimeSigWidgetComponent,
   BeatWidgetComponent,
   NavClipsWidgetComponent,
+  TrackSectionsWidgetComponent,
 ])

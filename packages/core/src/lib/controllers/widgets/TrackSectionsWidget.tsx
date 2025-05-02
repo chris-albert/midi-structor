@@ -11,7 +11,9 @@ const validInParent =
   (parentClip: UIClip) =>
   (clip: UIClip): boolean => {
     return (
-      parentClip.type === 'real' && parentClip.endTime !== undefined && clip.startTime < parentClip.endTime
+      parentClip.type === 'real' &&
+      parentClip.endTime !== undefined &&
+      clip.startTime < parentClip.endTime
     )
   }
 
@@ -28,6 +30,7 @@ export const TrackSectionsWidget = ControllerWidget.of({
     const activeClip = ProjectHooks.useActiveClip(track)
     const parentTrack = ProjectHooks.useTrack(parentTrackName)
     const parentActiveClip = ProjectHooks.useActiveClip(parentTrack)
+    const beat = ProjectHooks.useBeat()
 
     const visibleClips: Array<UIClip> = React.useMemo(() => {
       const tmpClips: Array<UIClip> = []
@@ -39,15 +42,32 @@ export const TrackSectionsWidget = ControllerWidget.of({
       return tmpClips.filter(validInParent(parentActiveClip))
     }, [track, activeClip, parentActiveClip])
 
+    const progress: number | undefined = React.useMemo(() => {
+      if (activeClip && activeClip.endTime !== undefined) {
+        const total = activeClip.endTime - activeClip.startTime
+        const fromStart = beat - activeClip.startTime
+        return (fromStart / total) * 100
+      } else {
+        return undefined
+      }
+    }, [activeClip, beat])
+
     const pads = targets.map((target, index) => {
       const clip = visibleClips?.[index]
 
-      const color = clip !== undefined && clip.type === 'real' ? clip.color : Color.BLACK
+      const color =
+        clip !== undefined && clip.type === 'real' ? clip.color : Color.BLACK
+      const label = clip !== undefined && clip.type === 'real' ? clip.name : ''
       return (
         <Pad
           key={`track-sections-${index}`}
           color={color}
           target={target}
+          options={{
+            label,
+            progress,
+            isActive: clip === activeClip,
+          }}
         />
       )
     })
