@@ -1,8 +1,9 @@
 import React from 'react'
-import { ActiveClipWidget, Color } from '@midi-structor/core'
 import { PadUIComponent } from './PadUIComponent'
 import { Typography } from '@mui/material'
 import { MIDIStructorWidget } from '../MIDIStructorWidget'
+import { ActiveClipWidget } from '../../../widgets/ActiveClipWidget'
+import { Color } from '../../../Color'
 
 export const ActiveClipWidgetComponent = MIDIStructorWidget.of({
   widget: ActiveClipWidget,

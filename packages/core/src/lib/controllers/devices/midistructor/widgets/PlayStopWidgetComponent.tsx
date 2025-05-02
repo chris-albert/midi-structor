@@ -1,9 +1,9 @@
 import React from 'react'
-import { PlayStopWidget } from '@midi-structor/core'
-import { PlayButtonComponent } from '../../../../PlayButtonComponent'
-import { StopButtonComponent } from '../../../../StopButtonComponent'
 import { PadUIComponent } from './PadUIComponent'
 import { MIDIStructorWidget } from '../MIDIStructorWidget'
+import { PlayStopWidget } from '../../../widgets/PlayStopWidget'
+import { PlayButtonComponent } from './PlayButtonComponent'
+import { StopButtonComponent } from './StopButtonComponent'
 
 export const PlayStopWidgetComponent = MIDIStructorWidget.of({
   widget: PlayStopWidget,

@@ -28,6 +28,7 @@ export * from './lib/controllers/devices/ui/ControllerUIDevices'
 export * from './lib/controllers/devices/ui/ControllerUIDevice'
 
 // Widgets
-export * from './lib/controllers/widgets/PlayStopWidget'
-export * from './lib/controllers/widgets/BeatsWidget'
-export * from './lib/controllers/widgets/ActiveClipWidget'
+export * from './lib/controllers/devices/midistructor/widgets/PlayButtonComponent'
+export * from './lib/controllers/devices/midistructor/widgets/StopButtonComponent'
+export * from './lib/controllers/devices/midistructor/MIDIStructorWidget'
+export * from './lib/controllers/devices/midistructor/widgets/AllMidiStructorWidgets'

@@ -6,8 +6,10 @@ import {
   ControllerWidgetType,
   MIDIStructorPad,
 } from '@midi-structor/core'
-import { OnClick } from './MidiStructorComponent'
 import { Schema, SchemaAST } from 'effect'
+import { MidiTarget } from '../../../midi/MidiTarget'
+
+export type OnClick = (target: MidiTarget) => void
 
 const UIBaseSchema = Schema.Struct({
   label: Schema.optional(Schema.String),

@@ -1,9 +1,12 @@
 import React from 'react'
-import { MIDIStructorStore, MIDIStructorUIWidgets } from '@midi-structor/core'
+import {
+  MIDIStructorStore,
+  MIDIStructorUIWidgets,
+  OnClick,
+} from '@midi-structor/core'
 import { Box } from '@mui/material'
 import _ from 'lodash'
 import { WidgetComponent } from './WidgetComponent'
-import { OnClick } from './MidiStructorComponent'
 
 export type WidgetsComponentProps = {
   widgets: MIDIStructorUIWidgets

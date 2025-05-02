@@ -3,33 +3,16 @@ import { Controller } from '../Controller'
 import { ControllerDevice } from './ControllerDevice'
 import { MidiMessage, SysExMessage } from '../../midi/MidiMessage'
 import { ControllerWidgets } from '../ControllerWidgets'
-import { PlayStopWidget } from '../widgets/PlayStopWidget'
 import { Either, Schema } from 'effect'
-import { ControllerWidget, ControllerWidgetsType } from '../ControllerWidget'
-import { BeatsWidget } from '../widgets/BeatsWidget'
+import { ControllerWidgetsType } from '../ControllerWidget'
 import { MidiTarget } from '../../midi/MidiTarget'
 import { Color } from '../Color'
-import { ActiveClipWidget } from '../widgets/ActiveClipWidget'
 import { UIMessageStore, UIStore } from './ui/ControllerUIDevice'
 import { atomFamily } from 'jotai/utils'
 import { atom, useAtomValue, useSetAtom } from 'jotai'
+import { AllMidiStructorWidgets } from './midistructor/widgets/AllMidiStructorWidgets'
 
-const UIBaseSchema = Schema.Struct({
-  label: Schema.optional(Schema.String),
-  border: Schema.optional(
-    Schema.Struct({
-      sizePx: Schema.optional(Schema.Number),
-      color: Schema.optional(Schema.String),
-    })
-  ),
-  visible: Schema.optional(Schema.Boolean),
-})
-
-const widgets = ControllerWidgets([
-  ControllerWidget.intersect(PlayStopWidget, UIBaseSchema),
-  ControllerWidget.intersect(BeatsWidget, UIBaseSchema),
-  ControllerWidget.intersect(ActiveClipWidget, UIBaseSchema),
-])
+const widgets = ControllerWidgets(AllMidiStructorWidgets.controllerWidgets)
 
 type ElementType<T> = T extends (infer U)[] ? U : never
 

@@ -1,9 +1,10 @@
 import React from 'react'
-import { BeatsWidget, Color } from '@midi-structor/core'
 import { PadUIComponent } from './PadUIComponent'
 import { Box, Typography } from '@mui/material'
 import _ from 'lodash'
 import { MIDIStructorWidget } from '../MIDIStructorWidget'
+import { BeatsWidget } from '../../../widgets/BeatsWidget'
+import { Color } from '../../../Color'
 
 export const BeatsWidgetComponent = MIDIStructorWidget.of({
   widget: BeatsWidget,

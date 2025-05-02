@@ -1,8 +1,11 @@
 import React from 'react'
-import { MIDIStructorStore, MIDIStructorUIWidget } from '@midi-structor/core'
+import {
+  AllMidiStructorWidgets,
+  MIDIStructorStore,
+  MIDIStructorUIWidget,
+  OnClick,
+} from '@midi-structor/core'
 import { Box } from '@mui/material'
-import { OnClick } from './MidiStructorComponent'
-import { AllMidiStructorWidgets } from './widgets/AllMidiStructorWidgets'
 
 const getLabel = (widget: MIDIStructorUIWidget): React.ReactElement | null =>
   widget.label === undefined ? null : (

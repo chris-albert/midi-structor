@@ -8,8 +8,6 @@ import {
 } from '@midi-structor/core'
 import { WidgetsComponent } from './WidgetsComponent'
 
-export type OnClick = (target: MidiTarget) => void
-
 export type MidiStructorComponentProps = {
   store: MIDIStructorStore
   midiEmitter: MidiEmitter

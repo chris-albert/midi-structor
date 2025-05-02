@@ -1,12 +1,18 @@
 import React from 'react'
 import { Box } from '@mui/material'
-import { PlayButtonComponent } from '../PlayButtonComponent'
-import { StopButtonComponent } from '../StopButtonComponent'
-import { TX_MESSAGE, ProjectHooks, Midi } from '@midi-structor/core'
+import {
+  TX_MESSAGE,
+  ProjectHooks,
+  Midi,
+  StopButtonComponent,
+  PlayButtonComponent,
+} from '@midi-structor/core'
 
 export type PlayStopWidgetComponentProps = {}
 
-export const PlayStopWidgetComponent: React.FC<PlayStopWidgetComponentProps> = ({}) => {
+export const PlayStopWidgetComponent: React.FC<
+  PlayStopWidgetComponentProps
+> = ({}) => {
   const dawEmitter = Midi.useDawEmitter()
   const isPlaying = ProjectHooks.useIsPlaying()
 
