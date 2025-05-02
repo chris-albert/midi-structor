@@ -27,9 +27,13 @@ export const NavClipsWidget = ControllerWidget.of({
       return _.fromPairs(_.map(arrangement.cues, (cue) => [cue.time, cue]))
     }, [arrangement.cues])
 
-    const unsortedClips: Array<UIRealClip> = track.clips.filter((c) => c.type === 'real') as Array<UIRealClip>
+    const unsortedClips: Array<UIRealClip> = track.clips.filter(
+      (c) => c.type === 'real'
+    ) as Array<UIRealClip>
     const realClips: Array<UIRealClip> =
-      sort === 'alphabetical' ? unsortedClips.sort((l, r) => l.name.localeCompare(r.name)) : unsortedClips
+      sort === 'alphabetical'
+        ? unsortedClips.sort((l, r) => l.name.localeCompare(r.name))
+        : unsortedClips
 
     const clips = React.useMemo(() => {
       const tmpClips: Array<NavigateableClip & { target: MidiTarget }> = []
@@ -57,6 +61,9 @@ export const NavClipsWidget = ControllerWidget.of({
         color={clip.clip.color}
         target={clip.target}
         onClick={() => onClick(clip)}
+        options={{
+          label: clip.clip.name,
+        }}
       />
     ))
 

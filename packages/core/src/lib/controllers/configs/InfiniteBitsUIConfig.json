@@ -81,6 +81,42 @@
           "controllerNumber": 4
         },
         "label": "Beat"
+      },
+      {
+        "_tag": "nav-clips",
+        "trackName": "Songs",
+        "sort": "order",
+        "targets": [
+          {
+            "_tag": "CC",
+            "controllerNumber": 20
+          },
+          {
+            "_tag": "CC",
+            "controllerNumber": 21
+          },
+          {
+            "_tag": "CC",
+            "controllerNumber": 22
+          },
+          {
+            "_tag": "CC",
+            "controllerNumber": 23
+          },
+          {
+            "_tag": "CC",
+            "controllerNumber": 24
+          },
+          {
+            "_tag": "CC",
+            "controllerNumber": 25
+          },
+          {
+            "_tag": "CC",
+            "controllerNumber": 26
+          }
+        ],
+        "label": "Songs"
       }
     ]
   }

@@ -14,6 +14,7 @@ export const ActiveClipWidgetComponent = MIDIStructorWidget.of({
           sx={{
             borderRadius: '5px',
             width: '100%',
+            px: 1,
             backgroundColor: `#${Color.toHex(pad.color)}`,
           }}
           variant='h1'
