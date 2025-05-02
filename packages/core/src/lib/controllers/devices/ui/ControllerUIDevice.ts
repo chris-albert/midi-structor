@@ -20,7 +20,6 @@ export type ControllerUIDevice<A, Widgets extends Array<ControllerWidget>> = {
     device: ControllerUIDevice<A, Widgets>
   ) => React.ReactElement
   useStore: UIStore<A>
-  // widgetComponents: ()
 }
 
 const of = <A, Widgets extends Array<ControllerWidget>>(
