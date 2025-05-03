@@ -162,6 +162,25 @@
           }
         ],
         "label": "Parts"
+      },
+      {
+        "_tag": "button",
+        "target": {
+          "_tag": "CC",
+          "controllerNumber": 100
+        },
+        "color": "FF0000",
+        "label": "Test",
+        "isFlashing": false,
+        "midi": [
+          {
+            "_tag": "Note",
+            "note": 100
+          }
+        ],
+        "text": {
+          "content": "HI"
+        }
       }
     ]
   }

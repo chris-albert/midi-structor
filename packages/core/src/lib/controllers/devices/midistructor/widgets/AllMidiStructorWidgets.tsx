@@ -8,6 +8,7 @@ import { BeatWidgetComponent } from './BeatWidgetComponent'
 import { NavClipsWidgetComponent } from './NavClipsWidgetComponent'
 import { TrackSectionsWidgetComponent } from './TrackSectionsWidgetComponent'
 import { SpacerWidgetComponent } from './SpacerWidgetComponent'
+import { ButtonWidgetComponent } from './ButtonWidgetComponent'
 
 export const AllMidiStructorWidgets = MIDIStructorWidgets([
   PlayStopWidgetComponent,
@@ -19,4 +20,5 @@ export const AllMidiStructorWidgets = MIDIStructorWidgets([
   NavClipsWidgetComponent,
   TrackSectionsWidgetComponent,
   SpacerWidgetComponent,
+  ButtonWidgetComponent,
 ])

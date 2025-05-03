@@ -12,10 +12,17 @@ export const ButtonWidget = ControllerWidget.of({
     target: MidiTarget.Schema,
     color: Color.Schema,
     isFlashing: Schema.Boolean,
-    message: MidiTarget.Schema,
+    midi: Schema.Array(MidiTarget.Schema),
+    text: Schema.optional(
+      Schema.Struct({
+        content: Schema.String,
+        color: Schema.optional(Color.Schema),
+        size: Schema.optional(Schema.String),
+      })
+    ),
   }),
   targets: (w) => [w.target],
-  component: ({ target, color, isFlashing, message }) => {
+  component: ({ target, color, isFlashing, midi }) => {
     const dawEmitter = Midi.useDawEmitter()
 
     return (
@@ -24,7 +31,7 @@ export const ButtonWidget = ControllerWidget.of({
         color={color}
         target={target}
         onClick={() => {
-          // dawEmitter.send(MidiTarget.toMessage(message, 127))
+          midi.forEach((t) => dawEmitter.send(MidiTarget.toMessage(t, 127)))
         }}
       />
     )
