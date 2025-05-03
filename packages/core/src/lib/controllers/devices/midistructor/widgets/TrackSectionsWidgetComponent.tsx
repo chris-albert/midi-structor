@@ -4,6 +4,10 @@ import { PadUIComponent } from './PadUIComponent'
 import { TrackSectionsWidget } from '../../../widgets/TrackSectionsWidget'
 import { Box, Typography } from '@mui/material'
 import { Color } from '../../../Color'
+import { MIDIStructorPad } from '../../MIDIStructorUI'
+
+const isActive = (pad: MIDIStructorPad): boolean =>
+  pad.options?.isActive || false
 
 export const TrackSectionsWidgetComponent = MIDIStructorWidget.of({
   widget: TrackSectionsWidget,
@@ -15,6 +19,7 @@ export const TrackSectionsWidgetComponent = MIDIStructorWidget.of({
             <Box
               key={i}
               sx={{
+                position: 'relative',
                 borderRadius: '5px',
                 border: '1px solid black',
                 backgroundColor: `#${Color.toHex(pad.color)}`,
@@ -24,6 +29,18 @@ export const TrackSectionsWidgetComponent = MIDIStructorWidget.of({
                 alignItems: 'center',
                 justifyContent: 'center',
               }}>
+              {isActive(pad) && pad.options?.progress !== undefined ? (
+                <Box
+                  sx={{
+                    position: 'absolute',
+                    top: 0,
+                    left: pad.options?.progress,
+                    height: '100%',
+                    width: '5px',
+                    backgroundColor: 'black',
+                  }}
+                />
+              ) : null}
               <Typography
                 sx={{
                   width: '100%',
