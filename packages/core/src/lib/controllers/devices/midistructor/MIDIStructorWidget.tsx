@@ -22,6 +22,11 @@ const UIBaseSchema = Schema.Struct({
   visible: Schema.optional(Schema.Boolean),
 })
 
+type ComponentNoPad<
+  K extends SchemaAST.LiteralValue,
+  A extends Schema.Struct.Fields
+> = (widget: ControllerWidgetType<ControllerWidget<K, A>>) => React.ReactElement
+
 type ComponentWithPad<
   K extends SchemaAST.LiteralValue,
   A extends Schema.Struct.Fields
@@ -47,7 +52,7 @@ type WidgetComponent<
   ? ComponentWithPad<K, A>
   : ControllerWidgetType<ControllerWidget<K, A>> extends ControllerWidgetTargets
   ? ComponentWithPads<K, A>
-  : never
+  : ComponentNoPad<K, A>
 
 export type MIDIStructorWidget<
   K extends SchemaAST.LiteralValue,

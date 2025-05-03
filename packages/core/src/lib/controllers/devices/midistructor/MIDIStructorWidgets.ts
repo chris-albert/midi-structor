@@ -76,7 +76,7 @@ export const MIDIStructorWidgets = <
       // @ts-ignore
       return w.Component(widget, onClick, state(store).many(widget.targets))
     } else {
-      return React.createElement('div')
+      return w.Component(widget)
     }
   }
 

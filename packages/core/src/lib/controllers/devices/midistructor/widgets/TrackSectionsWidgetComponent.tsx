@@ -25,7 +25,6 @@ export const TrackSectionsWidgetComponent = MIDIStructorWidget.of({
                 backgroundColor: `#${Color.toHex(pad.color)}`,
                 display: 'flex',
                 width: 100,
-                cursor: 'pointer',
                 alignItems: 'center',
                 justifyContent: 'center',
               }}>

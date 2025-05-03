@@ -60,5 +60,9 @@ export const WidgetComponent: React.FC<WidgetComponentProps> = ({
       <Box>{el}</Box>
     </Box>
   )
-  return <Box>{widgetBody}</Box>
+  if (widget.visible === undefined || widget.visible) {
+    return <Box>{widgetBody}</Box>
+  } else {
+    return el
+  }
 }

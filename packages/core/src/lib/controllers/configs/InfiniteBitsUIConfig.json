@@ -11,6 +11,11 @@
         "label": "Play/Stop"
       },
       {
+        "_tag": "spacer",
+        "width": 300,
+        "visible": false
+      },
+      {
         "_tag": "beats",
         "targets": [
           {
