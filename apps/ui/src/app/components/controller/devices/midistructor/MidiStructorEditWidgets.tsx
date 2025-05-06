@@ -2,8 +2,6 @@ import React from 'react'
 import { Box, Button, Drawer } from '@mui/material'
 import { AddWidgetComponent } from '../../../AddWidgetComponent'
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
-import { useAtom } from 'jotai/index'
-import { editWidgetsAtom } from '../../../../model/Widgets'
 
 export type MidiStructorEditWidgetsProps = {}
 
@@ -11,7 +9,7 @@ export const MidiStructorEditWidgets: React.FC<
   MidiStructorEditWidgetsProps
 > = ({}) => {
   const [widgetOpen, setWidgetOpen] = React.useState(false)
-  const [editWidgets, setEditWidgets] = useAtom(editWidgetsAtom)
+  const [editWidgets, setEditWidgets] = React.useState(false)
 
   return (
     <Box>

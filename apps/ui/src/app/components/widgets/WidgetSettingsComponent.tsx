@@ -1,13 +1,11 @@
 import React from 'react'
 import {
   duplicateWidget,
-  KnobWidget,
   moveLeftWidget,
   moveRightWidget,
   removeWidget,
   replaceWidget,
   Widget,
-  WidgetLookup,
   Widgets,
 } from '../../model/Widgets'
 import { Box, Button, Card, CardContent, CardHeader } from '@mui/material'
@@ -28,28 +26,34 @@ export type WidgetSettingsComponentProps = {
   setWidgets: (w: (ws: Widgets) => Widgets) => void
 }
 
-export const WidgetSettingsComponent: React.FC<WidgetSettingsComponentProps> = ({ widget, setWidgets }) => {
-  const [settings, setSettings] = React.useState(JSON.stringify(widget, null, 2))
+export const WidgetSettingsComponent: React.FC<
+  WidgetSettingsComponentProps
+> = ({ widget, setWidgets }) => {
+  const [settings, setSettings] = React.useState(
+    JSON.stringify(widget, null, 2)
+  )
 
   const onWidgetSave = () => {
-    const json = E.tryCatch(
-      () => JSON.parse(settings),
-      (e) => e
-    )
-    const res = E.flatMap(json, Widget.decode)
-    E.match<any, Widget, void>(
-      (err: any) => {
-        if (_.isArray(err)) {
-          toast.error('Invalid widget: ' + PathReporter.report(E.left(err)).join(', '))
-        } else {
-          toast.error('Invalid JSON: ' + err)
-        }
-      },
-      (newWidget) => {
-        setWidgets(replaceWidget(widget, newWidget))
-        toast.success('Widget saved')
-      }
-    )(res)
+    // const json = E.tryCatch(
+    //   () => JSON.parse(settings),
+    //   (e) => e
+    // )
+    // const res = E.flatMap(json, Widget.decode)
+    // E.match<any, Widget, void>(
+    //   (err: any) => {
+    //     if (_.isArray(err)) {
+    //       toast.error(
+    //         'Invalid widget: ' + PathReporter.report(E.left(err)).join(', ')
+    //       )
+    //     } else {
+    //       toast.error('Invalid JSON: ' + err)
+    //     }
+    //   },
+    //   (newWidget) => {
+    //     setWidgets(replaceWidget(widget, newWidget))
+    //     toast.success('Widget saved')
+    //   }
+    // )(res)
   }
 
   return (
@@ -65,7 +69,7 @@ export const WidgetSettingsComponent: React.FC<WidgetSettingsComponentProps> = (
             Save
           </Button>
         }
-        title={widget.type}
+        title={'Some widget'}
       />
       <CardContent>
         <JSONEditor
