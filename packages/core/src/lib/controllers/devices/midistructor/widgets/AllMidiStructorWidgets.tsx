@@ -9,6 +9,7 @@ import { NavClipsWidgetComponent } from './NavClipsWidgetComponent'
 import { TrackSectionsWidgetComponent } from './TrackSectionsWidgetComponent'
 import { SpacerWidgetComponent } from './SpacerWidgetComponent'
 import { ButtonWidgetComponent } from './ButtonWidgetComponent'
+import { KnobWidgetComponent } from './KnobWidgetComponent'
 
 export const AllMidiStructorWidgets = MIDIStructorWidgets([
   PlayStopWidgetComponent,
@@ -21,4 +22,5 @@ export const AllMidiStructorWidgets = MIDIStructorWidgets([
   TrackSectionsWidgetComponent,
   SpacerWidgetComponent,
   ButtonWidgetComponent,
+  KnobWidgetComponent,
 ])

@@ -174,12 +174,28 @@
         "isFlashing": false,
         "midi": [
           {
-            "_tag": "Note",
-            "note": 100
+            "type": "cc",
+            "controllerNumber": 10,
+            "data": 10,
+            "channel": 1
           }
         ],
         "text": {
           "content": "HI"
+        }
+      },
+      {
+        "_tag": "knob",
+        "target": {
+          "_tag": "CC",
+          "controllerNumber": 101
+        },
+        "color": "0000BB",
+        "label": "My Knob",
+        "midi": {
+          "_tag": "midi-note-vary-velocity",
+          "note": 50,
+          "channel": 1
         }
       }
     ]
