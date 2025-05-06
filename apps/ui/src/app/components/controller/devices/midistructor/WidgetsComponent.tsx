@@ -31,16 +31,14 @@ export const WidgetsComponent: React.FC<WidgetsComponentProps> = ({
       {_.map(widgets, (widget, i) => (
         <Box
           key={`${widget._tag}-${i}`}
-          sx={
-            {
-              //   ...(widget.name === 'spacer' && widget.isLineBreaking
-              //     ? {
-              //       flexBasis: '100%',
-              //       height: isEdit ? '80px' : '0',
-              //     }
-              //     : {}),
-            }
-          }>
+          sx={{
+            ...(widget._tag === 'spacer' && widget.isLineBreaking
+              ? {
+                  flexBasis: '100%',
+                  height: isEdit ? '80px' : '0',
+                }
+              : {}),
+          }}>
           <WidgetComponent
             widget={widget}
             onClick={onClick}

@@ -88,6 +88,12 @@
         "label": "Beat"
       },
       {
+        "_tag": "spacer",
+        "width": 0,
+        "visible": false,
+        "isLineBreaking": true
+      },
+      {
         "_tag": "nav-clips",
         "trackName": "Songs",
         "sort": "order",
@@ -162,6 +168,12 @@
           }
         ],
         "label": "Parts"
+      },
+      {
+        "_tag": "spacer",
+        "width": 0,
+        "visible": false,
+        "isLineBreaking": true
       },
       {
         "_tag": "button",

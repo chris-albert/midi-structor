@@ -9,6 +9,7 @@ export const SpacerWidgetComponent = MIDIStructorWidget.of({
     name: 'spacer',
     schema: Schema.Struct({
       width: Schema.Number,
+      isLineBreaking: Schema.optional(Schema.Boolean),
     }),
     targets: (w) => [],
     component: ({}) => <></>,

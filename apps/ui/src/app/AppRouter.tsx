@@ -20,7 +20,7 @@ export const AppRouter: React.FC<AppRouterProps> = ({}) => {
         element={<Layout />}>
         <Route
           index
-          element={<IndexPage />}
+          element={<ControllersPage />}
         />
         <Route
           path='arrangement'
