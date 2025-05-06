@@ -221,7 +221,9 @@ export type AbletonUIMessage =
   | MetronomeStateMessage
   | LoopStateMessage
 
-const parseSysExBody = (body: Array<number>): [number, Array<string>] => {
+const parseSysExBody = (
+  body: Readonly<Array<number>>
+): [number, Array<string>] => {
   const str = _.join(
     _.map(body, (value) => String.fromCharCode(value)),
     ''

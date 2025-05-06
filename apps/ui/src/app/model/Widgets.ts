@@ -207,7 +207,7 @@ export const ButtonWidget = t.intersection([
     fontSize: t.string,
     content: t.union([t.string, t.undefined]),
     textColor: t.union([t.string, t.undefined]),
-    midi: t.array(MidiMessage.schema),
+    midi: t.array(t.any),
   }),
 ])
 
@@ -239,7 +239,11 @@ export const MidiNoteKnobWidget = t.type({
 
 export type MidiNoteKnobWidget = t.TypeOf<typeof MidiNoteKnobWidget>
 
-export const KnobWidgetType = t.union([MidiVelocityKnobWidget, MidiNoteKnobWidget, t.undefined])
+export const KnobWidgetType = t.union([
+  MidiVelocityKnobWidget,
+  MidiNoteKnobWidget,
+  t.undefined,
+])
 
 export const KnobWidget = t.intersection([
   WidgetSettings,
@@ -301,7 +305,10 @@ export const emptyWidgets: Widgets = []
 
 export const editWidgetsAtom = atom(false)
 
-export const replaceWidget = (origWidget: Widget, updatedWidget: Widget): ((w: Widgets) => Widgets) => {
+export const replaceWidget = (
+  origWidget: Widget,
+  updatedWidget: Widget
+): ((w: Widgets) => Widgets) => {
   return produce<Widgets>((widgets) => {
     const widgetIndex = current(widgets).indexOf(origWidget)
     widgets[widgetIndex] = updatedWidget

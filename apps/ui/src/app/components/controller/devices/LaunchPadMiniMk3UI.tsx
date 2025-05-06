@@ -183,7 +183,9 @@ type LaunchPadMiniColorMessage = {
 
 export type LaunchPadMiniMessage = LaunchPadMiniColorMessage
 
-const atomStore = atomFamily((name: string) => atom<UIMessageStore<LaunchPadMiniMessage>>({}))
+const atomStore = atomFamily((name: string) =>
+  atom<UIMessageStore<LaunchPadMiniMessage>>({})
+)
 
 const getTargetFromNum = (num: number): MidiTarget => {
   const str = num.toString()
@@ -194,7 +196,9 @@ const getTargetFromNum = (num: number): MidiTarget => {
   }
 }
 
-const messagesFromSysex = (sysex: SysExMessage): Array<[string, LaunchPadMiniMessage]> => {
+const messagesFromSysex = (
+  sysex: SysExMessage
+): Array<[string, LaunchPadMiniMessage]> => {
   const colors: Array<[string, LaunchPadMiniMessage]> = []
   const colorsArray = sysex.body.slice(5)
   while (colorsArray.length >= 4) {
@@ -203,8 +207,13 @@ const messagesFromSysex = (sysex: SysExMessage): Array<[string, LaunchPadMiniMes
     const red = colorsArray.shift()
     const green = colorsArray.shift()
     const blue = colorsArray.shift()
+    // @ts-ignore
     const color = Color.fromRGB(red * 2, green * 2, blue * 2)
-    colors.push([MidiTarget.toKey(getTargetFromNum(target)), { type: 'color', color }])
+    colors.push([
+      // @ts-ignore
+      MidiTarget.toKey(getTargetFromNum(target)),
+      { type: 'color', color },
+    ])
   }
   return colors
 }

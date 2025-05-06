@@ -1,4 +1,3 @@
-import * as t from 'io-ts'
 import _ from 'lodash'
 import { Either, Schema, Option } from 'effect'
 import { ParseError } from 'effect/ParseResult'
@@ -20,115 +19,115 @@ const STOP_STATUS = 0xfc
 const ACTIVE_SENSING_STATUS = 0xfe
 const RESET_STATUS = 0xff
 
-export const MidiChannel = t.type({
-  channel: t.number,
+export const MidiChannel = Schema.Struct({
+  channel: Schema.Number,
 })
-export type MidiChannel = t.TypeOf<typeof MidiChannel>
+export type MidiChannel = Schema.Schema.Type<typeof MidiChannel>
 
-export const SysExMessage = t.type({
-  type: t.literal('sysex'),
-  manufacturer: t.number,
-  body: t.array(t.any),
+export const SysExMessage = Schema.Struct({
+  type: Schema.Literal('sysex'),
+  manufacturer: Schema.Number,
+  body: Schema.Array(Schema.Number),
 })
 
-export type SysExMessage = t.TypeOf<typeof SysExMessage>
+export type SysExMessage = Schema.Schema.Type<typeof SysExMessage>
 
-export const NoteOnMessage = t.intersection([
-  MidiChannel,
-  t.type({
-    type: t.literal('noteon'),
-    note: t.number,
-    velocity: t.number,
-  }),
-])
-
-export type NoteOnMessage = t.TypeOf<typeof NoteOnMessage>
-
-export const NoteOffMessage = t.intersection([
-  MidiChannel,
-  t.type({
-    type: t.literal('noteoff'),
-    note: t.number,
-    velocity: t.number,
-  }),
-])
-
-export type NoteOffMessage = t.TypeOf<typeof NoteOffMessage>
-
-export const ControlChangeMessage = t.intersection([
-  MidiChannel,
-  t.type({
-    type: t.literal('cc'),
-    controllerNumber: t.number,
-    data: t.number,
-  }),
-])
-
-export type ControlChangeMessage = t.TypeOf<typeof ControlChangeMessage>
-
-export const ProgramChangeMessage = t.intersection([
-  MidiChannel,
-  t.type({
-    type: t.literal('pc'),
-    programNumber: t.number,
-  }),
-])
-
-export type ProgramChangeMessage = t.TypeOf<typeof ProgramChangeMessage>
-
-export const ClockMessage = t.type({
-  type: t.literal('clock'),
+export const NoteOnMessage = Schema.Struct({
+  type: Schema.Literal('noteon'),
+  note: Schema.Number,
+  velocity: Schema.Number,
+  ...MidiChannel.fields,
 })
-export type ClockMessage = t.TypeOf<typeof ClockMessage>
 
-export const MeasureEndMessage = t.type({
-  type: t.literal('measureend'),
+export type NoteOnMessage = Schema.Schema.Type<typeof NoteOnMessage>
+
+export const NoteOffMessage = Schema.Struct({
+  type: Schema.Literal('noteoff'),
+  note: Schema.Number,
+  velocity: Schema.Number,
+  ...MidiChannel.fields,
 })
-export type MeasureEndMessage = t.TypeOf<typeof MeasureEndMessage>
 
-export const StartMessage = t.type({
-  type: t.literal('start'),
+export type NoteOffMessage = Schema.Schema.Type<typeof NoteOffMessage>
+
+export const ControlChangeMessage = Schema.Struct({
+  type: Schema.Literal('cc'),
+  controllerNumber: Schema.Number,
+  data: Schema.Number,
+  ...MidiChannel.fields,
 })
-export type StartMessage = t.TypeOf<typeof StartMessage>
 
-export const ContinueMessage = t.type({
-  type: t.literal('continue'),
+export type ControlChangeMessage = Schema.Schema.Type<
+  typeof ControlChangeMessage
+>
+
+export const ProgramChangeMessage = Schema.Struct({
+  type: Schema.Literal('pc'),
+  programNumber: Schema.Number,
+  ...MidiChannel.fields,
 })
-export type ContinueMessage = t.TypeOf<typeof ContinueMessage>
 
-export const StopMessage = t.type({
-  type: t.literal('stop'),
+export type ProgramChangeMessage = Schema.Schema.Type<
+  typeof ProgramChangeMessage
+>
+
+export const ClockMessage = Schema.Struct({
+  type: Schema.Literal('clock'),
 })
-export type StopMessage = t.TypeOf<typeof StopMessage>
+export type ClockMessage = Schema.Schema.Type<typeof ClockMessage>
 
-export const ResetMessage = t.type({
-  type: t.literal('reset'),
+export const MeasureEndMessage = Schema.Struct({
+  type: Schema.Literal('measureend'),
 })
-export type ResetMessage = t.TypeOf<typeof ResetMessage>
+export type MeasureEndMessage = Schema.Schema.Type<typeof MeasureEndMessage>
 
-export const ActiveSensingMessage = t.type({
-  type: t.literal('activesensing'),
+export const StartMessage = Schema.Struct({
+  type: Schema.Literal('start'),
 })
-export type ActiveSensingMessage = t.TypeOf<typeof ActiveSensingMessage>
+export type StartMessage = Schema.Schema.Type<typeof StartMessage>
 
-export const MTCQuarterFrameMessage = t.type({
-  type: t.literal('mtcquarterframe'),
-  data: t.number,
+export const ContinueMessage = Schema.Struct({
+  type: Schema.Literal('continue'),
 })
-export type MTCQuarterFrameMessage = t.TypeOf<typeof MTCQuarterFrameMessage>
+export type ContinueMessage = Schema.Schema.Type<typeof ContinueMessage>
 
-export const UnknownMessage = t.type({
-  type: t.literal('unknown'),
+export const StopMessage = Schema.Struct({
+  type: Schema.Literal('stop'),
 })
-export type UnknownMessage = t.TypeOf<typeof UnknownMessage>
+export type StopMessage = Schema.Schema.Type<typeof StopMessage>
 
-export const ErrorMessage = t.type({
-  type: t.literal('error'),
-  message: t.string,
+export const ResetMessage = Schema.Struct({
+  type: Schema.Literal('reset'),
 })
-export type ErrorMessage = t.TypeOf<typeof ErrorMessage>
+export type ResetMessage = Schema.Schema.Type<typeof ResetMessage>
 
-export const Message = t.union([
+export const ActiveSensingMessage = Schema.Struct({
+  type: Schema.Literal('activesensing'),
+})
+export type ActiveSensingMessage = Schema.Schema.Type<
+  typeof ActiveSensingMessage
+>
+
+export const MTCQuarterFrameMessage = Schema.Struct({
+  type: Schema.Literal('mtcquarterframe'),
+  data: Schema.Number,
+})
+export type MTCQuarterFrameMessage = Schema.Schema.Type<
+  typeof MTCQuarterFrameMessage
+>
+
+export const UnknownMessage = Schema.Struct({
+  type: Schema.Literal('unknown'),
+})
+export type UnknownMessage = Schema.Schema.Type<typeof UnknownMessage>
+
+export const ErrorMessage = Schema.Struct({
+  type: Schema.Literal('error'),
+  message: Schema.String,
+})
+export type ErrorMessage = Schema.Schema.Type<typeof ErrorMessage>
+
+export const Message = Schema.Union(
   SysExMessage,
   NoteOnMessage,
   NoteOffMessage,
@@ -143,10 +142,10 @@ export const Message = t.union([
   ActiveSensingMessage,
   MTCQuarterFrameMessage,
   UnknownMessage,
-  ErrorMessage,
-])
+  ErrorMessage
+)
 
-export type MidiMessage = t.TypeOf<typeof Message>
+export type MidiMessage = Schema.Schema.Type<typeof Message>
 export type MidiMessageWithRaw = MidiMessage & {
   raw: Uint8Array
   time: Date
