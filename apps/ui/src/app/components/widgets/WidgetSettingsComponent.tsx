@@ -10,16 +10,12 @@ import {
 } from '../../model/Widgets'
 import { Box, Button, Card, CardContent, CardHeader } from '@mui/material'
 import { JSONEditor } from '../JSONEditor'
-import * as E from 'fp-ts/Either'
 import { toast } from 'react-toastify'
-import { PathReporter } from 'io-ts/PathReporter'
-import _ from 'lodash'
 import IconButton from '@mui/material/IconButton'
 import ArrowLeftIcon from '@mui/icons-material/ArrowLeftOutlined'
 import ContentCopyIcon from '@mui/icons-material/ContentCopy'
 import ArrowRightIcon from '@mui/icons-material/ArrowRightOutlined'
 import DeleteIcon from '@mui/icons-material/Delete'
-import { formatType } from '../../utils/TypeFormatter'
 
 export type WidgetSettingsComponentProps = {
   widget: Widget

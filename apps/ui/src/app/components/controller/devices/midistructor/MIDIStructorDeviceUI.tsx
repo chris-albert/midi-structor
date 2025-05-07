@@ -24,11 +24,16 @@ const MIDIStructorDeviceUIComponent: React.FC<
       listener.emit(MidiMessage.raw(m))
     },
   }
+  const [editWidgets, setEditWidgets] = React.useState(false)
 
   return (
     <Box>
-      <MidiStructorEditWidgets />
+      <MidiStructorEditWidgets
+        editWidgets={editWidgets}
+        toggleEditWidgets={() => setEditWidgets((e) => !e)}
+      />
       <MidiStructorComponent
+        editWidgets={editWidgets}
         store={store}
         midiEmitter={midiEmitter}
       />

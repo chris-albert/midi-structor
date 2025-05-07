@@ -5,7 +5,10 @@ import {
   MIDIStructorUIWidget,
   OnClick,
 } from '@midi-structor/core'
-import { Box } from '@mui/material'
+import { Box, Drawer, Paper } from '@mui/material'
+import { WidgetSettingsComponent } from '../../../widgets/WidgetSettingsComponent'
+import IconButton from '@mui/material/IconButton'
+import MenuIcon from '@mui/icons-material/Menu'
 
 const getLabel = (widget: MIDIStructorUIWidget): React.ReactElement | null =>
   widget.label === undefined ? null : (
@@ -38,13 +41,17 @@ export type WidgetComponentProps = {
   widget: MIDIStructorUIWidget
   onClick: OnClick
   store: MIDIStructorStore
+  isEdit: boolean
 }
 
 export const WidgetComponent: React.FC<WidgetComponentProps> = ({
   widget,
   onClick,
   store,
+  isEdit,
 }) => {
+  const [settingsOpen, setSettingsOpen] = React.useState(false)
+
   const el = AllMidiStructorWidgets.Component(widget, onClick, store)
   const label = getLabel(widget)
   const widgetBody = (
@@ -60,7 +67,43 @@ export const WidgetComponent: React.FC<WidgetComponentProps> = ({
       <Box>{el}</Box>
     </Box>
   )
-  if (widget.visible === undefined || widget.visible) {
+  if (isEdit) {
+    return (
+      <Paper>
+        <Drawer
+          open={settingsOpen}
+          onClose={() => setSettingsOpen(false)}
+          anchor='right'
+          sx={{
+            flexShrink: 0,
+          }}>
+          <WidgetSettingsComponent
+            widget={widget}
+            setWidgets={(w) => {}}
+          />
+        </Drawer>
+        <Box
+          sx={{
+            border: '1px solid #777777',
+            borderRadius: '5px',
+            display: 'flex',
+            justifyContent: 'space-between',
+          }}>
+          <Box></Box>
+          <Box>
+            <IconButton
+              onClick={() => {
+                setSettingsOpen(true)
+              }}
+              aria-label='Edit'>
+              <MenuIcon />
+            </IconButton>
+          </Box>
+        </Box>
+        {widgetBody}
+      </Paper>
+    )
+  } else if (widget.visible === undefined || widget.visible) {
     return <Box>{widgetBody}</Box>
   } else {
     return el

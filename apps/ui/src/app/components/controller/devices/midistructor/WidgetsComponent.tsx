@@ -43,6 +43,7 @@ export const WidgetsComponent: React.FC<WidgetsComponentProps> = ({
             widget={widget}
             onClick={onClick}
             store={store}
+            isEdit={isEdit}
           />
         </Box>
       ))}

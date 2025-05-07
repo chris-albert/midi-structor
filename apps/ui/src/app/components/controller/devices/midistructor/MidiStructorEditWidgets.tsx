@@ -3,20 +3,22 @@ import { Box, Button, Drawer } from '@mui/material'
 import { AddWidgetComponent } from '../../../AddWidgetComponent'
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
 
-export type MidiStructorEditWidgetsProps = {}
+export type MidiStructorEditWidgetsProps = {
+  editWidgets: boolean
+  toggleEditWidgets: () => void
+}
 
 export const MidiStructorEditWidgets: React.FC<
   MidiStructorEditWidgetsProps
-> = ({}) => {
-  const [widgetOpen, setWidgetOpen] = React.useState(false)
-  const [editWidgets, setEditWidgets] = React.useState(false)
+> = ({ editWidgets, toggleEditWidgets }) => {
+  const [addWidgetOpen, setAddWidgetOpen] = React.useState(false)
 
   return (
     <Box>
       <Drawer
         anchor='top'
-        open={widgetOpen}
-        onClose={() => setWidgetOpen(false)}>
+        open={addWidgetOpen}
+        onClose={() => setAddWidgetOpen(false)}>
         <AddWidgetComponent />
       </Drawer>
       <Box
@@ -30,13 +32,13 @@ export const MidiStructorEditWidgets: React.FC<
           variant='outlined'
           color={editWidgets ? 'error' : 'success'}
           startIcon={<AddCircleOutlineIcon />}
-          onClick={() => setEditWidgets((e) => !e)}>
+          onClick={toggleEditWidgets}>
           {editWidgets ? 'Done Editing' : 'Edit Widgets'}
         </Button>
         <Button
           variant='outlined'
           startIcon={<AddCircleOutlineIcon />}
-          onClick={() => setWidgetOpen(true)}>
+          onClick={() => setAddWidgetOpen(true)}>
           Add Widget
         </Button>
       </Box>

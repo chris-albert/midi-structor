@@ -20,6 +20,7 @@ export const UIPage: React.FC<UIPageProps> = ({}) => {
       <MidiStructorComponent
         store={store}
         midiEmitter={emitter}
+        editWidgets={false}
       />
     </Box>
   )

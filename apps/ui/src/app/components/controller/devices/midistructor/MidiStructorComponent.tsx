@@ -11,11 +11,13 @@ import { WidgetsComponent } from './WidgetsComponent'
 export type MidiStructorComponentProps = {
   store: MIDIStructorStore
   midiEmitter: MidiEmitter
+  editWidgets: boolean
 }
 
 export const MidiStructorComponent: React.FC<MidiStructorComponentProps> = ({
   store,
   midiEmitter,
+  editWidgets,
 }) => {
   const widgets: MIDIStructorUIWidgets | undefined = React.useMemo(() => {
     const initMaybe = store['init']
@@ -35,7 +37,7 @@ export const MidiStructorComponent: React.FC<MidiStructorComponentProps> = ({
       {widgets !== undefined ? (
         <WidgetsComponent
           widgets={widgets}
-          isEdit={false}
+          isEdit={editWidgets}
           onClick={onClick}
           store={store}
         />

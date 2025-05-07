@@ -1,13 +1,10 @@
 import React from 'react'
 import { Box } from '@mui/material'
 import { WidgetButtonComponent } from './WidgetButtonComponent'
-import { UIWidgets } from '../hooks/UIWidgets'
 
 export type AddWidgetComponentProps = {}
 
 export const AddWidgetComponent: React.FC<AddWidgetComponentProps> = ({}) => {
-  const [_, setWidgets] = UIWidgets.useWidgets()
-
   return (
     <Box
       sx={{
