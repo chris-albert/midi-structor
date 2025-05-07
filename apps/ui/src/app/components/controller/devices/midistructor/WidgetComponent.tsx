@@ -9,6 +9,7 @@ import { Box, Drawer, Paper } from '@mui/material'
 import { WidgetSettingsComponent } from '../../../widgets/WidgetSettingsComponent'
 import IconButton from '@mui/material/IconButton'
 import MenuIcon from '@mui/icons-material/Menu'
+import { Widget } from '../../../../model/Widgets'
 
 const getLabel = (widget: MIDIStructorUIWidget): React.ReactElement | null =>
   widget.label === undefined ? null : (
@@ -69,7 +70,7 @@ export const WidgetComponent: React.FC<WidgetComponentProps> = ({
   )
   if (isEdit) {
     return (
-      <Paper>
+      <Box>
         <Drawer
           open={settingsOpen}
           onClose={() => setSettingsOpen(false)}
@@ -78,30 +79,35 @@ export const WidgetComponent: React.FC<WidgetComponentProps> = ({
             flexShrink: 0,
           }}>
           <WidgetSettingsComponent
-            widget={widget}
-            setWidgets={(w) => {}}
+            widget={widget as Widget}
+            setWidgets={(w) => {
+              console.log('edit widget', w)
+            }}
+            onClose={() => setSettingsOpen((s) => !s)}
           />
         </Drawer>
-        <Box
-          sx={{
-            border: '1px solid #777777',
-            borderRadius: '5px',
-            display: 'flex',
-            justifyContent: 'space-between',
-          }}>
-          <Box></Box>
-          <Box>
-            <IconButton
-              onClick={() => {
-                setSettingsOpen(true)
-              }}
-              aria-label='Edit'>
-              <MenuIcon />
-            </IconButton>
+        <Paper>
+          <Box
+            sx={{
+              border: '1px solid #777777',
+              borderRadius: '5px',
+              display: 'flex',
+              justifyContent: 'space-between',
+            }}>
+            <Box></Box>
+            <Box>
+              <IconButton
+                onClick={() => {
+                  setSettingsOpen(true)
+                }}
+                aria-label='Edit'>
+                <MenuIcon />
+              </IconButton>
+            </Box>
           </Box>
-        </Box>
-        {widgetBody}
-      </Paper>
+          {widgetBody}
+        </Paper>
+      </Box>
     )
   } else if (widget.visible === undefined || widget.visible) {
     return <Box>{widgetBody}</Box>

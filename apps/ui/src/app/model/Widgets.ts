@@ -1,10 +1,14 @@
 import { produce, current } from 'immer'
 import _ from 'lodash'
 import { Schema } from 'effect'
+import { AllMidiStructorWidgets } from '@midi-structor/core'
 
-export const Widget = Schema.Struct({})
+type DeepMutable<T> = {
+  -readonly [K in keyof T]: DeepMutable<T[K]>
+}
 
-export type Widget = Schema.Schema.Type<typeof Widget>
+export const Widget = AllMidiStructorWidgets.schema
+export type Widget = DeepMutable<typeof Widget.Type>
 
 export const Widgets = Schema.Array(Widget)
 

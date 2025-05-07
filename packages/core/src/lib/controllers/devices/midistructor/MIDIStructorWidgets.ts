@@ -3,6 +3,9 @@ import _ from 'lodash'
 import React from 'react'
 import { MIDIStructorPad, MIDIStructorStore } from '../MIDIStructorUI'
 import { MidiTarget } from '../../../midi/MidiTarget'
+import { Schema, Option, Either } from 'effect'
+import { ControllerWidgetType } from '../../ControllerWidget'
+import { ParseError } from 'effect/ParseResult'
 
 const state = (store: MIDIStructorStore) => {
   const one = (target: MidiTarget): MIDIStructorPad => {
@@ -38,6 +41,13 @@ type GetByName<Widgets> = Widgets extends Array<
   ? (name: K) => MIDIStructorWidget<K, A>
   : never
 
+type WidgetsUnion<A extends Array<MIDIStructorWidget<any, any>>> = {
+  [K in keyof A]: ControllerWidgetType<A[K]['widget']>
+}[number]
+
+type WidgetsSchema<A extends Array<MIDIStructorWidget<any, any>>> =
+  Schema.Schema<WidgetsUnion<A>, any>
+
 export type MIDIStructorWidgets<
   Widgets extends Array<MIDIStructorWidget<any, any>>
 > = {
@@ -45,10 +55,11 @@ export type MIDIStructorWidgets<
   controllerWidgets: MIDIStructorWidgetsType<Widgets>
   getByName: GetByName<Widgets>
   Component: (
-    widget: any,
+    widget: WidgetsUnion<Widgets>,
     onClick: OnClick,
     store: MIDIStructorStore
   ) => React.ReactElement
+  schema: WidgetsSchema<Widgets>
 }
 
 export const MIDIStructorWidgets = <
@@ -62,10 +73,11 @@ export const MIDIStructorWidgets = <
     lookup[name]) as GetByName<Widgets>
 
   const Component = (
-    widget: any,
+    widget: WidgetsUnion<Widgets>,
     onClick: OnClick,
     store: MIDIStructorStore
   ): React.ReactElement => {
+    // @ts-ignore
     const w = getByName(widget._tag)
     // @ts-ignore
     if (widget.target !== undefined) {
@@ -85,10 +97,15 @@ export const MIDIStructorWidgets = <
     (w) => w.widget
   ) as MIDIStructorWidgetsType<Widgets>
 
+  const schema = Schema.Union(
+    ...controllerWidgets.map((w) => w.schema as any as Schema.Schema<any>)
+  ) as unknown as WidgetsSchema<Widgets>
+
   return {
     widgets,
     controllerWidgets,
     getByName,
     Component,
+    schema,
   }
 }
