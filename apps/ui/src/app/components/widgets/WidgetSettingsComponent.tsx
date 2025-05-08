@@ -37,7 +37,7 @@ export const WidgetSettingsComponent: React.FC<
       schema: AllMidiStructorWidgets.schema,
       str: settings,
       ok: (newWidget) => {
-        //     // setWidgets(replaceWidget(widget, newWidget))
+        setWidgets(replaceWidget(widget, newWidget))
         toast.success('Widget saved')
       },
       error: (msg) => {

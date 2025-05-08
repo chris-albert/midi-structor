@@ -2,6 +2,7 @@ import React from 'react'
 import {
   MIDIStructorStore,
   MIDIStructorUIWidgets,
+  MIDIStructorUIWidgetsUpdate,
   OnClick,
 } from '@midi-structor/core'
 import { Box } from '@mui/material'
@@ -13,6 +14,7 @@ export type WidgetsComponentProps = {
   isEdit: boolean
   onClick: OnClick
   store: MIDIStructorStore
+  updateWidgets: MIDIStructorUIWidgetsUpdate
 }
 
 export const WidgetsComponent: React.FC<WidgetsComponentProps> = ({
@@ -20,6 +22,7 @@ export const WidgetsComponent: React.FC<WidgetsComponentProps> = ({
   isEdit,
   onClick,
   store,
+  updateWidgets,
 }) => {
   return (
     <Box
@@ -44,6 +47,7 @@ export const WidgetsComponent: React.FC<WidgetsComponentProps> = ({
             onClick={onClick}
             store={store}
             isEdit={isEdit}
+            updateWidgets={updateWidgets}
           />
         </Box>
       ))}

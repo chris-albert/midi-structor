@@ -1,63 +1,55 @@
-import { produce, current } from 'immer'
-import _ from 'lodash'
 import { Schema } from 'effect'
 import { AllMidiStructorWidgets } from '@midi-structor/core'
 
-type DeepMutable<T> = {
-  -readonly [K in keyof T]: DeepMutable<T[K]>
-}
-
 export const Widget = AllMidiStructorWidgets.schema
-export type Widget = DeepMutable<typeof Widget.Type>
+export type Widget = typeof Widget.Type
 
 export const Widgets = Schema.Array(Widget)
 
 export type Widgets = Schema.Schema.Type<typeof Widgets>
 
-export const emptyWidgets: Widgets = []
+type WidgetsUpdate = (w: Widgets) => Widgets
 
-export const replaceWidget = (
-  origWidget: Widget,
-  updatedWidget: Widget
-): ((w: Widgets) => Widgets) => {
-  return produce<Widgets>((widgets) => {
-    const widgetIndex = current(widgets).indexOf(origWidget)
-    widgets[widgetIndex] = updatedWidget
-  })
-}
+export const replaceWidget =
+  (origWidget: Widget, updatedWidget: Widget): WidgetsUpdate =>
+  (w) =>
+    w.filter((ww) => (ww === origWidget ? updatedWidget : ww))
 
-export const addWidget = (widget: Widget): ((w: Widgets) => Widgets) => {
-  return produce<Widgets>((widgets) => {
-    widgets.push(widget)
-  })
-}
+export const addWidget =
+  (widget: Widget): WidgetsUpdate =>
+  (w) =>
+    [...w, widget]
 
-export const removeWidget = (widget: Widget): ((w: Widgets) => Widgets) => {
-  return produce<Widgets>((widgets) => {
-    widgets.splice(current(widgets).indexOf(widget), 1)
-  })
-}
+export const removeWidget =
+  (widget: Widget): WidgetsUpdate =>
+  (w) =>
+    w.filter((ww) => ww !== widget)
 
-export const duplicateWidget = (widget: Widget): ((w: Widgets) => Widgets) => {
-  return produce<Widgets>((widgets) => {
-    const widgetIndex = current(widgets).indexOf(widget)
-    const newWidget = _.clone(widget)
-    widgets.splice(widgetIndex + 1, 0, newWidget)
-  })
-}
+export const duplicateWidget =
+  (widget: Widget): WidgetsUpdate =>
+  (w) =>
+    w.flatMap((ww) => (ww === widget ? [ww, ww] : ww))
 
-export const moveRightWidget = (widget: Widget): ((w: Widgets) => Widgets) => {
-  return produce<Widgets>((widgets) => {
-    const widgetIndex = current(widgets).indexOf(widget)
-    widgets.splice(widgetIndex, 1)
-    widgets.splice(widgetIndex + 1, 0, widget)
-  })
-}
+export const moveRightWidget =
+  (widget: Widget): WidgetsUpdate =>
+  (widgets) => {
+    const widgetIndex = widgets.indexOf(widget)
+    return [
+      ...widgets.slice(0, widgetIndex),
+      widgets[widgetIndex + 1] as any,
+      widgets[widgetIndex] as any,
+      ...widgets.slice(widgetIndex + 2),
+    ]
+  }
 
-export const moveLeftWidget = (widget: Widget): ((w: Widgets) => Widgets) => {
-  return produce<Widgets>((widgets) => {
-    const widgetIndex = current(widgets).indexOf(widget)
-    widgets.splice(widgetIndex, 1)
-    widgets.splice(widgetIndex - 1, 0, widget)
-  })
-}
+export const moveLeftWidget =
+  (widget: Widget): WidgetsUpdate =>
+  (widgets) => {
+    const widgetIndex = widgets.indexOf(widget)
+    return [
+      ...widgets.slice(0, widgetIndex - 1),
+      widgets[widgetIndex] as any,
+      widgets[widgetIndex - 1] as any,
+      ...widgets.slice(widgetIndex + 1),
+    ]
+  }

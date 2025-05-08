@@ -19,6 +19,11 @@ type ElementType<T> = T extends (infer U)[] ? U : never
 export type MIDIStructorUIWidgets = ControllerWidgetsType<
   typeof widgets.widgets
 >
+
+export type MIDIStructorUIWidgetsUpdate = (
+  w: MIDIStructorUIWidgets
+) => MIDIStructorUIWidgets
+
 export type MIDIStructorUIWidget = ElementType<MIDIStructorUIWidgets>
 
 export const MidiStructorUIInit = Schema.TaggedStruct('init', {

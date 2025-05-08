@@ -1,9 +1,13 @@
 import React from 'react'
-import { ConfiguredController, ControllerConfig, ControllerDevice } from '@midi-structor/core'
+import {
+  ConfiguredController,
+  ControllerConfig,
+  ControllerDevice,
+} from '@midi-structor/core'
 import { PrimitiveAtom } from 'jotai/index'
 import { Button, Card, CardContent, CardHeader } from '@mui/material'
 import { JSONEditor } from '../JSONEditor'
-import { Either, Schema, Option } from 'effect'
+import { Either } from 'effect'
 import { toast } from 'react-toastify'
 
 export type ControllerEditRawComponentProps = {
@@ -11,15 +15,16 @@ export type ControllerEditRawComponentProps = {
   device: ControllerDevice
 }
 
-export const ControllerEditRawComponent: React.FC<ControllerEditRawComponentProps> = ({
-  controllerAtom,
-  device,
-}) => {
+export const ControllerEditRawComponent: React.FC<
+  ControllerEditRawComponentProps
+> = ({ controllerAtom, device }) => {
   const controller = ConfiguredController.useController(controllerAtom)
   const [rawControllerConfig, setRawControllerConfig] = React.useState('')
 
   React.useEffect(() => {
-    setRawControllerConfig(ControllerConfig.stringify(controller.config, device))
+    setRawControllerConfig(
+      ControllerConfig.stringify(controller.config, device)
+    )
   }, [controller.config])
 
   const onSave = () => {
@@ -28,7 +33,8 @@ export const ControllerEditRawComponent: React.FC<ControllerEditRawComponentProp
         controller.setConfig(config)
         toast.success('Successfully saved config')
       },
-      onLeft: (error) => toast.error(`Error while saving controller config: ${error}`),
+      onLeft: (error) =>
+        toast.error(`Error while saving controller config: ${error}`),
     })
   }
 

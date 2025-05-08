@@ -4,6 +4,7 @@ import {
   MidiEmitter,
   MIDIStructorStore,
   MIDIStructorUIWidgets,
+  MIDIStructorUIWidgetsUpdate,
   MidiTarget,
 } from '@midi-structor/core'
 import { WidgetsComponent } from './WidgetsComponent'
@@ -12,12 +13,14 @@ export type MidiStructorComponentProps = {
   store: MIDIStructorStore
   midiEmitter: MidiEmitter
   editWidgets: boolean
+  updateWidgets: MIDIStructorUIWidgetsUpdate
 }
 
 export const MidiStructorComponent: React.FC<MidiStructorComponentProps> = ({
   store,
   midiEmitter,
   editWidgets,
+  updateWidgets,
 }) => {
   const widgets: MIDIStructorUIWidgets | undefined = React.useMemo(() => {
     const initMaybe = store['init']
@@ -40,6 +43,7 @@ export const MidiStructorComponent: React.FC<MidiStructorComponentProps> = ({
           isEdit={editWidgets}
           onClick={onClick}
           store={store}
+          updateWidgets={updateWidgets}
         />
       ) : (
         <Box>

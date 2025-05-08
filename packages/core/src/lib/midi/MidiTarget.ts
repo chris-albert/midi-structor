@@ -19,9 +19,15 @@ const MidiTargetSchema = Schema.Union(
   Schema.TaggedStruct('PC', {
     programNumber: Schema.Number,
   })
-)
+).annotations({ identifier: 'MidiTarget' })
 
-const notes = ({ from, to }: { from: number; to: number }): Array<MidiTarget> => {
+const notes = ({
+  from,
+  to,
+}: {
+  from: number
+  to: number
+}): Array<MidiTarget> => {
   const arr: Array<MidiTarget> = []
   for (let i = from; i <= to; i++) {
     arr.push(note(i))
@@ -38,8 +44,10 @@ const ccs = ({ from, to }: { from: number; to: number }): Array<MidiTarget> => {
 }
 
 const note = (note: number): MidiTarget => _MidiTarget.Note({ note })
-const cc = (controllerNumber: number): MidiTarget => _MidiTarget.CC({ controllerNumber })
-const pc = (programNumber: number): MidiTarget => _MidiTarget.PC({ programNumber })
+const cc = (controllerNumber: number): MidiTarget =>
+  _MidiTarget.CC({ controllerNumber })
+const pc = (programNumber: number): MidiTarget =>
+  _MidiTarget.PC({ programNumber })
 
 const toKey = (target: MidiTarget): string =>
   _MidiTarget.$match({

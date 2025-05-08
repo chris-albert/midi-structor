@@ -3,6 +3,7 @@ import {
   AllMidiStructorWidgets,
   MIDIStructorStore,
   MIDIStructorUIWidget,
+  MIDIStructorUIWidgetsUpdate,
   OnClick,
 } from '@midi-structor/core'
 import { Box, Drawer, Paper } from '@mui/material'
@@ -43,6 +44,7 @@ export type WidgetComponentProps = {
   onClick: OnClick
   store: MIDIStructorStore
   isEdit: boolean
+  updateWidgets: MIDIStructorUIWidgetsUpdate
 }
 
 export const WidgetComponent: React.FC<WidgetComponentProps> = ({
@@ -50,6 +52,7 @@ export const WidgetComponent: React.FC<WidgetComponentProps> = ({
   onClick,
   store,
   isEdit,
+  updateWidgets,
 }) => {
   const [settingsOpen, setSettingsOpen] = React.useState(false)
 
@@ -81,6 +84,7 @@ export const WidgetComponent: React.FC<WidgetComponentProps> = ({
           <WidgetSettingsComponent
             widget={widget as Widget}
             setWidgets={(w) => {
+              // updateWidgets(w)
               console.log('edit widget', w)
             }}
             onClose={() => setSettingsOpen((s) => !s)}

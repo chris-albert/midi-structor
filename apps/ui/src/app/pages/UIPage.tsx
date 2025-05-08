@@ -21,6 +21,7 @@ export const UIPage: React.FC<UIPageProps> = ({}) => {
         store={store}
         midiEmitter={emitter}
         editWidgets={false}
+        updateWidgets={(w) => w}
       />
     </Box>
   )

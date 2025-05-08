@@ -36,6 +36,10 @@ const MIDIStructorDeviceUIComponent: React.FC<
         editWidgets={editWidgets}
         store={store}
         midiEmitter={midiEmitter}
+        updateWidgets={(widgets) => {
+          console.log('updateWidgets', widgets)
+          return widgets
+        }}
       />
     </Box>
   )
