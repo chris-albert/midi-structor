@@ -13,6 +13,7 @@ export const ControllerHomeComponent: React.FC<
 > = ({ controllerAtom }) => {
   const controller = ConfiguredController.useController(controllerAtom)
   const devices = ControllerUIDevices.useDevices()
+  console.log('devices', devices, controller.device)
 
   return (
     <Box sx={{ mt: 2 }}>

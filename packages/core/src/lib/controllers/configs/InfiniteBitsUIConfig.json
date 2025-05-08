@@ -8,7 +8,7 @@
       },
       "playColor": "00ff00",
       "stopColor": "ff0000",
-      "label": "Play/Stop 2"
+      "label": "Play/Stop"
     },
     {
       "_tag": "spacer",
