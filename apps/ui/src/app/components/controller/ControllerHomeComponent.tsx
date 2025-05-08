@@ -1,6 +1,11 @@
 import React from 'react'
 import { PrimitiveAtom } from 'jotai/index'
-import { ConfiguredController, ControllerUIDevices } from '@midi-structor/core'
+import {
+  ConfiguredController,
+  ControllerUIDevices,
+  MIDIStructorUIWidgets,
+  MIDIStructorUIWidgetsUpdate,
+} from '@midi-structor/core'
 import { Box } from '@mui/material'
 import { Option } from 'effect'
 
@@ -13,13 +18,16 @@ export const ControllerHomeComponent: React.FC<
 > = ({ controllerAtom }) => {
   const controller = ConfiguredController.useController(controllerAtom)
   const devices = ControllerUIDevices.useDevices()
-  console.log('devices', devices, controller.device)
+
+  const setWidgets = (widgets: MIDIStructorUIWidgets) => {
+    controller.setConfig({ widgets })
+  }
 
   return (
     <Box sx={{ mt: 2 }}>
       {Option.getOrElse(
         Option.map(devices.findByName(controller.device), (c) =>
-          c.Component(controllerAtom, c)
+          c.component(controller.controller, c, setWidgets)
         ),
         () => null
       )}

@@ -9,26 +9,24 @@ import {
   SchemaHelper,
   AllMidiStructorWidgets,
   ControllerConfig,
+  MIDIStructorUIWidgets,
 } from '@midi-structor/core'
 import { MidiStructorComponent } from './MidiStructorComponent'
 import { Box } from '@mui/material'
 import { MidiStructorEditWidgets } from './MidiStructorEditWidgets'
-import { PrimitiveAtom } from 'jotai'
 import { Either, Schema } from 'effect'
 import { toast } from 'react-toastify'
 
 type MIDIStructorDeviceUIComponentProps = {
-  configuredController: PrimitiveAtom<ConfiguredController>
+  configuredController: ConfiguredController
+  setWidgets: (w: MIDIStructorUIWidgets) => void
 }
 
 const MIDIStructorDeviceUIComponent: React.FC<
   MIDIStructorDeviceUIComponentProps
-> = ({ configuredController }) => {
-  const controller = ConfiguredController.useController(configuredController)
-  const listener = ConfiguredController.useVirtualListener(
-    controller.controller
-  )
-  const store = MIDIStructorUI.useStore(controller.name).useGet()
+> = ({ configuredController, setWidgets }) => {
+  const listener = ConfiguredController.useVirtualListener(configuredController)
+  const store = MIDIStructorUI.useStore(configuredController.name).useGet()
   const midiEmitter: MidiEmitter = {
     send: (m: MidiMessage) => {
       listener.emit(MidiMessage.raw(m))
@@ -38,7 +36,7 @@ const MIDIStructorDeviceUIComponent: React.FC<
 
   const updateWidgets: MIDIStructorUIWidgetsUpdate = (widgets) => {
     // @ts-ignore
-    const updated = widgets(controller.config.widgets)
+    const updated = widgets(configuredController.config.widgets)
     const stringWidgets = SchemaHelper.encode(
       Schema.Struct({
         widgets: Schema.Array(AllMidiStructorWidgets.schema),
@@ -47,7 +45,8 @@ const MIDIStructorDeviceUIComponent: React.FC<
     )
     Either.match(ControllerConfig.parse(stringWidgets, MIDIStructorUI.device), {
       onRight: (widgets) => {
-        controller.setConfig(widgets)
+        // @ts-ignore
+        setWidgets(widgets.widgets)
       },
       onLeft: (error) => toast.error(error),
     })
@@ -71,10 +70,11 @@ const MIDIStructorDeviceUIComponent: React.FC<
 
 export const MIDIStructorDeviceUI = ControllerUIDevice.of({
   controller: MIDIStructorUI.device,
-  Component: (configuredController) => {
+  component: (configuredController, _, setWidgets) => {
     return (
       <MIDIStructorDeviceUIComponent
         configuredController={configuredController}
+        setWidgets={setWidgets}
       />
     )
   },

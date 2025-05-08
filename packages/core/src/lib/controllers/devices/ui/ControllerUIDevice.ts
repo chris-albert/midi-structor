@@ -5,7 +5,10 @@ import {
   MidiMessage,
 } from '@midi-structor/core'
 import { ControllerWidget } from '../../ControllerWidget'
-import { PrimitiveAtom } from 'jotai'
+import {
+  MIDIStructorUIWidgets,
+  MIDIStructorUIWidgetsUpdate,
+} from '../MIDIStructorUI'
 
 export type UIMessageStore<A> = Record<string, A>
 
@@ -16,9 +19,10 @@ export type UIStore<A> = (name: string) => {
 
 export type ControllerUIDevice<A, Widgets extends Array<ControllerWidget>> = {
   controller: ControllerDevice<Widgets>
-  Component: (
-    controller: PrimitiveAtom<ConfiguredController>,
-    device: ControllerUIDevice<A, Widgets>
+  component: (
+    controller: ConfiguredController,
+    device: ControllerUIDevice<A, Widgets>,
+    setWidgets: (w: MIDIStructorUIWidgets) => void
   ) => React.ReactElement
   useStore: UIStore<A>
 }
@@ -41,8 +45,7 @@ const dummyStore =
 
 const emptyDevice: ControllerUIDevice<{}, []> = {
   controller: ControllerDevice.empty,
-  Component: (c: PrimitiveAtom<ConfiguredController>) =>
-    React.createElement('div'),
+  component: (c: ConfiguredController) => React.createElement('div'),
   useStore: dummyStore<{}>(),
 }
 

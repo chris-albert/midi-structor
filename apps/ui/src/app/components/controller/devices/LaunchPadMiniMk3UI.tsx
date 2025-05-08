@@ -240,12 +240,11 @@ const useStore: UIStore<LaunchPadMiniMessage> = (name) => {
 
 export const LaunchPadMiniMk3UI = ControllerUIDevice.of({
   controller: LaunchPadMiniMk3.device,
-  Component: (configuredController, device) => {
-    const controller = ConfiguredController.useController(configuredController)
+  component: (configuredController, device) => {
     return (
       <ControllerGridComponent
         controllerUI={controllerUI}
-        controller={controller.controller}
+        controller={configuredController}
         device={device}
       />
     )
