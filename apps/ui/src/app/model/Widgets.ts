@@ -1,12 +1,12 @@
-import { Schema } from 'effect'
-import { AllMidiStructorWidgets } from '@midi-structor/core'
+import {
+  MIDIStructorUIWidget,
+  MIDIStructorUIWidgets,
+  MIDIStructorUIWidgetsUpdate,
+} from '@midi-structor/core'
 
-export const Widget = AllMidiStructorWidgets.schema
-export type Widget = typeof Widget.Type
+export type Widget = MIDIStructorUIWidget
 
-export const Widgets = Schema.Array(Widget)
-
-export type Widgets = Schema.Schema.Type<typeof Widgets>
+export type Widgets = MIDIStructorUIWidgets
 
 type WidgetsUpdate = (w: Widgets) => Widgets
 

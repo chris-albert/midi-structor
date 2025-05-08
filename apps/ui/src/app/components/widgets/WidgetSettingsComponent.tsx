@@ -6,7 +6,6 @@ import {
   removeWidget,
   replaceWidget,
   Widget,
-  Widgets,
 } from '../../model/Widgets'
 import { Box, Button, Card, CardContent, CardHeader } from '@mui/material'
 import { JSONEditor } from '../JSONEditor'
@@ -16,18 +15,22 @@ import ArrowLeftIcon from '@mui/icons-material/ArrowLeftOutlined'
 import ContentCopyIcon from '@mui/icons-material/ContentCopy'
 import ArrowRightIcon from '@mui/icons-material/ArrowRightOutlined'
 import DeleteIcon from '@mui/icons-material/Delete'
-import { AllMidiStructorWidgets, SchemaHelper } from '@midi-structor/core'
+import {
+  AllMidiStructorWidgets,
+  MIDIStructorUIWidgetsUpdate,
+  SchemaHelper,
+} from '@midi-structor/core'
 import CloseIcon from '@mui/icons-material/Close'
 
 export type WidgetSettingsComponentProps = {
   widget: Widget
-  setWidgets: (w: (ws: Widgets) => Widgets) => void
+  updateWidgets: MIDIStructorUIWidgetsUpdate
   onClose: () => void
 }
 
 export const WidgetSettingsComponent: React.FC<
   WidgetSettingsComponentProps
-> = ({ widget, setWidgets, onClose }) => {
+> = ({ widget, updateWidgets, onClose }) => {
   const [settings, setSettings] = React.useState(
     SchemaHelper.encode(AllMidiStructorWidgets.schema, widget)
   )
@@ -37,7 +40,7 @@ export const WidgetSettingsComponent: React.FC<
       schema: AllMidiStructorWidgets.schema,
       str: settings,
       ok: (newWidget) => {
-        setWidgets(replaceWidget(widget, newWidget))
+        updateWidgets(replaceWidget(widget, newWidget))
         toast.success('Widget saved')
       },
       error: (msg) => {
@@ -70,28 +73,28 @@ export const WidgetSettingsComponent: React.FC<
           <Box>
             <IconButton
               onClick={() => {
-                setWidgets(removeWidget(widget))
+                updateWidgets(removeWidget(widget))
               }}
               aria-label='Remove Widget'>
               <DeleteIcon />
             </IconButton>
             <IconButton
               onClick={() => {
-                setWidgets(duplicateWidget(widget))
+                updateWidgets(duplicateWidget(widget))
               }}
               aria-label='Duplicate'>
               <ContentCopyIcon />
             </IconButton>
             <IconButton
               onClick={() => {
-                setWidgets(moveLeftWidget(widget))
+                updateWidgets(moveLeftWidget(widget))
               }}
               aria-label='Move Left'>
               <ArrowLeftIcon />
             </IconButton>
             <IconButton
               onClick={() => {
-                setWidgets(moveRightWidget(widget))
+                updateWidgets(moveRightWidget(widget))
               }}
               aria-label='Move Right'>
               <ArrowRightIcon />

@@ -21,8 +21,8 @@ export type MIDIStructorUIWidgets = ControllerWidgetsType<
 >
 
 export type MIDIStructorUIWidgetsUpdate = (
-  w: MIDIStructorUIWidgets
-) => MIDIStructorUIWidgets
+  wu: (w: MIDIStructorUIWidgets) => MIDIStructorUIWidgets
+) => void
 
 export type MIDIStructorUIWidget = ElementType<MIDIStructorUIWidgets>
 

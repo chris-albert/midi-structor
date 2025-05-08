@@ -83,10 +83,7 @@ export const WidgetComponent: React.FC<WidgetComponentProps> = ({
           }}>
           <WidgetSettingsComponent
             widget={widget as Widget}
-            setWidgets={(w) => {
-              // updateWidgets(w)
-              console.log('edit widget', w)
-            }}
+            updateWidgets={updateWidgets}
             onClose={() => setSettingsOpen((s) => !s)}
           />
         </Drawer>
