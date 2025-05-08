@@ -5,11 +5,17 @@ import {
   ConfiguredController,
   MidiEmitter,
   MidiMessage,
+  MIDIStructorUIWidgetsUpdate,
+  SchemaHelper,
+  AllMidiStructorWidgets,
+  ControllerConfig,
 } from '@midi-structor/core'
 import { MidiStructorComponent } from './MidiStructorComponent'
 import { Box } from '@mui/material'
 import { MidiStructorEditWidgets } from './MidiStructorEditWidgets'
 import { PrimitiveAtom } from 'jotai'
+import { Either, Schema } from 'effect'
+import { toast } from 'react-toastify'
 
 type MIDIStructorDeviceUIComponentProps = {
   configuredController: PrimitiveAtom<ConfiguredController>
@@ -30,6 +36,23 @@ const MIDIStructorDeviceUIComponent: React.FC<
   }
   const [editWidgets, setEditWidgets] = React.useState(false)
 
+  const updateWidgets: MIDIStructorUIWidgetsUpdate = (widgets) => {
+    // @ts-ignore
+    const updated = widgets(controller.config.widgets)
+    const stringWidgets = SchemaHelper.encode(
+      Schema.Struct({
+        widgets: Schema.Array(AllMidiStructorWidgets.schema),
+      }),
+      { widgets: updated }
+    )
+    Either.match(ControllerConfig.parse(stringWidgets, MIDIStructorUI.device), {
+      onRight: (widgets) => {
+        controller.setConfig(widgets)
+      },
+      onLeft: (error) => toast.error(error),
+    })
+  }
+
   return (
     <Box>
       <MidiStructorEditWidgets
@@ -40,10 +63,7 @@ const MIDIStructorDeviceUIComponent: React.FC<
         editWidgets={editWidgets}
         store={store}
         midiEmitter={midiEmitter}
-        updateWidgets={(widgets) => {
-          console.log('updateWidgets', widgets)
-          return widgets
-        }}
+        updateWidgets={updateWidgets}
       />
     </Box>
   )

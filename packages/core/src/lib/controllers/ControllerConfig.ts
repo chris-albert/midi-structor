@@ -3,13 +3,15 @@ import { MidiTarget } from '../midi/MidiTarget'
 import _ from 'lodash'
 import { ResolvedControllerWidget } from './ControllerWidget'
 import { ControllerDevice } from './devices/ControllerDevice'
+import { SchemaHelper } from '../util/SchemaHelper'
 
 export const ControllerConfigSchema = Schema.Struct({
   widgets: Schema.Array(Schema.Any),
 })
 
-const collectTargets = (widgets: Array<ResolvedControllerWidget>): Array<MidiTarget> =>
-  widgets.flatMap((w) => w.targets())
+const collectTargets = (
+  widgets: Array<ResolvedControllerWidget>
+): Array<MidiTarget> => widgets.flatMap((w) => w.targets())
 
 const duplicateTargets = (
   config: ControllerConfig,
@@ -53,23 +55,21 @@ const schema = (device: ControllerDevice): Schema.Schema<ControllerConfig> =>
     widgets: Schema.Array(device.widgets.schema),
   })
 
-const parse = (str: string, device: ControllerDevice): Either.Either<ControllerConfig, string> => {
-  const decoded = Schema.decodeUnknownEither(Schema.parseJson(schema(device)))(str)
-  return Either.flatMap(
-    Either.mapLeft(decoded, (p) => {
-      console.error('error decoding', p)
-      return `${p}`
-    }),
-    (c) => validate(c, device)
-  )
-}
-
-const stringify = (config: ControllerConfig, device: ControllerDevice): string => {
-  return Option.match(Schema.encodeOption(schema(device))(config), {
-    onSome: (c) => JSON.stringify(c, null, 2),
-    onNone: () => 'Error decoding controller config',
+const parse = (
+  str: string,
+  device: ControllerDevice
+): Either.Either<ControllerConfig, string> =>
+  SchemaHelper.decodeString({
+    schema: schema(device),
+    str,
+    ok: (c) => validate(c, device),
+    error: (e) => Either.left(e),
   })
-}
+
+const stringify = (
+  config: ControllerConfig,
+  device: ControllerDevice
+): string => SchemaHelper.encode(schema(device), config)
 
 const empty = (): ControllerConfig => ({
   widgets: [],

@@ -1,8 +1,9 @@
 import {
   MIDIStructorUIWidget,
   MIDIStructorUIWidgets,
-  MIDIStructorUIWidgetsUpdate,
 } from '@midi-structor/core'
+
+import _ from 'lodash'
 
 export type Widget = MIDIStructorUIWidget
 
@@ -13,7 +14,7 @@ type WidgetsUpdate = (w: Widgets) => Widgets
 export const replaceWidget =
   (origWidget: Widget, updatedWidget: Widget): WidgetsUpdate =>
   (w) =>
-    w.filter((ww) => (ww === origWidget ? updatedWidget : ww))
+    w.map((ww) => (_.isEqual(ww, origWidget) ? updatedWidget : ww))
 
 export const addWidget =
   (widget: Widget): WidgetsUpdate =>
