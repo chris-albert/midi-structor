@@ -9,16 +9,20 @@ import {
 import { MidiStructorComponent } from './MidiStructorComponent'
 import { Box } from '@mui/material'
 import { MidiStructorEditWidgets } from './MidiStructorEditWidgets'
+import { PrimitiveAtom } from 'jotai'
 
 type MIDIStructorDeviceUIComponentProps = {
-  configuredController: ConfiguredController
+  configuredController: PrimitiveAtom<ConfiguredController>
 }
 
 const MIDIStructorDeviceUIComponent: React.FC<
   MIDIStructorDeviceUIComponentProps
 > = ({ configuredController }) => {
-  const listener = ConfiguredController.useVirtualListener(configuredController)
-  const store = MIDIStructorUI.useStore(configuredController.name).useGet()
+  const controller = ConfiguredController.useController(configuredController)
+  const listener = ConfiguredController.useVirtualListener(
+    controller.controller
+  )
+  const store = MIDIStructorUI.useStore(controller.name).useGet()
   const midiEmitter: MidiEmitter = {
     send: (m: MidiMessage) => {
       listener.emit(MidiMessage.raw(m))
@@ -47,7 +51,7 @@ const MIDIStructorDeviceUIComponent: React.FC<
 
 export const MIDIStructorDeviceUI = ControllerUIDevice.of({
   controller: MIDIStructorUI.device,
-  component: (configuredController) => {
+  Component: (configuredController) => {
     return (
       <MIDIStructorDeviceUIComponent
         configuredController={configuredController}

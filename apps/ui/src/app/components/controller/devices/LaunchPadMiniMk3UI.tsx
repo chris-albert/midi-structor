@@ -13,6 +13,7 @@ import {
   ControllerUIDevice,
   UIMessageStore,
   UIStore,
+  ConfiguredController,
 } from '@midi-structor/core'
 import { ControllerPad, ControllerUI, midiFromRowCol } from '../ControllerUI'
 import React from 'react'
@@ -239,11 +240,12 @@ const useStore: UIStore<LaunchPadMiniMessage> = (name) => {
 
 export const LaunchPadMiniMk3UI = ControllerUIDevice.of({
   controller: LaunchPadMiniMk3.device,
-  component: (configuredController, device) => {
+  Component: (configuredController, device) => {
+    const controller = ConfiguredController.useController(configuredController)
     return (
       <ControllerGridComponent
         controllerUI={controllerUI}
-        controller={configuredController}
+        controller={controller.controller}
         device={device}
       />
     )
