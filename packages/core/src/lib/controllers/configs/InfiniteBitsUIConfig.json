@@ -1,214 +1,214 @@
-  {
-    "widgets": [
-      {
-        "_tag": "play-stop",
-        "target": {
+{
+  "widgets": [
+    {
+      "_tag": "play-stop",
+      "target": {
+        "_tag": "CC",
+        "controllerNumber": 1
+      },
+      "playColor": "00ff00",
+      "stopColor": "ff0000",
+      "label": "Play/Stop 2"
+    },
+    {
+      "_tag": "spacer",
+      "width": 300,
+      "visible": false
+    },
+    {
+      "_tag": "beats",
+      "targets": [
+        {
           "_tag": "CC",
-          "controllerNumber": 1
+          "controllerNumber": 10
         },
-        "playColor": "00FF00",
-        "stopColor": "FF0000",
-        "label": "Play/Stop"
-      },
-      {
-        "_tag": "spacer",
-        "width": 300,
-        "visible": false
-      },
-      {
-        "_tag": "beats",
-        "targets": [
-          {
-            "_tag": "CC",
-            "controllerNumber": 10
-          },
-          {
-            "_tag": "CC",
-            "controllerNumber": 11
-          },
-          {
-            "_tag": "CC",
-            "controllerNumber": 12
-          },
-          {
-            "_tag": "CC",
-            "controllerNumber": 13
-          },
-          {
-            "_tag": "CC",
-            "controllerNumber": 14
-          },
-          {
-            "_tag": "CC",
-            "controllerNumber": 15
-          },
-          {
-            "_tag": "CC",
-            "controllerNumber": 16
-          },
-          {
-            "_tag": "CC",
-            "controllerNumber": 17
-          }
-        ],
-        "oneColor": "00FF00",
-        "restColor": "FF0000"
-      },
-      {
-        "_tag": "active-clip",
-        "target": {
+        {
           "_tag": "CC",
-          "controllerNumber": 18
+          "controllerNumber": 11
         },
-        "trackName": "Songs",
-        "label": "Active"
-      },
-      {
-        "_tag": "tempo",
-        "target": {
+        {
           "_tag": "CC",
-          "controllerNumber": 2
+          "controllerNumber": 12
         },
-        "label": "Tempo"
-      },
-      {
-        "_tag": "time-signature",
-        "target": {
+        {
           "_tag": "CC",
-          "controllerNumber": 3
+          "controllerNumber": 13
         },
-        "label": "Time Sig"
-      },
-      {
-        "_tag": "beat",
-        "target": {
+        {
           "_tag": "CC",
-          "controllerNumber": 4
+          "controllerNumber": 14
         },
-        "label": "Beat"
-      },
-      {
-        "_tag": "spacer",
-        "width": 0,
-        "visible": false,
-        "isLineBreaking": true
-      },
-      {
-        "_tag": "nav-clips",
-        "trackName": "Songs",
-        "sort": "order",
-        "targets": [
-          {
-            "_tag": "CC",
-            "controllerNumber": 20
-          },
-          {
-            "_tag": "CC",
-            "controllerNumber": 21
-          },
-          {
-            "_tag": "CC",
-            "controllerNumber": 22
-          },
-          {
-            "_tag": "CC",
-            "controllerNumber": 23
-          },
-          {
-            "_tag": "CC",
-            "controllerNumber": 24
-          },
-          {
-            "_tag": "CC",
-            "controllerNumber": 25
-          },
-          {
-            "_tag": "CC",
-            "controllerNumber": 26
-          }
-        ],
-        "label": "Songs"
-      },
-      {
-        "_tag": "track-sections",
-        "trackName": "Parts",
-        "parentTrackName": "Songs",
-        "targets": [
-          {
-            "_tag": "CC",
-            "controllerNumber": 30
-          },
-          {
-            "_tag": "CC",
-            "controllerNumber": 31
-          },
-          {
-            "_tag": "CC",
-            "controllerNumber": 32
-          },
-          {
-            "_tag": "CC",
-            "controllerNumber": 33
-          },
-          {
-            "_tag": "CC",
-            "controllerNumber": 34
-          },
-          {
-            "_tag": "CC",
-            "controllerNumber": 35
-          },
-          {
-            "_tag": "CC",
-            "controllerNumber": 36
-          },
-          {
-            "_tag": "CC",
-            "controllerNumber": 37
-          }
-        ],
-        "label": "Parts"
-      },
-      {
-        "_tag": "spacer",
-        "width": 0,
-        "visible": false,
-        "isLineBreaking": true
-      },
-      {
-        "_tag": "button",
-        "target": {
+        {
           "_tag": "CC",
-          "controllerNumber": 100
+          "controllerNumber": 15
         },
-        "color": "FF0000",
-        "label": "Test",
-        "isFlashing": false,
-        "midi": [
-          {
-            "type": "cc",
-            "controllerNumber": 10,
-            "data": 10,
-            "channel": 1
-          }
-        ],
-        "text": {
-          "content": "HI"
+        {
+          "_tag": "CC",
+          "controllerNumber": 16
+        },
+        {
+          "_tag": "CC",
+          "controllerNumber": 17
         }
+      ],
+      "oneColor": "00ff00",
+      "restColor": "ff0000"
+    },
+    {
+      "_tag": "active-clip",
+      "target": {
+        "_tag": "CC",
+        "controllerNumber": 18
       },
-      {
-        "_tag": "knob",
-        "target": {
+      "trackName": "Songs",
+      "label": "Active"
+    },
+    {
+      "_tag": "tempo",
+      "target": {
+        "_tag": "CC",
+        "controllerNumber": 2
+      },
+      "label": "Tempo"
+    },
+    {
+      "_tag": "time-signature",
+      "target": {
+        "_tag": "CC",
+        "controllerNumber": 3
+      },
+      "label": "Time Sig"
+    },
+    {
+      "_tag": "beat",
+      "target": {
+        "_tag": "CC",
+        "controllerNumber": 4
+      },
+      "label": "Beat"
+    },
+    {
+      "_tag": "spacer",
+      "width": 0,
+      "isLineBreaking": true,
+      "visible": false
+    },
+    {
+      "_tag": "nav-clips",
+      "targets": [
+        {
           "_tag": "CC",
-          "controllerNumber": 101
+          "controllerNumber": 20
         },
-        "color": "0000BB",
-        "label": "My Knob",
-        "midi": {
-          "_tag": "midi-note-vary-velocity",
-          "note": 50,
+        {
+          "_tag": "CC",
+          "controllerNumber": 21
+        },
+        {
+          "_tag": "CC",
+          "controllerNumber": 22
+        },
+        {
+          "_tag": "CC",
+          "controllerNumber": 23
+        },
+        {
+          "_tag": "CC",
+          "controllerNumber": 24
+        },
+        {
+          "_tag": "CC",
+          "controllerNumber": 25
+        },
+        {
+          "_tag": "CC",
+          "controllerNumber": 26
+        }
+      ],
+      "trackName": "Songs",
+      "sort": "order",
+      "label": "Songs"
+    },
+    {
+      "_tag": "track-sections",
+      "targets": [
+        {
+          "_tag": "CC",
+          "controllerNumber": 30
+        },
+        {
+          "_tag": "CC",
+          "controllerNumber": 31
+        },
+        {
+          "_tag": "CC",
+          "controllerNumber": 32
+        },
+        {
+          "_tag": "CC",
+          "controllerNumber": 33
+        },
+        {
+          "_tag": "CC",
+          "controllerNumber": 34
+        },
+        {
+          "_tag": "CC",
+          "controllerNumber": 35
+        },
+        {
+          "_tag": "CC",
+          "controllerNumber": 36
+        },
+        {
+          "_tag": "CC",
+          "controllerNumber": 37
+        }
+      ],
+      "trackName": "Parts",
+      "parentTrackName": "Songs",
+      "label": "Parts"
+    },
+    {
+      "_tag": "spacer",
+      "width": 0,
+      "isLineBreaking": true,
+      "visible": false
+    },
+    {
+      "_tag": "button",
+      "target": {
+        "_tag": "CC",
+        "controllerNumber": 100
+      },
+      "color": "ff0000",
+      "isFlashing": false,
+      "midi": [
+        {
+          "type": "cc",
+          "controllerNumber": 10,
+          "data": 10,
           "channel": 1
         }
-      }
-    ]
-  }
+      ],
+      "text": {
+        "content": "HI"
+      },
+      "label": "Test"
+    },
+    {
+      "_tag": "knob",
+      "target": {
+        "_tag": "CC",
+        "controllerNumber": 101
+      },
+      "color": "0000bb",
+      "midi": {
+        "_tag": "midi-note-vary-velocity",
+        "note": 50,
+        "channel": 1
+      },
+      "label": "My Knob"
+    }
+  ]
+}

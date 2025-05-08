@@ -6,7 +6,9 @@ type ControllerWidgetComponentProps = {
   widget: ResolvedControllerWidget
 }
 
-const ControllerWidgetComponent: React.FC<ControllerWidgetComponentProps> = ({ widget }) => {
+const ControllerWidgetComponent: React.FC<ControllerWidgetComponentProps> = ({
+  widget,
+}) => {
   return widget.component()
 }
 
@@ -16,14 +18,12 @@ export type ControllerConfigComponentProps = {
   widgets: Array<ResolvedControllerWidget>
 }
 
-export const ControllerConfigComponent: React.FC<ControllerConfigComponentProps> = ({
-  controller,
-  name,
-  widgets,
-}) => {
+export const ControllerConfigComponent: React.FC<
+  ControllerConfigComponentProps
+> = ({ controller, name, widgets }) => {
   React.useEffect(() => {
     controller.init(widgets)
-  }, [])
+  }, [widgets])
 
   return (
     <controller

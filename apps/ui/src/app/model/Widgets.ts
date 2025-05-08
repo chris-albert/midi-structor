@@ -24,17 +24,21 @@ export const addWidget =
 export const removeWidget =
   (widget: Widget): WidgetsUpdate =>
   (w) =>
-    w.filter((ww) => ww !== widget)
+    w.filter((ww) => !_.isEqual(ww, widget))
 
 export const duplicateWidget =
   (widget: Widget): WidgetsUpdate =>
   (w) =>
-    w.flatMap((ww) => (ww === widget ? [ww, ww] : ww))
+    w.flatMap((ww) => (_.isEqual(ww, widget) ? [ww, ww] : ww))
+
+const findWidgetIndex = (widgets: Widgets, widget: Widget): number => {
+  return widgets.findIndex((w) => _.isEqual(w, widget)) || -1
+}
 
 export const moveRightWidget =
   (widget: Widget): WidgetsUpdate =>
   (widgets) => {
-    const widgetIndex = widgets.indexOf(widget)
+    const widgetIndex = findWidgetIndex(widgets, widget)
     return [
       ...widgets.slice(0, widgetIndex),
       widgets[widgetIndex + 1] as any,
@@ -46,7 +50,7 @@ export const moveRightWidget =
 export const moveLeftWidget =
   (widget: Widget): WidgetsUpdate =>
   (widgets) => {
-    const widgetIndex = widgets.indexOf(widget)
+    const widgetIndex = findWidgetIndex(widgets, widget)
     return [
       ...widgets.slice(0, widgetIndex - 1),
       widgets[widgetIndex] as any,
