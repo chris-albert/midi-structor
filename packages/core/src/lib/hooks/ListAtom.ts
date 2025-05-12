@@ -1,7 +1,7 @@
 import { useAtom, PrimitiveAtom } from 'jotai'
 
-export const useListAtom = <A>(atom: PrimitiveAtom<Array<A>>) => {
-  const [values, setValues] = useAtom<Array<A>>(atom)
+export const useListAtom = <A>(atom: PrimitiveAtom<Readonly<Array<A>>>) => {
+  const [values, setValues] = useAtom<Readonly<Array<A>>>(atom)
 
   const add = (a: A) => {
     setValues((prevValues) => [...prevValues, a])

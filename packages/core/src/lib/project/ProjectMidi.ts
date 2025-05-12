@@ -12,25 +12,25 @@ import {
 import { atom, getDefaultStore, useAtom, useAtomValue, useSetAtom } from 'jotai'
 import { atomFamily } from 'jotai/utils'
 import { AbletonUIMessage, parseAbletonUIMessage } from './AbletonUIMessage'
-import * as t from 'io-ts'
 import React from 'react'
 import { AtomStorage } from '../storage/AtomStorage'
 import { MIDIStructorUI } from '../controllers/devices/MIDIStructorUI'
+import { Schema } from 'effect'
 
 const store = getDefaultStore()
 
-export const ProjectConfig = t.type({
-  label: t.string,
-  key: t.string,
+export const ProjectConfig = Schema.Struct({
+  label: Schema.String,
+  key: Schema.String,
 })
 
-export type ProjectConfig = t.TypeOf<typeof ProjectConfig>
+export type ProjectConfig = Schema.Schema.Type<typeof ProjectConfig>
 
-export const ProjectsConfig = t.type({
-  projects: t.array(ProjectConfig),
+export const ProjectsConfig = Schema.Struct({
+  projects: Schema.Array(ProjectConfig),
 })
 
-export type ProjectsConfig = t.TypeOf<typeof ProjectsConfig>
+export type ProjectsConfig = Schema.Schema.Type<typeof ProjectsConfig>
 
 const defaultProjectsConfig: () => ProjectsConfig = () => ({
   projects: [

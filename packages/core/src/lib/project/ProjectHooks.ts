@@ -1,4 +1,10 @@
-import { getDefaultStore, useAtom, useAtomValue, useSetAtom, WritableAtom } from 'jotai'
+import {
+  getDefaultStore,
+  useAtom,
+  useAtomValue,
+  useSetAtom,
+  WritableAtom,
+} from 'jotai'
 import { ProjectImportStatus, ProjectMidi } from './ProjectMidi'
 import React from 'react'
 import _ from 'lodash'
@@ -10,10 +16,16 @@ import { useListAtom } from '../hooks/ListAtom'
 const store = getDefaultStore()
 
 const isClipActive = (clip: UIClip, beat: number): boolean => {
-  return beat >= clip.startTime && (clip.endTime === undefined || beat < clip.endTime)
+  return (
+    beat >= clip.startTime &&
+    (clip.endTime === undefined || beat < clip.endTime)
+  )
 }
 
-export const searchActiveClip = (clips: Array<UIClip>, beat: number): UIClip => {
+export const searchActiveClip = (
+  clips: Array<UIClip>,
+  beat: number
+): UIClip => {
   return _.find(clips, (clip) => isClipActive(clip, beat)) as UIClip
 }
 
@@ -32,9 +44,13 @@ const useArrangementAtom = () => {
 const useArrangement = () => useAtomValue(useArrangementAtom())
 
 const useTracksAtom = () => {
-  const arrangement: WritableAtom<UIArrangement, [UIArrangement], void> = useArrangementAtom()
+  const arrangement: WritableAtom<UIArrangement, [UIArrangement], void> =
+    useArrangementAtom()
 
-  return React.useMemo(() => focusAtom(arrangement, (o) => o.prop('tracks')), [arrangement])
+  return React.useMemo(
+    () => focusAtom(arrangement, (o) => o.prop('tracks')),
+    [arrangement]
+  )
 }
 
 const useTracks = () => useAtomValue(useTracksAtom())
@@ -64,7 +80,8 @@ const useActiveProjectLabel = () => {
 
 const useProjectsListAtom = () => {
   const projects = React.useMemo(
-    () => focusAtom(ProjectMidi.atoms.projectsConfig, (o) => o.prop('projects')),
+    () =>
+      focusAtom(ProjectMidi.atoms.projectsConfig, (o) => o.prop('projects')),
     [ProjectMidi.atoms.projectsConfig]
   )
   return useListAtom(projects)
@@ -79,10 +96,12 @@ const useOnStatusChange = (f: (status: ProjectImportStatus) => void) => {
 
 const useBeat = () => useAtomValue(ProjectMidi.atoms.realTime.beats)
 const useBarBeats = () => useAtomValue(ProjectMidi.atoms.realTime.barBeats)
-const useTimeSignature = () => useAtomValue(ProjectMidi.atoms.realTime.timeSignature)
+const useTimeSignature = () =>
+  useAtomValue(ProjectMidi.atoms.realTime.timeSignature)
 const useTempo = () => useAtomValue(ProjectMidi.atoms.realTime.tempo)
 const useIsPlaying = () => useAtomValue(ProjectMidi.atoms.realTime.isPlaying)
-const useMetronomeState = () => useAtomValue(ProjectMidi.atoms.realTime.metronomeState)
+const useMetronomeState = () =>
+  useAtomValue(ProjectMidi.atoms.realTime.metronomeState)
 const getMetronomeState = () => {
   return store.get(ProjectMidi.atoms.realTime.metronomeState)
 }
