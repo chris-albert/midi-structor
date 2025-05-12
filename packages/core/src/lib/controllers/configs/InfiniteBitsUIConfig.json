@@ -11,6 +11,15 @@
       "label": "Play/Stop"
     },
     {
+      "_tag": "metronome-control",
+      "target": {
+        "_tag": "CC",
+        "controllerNumber": 102
+      },
+      "color": "f5e342",
+      "label": "Metronome"
+    },
+    {
       "_tag": "spacer",
       "width": 300,
       "visible": false

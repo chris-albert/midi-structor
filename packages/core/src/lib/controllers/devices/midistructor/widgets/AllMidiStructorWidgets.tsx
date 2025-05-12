@@ -10,6 +10,7 @@ import { TrackSectionsWidgetComponent } from './TrackSectionsWidgetComponent'
 import { SpacerWidgetComponent } from './SpacerWidgetComponent'
 import { ButtonWidgetComponent } from './ButtonWidgetComponent'
 import { KnobWidgetComponent } from './KnobWidgetComponent'
+import { MetronomeControlWidgetComponent } from './MetronomeControlWidgetComponent'
 
 export const AllMidiStructorWidgets = MIDIStructorWidgets([
   PlayStopWidgetComponent,
@@ -23,4 +24,5 @@ export const AllMidiStructorWidgets = MIDIStructorWidgets([
   SpacerWidgetComponent,
   ButtonWidgetComponent,
   KnobWidgetComponent,
+  MetronomeControlWidgetComponent,
 ])

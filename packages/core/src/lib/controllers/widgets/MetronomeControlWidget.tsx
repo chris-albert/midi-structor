@@ -24,7 +24,12 @@ export const MetronomeControlWidget = ControllerWidget.of({
         isFlashing={metronomeState}
         color={color}
         target={target}
-        onClick={() => dawEmitter.send(TX_MESSAGE.metronome(!ProjectHooks.getMetronomeState()))}
+        onClick={() =>
+          dawEmitter.send(
+            TX_MESSAGE.metronome(!ProjectHooks.getMetronomeState())
+          )
+        }
+        options={{ metronomeState }}
       />
     )
   },
