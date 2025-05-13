@@ -33,7 +33,9 @@ makeicns -512 midi-structor-logo-512.png
 Initialize Messages
 ```mermaid
 sequenceDiagram
-    MIDI Structor->>Ableton: ready
+    MIDI Structor->>Ableton: init
+    Ableton->>MIDI Structor: init-ack [projectName: string]
+     MIDI Structor->>Ableton: init-ready [Array<string>]
     Ableton->>MIDI Structor: init-project
     loop Each Clip
         Ableton->>MIDI Structor: init-clip

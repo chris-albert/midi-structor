@@ -10,6 +10,15 @@ type MessageParser = {
 }
 
 const RX_STATUS: Record<string, MessageParser> = {
+  INIT_ACK: {
+    statusByte: 0x02,
+    parse: (input: Array<any>) => {
+      return {
+        type: 'init-ack',
+        projectName: input[0],
+      }
+    },
+  },
   INIT: {
     statusByte: 0x03,
     parse: (input: Array<any>) => {
@@ -163,6 +172,11 @@ export type IsPlayingMessage = {
   value: boolean
 }
 
+export type InitAckMessage = {
+  type: 'init-ack'
+  projectName: string
+}
+
 export type InitProjectMessage = {
   type: 'init-project'
   tracksCount: number
@@ -209,6 +223,7 @@ export type LoopStateMessage = {
 
 export type AbletonUIMessage =
   | BeatMessage
+  | InitAckMessage
   | InitProjectMessage
   | InitTrackMessage
   | InitClipMessage
@@ -267,6 +282,19 @@ export const TX_MESSAGE = {
       manufacturer: MANUFACTURER_ID,
       body: [statusByte, ...charCodesFromString(body.toString())],
     }
+  },
+  baseJSON: (statusByte: number, body: any): SysExMessage => {
+    return {
+      type: 'sysex',
+      manufacturer: MANUFACTURER_ID,
+      body: [statusByte, ...charCodesFromString(JSON.stringify(body))],
+    }
+  },
+  init: () => {
+    return TX_MESSAGE.base(0x40, 1)
+  },
+  initReady: (tracks: Array<string>) => {
+    return TX_MESSAGE.baseJSON(0x41, { tracks })
   },
   play: () => {
     return TX_MESSAGE.base(0x50, 1)

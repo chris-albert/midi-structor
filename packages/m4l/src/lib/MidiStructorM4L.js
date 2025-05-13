@@ -3,6 +3,7 @@ var MANUFACTURER_ID = 0x02
 var EMIT_MILLIS = 10
 
 var STATUS = {
+  INIT_ACK: 0x02,
   INIT: 0x03,
   DONE: 0x04,
   TRACK: 0x05,
@@ -50,6 +51,9 @@ function sysex(datas) {
 }
 
 var Message = {
+  initAck: function (projectName) {
+    return sysex([STATUS.INIT_ACK, projectName])
+  },
   init: function () {
     return sysex([STATUS.INIT])
   },
@@ -60,7 +64,15 @@ var Message = {
     return sysex([STATUS.TRACK, name, trackIndex, color])
   },
   clip: function (name, trackIndex, clipIndex, color, startTime, endTime) {
-    return sysex([STATUS.CLIP, name, trackIndex, clipIndex, color, startTime, endTime])
+    return sysex([
+      STATUS.CLIP,
+      name,
+      trackIndex,
+      clipIndex,
+      color,
+      startTime,
+      endTime,
+    ])
   },
   beat: function (value) {
     return sysex([STATUS.BEAT, value])
@@ -78,7 +90,13 @@ var Message = {
     return sysex([STATUS.IS_PLAYING, playing])
   },
   cue: function (cuePoint) {
-    return sysex([STATUS.CUE, cuePoint.id, cuePoint.name, cuePoint.time, cuePoint.index])
+    return sysex([
+      STATUS.CUE,
+      cuePoint.id,
+      cuePoint.name,
+      cuePoint.time,
+      cuePoint.index,
+    ])
   },
   metroState: function (state) {
     return sysex([STATUS.METRO_STATE, state])
@@ -127,12 +145,10 @@ function forEach(arr, func) {
 }
 
 function metronomeState(state) {
-  post('metronomeState', state[1], '\n')
   outlet(0, Message.metroState(state[1]))
 }
 
 function loopState(state) {
-  post('loopState', state[1], '\n')
   outlet(0, Message.loop(state[1]))
 }
 
@@ -145,10 +161,21 @@ function setupObservers() {
   loopObserver.property = 'loop'
 }
 
+function initAck() {
+  var api = new LiveAPI(function () {}, 'live_set')
+  projectName = api.get('name')
+  post('initAck', projectName, '\n')
+  outlet(0, Message.initAck(projectName))
+}
+
 function init() {
+  post('nothing to do here right now\n')
+}
+
+function initProject() {
   setupObservers()
 
-  post('Parsing tracks\n')
+  post('Init Project\n')
   tracks = parseTracks()
   cues = parseCues()
 
@@ -166,7 +193,9 @@ function emit(tracks, cues) {
 
   var task = new Task(function () {
     if (messages.length > 0) {
-      var percentage = Math.floor((arguments.callee.task.iterations / totalMessages) * 100) + '%'
+      var percentage =
+        Math.floor((arguments.callee.task.iterations / totalMessages) * 100) +
+        '%'
       outlet(1, percentage)
       outlet(0, messages.shift())
     } else {
@@ -190,7 +219,14 @@ function generateMessages(tracks, cues) {
   post('Processing', tracks.clips.length, 'clips \n')
   forEach(tracks.clips, function (clip) {
     messages.push(
-      Message.clip(clip.name, clip.trackIndex, clip.clipIndex, clip.color, clip.startTime, clip.endTime)
+      Message.clip(
+        clip.name,
+        clip.trackIndex,
+        clip.clipIndex,
+        clip.color,
+        clip.startTime,
+        clip.endTime
+      )
     )
   })
 

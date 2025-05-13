@@ -11,10 +11,12 @@ export const MidiRoot: React.FC<MidiRootProps> = ({}) => {
   ProjectMidi.useProjectListener()
 
   ProjectHooks.useOnStatusChange((status) => {
-    if (status === 'importing') {
-      toast.info('Importing new project.')
-    } else if (status === 'done') {
-      toast.success(`Successfully imported project!`)
+    if (status.type === 'ack') {
+      toast.info(`Initializing project ${status.projectName}.`)
+    } else if (status.type === 'importing') {
+      toast.info('Importing project.')
+    } else if (status.type === 'done') {
+      toast.success(`Successfully imported!`)
     }
   })
 

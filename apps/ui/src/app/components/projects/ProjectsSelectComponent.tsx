@@ -3,15 +3,21 @@ import { Box } from '@mui/material'
 import { SelectComponent, SelectItem } from '../SelectComponent'
 import _ from 'lodash'
 import { ProjectConfig, ProjectHooks } from '@midi-structor/core'
+import RefreshIcon from '@mui/icons-material/Refresh'
+import IconButton from '@mui/material/IconButton'
+import { useNavigate } from 'react-router-dom'
 
 export type ProjectsSelectComponentProps = {}
 
-export const ProjectsSelectComponent: React.FC<ProjectsSelectComponentProps> = ({}) => {
+export const ProjectsSelectComponent: React.FC<
+  ProjectsSelectComponentProps
+> = ({}) => {
   const setActiveProject = ProjectHooks.useSetActiveProject()
 
   const [items, setItems] = React.useState<Array<SelectItem<ProjectConfig>>>([])
   const activeProjectLabel = ProjectHooks.useActiveProjectLabel()
   const projects = ProjectHooks.useProjectsListAtom()
+  const navigate = useNavigate()
 
   React.useEffect(() => {
     setItems(
@@ -28,12 +34,21 @@ export const ProjectsSelectComponent: React.FC<ProjectsSelectComponentProps> = (
     }
   }
 
+  const onRefresh = () => {
+    navigate(0)
+  }
+
   return (
     <Box
       sx={{
         display: 'flex',
         alignItems: 'center',
       }}>
+      <IconButton
+        aria-label='refresh'
+        onClick={onRefresh}>
+        <RefreshIcon />
+      </IconButton>
       <SelectComponent
         label='Project'
         items={items}

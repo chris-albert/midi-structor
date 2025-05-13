@@ -11,11 +11,17 @@ import {
 } from './UIStateDisplay'
 import { atom, getDefaultStore, useAtom, useAtomValue, useSetAtom } from 'jotai'
 import { atomFamily } from 'jotai/utils'
-import { AbletonUIMessage, parseAbletonUIMessage } from './AbletonUIMessage'
+import {
+  AbletonUIMessage,
+  parseAbletonUIMessage,
+  TX_MESSAGE,
+} from './AbletonUIMessage'
 import React from 'react'
 import { AtomStorage } from '../storage/AtomStorage'
 import { MIDIStructorUI } from '../controllers/devices/MIDIStructorUI'
 import { Schema } from 'effect'
+import { MidiMessage } from '../midi/MidiMessage'
+import { ProjectHooks } from './ProjectHooks'
 
 const store = getDefaultStore()
 
@@ -47,21 +53,23 @@ export type TimeSignature = {
 }
 
 export type ProjectImportStatus =
-  | 'none'
-  | 'importing'
-  | 'finalizing'
-  | 'done'
-  | 'error'
+  | { type: 'none' }
+  | { type: 'ack'; projectName: string }
+  | { type: 'importing' }
+  | { type: 'finalizing' }
+  | { type: 'done' }
+  | { type: 'error'; msg: string }
 
 const atoms = {
   initArrangement: atom<InitArrangement>([]),
-  importStatus: atom<ProjectImportStatus>('none'),
+  importStatus: atom<ProjectImportStatus>({ type: 'none' }),
   projectsConfig: AtomStorage.atom<ProjectsConfig>(
     'projects-config',
     defaultProjectsConfig()
   ),
   project: {
     active: AtomStorage.atom('active-project', 'default'),
+    abletonName: atom<string | undefined>(undefined),
     arrangement: atomFamily((name: string) =>
       AtomStorage.atom<UIArrangement>(`arrangement-${name}`, emptyArrangement())
     ),
@@ -93,17 +101,22 @@ const useAbletonUIMessages = () => {
   const setMetronomeState = useSetAtom(atoms.realTime.metronomeState)
   const setLoopState = useSetAtom(atoms.realTime.loopState)
 
+  const setAbletonProjectName = useSetAtom(atoms.project.abletonName)
+
   React.useEffect(() => {
-    if (importStatus === 'finalizing') {
+    if (importStatus.type === 'finalizing') {
       const arrangement = initDone(store.get(atoms.initArrangement))
       setArrangement(arrangement)
-      setImportStatus('done')
+      setImportStatus({ type: 'done' })
     }
   }, [importStatus])
 
   const onAbletonUIMessage = (msg: AbletonUIMessage) => {
-    if (msg.type === 'init-project') {
-      setImportStatus('importing')
+    if (msg.type === 'init-ack') {
+      setImportStatus({ type: 'ack', projectName: msg.projectName })
+      setAbletonProjectName(msg.projectName)
+    } else if (msg.type === 'init-project') {
+      setImportStatus({ type: 'importing' })
       setInitArrangement(initArrangement(msg))
     } else if (msg.type === 'init-track') {
       setInitArrangement(initTrack(msg))
@@ -112,8 +125,8 @@ const useAbletonUIMessages = () => {
     } else if (msg.type === 'init-cue') {
       setInitArrangement(initCue(msg))
     } else if (msg.type === 'init-done') {
-      store.set(atoms.importStatus, 'finalizing')
-      setImportStatus('finalizing')
+      store.set(atoms.importStatus, { type: 'finalizing' })
+      setImportStatus({ type: 'finalizing' })
     } else if (msg.type === 'beat') {
       setBeats(msg.value)
     } else if (msg.type === 'sig') {
@@ -142,8 +155,19 @@ const useGlobalMidiStructorStore = () =>
 
 const useProjectListener = () => {
   const dawListener = Midi.useDawListener()
+  const dawEmitter = Midi.useDawEmitter()
   const ableton = useAbletonUIMessages()
   const onMidiStructor = useGlobalMidiStructorStore().usePut()
+
+  React.useEffect(() => {
+    dawEmitter.send(TX_MESSAGE.init())
+  }, [dawEmitter])
+
+  ProjectHooks.useOnStatusChange((status) => {
+    if (status.type === 'ack') {
+      dawEmitter.send(TX_MESSAGE.initReady([]))
+    }
+  })
 
   React.useEffect(() => {
     return dawListener.on('sysex', (sysex) => {

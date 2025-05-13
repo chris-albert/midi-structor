@@ -17,8 +17,16 @@ function getApi() {
 }
 
 var RX_MESSAGE = {
+  0x40: function () {
+    post('init\n')
+    outlet(0, 'initAck')
+  },
+  0x41: function () {
+    post('initReady\n')
+    outlet(0, 'initProject')
+  },
   0x50: function () {
-    post('starting')
+    post('starting\n')
     var api = getApi()
     api.call('start_playing')
   },
