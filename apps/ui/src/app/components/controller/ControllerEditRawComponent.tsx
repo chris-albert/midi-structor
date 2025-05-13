@@ -53,7 +53,7 @@ export const ControllerEditRawComponent: React.FC<
       />
       <CardContent>
         <JSONEditor
-          height='800px'
+          height='500px'
           readonly={false}
           onChange={setRawControllerConfig}
           value={rawControllerConfig}

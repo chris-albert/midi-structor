@@ -6,7 +6,7 @@ export type ControllersPageProps = {}
 
 export const ControllersPage: React.FC<ControllersPageProps> = ({}) => {
   return (
-    <Box sx={{ height: '100%' }}>
+    <Box>
       <ControllersComponent />
     </Box>
   )

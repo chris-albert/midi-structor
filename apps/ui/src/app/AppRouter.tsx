@@ -1,7 +1,6 @@
 import React from 'react'
 import { BrowserRouter, HashRouter, Route, Routes } from 'react-router-dom'
 import { Layout } from './pages/Layout'
-import { IndexPage } from './pages/IndexPage'
 import { ArrangementComponent } from './components/arrangement/ArrangementComponent'
 import { MidiPage } from './pages/MidiPage'
 import { ControllersPage } from './pages/ControllersPage'
