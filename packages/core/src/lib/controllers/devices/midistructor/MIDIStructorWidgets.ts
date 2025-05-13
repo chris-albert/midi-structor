@@ -3,9 +3,8 @@ import _ from 'lodash'
 import React from 'react'
 import { MIDIStructorPad, MIDIStructorStore } from '../MIDIStructorUI'
 import { MidiTarget } from '../../../midi/MidiTarget'
-import { Schema, Option, Either } from 'effect'
+import { Schema } from 'effect'
 import { ControllerWidgetType } from '../../ControllerWidget'
-import { ParseError } from 'effect/ParseResult'
 
 const state = (store: MIDIStructorStore) => {
   const one = (target: MidiTarget): MIDIStructorPad => {
