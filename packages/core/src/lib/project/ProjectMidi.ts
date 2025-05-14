@@ -20,7 +20,6 @@ import React from 'react'
 import { AtomStorage } from '../storage/AtomStorage'
 import { MIDIStructorUI } from '../controllers/devices/MIDIStructorUI'
 import { Schema } from 'effect'
-import { MidiMessage } from '../midi/MidiMessage'
 import { ProjectHooks } from './ProjectHooks'
 
 const store = getDefaultStore()
@@ -28,6 +27,12 @@ const store = getDefaultStore()
 export const ProjectConfig = Schema.Struct({
   label: Schema.String,
   key: Schema.String,
+  style: Schema.Struct({
+    accent: Schema.Struct({
+      color1: Schema.String,
+      color2: Schema.String,
+    }),
+  }),
 })
 
 export type ProjectConfig = Schema.Schema.Type<typeof ProjectConfig>
@@ -38,13 +43,19 @@ export const ProjectsConfig = Schema.Struct({
 
 export type ProjectsConfig = Schema.Schema.Type<typeof ProjectsConfig>
 
-const defaultProjectsConfig: () => ProjectsConfig = () => ({
-  projects: [
-    {
-      label: 'Default',
-      key: 'default',
+const defaultProjectConfig = (): ProjectConfig => ({
+  label: 'Default',
+  key: 'default',
+  style: {
+    accent: {
+      color1: '#6a11cb',
+      color2: '#2575fc',
     },
-  ],
+  },
+})
+
+const defaultProjectsConfig: () => ProjectsConfig = () => ({
+  projects: [defaultProjectConfig()],
 })
 
 export type TimeSignature = {
@@ -184,5 +195,7 @@ const useProjectListener = () => {
 export const ProjectMidi = {
   useProjectListener,
   useGlobalMidiStructorStore,
+  defaultProjectsConfig,
+  defaultProjectConfig,
   atoms,
 }

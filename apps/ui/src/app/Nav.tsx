@@ -5,22 +5,32 @@ import MenuIcon from '@mui/icons-material/Menu'
 import { NavLinkItem } from './components/NavLinkItem'
 import { ProjectsSelectComponent } from './components/projects/ProjectsSelectComponent'
 import RefreshIcon from '@mui/icons-material/Refresh'
+import { ProjectHooks } from '@midi-structor/core'
 
 export type NavProps = {}
 
 export const Nav: React.FC<NavProps> = () => {
   const [menuOpen, setMenuOpen] = React.useState(false)
+  const projectStyle = ProjectHooks.useProjectStyle()
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position='static'>
+      <AppBar
+        position='static'
+        sx={{
+          background: projectStyle.horizontalGradient,
+        }}>
         <Drawer
           anchor='left'
           open={menuOpen}
           onClose={() => setMenuOpen(false)}>
           <Box
             role='presentation'
-            sx={{ width: 200 }}>
+            sx={{
+              width: 200,
+              height: '100%',
+              background: projectStyle.leftVerticalGradient,
+            }}>
             <List>
               <NavLinkItem
                 path='/'
@@ -40,6 +50,11 @@ export const Nav: React.FC<NavProps> = () => {
               <NavLinkItem
                 path='/arrangement'
                 label='Arrangement'
+                onClick={() => setMenuOpen(false)}
+              />
+              <NavLinkItem
+                path='/settings'
+                label='Settings'
                 onClick={() => setMenuOpen(false)}
               />
             </List>

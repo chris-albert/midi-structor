@@ -2,7 +2,7 @@ import React from 'react'
 import { Box } from '@mui/material'
 import { SelectComponent, SelectItem } from '../SelectComponent'
 import _ from 'lodash'
-import { ProjectConfig, ProjectHooks } from '@midi-structor/core'
+import { ProjectConfig, ProjectHooks, ProjectMidi } from '@midi-structor/core'
 import RefreshIcon from '@mui/icons-material/Refresh'
 import IconButton from '@mui/material/IconButton'
 import { useNavigate } from 'react-router-dom'
@@ -56,6 +56,7 @@ export const ProjectsSelectComponent: React.FC<
         activeLabel={activeProjectLabel}
         onNew={(newLabel) => {
           projects.add({
+            ...ProjectMidi.defaultProjectConfig(),
             label: newLabel,
             key: _.replace(_.toLower(newLabel), ' ', '-'),
           })

@@ -1,9 +1,19 @@
 import React, { ReactElement } from 'react'
-import { InputLabel, Select, MenuItem, FormControl, SelectChangeEvent, Box, Button } from '@mui/material'
+import {
+  InputLabel,
+  Select,
+  MenuItem,
+  FormControl,
+  SelectChangeEvent,
+  Box,
+  Button,
+} from '@mui/material'
 import _ from 'lodash'
 import { SelectNewItemComponent } from './SelectNewItemComponent'
 import IconButton from '@mui/material/IconButton'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
+import SettingsIcon from '@mui/icons-material/Settings'
+import { ProjectHooks } from '@midi-structor/core'
 
 export type SelectItem<A = string> = {
   label: string
@@ -19,6 +29,7 @@ export type SelectComponentProps<A> = {
   noItemsLabel?: string
   onNew?: (label: string) => void
   onDelete?: (item: A) => void
+  onEdit?: (item: A) => void
 }
 
 export const SelectComponent = <A,>({
@@ -30,9 +41,11 @@ export const SelectComponent = <A,>({
   noItemsLabel,
   onNew,
   onDelete,
+  onEdit,
 }: SelectComponentProps<A>): ReactElement<any, any> => {
   const [value, setValue] = React.useState<number | ''>('')
   const [isEdit, setIsEdit] = React.useState(false)
+  const projectStyle = ProjectHooks.useProjectStyle()
 
   const handleClick = () => {
     setIsEdit((e) => !e)
@@ -72,6 +85,15 @@ export const SelectComponent = <A,>({
         label={label}
         onClose={() => setIsEdit(false)}
         onChange={onChangeLocal}
+        MenuProps={{
+          slotProps: {
+            paper: {
+              sx: {
+                background: projectStyle.rightVerticalGradient,
+              },
+            },
+          },
+        }}
         fullWidth>
         {containEmpty ? <MenuItem value=''>--</MenuItem> : null}
         {noItemsLabel !== undefined && items.length === 0 ? (
@@ -94,7 +116,7 @@ export const SelectComponent = <A,>({
                 }}>
                 {item.label}
               </Box>
-              <Box>
+              <Box sx={{ display: 'flex' }}>
                 {onDelete !== undefined ? (
                   <IconButton
                     size='small'
@@ -102,6 +124,15 @@ export const SelectComponent = <A,>({
                       onDelete(item.value)
                     }}>
                     <DeleteOutlineIcon color='error' />
+                  </IconButton>
+                ) : null}
+                {onEdit !== undefined ? (
+                  <IconButton
+                    size='small'
+                    onClick={() => {
+                      onEdit(item.value)
+                    }}>
+                    <SettingsIcon />
                   </IconButton>
                 ) : null}
               </Box>

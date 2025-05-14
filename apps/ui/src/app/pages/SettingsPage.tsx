@@ -1,12 +1,15 @@
 import React from 'react'
-import { Box, Card, CardContent, CardHeader } from '@mui/material'
-import { JSONEditor } from '../components/JSONEditor'
+import { Box, Card, CardContent, CardHeader, TextField } from '@mui/material'
 import { ProjectHooks } from '@midi-structor/core'
+import { stringToColor } from '../components/StringAvatarComponent'
+import { MuiColorInput } from 'mui-color-input'
 
 export type SettingsPageProps = {}
 
 export const SettingsPage: React.FC<SettingsPageProps> = ({}) => {
-  const arrangement = ProjectHooks.useArrangement()
+  const project = ProjectHooks.useActiveProjectValue()
+  const updateProject = ProjectHooks.useUpdateActiveProject()
+  const projectStyle = ProjectHooks.useProjectStyle()
 
   return (
     <Box
@@ -15,34 +18,65 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({}) => {
         p: 2,
         gap: 2,
       }}>
-      {/*<Card>*/}
-      {/*  <CardHeader*/}
-      {/*    title='Projects'*/}
-      {/*    action={*/}
-      {/*      <Button*/}
-      {/*        onClick={onProjectsSave}*/}
-      {/*        variant='outlined'*/}
-      {/*        size='small'>*/}
-      {/*        Save*/}
-      {/*      </Button>*/}
-      {/*    }*/}
-      {/*  />*/}
-      {/*  <CardContent>*/}
-      {/*    <JSONEditor*/}
-      {/*      height='800px'*/}
-      {/*      value={rawProjects}*/}
-      {/*      readonly={false}*/}
-      {/*      onChange={setRawProjects}*/}
-      {/*    />*/}
-      {/*  </CardContent>*/}
-      {/*</Card>*/}
-      <Card>
-        <CardHeader title='Arrangement' />
+      <Card
+        sx={{
+          minWidth: '500px',
+        }}>
+        <CardHeader title='Project Settings' />
         <CardContent>
-          <JSONEditor
-            height='800px'
-            value={JSON.stringify(arrangement, null, 2)}
-          />
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 2,
+            }}>
+            <TextField
+              label='Project Name'
+              variant='outlined'
+              fullWidth
+              value={project.label}
+              onChange={(e) =>
+                updateProject({
+                  ...project,
+                  label: e.target.value,
+                })
+              }
+            />
+            <MuiColorInput
+              label='Accent Color 1'
+              size='small'
+              format='hex'
+              value={projectStyle.accent.color1}
+              onChange={(n, c) => {
+                updateProject({
+                  ...project,
+                  style: {
+                    accent: {
+                      ...projectStyle.accent,
+                      color1: n,
+                    },
+                  },
+                })
+              }}
+            />
+            <MuiColorInput
+              label='Accent Color 2'
+              size='small'
+              format='hex'
+              value={projectStyle.accent.color2}
+              onChange={(n, c) => {
+                updateProject({
+                  ...project,
+                  style: {
+                    accent: {
+                      ...projectStyle.accent,
+                      color2: n,
+                    },
+                  },
+                })
+              }}
+            />
+          </Box>
         </CardContent>
       </Card>
     </Box>

@@ -1,13 +1,15 @@
 import {
+  atom,
   getDefaultStore,
   useAtom,
   useAtomValue,
   useSetAtom,
   WritableAtom,
 } from 'jotai'
-import { ProjectImportStatus, ProjectMidi } from './ProjectMidi'
+import { ProjectConfig, ProjectImportStatus, ProjectMidi } from './ProjectMidi'
 import React from 'react'
 import _ from 'lodash'
+import { List } from 'immutable'
 import { focusAtom } from 'jotai-optics'
 import { splitAtom } from 'jotai/utils'
 import { emptyTrack, UIArrangement, UIClip, UITrack } from './UIStateDisplay'
@@ -63,6 +65,42 @@ const useTrackOrUndefined = (trackName: string): UITrack | undefined => {
 const useTrack = (trackName: string) => {
   const track = useTrackOrUndefined(trackName)
   return track === undefined ? emptyTrack : track
+}
+
+const useActiveProjectValue = () => {
+  const activeProject = useAtomValue(ProjectMidi.atoms.project.active)
+  const projects = useAtomValue(ProjectMidi.atoms.projectsConfig)
+  const project = _.find(projects.projects, (p) => p.key === activeProject)
+
+  return project || ProjectMidi.defaultProjectConfig()
+}
+
+const useUpdateActiveProject = () => {
+  const active = useAtomValue(ProjectMidi.atoms.project.active)
+  const [projects, setProjects] = useAtom(ProjectMidi.atoms.projectsConfig)
+  const projectsList = List(projects.projects)
+  const origProjectIndex = projectsList.findIndex((p) => p.key === active)
+  return (newProject: ProjectConfig) => {
+    const newProjects =
+      origProjectIndex !== undefined
+        ? projectsList.set(origProjectIndex, newProject)
+        : projectsList
+    setProjects({ projects: newProjects.toArray() })
+  }
+}
+
+const useProjectStyle = () => {
+  const project = useActiveProjectValue()
+  const style = {
+    ...ProjectMidi.defaultProjectConfig().style,
+    ...project.style,
+  }
+  return {
+    ...style,
+    horizontalGradient: `linear-gradient(to right, ${style.accent.color1}, ${style.accent.color2})`,
+    leftVerticalGradient: `linear-gradient(to bottom, ${style.accent.color1}, ${style.accent.color2})`,
+    rightVerticalGradient: `linear-gradient(to top, ${style.accent.color1}, ${style.accent.color2})`,
+  }
 }
 
 const useProjectsConfig = () => useAtom(ProjectMidi.atoms.projectsConfig)
@@ -123,6 +161,9 @@ export const ProjectHooks = {
   useProjectsListAtom,
   useActiveProjectLabel,
   useSetActiveProject,
+  useProjectStyle,
+  useActiveProjectValue,
+  useUpdateActiveProject,
   useTracks,
   useTrack,
   useTrackOrUndefined,
