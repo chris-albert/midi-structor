@@ -3,7 +3,11 @@ import { TabItem, TabsComponent } from '../TabsComponent'
 import { Box } from '@mui/material'
 import AddCircleIcon from '@mui/icons-material/AddCircle'
 import { AddControllerComponent } from './AddControllerComponent'
-import { ConfiguredController } from '@midi-structor/core'
+import {
+  ConfiguredController,
+  ProjectHooks,
+  ProjectMidi,
+} from '@midi-structor/core'
 import { ControllerComponent } from './ControllerComponent'
 import { ControllerAvatarComponent } from './ControllerAvatarComponent'
 
@@ -14,8 +18,11 @@ const addTabItem: TabItem = {
 
 export type ControllersComponentProps = {}
 
-export const ControllersComponent: React.FC<ControllersComponentProps> = ({}) => {
+export const ControllersComponent: React.FC<
+  ControllersComponentProps
+> = ({}) => {
   const controllers = ConfiguredController.useControllersValue()
+  const projectStyle = ProjectHooks.useProjectStyle()
 
   const controllersTabs: Array<TabItem> = [
     ...controllers.map((controller) => ({
@@ -30,6 +37,13 @@ export const ControllersComponent: React.FC<ControllersComponentProps> = ({}) =>
       <TabsComponent
         orientation='vertical'
         tabs={controllersTabs}
+        // slotProps={{
+        //   tabs: {
+        //     sx: {
+        //       background: projectStyle.leftVerticalGradient,
+        //     },
+        //   },
+        // }}
       />
     </Box>
   )

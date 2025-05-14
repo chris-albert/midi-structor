@@ -1,5 +1,13 @@
 import React from 'react'
-import { Box, Card, CardContent, CardHeader, TextField } from '@mui/material'
+import {
+  Box,
+  Card,
+  CardContent,
+  CardHeader,
+  Divider,
+  TextField,
+  Typography,
+} from '@mui/material'
 import { ProjectHooks } from '@midi-structor/core'
 import { stringToColor } from '../components/StringAvatarComponent'
 import { MuiColorInput } from 'mui-color-input'
@@ -30,6 +38,8 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({}) => {
               flexDirection: 'column',
               gap: 2,
             }}>
+            <Typography variant='h6'>General</Typography>
+            <Divider />
             <TextField
               label='Project Name'
               variant='outlined'
@@ -42,6 +52,20 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({}) => {
                 })
               }
             />
+            <TextField
+              label='Load with Ableton project'
+              variant='outlined'
+              fullWidth
+              value={project.abletonProject || ''}
+              onChange={(e) =>
+                updateProject({
+                  ...project,
+                  abletonProject: e.target.value,
+                })
+              }
+            />
+            <Typography variant='h6'>Style</Typography>
+            <Divider />
             <MuiColorInput
               label='Accent Color 1'
               size='small'

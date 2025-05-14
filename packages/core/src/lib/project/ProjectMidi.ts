@@ -27,6 +27,7 @@ const store = getDefaultStore()
 export const ProjectConfig = Schema.Struct({
   label: Schema.String,
   key: Schema.String,
+  abletonProject: Schema.optional(Schema.String),
   style: Schema.Struct({
     accent: Schema.Struct({
       color1: Schema.String,

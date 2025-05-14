@@ -1,5 +1,7 @@
 import React from 'react'
 import { Tabs, Tab, Box } from '@mui/material'
+import { SxProps } from '@mui/system'
+import { Theme } from '@mui/material/styles'
 
 export type TabItem = {
   label?: string
@@ -10,9 +12,18 @@ export type TabItem = {
 export type TabsComponentProps = {
   orientation: 'horizontal' | 'vertical'
   tabs: Array<TabItem>
+  slotProps?: {
+    tabs?: {
+      sx?: SxProps<Theme>
+    }
+  }
 }
 
-export const TabsComponent: React.FC<TabsComponentProps> = ({ orientation, tabs }) => {
+export const TabsComponent: React.FC<TabsComponentProps> = ({
+  orientation,
+  tabs,
+  slotProps,
+}) => {
   const [selected, setSelected] = React.useState(0)
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -26,7 +37,12 @@ export const TabsComponent: React.FC<TabsComponentProps> = ({ orientation, tabs 
   return (
     <Box sx={{ flexGrow: 1, display: 'flex', height: '100%' }}>
       <Tabs
-        sx={{ borderRight: 1, borderColor: 'divider', minWidth: '90px' }}
+        sx={{
+          ...slotProps?.tabs?.sx,
+          borderRight: 1,
+          borderColor: 'divider',
+          minWidth: '90px',
+        }}
         orientation={orientation}
         value={selected}
         onChange={handleChange}>
