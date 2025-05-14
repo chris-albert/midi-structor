@@ -1,6 +1,7 @@
 import React from 'react'
 import {
   Box,
+  Button,
   Card,
   CardContent,
   CardHeader,
@@ -9,7 +10,6 @@ import {
   Typography,
 } from '@mui/material'
 import { ProjectHooks } from '@midi-structor/core'
-import { stringToColor } from '../components/StringAvatarComponent'
 import { MuiColorInput } from 'mui-color-input'
 
 export type SettingsPageProps = {}
@@ -18,6 +18,14 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({}) => {
   const project = ProjectHooks.useActiveProjectValue()
   const updateProject = ProjectHooks.useUpdateActiveProject()
   const projectStyle = ProjectHooks.useProjectStyle()
+  const abletonProject = ProjectHooks.useAbletonProjectName()
+
+  const onAbletonSelect = () => {
+    updateProject({
+      ...project,
+      abletonProject,
+    })
+  }
 
   return (
     <Box
@@ -52,6 +60,22 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({}) => {
                 })
               }
             />
+            {abletonProject !== undefined ? (
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <Typography>
+                  Current Ableton project: {abletonProject}
+                </Typography>
+                <Button
+                  size='small'
+                  sx={{
+                    background: projectStyle.horizontalGradient,
+                  }}
+                  onClick={onAbletonSelect}
+                  variant='contained'>
+                  Load with this
+                </Button>
+              </Box>
+            ) : null}
             <TextField
               label='Load with Ableton project'
               variant='outlined'

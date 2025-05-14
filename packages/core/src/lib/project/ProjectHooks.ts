@@ -125,6 +125,9 @@ const useProjectsListAtom = () => {
   return useListAtom(projects)
 }
 
+const useAbletonProjectName = () =>
+  useAtomValue(ProjectMidi.atoms.project.abletonName)
+
 const useSetActiveProject = () => useSetAtom(ProjectMidi.atoms.project.active)
 
 const useOnStatusChange = (f: (status: ProjectImportStatus) => void) => {
@@ -162,6 +165,7 @@ export const ProjectHooks = {
   useActiveProjectLabel,
   useSetActiveProject,
   useProjectStyle,
+  useAbletonProjectName,
   useActiveProjectValue,
   useUpdateActiveProject,
   useTracks,
