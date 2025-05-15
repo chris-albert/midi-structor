@@ -8,12 +8,20 @@ export type ControllerBrowserModeComponentProps = {
   controllerAtom: PrimitiveAtom<ConfiguredController>
 }
 
-export const ControllerBrowserModeComponent: React.FC<ControllerBrowserModeComponentProps> = ({
-  controllerAtom,
-}) => {
-  const deviceSelection = ConfiguredController.useMidiDeviceSelection(controllerAtom)
+export const ControllerBrowserModeComponent: React.FC<
+  ControllerBrowserModeComponentProps
+> = ({ controllerAtom }) => {
+  const deviceSelection =
+    ConfiguredController.useMidiDeviceSelection(controllerAtom)
   return (
-    <Box sx={{ width: '100%' }}>
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        gap: 2,
+        width: '100%',
+      }}>
       <MidiDeviceSelectionComponent midiDevices={deviceSelection.input} />
       <MidiDeviceSelectionComponent midiDevices={deviceSelection.output} />
     </Box>

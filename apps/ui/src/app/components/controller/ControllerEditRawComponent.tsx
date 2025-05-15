@@ -3,6 +3,7 @@ import {
   ConfiguredController,
   ControllerConfig,
   ControllerDevice,
+  ProjectHooks,
 } from '@midi-structor/core'
 import { PrimitiveAtom } from 'jotai/index'
 import { Button, Card, CardContent, CardHeader } from '@mui/material'
@@ -20,6 +21,7 @@ export const ControllerEditRawComponent: React.FC<
 > = ({ controllerAtom, device }) => {
   const controller = ConfiguredController.useController(controllerAtom)
   const [rawControllerConfig, setRawControllerConfig] = React.useState('')
+  const projectStyle = ProjectHooks.useProjectStyle()
 
   React.useEffect(() => {
     setRawControllerConfig(
@@ -41,6 +43,9 @@ export const ControllerEditRawComponent: React.FC<
   return (
     <Card>
       <CardHeader
+        sx={{
+          background: projectStyle.horizontalGradient,
+        }}
         action={
           <Button
             onClick={onSave}

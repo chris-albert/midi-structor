@@ -75,7 +75,7 @@ export const SelectComponent = <A,>({
 
   return (
     <FormControl
-      sx={{ m: 1, minWidth: 140, width: '100%' }}
+      sx={{ minWidth: 140, width: '100%' }}
       size='small'>
       <InputLabel id='demo-simple-select-label'>{label}</InputLabel>
       <Select

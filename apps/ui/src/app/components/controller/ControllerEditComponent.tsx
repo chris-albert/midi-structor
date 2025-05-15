@@ -1,7 +1,14 @@
 import React from 'react'
 import { PrimitiveAtom } from 'jotai/index'
 import { ConfiguredController, ControllerDevice } from '@midi-structor/core'
-import { Box, Button, Divider, FormControlLabel, Switch, Typography } from '@mui/material'
+import {
+  Box,
+  Button,
+  Divider,
+  FormControlLabel,
+  Switch,
+  Typography,
+} from '@mui/material'
 import { DeviceSelectorComponent } from './DeviceSelectorComponent'
 import { ControllerBrowserModeComponent } from '../midi/ControllerBrowserModeComponent'
 import DeleteIcon from '@mui/icons-material/Delete'
@@ -15,15 +22,15 @@ export type ControllerEditComponentProps = {
   device: ControllerDevice
 }
 
-export const ControllerEditComponent: React.FC<ControllerEditComponentProps> = ({
-  controllerAtom,
-  device,
-}) => {
+export const ControllerEditComponent: React.FC<
+  ControllerEditComponentProps
+> = ({ controllerAtom, device }) => {
   const controller = ConfiguredController.useController(controllerAtom)
 
   return (
     <Box sx={{ pt: 1, display: 'flex', gap: 2 }}>
-      <Box sx={{ width: '50%', display: 'flex', flexDirection: 'column', gap: 2 }}>
+      <Box
+        sx={{ width: '50%', display: 'flex', flexDirection: 'column', gap: 2 }}>
         <Typography variant='h6'>General</Typography>
         <Divider />
         <ControllerNameComponent controllerAtom={controllerAtom} />
@@ -40,7 +47,7 @@ export const ControllerEditComponent: React.FC<ControllerEditComponentProps> = (
             label='Enabled'
           />
         </Box>
-        <Box sx={{ ml: 1 }}>
+        <Box sx={{}}>
           <MuiColorInput
             label='Color'
             size='small'

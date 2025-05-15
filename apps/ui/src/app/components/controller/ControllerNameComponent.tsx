@@ -7,11 +7,13 @@ export type ControllerNameComponentProps = {
   controllerAtom: PrimitiveAtom<ConfiguredController>
 }
 
-export const ControllerNameComponent: React.FC<ControllerNameComponentProps> = ({ controllerAtom }) => {
+export const ControllerNameComponent: React.FC<
+  ControllerNameComponentProps
+> = ({ controllerAtom }) => {
   const controller = ConfiguredController.useController(controllerAtom)
 
   return (
-    <Box sx={{ m: 1, width: '100%' }}>
+    <Box sx={{ width: '100%' }}>
       <TextField
         fullWidth
         label='Name'

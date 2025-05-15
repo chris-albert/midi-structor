@@ -1,5 +1,10 @@
 import React from 'react'
-import { MidiInput, MidiMessageWithRaw, Midi, ConfiguredController } from '@midi-structor/core'
+import {
+  MidiInput,
+  MidiMessageWithRaw,
+  Midi,
+  ConfiguredController,
+} from '@midi-structor/core'
 import { Box, Button, Card, CardContent, Grid } from '@mui/material'
 import _ from 'lodash'
 import { MidiMessageDetail } from '../components/MidiMessageDetail'
@@ -12,7 +17,9 @@ export const MonitorPage: React.FC<MonitorPageProps> = () => {
   const dawListener = Midi.useDawListener()
   const controllerListener = ConfiguredController.useListeners()
   const agentListener = Midi.useAgentListener()
-  const [messages, setMessages] = React.useState<Array<[MidiMessageWithRaw, number]>>([])
+  const [messages, setMessages] = React.useState<
+    Array<[MidiMessageWithRaw, number]>
+  >([])
   const [totalCount, setTotalCount] = React.useState(0)
   const [listenEnabled, setListenEnabled] = React.useState(false)
 
@@ -59,7 +66,7 @@ export const MonitorPage: React.FC<MonitorPageProps> = () => {
   }, [])
 
   return (
-    <Box sx={{ m: 2 }}>
+    <Box>
       <Box sx={{ mb: 2 }}>
         <Button
           sx={{ mr: 1 }}
@@ -102,7 +109,8 @@ export const MonitorPage: React.FC<MonitorPageProps> = () => {
             <Grid
               item
               xs={9}>
-              <Box sx={{ display: 'flex', justifyContent: 'flex-start', mr: 5 }}>
+              <Box
+                sx={{ display: 'flex', justifyContent: 'flex-start', mr: 5 }}>
                 <Box>Values</Box>
               </Box>
             </Grid>

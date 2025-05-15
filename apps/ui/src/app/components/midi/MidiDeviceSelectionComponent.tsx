@@ -9,9 +9,9 @@ export type MidiDeviceSelectionComponentProps = {
   midiDevices: MidiDeviceSelection
 }
 
-export const MidiDeviceSelectionComponent: React.FC<MidiDeviceSelectionComponentProps> = ({
-  midiDevices,
-}) => {
+export const MidiDeviceSelectionComponent: React.FC<
+  MidiDeviceSelectionComponentProps
+> = ({ midiDevices }) => {
   const [items, setItems] = React.useState<Array<SelectItem>>([])
 
   React.useEffect(() => {
@@ -35,6 +35,7 @@ export const MidiDeviceSelectionComponent: React.FC<MidiDeviceSelectionComponent
         width: '100%',
         display: 'flex',
         alignItems: 'center',
+        gap: 1,
       }}>
       <SelectComponent
         label={`MIDI ${_.capitalize(midiDevices.type)}`}
