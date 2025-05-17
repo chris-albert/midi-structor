@@ -83,7 +83,12 @@ export const Nav: React.FC<NavProps> = () => {
               xs={4}
               container
               justifyContent='right'>
-              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  my: 1,
+                }}>
                 <ProjectsSelectComponent />
               </Box>
             </Grid>

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Box } from '@mui/material'
-import { SelectComponent, SelectItem } from '../SelectComponent'
+import { SelectComponent, SelectItem } from '../form/SelectComponent'
 import _ from 'lodash'
 import { ProjectConfig, ProjectHooks, ProjectMidi } from '@midi-structor/core'
 import RefreshIcon from '@mui/icons-material/Refresh'

@@ -1,6 +1,6 @@
 import React from 'react'
 import { MidiDeviceSelection } from '@midi-structor/core'
-import { SelectComponent, SelectItem } from '../SelectComponent'
+import { SelectComponent, SelectItem } from '../form/SelectComponent'
 import { Box } from '@mui/material'
 import _ from 'lodash'
 import { StatusLedComponent } from '../StatusLedComponent'

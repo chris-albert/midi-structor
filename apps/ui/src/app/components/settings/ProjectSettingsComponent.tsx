@@ -5,12 +5,14 @@ import {
   Card,
   CardContent,
   CardHeader,
+  Chip,
   Divider,
   TextField,
   Typography,
 } from '@mui/material'
 import { ProjectHooks } from '@midi-structor/core'
 import { MuiColorInput } from 'mui-color-input'
+import { SaveableTextFieldComponent } from '../form/SaveableTextFieldComponent'
 
 export type ProjectSettingsComponentProps = {}
 
@@ -21,12 +23,13 @@ export const ProjectSettingsComponent: React.FC<
   const updateProject = ProjectHooks.useUpdateActiveProject()
   const projectStyle = ProjectHooks.useProjectStyle()
   const abletonProject = ProjectHooks.useAbletonProjectName()
+  const updateProjectName = ProjectHooks.useSetActiveProjectName()
 
   const onAbletonSelect = () => {
-    updateProject({
-      ...project,
+    updateProject((p) => ({
+      ...p,
       abletonProject,
-    })
+    }))
   }
 
   return (
@@ -49,20 +52,15 @@ export const ProjectSettingsComponent: React.FC<
           }}>
           <Typography variant='h6'>General</Typography>
           <Divider />
-          <TextField
+          <SaveableTextFieldComponent
             label='Project Name'
-            variant='outlined'
-            fullWidth
-            size='small'
-            value={project.label}
-            onChange={(e) =>
-              updateProject({
-                ...project,
-                label: e.target.value,
-              })
-            }
+            initialValue={project.label}
+            onSave={updateProjectName}
           />
-          {abletonProject !== undefined ? (
+          <Typography variant='h6'>Ableton Project</Typography>
+          <Divider />
+          {abletonProject !== undefined &&
+          abletonProject !== project.abletonProject ? (
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
               <Typography>Current Ableton project: {abletonProject}</Typography>
               <Button
@@ -76,19 +74,29 @@ export const ProjectSettingsComponent: React.FC<
               </Button>
             </Box>
           ) : null}
-          <TextField
-            label='Load with Ableton project'
-            variant='outlined'
-            fullWidth
-            size='small'
-            value={project.abletonProject || ''}
-            onChange={(e) =>
-              updateProject({
-                ...project,
-                abletonProject: e.target.value,
-              })
-            }
-          />
+          {project.abletonProject !== undefined ? (
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+              }}>
+              <Typography>Load with Ableton project: </Typography>
+              <Chip
+                sx={{
+                  ml: 1,
+                  background: projectStyle.horizontalGradient,
+                }}
+                label={project.abletonProject}
+                variant='outlined'
+                onDelete={() => {
+                  updateProject((p) => ({
+                    ...p,
+                    abletonProject: undefined,
+                  }))
+                }}
+              />
+            </Box>
+          ) : null}
           <Typography variant='h6'>Style</Typography>
           <Divider />
           <MuiColorInput
@@ -97,15 +105,15 @@ export const ProjectSettingsComponent: React.FC<
             format='hex'
             value={projectStyle.accent.color1}
             onChange={(n, c) => {
-              updateProject({
-                ...project,
+              updateProject((p) => ({
+                ...p,
                 style: {
                   accent: {
                     ...projectStyle.accent,
                     color1: n,
                   },
                 },
-              })
+              }))
             }}
           />
           <MuiColorInput
@@ -114,15 +122,15 @@ export const ProjectSettingsComponent: React.FC<
             format='hex'
             value={projectStyle.accent.color2}
             onChange={(n, c) => {
-              updateProject({
-                ...project,
+              updateProject((p) => ({
+                ...p,
                 style: {
                   accent: {
                     ...projectStyle.accent,
                     color2: n,
                   },
                 },
-              })
+              }))
             }}
           />
         </Box>

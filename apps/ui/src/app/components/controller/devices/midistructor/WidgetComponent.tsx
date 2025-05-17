@@ -5,6 +5,7 @@ import {
   MIDIStructorUIWidget,
   MIDIStructorUIWidgetsUpdate,
   OnClick,
+  ProjectHooks,
 } from '@midi-structor/core'
 import { Box, Drawer, Paper } from '@mui/material'
 import { WidgetSettingsComponent } from '../../../widgets/WidgetSettingsComponent'
@@ -55,6 +56,7 @@ export const WidgetComponent: React.FC<WidgetComponentProps> = ({
   updateWidgets,
 }) => {
   const [settingsOpen, setSettingsOpen] = React.useState(false)
+  const projectStyle = ProjectHooks.useProjectStyle()
 
   const el = AllMidiStructorWidgets.Component(widget, onClick, store)
   const label = getLabel(widget)
@@ -92,6 +94,7 @@ export const WidgetComponent: React.FC<WidgetComponentProps> = ({
             sx={{
               border: '1px solid #777777',
               borderRadius: '5px',
+              // background: projectStyle.horizontalGradient,
               display: 'flex',
               justifyContent: 'space-between',
             }}>

@@ -14,6 +14,7 @@ import { focusAtom } from 'jotai-optics'
 import { splitAtom } from 'jotai/utils'
 import { emptyTrack, UIArrangement, UIClip, UITrack } from './UIStateDisplay'
 import { useListAtom } from '../hooks/ListAtom'
+import { Option } from 'effect'
 
 const store = getDefaultStore()
 
@@ -80,12 +81,34 @@ const useUpdateActiveProject = () => {
   const [projects, setProjects] = useAtom(ProjectMidi.atoms.projectsConfig)
   const projectsList = List(projects.projects)
   const origProjectIndex = projectsList.findIndex((p) => p.key === active)
-  return (newProject: ProjectConfig) => {
+  return (newProjectFunc: (pc: ProjectConfig) => ProjectConfig) => {
     const newProjects =
       origProjectIndex !== undefined
-        ? projectsList.set(origProjectIndex, newProject)
+        ? projectsList.set(
+            origProjectIndex,
+            // @ts-ignore
+            newProjectFunc(projects.projects[origProjectIndex])
+          )
         : projectsList
     setProjects({ projects: newProjects.toArray() })
+  }
+}
+
+const useSetActiveProjectName = () => {
+  const updateProject = useUpdateActiveProject()
+  const projects = useAtomValue(ProjectMidi.atoms.projectsConfig)
+
+  return (newProject: string): Option.Option<string> => {
+    const exists = projects.projects.findIndex((p) => p.label === newProject)
+    if (exists === -1) {
+      updateProject((p) => ({
+        ...p,
+        label: newProject,
+      }))
+      return Option.none()
+    } else {
+      return Option.some(`Project ${newProject} already exists`)
+    }
   }
 }
 
@@ -166,6 +189,7 @@ export const ProjectHooks = {
   useSetActiveProject,
   useProjectStyle,
   useAbletonProjectName,
+  useSetActiveProjectName,
   useActiveProjectValue,
   useUpdateActiveProject,
   useTracks,

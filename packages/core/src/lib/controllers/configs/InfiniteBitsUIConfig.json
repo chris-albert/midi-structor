@@ -20,8 +20,33 @@
       "label": "Metronome"
     },
     {
+      "_tag": "beat",
+      "target": {
+        "_tag": "CC",
+        "controllerNumber": 4
+      },
+      "label": "Beat"
+    },
+    {
+      "_tag": "tempo",
+      "target": {
+        "_tag": "CC",
+        "controllerNumber": 2
+      },
+      "label": "Tempo"
+    },
+    {
+      "_tag": "time-signature",
+      "target": {
+        "_tag": "CC",
+        "controllerNumber": 3
+      },
+      "label": "Time Sig"
+    },
+    {
       "_tag": "spacer",
       "width": 300,
+      "isLineBreaking": true,
       "visible": false
     },
     {
@@ -71,30 +96,6 @@
       },
       "trackName": "Songs",
       "label": "Active"
-    },
-    {
-      "_tag": "tempo",
-      "target": {
-        "_tag": "CC",
-        "controllerNumber": 2
-      },
-      "label": "Tempo"
-    },
-    {
-      "_tag": "time-signature",
-      "target": {
-        "_tag": "CC",
-        "controllerNumber": 3
-      },
-      "label": "Time Sig"
-    },
-    {
-      "_tag": "beat",
-      "target": {
-        "_tag": "CC",
-        "controllerNumber": 4
-      },
-      "label": "Beat"
     },
     {
       "_tag": "spacer",
