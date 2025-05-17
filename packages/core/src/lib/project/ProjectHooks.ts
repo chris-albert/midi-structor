@@ -94,9 +94,11 @@ const useUpdateActiveProject = () => {
   }
 }
 
+const useProjects = () => useAtomValue(ProjectMidi.atoms.projectsConfig)
+
 const useSetActiveProjectName = () => {
   const updateProject = useUpdateActiveProject()
-  const projects = useAtomValue(ProjectMidi.atoms.projectsConfig)
+  const projects = useProjects()
 
   return (newProject: string): Option.Option<string> => {
     const exists = projects.projects.findIndex((p) => p.label === newProject)
@@ -130,7 +132,7 @@ const useProjectsConfig = () => useAtom(ProjectMidi.atoms.projectsConfig)
 
 const useActiveProjectLabel = () => {
   const activeProject = useAtomValue(ProjectMidi.atoms.project.active)
-  const projects = useAtomValue(ProjectMidi.atoms.projectsConfig)
+  const projects = useProjects()
   const project = _.find(projects.projects, (p) => p.key === activeProject)
   if (project !== undefined) {
     return project.label
@@ -152,6 +154,7 @@ const useAbletonProjectName = () =>
   useAtomValue(ProjectMidi.atoms.project.abletonName)
 
 const useSetActiveProject = () => useSetAtom(ProjectMidi.atoms.project.active)
+const useActiveProject = () => useAtomValue(ProjectMidi.atoms.project.active)
 
 const useOnStatusChange = (f: (status: ProjectImportStatus) => void) => {
   const importStatus = useAtomValue(ProjectMidi.atoms.importStatus)
@@ -172,6 +175,20 @@ const getMetronomeState = () => {
 const useLoopState = () => useAtomValue(ProjectMidi.atoms.realTime.loopState)
 const getLoopState = () => {
   return store.get(ProjectMidi.atoms.realTime.loopState)
+}
+
+const useOnProjectLoad = () => {
+  const projects = useProjects()
+  const activeProject = useActiveProject()
+  const setActiveProject = useSetActiveProject()
+  return (abletonProject: string) => {
+    const project = List(projects.projects).find(
+      (p) => p.abletonProject === abletonProject
+    )
+    if (project !== undefined && abletonProject !== activeProject) {
+      setActiveProject(project.key)
+    }
+  }
 }
 
 export const ProjectHooks = {
@@ -199,6 +216,7 @@ export const ProjectHooks = {
   getMetronomeState,
   useLoopState,
   getLoopState,
+  useOnProjectLoad,
   useTracksAtoms: () => {
     return useAtomValue(splitAtom(useTracksAtom()))
   },
