@@ -10,6 +10,8 @@ export type ControllerWidget<
   schema: Schema.TaggedStruct<K, A>
   targets: (a: Schema.Struct.Type<A>) => Array<MidiTarget>
   component: (a: Schema.Struct.Type<A>) => React.ReactElement
+  tracks: (a: Schema.Struct.Type<A>) => Array<string>
+  // init: () => Schema.Struct.Type<A>
 }
 
 export type ControllerWidgetProps<
@@ -20,6 +22,8 @@ export type ControllerWidgetProps<
   schema: Schema.Struct<A>
   targets: (a: Schema.Struct.Type<A>) => Array<MidiTarget>
   component: (a: Schema.Struct.Type<A>) => React.ReactElement
+  // init: () => Schema.Struct.Type<A>
+  tracks?: (a: Schema.Struct.Type<A>) => Array<string>
 }
 
 const of = <K extends SchemaAST.LiteralValue, A extends Schema.Struct.Fields>(
@@ -27,8 +31,10 @@ const of = <K extends SchemaAST.LiteralValue, A extends Schema.Struct.Fields>(
 ): ControllerWidget<K, A> => ({
   name: props.name,
   schema: Schema.TaggedStruct(props.name, props.schema.fields),
+  // init: props.init,
   targets: props.targets,
   component: props.component,
+  tracks: props.tracks || (() => []),
 })
 
 const intersect = <
@@ -45,8 +51,13 @@ const intersect = <
       ...widget.schema.fields,
       ...bSchema.fields,
     }) as Schema.Struct<A & B>,
+    // init: widget.init as () => Schema.Struct.Type<A & B>,
     targets: (f) => widget.targets(f as Schema.Struct.Type<A>),
     component: (f) => widget.component(f as Schema.Struct.Type<A>),
+    tracks: (f) =>
+      widget.tracks !== undefined
+        ? widget.tracks(f as Schema.Struct.Type<A>)
+        : [],
   })
 
 export const ControllerWidget = {

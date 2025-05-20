@@ -143,6 +143,7 @@ export const BarTrackerWidget = ControllerWidget.of({
     color: Color.Schema,
   }),
   targets: (w) => [...w.targets],
+  tracks: (w) => [w.trackName],
   component: ({ targets, trackName, color }) => {
     const track = ProjectHooks.useTrack(trackName)
     const beat = ProjectHooks.useBeat()
@@ -175,7 +176,9 @@ export const BarTrackerWidget = ControllerWidget.of({
               if (diff % timeSig.noteCount === 0) {
                 setBarsSinceStart(Math.floor(diff / timeSig.noteCount) * 2)
               } else {
-                setBarsSinceStart(Math.floor(((diff + 0.5) * 2) / timeSig.noteCount))
+                setBarsSinceStart(
+                  Math.floor(((diff + 0.5) * 2) / timeSig.noteCount)
+                )
               }
             }
           }

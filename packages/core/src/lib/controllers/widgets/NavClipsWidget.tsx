@@ -17,6 +17,7 @@ export const NavClipsWidget = ControllerWidget.of({
     sort: Schema.optional(Schema.Literal('alphabetical', 'order')),
   }),
   targets: (s) => [...s.targets],
+  tracks: (w) => [w.trackName],
   component: ({ targets, trackName, sort }) => {
     const dawEmitter = Midi.useDawEmitter()
     const arrangement = ProjectHooks.useArrangement()

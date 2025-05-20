@@ -2,15 +2,17 @@ import React from 'react'
 import { Box, Button, Drawer } from '@mui/material'
 import { AddWidgetComponent } from '../../../AddWidgetComponent'
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
+import { MIDIStructorUIWidgetsUpdate } from '@midi-structor/core'
 
 export type MidiStructorEditWidgetsProps = {
   editWidgets: boolean
   toggleEditWidgets: () => void
+  updateWidgets: MIDIStructorUIWidgetsUpdate
 }
 
 export const MidiStructorEditWidgets: React.FC<
   MidiStructorEditWidgetsProps
-> = ({ editWidgets, toggleEditWidgets }) => {
+> = ({ editWidgets, toggleEditWidgets, updateWidgets }) => {
   const [addWidgetOpen, setAddWidgetOpen] = React.useState(false)
 
   return (
@@ -19,7 +21,7 @@ export const MidiStructorEditWidgets: React.FC<
         anchor='top'
         open={addWidgetOpen}
         onClose={() => setAddWidgetOpen(false)}>
-        <AddWidgetComponent />
+        <AddWidgetComponent updateWidgets={updateWidgets} />
       </Drawer>
       <Box
         sx={{

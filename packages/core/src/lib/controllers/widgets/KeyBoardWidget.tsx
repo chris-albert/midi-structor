@@ -18,6 +18,7 @@ export const KeyBoardWidget = ControllerWidget.of({
     trackName: Schema.String,
   }),
   targets: (w) => [...w.topTargets, ...w.bottomTargets],
+  tracks: (w) => [w.trackName],
   component: ({ topTargets, bottomTargets, trackName }) => {
     const track = ProjectHooks.useTrack(trackName)
 

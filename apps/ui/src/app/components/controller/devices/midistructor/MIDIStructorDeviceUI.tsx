@@ -57,6 +57,7 @@ const MIDIStructorDeviceUIComponent: React.FC<
       <MidiStructorEditWidgets
         editWidgets={editWidgets}
         toggleEditWidgets={() => setEditWidgets((e) => !e)}
+        updateWidgets={updateWidgets}
       />
       <MidiStructorComponent
         editWidgets={editWidgets}

@@ -25,6 +25,7 @@ export const TrackSectionsWidget = ControllerWidget.of({
     parentTrackName: Schema.String,
   }),
   targets: (w) => [...w.targets],
+  tracks: (w) => [w.trackName, w.parentTrackName],
   component: ({ targets, trackName, parentTrackName = '' }) => {
     const track = ProjectHooks.useTrack(trackName)
     const activeClip = ProjectHooks.useActiveClip(track)

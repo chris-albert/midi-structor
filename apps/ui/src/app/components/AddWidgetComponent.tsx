@@ -1,10 +1,18 @@
 import React from 'react'
 import { Box } from '@mui/material'
 import { WidgetButtonComponent } from './WidgetButtonComponent'
+import {
+  MIDIStructorUI,
+  MIDIStructorUIWidgetsUpdate,
+} from '@midi-structor/core'
 
-export type AddWidgetComponentProps = {}
+export type AddWidgetComponentProps = {
+  updateWidgets: MIDIStructorUIWidgetsUpdate
+}
 
-export const AddWidgetComponent: React.FC<AddWidgetComponentProps> = ({}) => {
+export const AddWidgetComponent: React.FC<AddWidgetComponentProps> = ({
+  updateWidgets,
+}) => {
   return (
     <Box
       sx={{
@@ -12,13 +20,18 @@ export const AddWidgetComponent: React.FC<AddWidgetComponentProps> = ({}) => {
         display: 'flex',
         gap: 2,
       }}>
-      <WidgetButtonComponent
-        onClick={() => {
-          // setWidgets(addWidget(beatCounter()))
-        }}>
-        Beat Counter
-      </WidgetButtonComponent>
-      ...
+      {MIDIStructorUI.device.widgets.widgets.map((widget) => (
+        <WidgetButtonComponent
+          key={`widet-${widget.name}`}
+          onClick={() => {
+            updateWidgets((w) => {
+              // console.log(w, widget)
+              return [...w]
+            })
+          }}>
+          {widget.name}
+        </WidgetButtonComponent>
+      ))}
     </Box>
   )
 }

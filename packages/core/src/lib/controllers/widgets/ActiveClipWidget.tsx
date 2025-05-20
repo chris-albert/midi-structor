@@ -12,6 +12,7 @@ export const ActiveClipWidget = ControllerWidget.of({
     trackName: Schema.String,
   }),
   targets: (w) => [w.target],
+  tracks: (w) => [w.trackName],
   component: ({ target, trackName }) => {
     const track = ProjectHooks.useTrack(trackName)
     const activeClip = ProjectHooks.useActiveClip(track)
