@@ -2,6 +2,18 @@ import React from 'react'
 import { Schema, SchemaAST } from 'effect'
 import { MidiTarget } from '../midi/MidiTarget'
 
+const TargetSchema = Schema.Struct({
+  target: MidiTarget.Schema,
+})
+
+type TargetSchema = typeof TargetSchema.Type
+
+const TargetsSchema = Schema.Struct({
+  target: Schema.Array(MidiTarget.Schema),
+})
+
+type TargetsSchema = typeof TargetsSchema.Type
+
 export type ControllerWidget<
   K extends SchemaAST.LiteralValue = any,
   A extends Schema.Struct.Fields = any
