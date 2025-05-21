@@ -19,6 +19,11 @@ Running web app locally:
 ./run.sh
 ```
 
+Building web app locally:
+```
+pnpm ui-deploy
+```
+
 Building electron, including bundling the ui:
 ```
 ./electron-make.sh
