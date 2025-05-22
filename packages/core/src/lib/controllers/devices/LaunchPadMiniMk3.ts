@@ -1,4 +1,3 @@
-import { MidiEmitter, MidiListener } from '../../midi/GlobalMidi'
 import { MidiMessage } from '../../midi/MidiMessage'
 import _ from 'lodash'
 import { Controller } from '../Controller'
@@ -54,69 +53,63 @@ const fixColor = (color: Color, fixColor: boolean): Color => {
   }
 }
 
-const controller = (
-  emitter: MidiEmitter,
-  listener: MidiListener,
-  virtual: boolean
-) =>
-  new Controller({
-    init: () => {
-      emitter.send(MidiMessage.sysex([32, 41, 2, 13, 14, 1]))
-    },
-    render: (pads) => {
-      const sysexArr = [32, 41, 2, 13, 3]
-      _.forEach(pads, (pad) => {
-        if (pad.color !== undefined) {
-          const [r, g, b] = Color.toRGB(fixColor(pad.color, !virtual))
-          sysexArr.push(
-            3,
-            MidiTarget.toValue(pad.target),
-            Math.floor(r / 2),
-            Math.floor(g / 2),
-            Math.floor(b / 2)
-          )
-        }
-      })
-      emitter.send(MidiMessage.sysex(sysexArr))
-    },
-    loading: (controller) => {
-      const allWhite = () => {
-        controller.render(
-          _.map(controller.targets, (target) => ({
-            target,
-            color: Color.WHITE,
-          }))
+const controller = Controller.of({
+  init: (emitter) => () => {
+    emitter.send(MidiMessage.sysex([32, 41, 2, 13, 14, 1]))
+  },
+  render: (emitter) => (pads) => {
+    const sysexArr = [32, 41, 2, 13, 3]
+    _.forEach(pads, (pad) => {
+      if (pad.color !== undefined) {
+        const [r, g, b] = Color.toRGB(fixColor(pad.color, true))
+        sysexArr.push(
+          3,
+          MidiTarget.toValue(pad.target),
+          Math.floor(r / 2),
+          Math.floor(g / 2),
+          Math.floor(b / 2)
         )
       }
-      const allBlack = () => {
-        controller.render(
-          _.map(controller.targets, (target) => ({
-            target,
-            color: Color.BLACK,
-          }))
+    })
+    emitter.send(MidiMessage.sysex(sysexArr))
+  },
+  loading: (emitter) => (controller) => {
+    const targets = MidiTarget.notes({ from: 11, to: 99 })
+    const color = (num: number, value: number): Color => {
+      const firstDigit = Math.floor(value / 10)
+      const secondDigit = value % 10
+      if (firstDigit <= num + 1 && secondDigit <= num + 1) {
+        return (
+          Color.ROYGBIV[(Math.max(firstDigit, secondDigit) - 1) % 7] ||
+          Color.WHITE
         )
+      } else {
+        return Color.BLACK
       }
-      let flip = false
-
-      const id = setInterval(() => {
-        const _ = flip ? allWhite() : allBlack()
-        flip = !flip
-      }, 200)
-      console.log('loading', id)
-      return () => {
-        console.log('cleanup', id)
-        clearInterval(id)
-      }
-    },
-    listenFilter: (m: MidiMessage): boolean => {
-      return !(
-        (m.type === 'noteon' && m.velocity === 0) ||
-        (m.type === 'cc' && m.data === 0)
+    }
+    let count = 0
+    const id = setInterval(() => {
+      const num = count % 9
+      controller.render(emitter)(
+        targets.map((target, index) => ({
+          target,
+          color: color(num, MidiTarget.toValue(target)),
+        }))
       )
-    },
-    listener,
-    targets: MidiTarget.notes({ from: 11, to: 99 }),
-  })
+      count++
+    }, 250)
+    return () => {
+      clearInterval(id)
+    }
+  },
+  listenFilter: (m: MidiMessage): boolean => {
+    return !(
+      (m.type === 'noteon' && m.velocity === 0) ||
+      (m.type === 'cc' && m.data === 0)
+    )
+  },
+  targets: MidiTarget.notes({ from: 11, to: 99 }),
+})
 
 const device = ControllerDevice.of({
   name: 'Launchpad Mini [MK3]',

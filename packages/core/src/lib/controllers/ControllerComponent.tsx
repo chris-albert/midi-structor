@@ -3,19 +3,27 @@ import { ConfiguredController } from './ConfiguredController'
 import { ControllerConfigComponent } from './ControllerConfigComponent'
 import { ControllerDevices } from './devices/ControllerDevices'
 import { Option } from 'effect'
+import { ControllerInstance } from './ControllerInstance'
 
 export type ControllerComponentProps = {
   controller: ConfiguredController
 }
 
-export const ControllerComponent: React.FC<ControllerComponentProps> = ({ controller }) => {
+export const ControllerComponent: React.FC<ControllerComponentProps> = ({
+  controller,
+}) => {
   const io = ConfiguredController.useIO(controller)
   const device = ControllerDevices.findByName(controller.device)
 
   if (io.enabled && Option.isSome(device)) {
     return (
       <ControllerConfigComponent
-        controller={device.value.controller(io.emitter, io.listener, false)}
+        controller={ControllerInstance.of(
+          controller,
+          device.value.controller,
+          io.emitter,
+          io.listener
+        )}
         name={controller.name}
         widgets={device.value.widgets.resolve(controller.config)}
       />

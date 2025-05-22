@@ -1,9 +1,6 @@
-import { Data } from 'effect'
-import _ from 'lodash'
-import { Color } from './Color'
 import { MidiTarget } from '../midi/MidiTarget'
 import { MidiMessage } from '../midi/MidiMessage'
-import { Midi, MidiListener } from '../midi/GlobalMidi'
+import { MidiEmitter } from '../midi/GlobalMidi'
 import { ResolvedControllerWidget } from './ControllerWidget'
 
 export const messageToKey = (message: MidiMessage): string => {
@@ -22,61 +19,41 @@ export type TargetColor = {
   options?: any
 }
 
-export class Controller extends Data.Class<{
+type EmitterDep<A, B = void> = (e: MidiEmitter) => (a: A) => B
+
+export type Controller = {
   targets: Array<MidiTarget>
-  init: (widgets: Array<ResolvedControllerWidget>) => void
-  render: (pads: Array<TargetColor>) => void
-  listener: MidiListener
+  init: EmitterDep<Array<ResolvedControllerWidget>>
+  loading: EmitterDep<Controller, () => void>
+  render: EmitterDep<Array<TargetColor>>
+  listenFilter: (m: MidiMessage) => boolean
+}
+
+export type ControllerProps = {
+  targets: Array<MidiTarget>
+  init: EmitterDep<Array<ResolvedControllerWidget>>
+  loading?: EmitterDep<Controller, () => void>
+  render: EmitterDep<Array<TargetColor>>
   listenFilter?: (m: MidiMessage) => boolean
-  loading?: (controller: Controller) => () => void
-}> {
-  loadingCleanup = () => {}
-  cleanup: (() => void) | undefined = undefined
-  filter: (m: MidiMessage) => boolean = this.listenFilter || (() => true)
+}
 
-  clear() {
-    this.render(
-      _.map(this.targets, (target) => ({
-        target,
-        color: Color.BLACK,
-      }))
-    )
+const of = (props: ControllerProps): Controller => {
+  return {
+    targets: props.targets,
+    init: props.init,
+    render: props.render,
+    loading: props.loading || (() => () => () => {}),
+    listenFilter: props.listenFilter || (() => true),
   }
+}
 
-  loaded() {
-    this.loadingCleanup()
-    this.clear()
-  }
+const empty = of({
+  targets: [],
+  init: () => () => {},
+  render: () => () => {},
+})
 
-  doInit(widgets: Array<ResolvedControllerWidget>) {
-    this.init(widgets)
-    if (this.loading !== undefined) {
-      // this.loadingCleanup = this.loading(this)
-    }
-  }
-
-  doRender(pads: Array<TargetColor>) {
-    this.render(pads)
-  }
-
-  on(f: (m: MidiMessage) => void): void {
-    this.cleanup = this.listener.on('*', (m) => {
-      if (this.filter(m)) {
-        f(m)
-      }
-    })
-  }
-
-  off() {
-    if (this.cleanup !== undefined) {
-      this.cleanup()
-    }
-  }
-
-  static empty: Controller = new Controller({
-    targets: [],
-    init: () => {},
-    render: () => {},
-    listener: Midi.emptyListener(),
-  })
+export const Controller = {
+  of,
+  empty,
 }

@@ -2,10 +2,8 @@ import Reconciler, { OpaqueHandle } from 'react-reconciler'
 import ReactReconciler from 'react-reconciler'
 import _ from 'lodash'
 import { MidiTarget } from '../midi/MidiTarget'
-import {
-  Controller as ControllerModel,
-  messageToKey,
-} from '../controllers/Controller'
+import { messageToKey } from '../controllers/Controller'
+import { ControllerInstance as ControllerModel } from '../controllers/ControllerInstance'
 import { Color } from '../controllers/Color'
 import { MidiMessage } from '../midi/MidiMessage'
 import React from 'react'
@@ -86,7 +84,7 @@ const ControllerManager = (
       controller.off()
     },
     render(pads: Array<PadProps>) {
-      controller.doRender(pads)
+      controller.render(pads)
     },
   }
 }

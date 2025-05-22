@@ -48,5 +48,14 @@ export const Color = {
   PURPLE: fromRGB(128, 0, 128),
   YELLOW: fromRGB(255, 255, 0),
   WHITE: fromRGB(255, 255, 255),
+  ROYGBIV: [
+    fromRGB(255, 0, 0), // Red
+    fromRGB(255, 165, 0), // Orange
+    fromRGB(255, 255, 0), // Yellow
+    fromRGB(0, 255, 0), // Green
+    fromRGB(0, 0, 255), // Blue
+    fromRGB(75, 0, 130), // Indigo
+    fromRGB(238, 130, 238), // Violet
+  ],
   Schema: ColorSchema,
 }

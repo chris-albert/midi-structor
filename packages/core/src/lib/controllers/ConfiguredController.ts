@@ -6,7 +6,12 @@ import { Option, pipe } from 'effect'
 import React from 'react'
 import { focusAtom } from 'jotai-optics'
 import { OpticFor_ } from 'optics-ts'
-import { Midi, MidiDeviceSelection, MidiEmitter, MidiListener } from '../midi/GlobalMidi'
+import {
+  Midi,
+  MidiDeviceSelection,
+  MidiEmitter,
+  MidiListener,
+} from '../midi/GlobalMidi'
 import { MidiDeviceManager } from '../midi/MidiDeviceManager'
 import { MidiMessage } from '../midi/MidiMessage'
 import { EventEmitter } from '../EventEmitter'
@@ -15,6 +20,7 @@ import { Color } from './Color'
 import { ControllerConfig } from './ControllerConfig'
 import { ControllerDevices } from './devices/ControllerDevices'
 import { ControllerUIDevices } from './devices/ui/ControllerUIDevices'
+import { v4 } from 'uuid'
 
 export type ConfiguredController = {
   name: string
@@ -26,6 +32,7 @@ export type ConfiguredController = {
     input: Option.Option<string>
     output: Option.Option<string>
   }
+  id: string
 }
 
 export type ConfiguredControllers = Array<ConfiguredController>
@@ -39,6 +46,7 @@ const defaultConfiguredController = (name: string): ConfiguredController => ({
     input: Option.none(),
     output: Option.none(),
   },
+  id: v4(),
 })
 
 export type VirtualStore = Record<string, Color>
@@ -60,7 +68,10 @@ const useControllers = () => {
 
 const useControllerAtoms = () => {
   const activeProject = useAtomValue(ProjectMidi.atoms.project.active)
-  const controllers = React.useMemo(() => atoms.controllers(activeProject), [activeProject])
+  const controllers = React.useMemo(
+    () => atoms.controllers(activeProject),
+    [activeProject]
+  )
   return splitAtom(controllers)
 }
 
@@ -84,7 +95,10 @@ const useRemoveController = () => {
 }
 
 const useControllerName = (controller: PrimitiveAtom<ConfiguredController>) => {
-  const nameAtom = React.useMemo(() => focusAtom(controller, (s) => s.prop('name')), [])
+  const nameAtom = React.useMemo(
+    () => focusAtom(controller, (s) => s.prop('name')),
+    []
+  )
   return useAtomValue(nameAtom)
 }
 
@@ -123,7 +137,9 @@ const useController = (controller: PrimitiveAtom<ConfiguredController>) => {
 }
 
 const useRealController = (controller: PrimitiveAtom<ConfiguredController>) => {
-  const baseController = useController(controller as PrimitiveAtom<ConfiguredController>)
+  const baseController = useController(
+    controller as PrimitiveAtom<ConfiguredController>
+  )
   const selected = useSafeFocus(controller, 'selected')
   const [input, setInput] = useAtom(useSafeFocus(selected, 'input'))
   const [output, setOutput] = useAtom(useSafeFocus(selected, 'output'))
@@ -171,21 +187,25 @@ export type ConfiguredControllerIO = {
   enabled: boolean
 }
 
-const useRealIO = (controller: ConfiguredController): ConfiguredControllerIO => {
+const useRealIO = (
+  controller: ConfiguredController
+): ConfiguredControllerIO => {
   const manager = Midi.useDeviceManager()
 
   const listener = React.useMemo(
     () =>
-      Option.getOrElse(pipe(controller.selected.input, Option.flatMap(manager.getInput)), () =>
-        MidiDeviceManager.emptyListener()
+      Option.getOrElse(
+        pipe(controller.selected.input, Option.flatMap(manager.getInput)),
+        () => MidiDeviceManager.emptyListener()
       ),
     [controller]
   )
 
   const emitter = React.useMemo(
     () =>
-      Option.getOrElse(pipe(controller.selected.output, Option.flatMap(manager.getOutput)), () =>
-        MidiDeviceManager.emptyEmitter()
+      Option.getOrElse(
+        pipe(controller.selected.output, Option.flatMap(manager.getOutput)),
+        () => MidiDeviceManager.emptyEmitter()
       ),
     [controller]
   )
@@ -198,13 +218,17 @@ const useRealIO = (controller: ConfiguredController): ConfiguredControllerIO => 
 }
 
 const useUIStore = (controller: ConfiguredController) => {
-  return ControllerUIDevices.useDevices().getByName(controller.device).useStore(controller.name)
+  return ControllerUIDevices.useDevices()
+    .getByName(controller.device)
+    .useStore(controller.name)
 }
 
 const useVirtualListener = (controller: ConfiguredController) =>
   useAtomValue(atoms.virtualListener(controller.name))
 
-const useVirtualIO = (controller: ConfiguredController): ConfiguredControllerIO => {
+const useVirtualIO = (
+  controller: ConfiguredController
+): ConfiguredControllerIO => {
   const putMessage = useUIStore(controller).usePut()
   const listener = useVirtualListener(controller)
 

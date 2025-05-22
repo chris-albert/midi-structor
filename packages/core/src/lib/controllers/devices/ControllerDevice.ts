@@ -1,15 +1,10 @@
 import { Controller } from '../Controller'
-import { MidiEmitter, MidiListener } from '../../midi/GlobalMidi'
 import { ControllerWidgets } from '../ControllerWidgets'
 import { ControllerWidget } from '../ControllerWidget'
 
 export type ControllerDevice<Widgets extends Array<ControllerWidget> = any> = {
   name: string
-  controller: (
-    emitter: MidiEmitter,
-    listener: MidiListener,
-    virtual: boolean
-  ) => Controller
+  controller: Controller
   widgets: ControllerWidgets<Widgets>
 }
 
@@ -19,7 +14,7 @@ const of = <Widgets extends Array<ControllerWidget>>(
 
 const empty: ControllerDevice<[]> = {
   name: 'empty',
-  controller: (e, l) => Controller.empty,
+  controller: Controller.empty,
   widgets: ControllerWidgets([]),
 }
 

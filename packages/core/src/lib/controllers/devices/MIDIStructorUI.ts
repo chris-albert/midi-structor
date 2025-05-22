@@ -1,4 +1,3 @@
-import { MidiEmitter, MidiListener } from '../../midi/GlobalMidi'
 import { Controller } from '../Controller'
 import { ControllerDevice } from './ControllerDevice'
 import { MidiMessage, SysExMessage } from '../../midi/MidiMessage'
@@ -49,45 +48,38 @@ export const MIDIStructorResend = Schema.TaggedStruct('resend', {})
 export const MidiStructorSysexControlCode = 50
 export const MidiStructorUIManufacturer = 0x03
 
-const controller = (
-  emitter: MidiEmitter,
-  listener: MidiListener,
-  virtual: boolean
-) =>
-  new Controller({
-    init: (widgets) => {
-      const uiWidgets = MidiStructorUIInit.make({
-        widgets: widgets.map((w) => w.widget),
-      })
-      console.log('MidiStructor UI widgets', uiWidgets)
+const controller = Controller.of({
+  init: (emitter) => (widgets) => {
+    const uiWidgets = MidiStructorUIInit.make({
+      widgets: widgets.map((w) => w.widget),
+    })
+    console.log('MidiStructor UI widgets', uiWidgets)
+    emitter.send(
+      MidiMessage.jsonSchemaSysex(
+        uiWidgets,
+        MidiStructorUIInit,
+        [MidiStructorSysexControlCode],
+        MidiStructorUIManufacturer
+      )
+    )
+  },
+  render: (emitter) => (pads) => {
+    pads.forEach((pad) => {
       emitter.send(
         MidiMessage.jsonSchemaSysex(
-          uiWidgets,
-          MidiStructorUIInit,
-          [MidiStructorSysexControlCode],
-          MidiStructorUIManufacturer
+          MIDIStructorPad.make({
+            target: pad.target,
+            color: pad.color,
+            options: pad.options,
+          }),
+          MIDIStructorPad,
+          [MidiStructorSysexControlCode]
         )
       )
-    },
-    render: (pads) => {
-      pads.forEach((pad) => {
-        emitter.send(
-          MidiMessage.jsonSchemaSysex(
-            MIDIStructorPad.make({
-              target: pad.target,
-              color: pad.color,
-              options: pad.options,
-            }),
-            MIDIStructorPad,
-            [MidiStructorSysexControlCode]
-          )
-        )
-      })
-    },
-    listenFilter: (m: MidiMessage): boolean => true,
-    listener,
-    targets: [],
-  })
+    })
+  },
+  targets: [],
+})
 
 export type MIDIStructorStore = UIMessageStore<MIDIStructorMessage>
 

@@ -2,6 +2,7 @@ import React from 'react'
 import { Controller } from './Controller'
 import { ResolvedControllerWidget } from './ControllerWidget'
 import { ProjectHooks } from '../project/ProjectHooks'
+import { ControllerInstance } from './ControllerInstance'
 
 type ControllerWidgetComponentProps = {
   widget: ResolvedControllerWidget
@@ -14,7 +15,7 @@ const ControllerWidgetComponent: React.FC<ControllerWidgetComponentProps> = ({
 }
 
 export type ControllerConfigComponentProps = {
-  controller: Controller
+  controller: ControllerInstance
   name: string
   widgets: Array<ResolvedControllerWidget>
 }
@@ -23,7 +24,7 @@ export const ControllerConfigComponent: React.FC<
   ControllerConfigComponentProps
 > = ({ controller, name, widgets }) => {
   React.useEffect(() => {
-    controller.doInit(widgets)
+    controller.init(widgets)
   }, [widgets])
 
   const loading = ProjectHooks.useIsProjectLoading()
