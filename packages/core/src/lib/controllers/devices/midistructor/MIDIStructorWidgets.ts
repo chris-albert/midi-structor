@@ -15,6 +15,7 @@ const state = (store: MIDIStructorStore) => {
       return MIDIStructorPad.make({
         target,
         color: 0,
+        options: {},
       })
     }
   }

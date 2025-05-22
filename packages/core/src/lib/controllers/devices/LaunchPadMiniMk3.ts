@@ -29,11 +29,23 @@ const fixColor = (color: Color, fixColor: boolean): Color => {
     //find max channel
     const [r, g, b] = Color.toRGB(color)
     if (r > g && r > b) {
-      return Color.fromRGB(r, Math.floor(g * COLOR_SCALE), Math.floor(b * COLOR_SCALE))
+      return Color.fromRGB(
+        r,
+        Math.floor(g * COLOR_SCALE),
+        Math.floor(b * COLOR_SCALE)
+      )
     } else if (g > r && g > b) {
-      return Color.fromRGB(Math.floor(r * COLOR_SCALE), g, Math.floor(b * COLOR_SCALE))
+      return Color.fromRGB(
+        Math.floor(r * COLOR_SCALE),
+        g,
+        Math.floor(b * COLOR_SCALE)
+      )
     } else if (b > r && b > g) {
-      return Color.fromRGB(Math.floor(r * COLOR_SCALE), Math.floor(g * COLOR_SCALE), b)
+      return Color.fromRGB(
+        Math.floor(r * COLOR_SCALE),
+        Math.floor(g * COLOR_SCALE),
+        b
+      )
     } else {
       return color
     }
@@ -42,7 +54,11 @@ const fixColor = (color: Color, fixColor: boolean): Color => {
   }
 }
 
-const controller = (emitter: MidiEmitter, listener: MidiListener, virtual: boolean) =>
+const controller = (
+  emitter: MidiEmitter,
+  listener: MidiListener,
+  virtual: boolean
+) =>
   new Controller({
     init: () => {
       emitter.send(MidiMessage.sysex([32, 41, 2, 13, 14, 1]))
@@ -63,8 +79,40 @@ const controller = (emitter: MidiEmitter, listener: MidiListener, virtual: boole
       })
       emitter.send(MidiMessage.sysex(sysexArr))
     },
+    loading: (controller) => {
+      const allWhite = () => {
+        controller.render(
+          _.map(controller.targets, (target) => ({
+            target,
+            color: Color.WHITE,
+          }))
+        )
+      }
+      const allBlack = () => {
+        controller.render(
+          _.map(controller.targets, (target) => ({
+            target,
+            color: Color.BLACK,
+          }))
+        )
+      }
+      let flip = false
+
+      const id = setInterval(() => {
+        const _ = flip ? allWhite() : allBlack()
+        flip = !flip
+      }, 200)
+      console.log('loading', id)
+      return () => {
+        console.log('cleanup', id)
+        clearInterval(id)
+      }
+    },
     listenFilter: (m: MidiMessage): boolean => {
-      return !((m.type === 'noteon' && m.velocity === 0) || (m.type === 'cc' && m.data === 0))
+      return !(
+        (m.type === 'noteon' && m.velocity === 0) ||
+        (m.type === 'cc' && m.data === 0)
+      )
     },
     listener,
     targets: MidiTarget.notes({ from: 11, to: 99 }),

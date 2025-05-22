@@ -86,7 +86,7 @@ const ControllerManager = (
       controller.off()
     },
     render(pads: Array<PadProps>) {
-      controller.render(pads)
+      controller.doRender(pads)
     },
   }
 }

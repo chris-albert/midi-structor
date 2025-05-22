@@ -1,6 +1,7 @@
 import React from 'react'
 import { Controller } from './Controller'
 import { ResolvedControllerWidget } from './ControllerWidget'
+import { ProjectHooks } from '../project/ProjectHooks'
 
 type ControllerWidgetComponentProps = {
   widget: ResolvedControllerWidget
@@ -22,19 +23,26 @@ export const ControllerConfigComponent: React.FC<
   ControllerConfigComponentProps
 > = ({ controller, name, widgets }) => {
   React.useEffect(() => {
-    controller.init(widgets)
+    controller.doInit(widgets)
   }, [widgets])
 
-  return (
-    <controller
-      model={controller}
-      name={name}>
-      {widgets.map((widget, i) => (
-        <ControllerWidgetComponent
-          widget={widget}
-          key={`${widget.name}-${i}`}
-        />
-      ))}
-    </controller>
-  )
+  const loading = ProjectHooks.useIsProjectLoading()
+
+  if (loading) {
+    return null
+  } else {
+    controller.loaded()
+    return (
+      <controller
+        model={controller}
+        name={name}>
+        {widgets.map((widget, i) => (
+          <ControllerWidgetComponent
+            widget={widget}
+            key={`${widget.name}-${i}`}
+          />
+        ))}
+      </controller>
+    )
+  }
 }

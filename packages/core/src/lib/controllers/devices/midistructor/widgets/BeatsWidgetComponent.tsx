@@ -9,7 +9,7 @@ import { Color } from '../../../Color'
 export const BeatsWidgetComponent = MIDIStructorWidget.of({
   widget: BeatsWidget,
   Component: (widget, onClick, pads) => {
-    const totalBeats = _.head(pads)?.options?.timeSignature.noteCount || 8
+    const totalBeats = _.head(pads)?.options?.timeSignature?.noteCount || 8
     return (
       <PadUIComponent>
         {pads.slice(0, totalBeats).map((pad, i) => (

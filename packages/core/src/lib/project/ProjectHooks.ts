@@ -161,6 +161,9 @@ const useOnStatusChange = (f: (status: ProjectImportStatus) => void) => {
   React.useEffect(() => f(importStatus), [importStatus])
 }
 
+const useIsProjectLoading = () =>
+  useAtomValue(ProjectMidi.atoms.importStatus).type !== 'done'
+
 const useBeat = () => useAtomValue(ProjectMidi.atoms.realTime.beats)
 const useBarBeats = () => useAtomValue(ProjectMidi.atoms.realTime.barBeats)
 const useTimeSignature = () =>
@@ -217,6 +220,7 @@ export const ProjectHooks = {
   useLoopState,
   getLoopState,
   useOnProjectLoad,
+  useIsProjectLoading,
   useTracksAtoms: () => {
     return useAtomValue(splitAtom(useTracksAtom()))
   },
