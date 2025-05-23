@@ -11,7 +11,7 @@ export default defineConfig({
   server: {
     port: 3000,
     host: 'localhost',
-    // hmr: false,
+    hmr: false,
   },
   plugins: [
     react(),

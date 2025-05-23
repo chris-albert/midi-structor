@@ -3,7 +3,7 @@
   "tasks": {
     "madge": {
       "outputs": [],
-      "dependsOn": ["^madge"],
+      "dependsOn": ["@midi-structor/ui#build"],
       "inputs": ["./packages/core/**/*.ts", "./packages/core/**/*.ts"],
       "cache": false
     },

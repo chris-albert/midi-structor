@@ -18,7 +18,6 @@ import {
 } from './AbletonUIMessage'
 import React from 'react'
 import { AtomStorage } from '../storage/AtomStorage'
-import { MIDIStructorUI } from '../controllers/devices/MIDIStructorUI'
 import { Schema } from 'effect'
 import { ProjectHooks } from './ProjectHooks'
 
@@ -166,32 +165,15 @@ const useAbletonUIMessages = () => {
   return { onAbletonUIMessage }
 }
 
-const useGlobalMidiStructorStore = () =>
-  MIDIStructorUI.useStore('global:MIDIStructorUI')
-
-const useProjectListener = (tracks: Array<string>) => {
+const useProjectListener = () => {
   const dawListener = Midi.useDawListener()
-  const dawEmitter = Midi.useDawEmitter()
   const ableton = useAbletonUIMessages()
-  const onMidiStructor = useGlobalMidiStructorStore().usePut()
-
-  React.useEffect(() => {
-    dawEmitter.send(TX_MESSAGE.init())
-  }, [dawEmitter])
-
-  ProjectHooks.useOnStatusChange((status) => {
-    if (status.type === 'ack') {
-      dawEmitter.send(TX_MESSAGE.initReady(tracks))
-    }
-  })
 
   React.useEffect(() => {
     return dawListener.on('sysex', (sysex) => {
       const msg = parseAbletonUIMessage(sysex)
       if (msg !== undefined) {
         ableton.onAbletonUIMessage(msg)
-      } else {
-        onMidiStructor(sysex)
       }
     })
   }, [dawListener])
@@ -199,7 +181,6 @@ const useProjectListener = (tracks: Array<string>) => {
 
 export const ProjectMidi = {
   useProjectListener,
-  useGlobalMidiStructorStore,
   defaultProjectsConfig,
   defaultProjectConfig,
   atoms,
