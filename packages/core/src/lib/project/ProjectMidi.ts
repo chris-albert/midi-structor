@@ -21,8 +21,6 @@ import { AtomStorage } from '../storage/AtomStorage'
 import { MIDIStructorUI } from '../controllers/devices/MIDIStructorUI'
 import { Schema } from 'effect'
 import { ProjectHooks } from './ProjectHooks'
-import { ControllerMidi } from '../controllers/ControllerMidi'
-import { ConfiguredController } from '../controllers/ConfiguredController'
 
 const store = getDefaultStore()
 
@@ -171,12 +169,11 @@ const useAbletonUIMessages = () => {
 const useGlobalMidiStructorStore = () =>
   MIDIStructorUI.useStore('global:MIDIStructorUI')
 
-const useProjectListener = () => {
+const useProjectListener = (tracks: Array<string>) => {
   const dawListener = Midi.useDawListener()
   const dawEmitter = Midi.useDawEmitter()
   const ableton = useAbletonUIMessages()
   const onMidiStructor = useGlobalMidiStructorStore().usePut()
-  const tracks = ConfiguredController.useProjectTracks()
 
   React.useEffect(() => {
     dawEmitter.send(TX_MESSAGE.init())
@@ -184,7 +181,6 @@ const useProjectListener = () => {
 
   ProjectHooks.useOnStatusChange((status) => {
     if (status.type === 'ack') {
-      console.log('tracks', tracks)
       dawEmitter.send(TX_MESSAGE.initReady(tracks))
     }
   })

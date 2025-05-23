@@ -77,10 +77,6 @@ const init = (): ForeverBeat => {
     onBeat(store.get(ProjectMidi.atoms.realTime.barBeats))
   })
 
-  store.sub(ProjectMidi.atoms.realTime.halfBeat, () => {
-    // onBeat(store.get(ProjectMidi.atoms.realTime.halfBeat))
-  })
-
   const onTick = (f: ForeverBeatCallback) => {
     callbacks = [...callbacks, f]
     return () => {

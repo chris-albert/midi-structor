@@ -1,7 +1,7 @@
 import { ReactControllersApp } from './ReactControllersApp'
 import ControllerWorker from '../workers/controller/worker?worker'
 
-const USE_WORKER = false
+const USE_WORKER = true
 
 const usingWorker = () => {
   console.log('Loading Worker Controller...')

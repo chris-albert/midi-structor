@@ -5,7 +5,9 @@
   "scripts": {
     "ui-dev": "turbo run @midi-structor/ui#dev",
     "ui-deploy": "turbo run @midi-structor/ui#build",
-    "electron-make": "turbo run @midi-structor/electron#make"
+    "electron-make": "turbo run @midi-structor/electron#make",
+    "madge-image": "madge --image graph.svg --circular ./packages/core",
+    "madge": "madge --circular ./packages/core"
   },
   "private": true,
   "dependencies": {

@@ -1,12 +1,18 @@
 import _ from 'lodash'
 import { LaunchPadMiniMk3 } from './LaunchPadMiniMk3'
+import { MIDIStructorUI } from './MIDIStructorUI'
 import { ControllerDevice } from './ControllerDevice'
 import { Option } from 'effect'
-import { MIDIStructorUI } from './MIDIStructorUI'
 
-const allDevices: Array<ControllerDevice> = [LaunchPadMiniMk3.device, MIDIStructorUI.device]
+const allDevices: Array<ControllerDevice> = [
+  LaunchPadMiniMk3.device,
+  MIDIStructorUI.device,
+]
 
-const deviceLookup: Record<string, ControllerDevice> = _.keyBy(allDevices, 'name')
+const deviceLookup: Record<string, ControllerDevice> = _.keyBy(
+  allDevices,
+  'name'
+)
 
 const defaultDevice: ControllerDevice = LaunchPadMiniMk3.device
 

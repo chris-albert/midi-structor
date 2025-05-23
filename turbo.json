@@ -1,6 +1,12 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "tasks": {
+    "madge": {
+      "outputs": [],
+      "dependsOn": ["^madge"],
+      "inputs": ["./packages/core/**/*.ts", "./packages/core/**/*.ts"],
+      "cache": false
+    },
     "build": {
       "dependsOn": ["^build"],
       "outputs": ["dist/**"]

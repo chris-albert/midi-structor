@@ -1,6 +1,10 @@
 import React from 'react'
 import { MidiAccess } from '../../midi/MidiAccess'
-import { ProjectHooks, ProjectMidi } from '@midi-structor/core'
+import {
+  ConfiguredController,
+  ProjectHooks,
+  ProjectMidi,
+} from '@midi-structor/core'
 import { toast } from 'react-toastify'
 
 export type MidiRootProps = {}
@@ -8,7 +12,8 @@ export type MidiRootProps = {}
 export const MidiRoot: React.FC<MidiRootProps> = ({}) => {
   MidiAccess.useAccess()
 
-  ProjectMidi.useProjectListener()
+  const tracks = ConfiguredController.useProjectTracks()
+  ProjectMidi.useProjectListener(tracks)
   const onProjectLoad = ProjectHooks.useOnProjectLoad()
 
   ProjectHooks.useOnStatusChange((status) => {
