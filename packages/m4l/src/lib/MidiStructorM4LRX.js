@@ -21,9 +21,10 @@ var RX_MESSAGE = {
     post('init\n')
     outlet(0, 'initAck')
   },
-  0x41: function () {
-    post('initReady\n')
-    outlet(0, 'initProject')
+  0x41: function (buffer) {
+    var tracks = charCodesToString(buffer)
+    post('initReady', tracks, '\n')
+    outlet(0, 'initProject', tracks)
   },
   0x50: function () {
     post('starting\n')
@@ -35,25 +36,30 @@ var RX_MESSAGE = {
     var api = getApi()
     api.call('stop_playing')
   },
-  0x52: function (cueIndex) {
+  0x52: function (buffer) {
+    var cueIndex = charCodesToNumber(buffer)
     var cue = new LiveAPI(function () {}, 'live_set cue_points ' + cueIndex)
     cue.call('jump')
   },
-  0x54: function (jumpBeat) {
+  0x54: function (buffer) {
+    var jumpBeat = charCodesToNumber(buffer)
     var api = getApi()
     api.call('jump_by', jumpBeat)
   },
-  0x55: function (on) {
+  0x55: function (buffer) {
+    var on = charCodesToNumber(buffer)
     post('recording\n')
     var api = getApi()
     api.set('record_mode', on)
   },
-  0x56: function (on) {
+  0x56: function (buffer) {
+    var on = charCodesToNumber(buffer)
     post('metronome', on, '\n')
     var api = getApi()
     api.set('metronome', on)
   },
-  0x57: function (on) {
+  0x57: function (buffer) {
+    var on = charCodesToNumber(buffer)
     post('loop', on, '\n')
     var api = getApi()
     api.set('loop', on)
@@ -73,7 +79,6 @@ function processByte(byte) {
     processMessage()
     buffer = []
   } else {
-    post('byte: ' + byte)
     buffer.push(byte)
   }
 }
@@ -90,12 +95,20 @@ function charCodesToNumber(charCodes) {
   }
 }
 
+function charCodesToString(charCodes) {
+  var str = ''
+  for (var i = 0; i < charCodes.length; i++) {
+    str += String.fromCharCode(charCodes[i])
+  }
+  return str
+}
+
 function processMessage() {
   if (buffer[0] == MANUFACURER_ID) {
     post(buffer[1], '\n')
     var func = RX_MESSAGE[buffer[1]]
     if (func != undefined) {
-      func(charCodesToNumber(buffer.slice(2)))
+      func(buffer.slice(2))
     }
   }
 }

@@ -138,6 +138,15 @@ const RX_STATUS: Record<string, MessageParser> = {
       }
     },
   },
+  HALF_BEAT: {
+    statusByte: 0x0f,
+    parse: (input: Array<any>) => {
+      return {
+        type: 'half-beat',
+        isHalf: _.toNumber(input[0]) === 1,
+      }
+    },
+  },
 }
 
 const RX_STATUS_LOOKUP: Record<number, MessageParser> = _.fromPairs(
@@ -221,6 +230,11 @@ export type LoopStateMessage = {
   value: boolean
 }
 
+export type HalfBeatMessage = {
+  type: 'half-beat'
+  isHalf: boolean
+}
+
 export type AbletonUIMessage =
   | BeatMessage
   | InitAckMessage
@@ -235,6 +249,7 @@ export type AbletonUIMessage =
   | InitCueMessage
   | MetronomeStateMessage
   | LoopStateMessage
+  | HalfBeatMessage
 
 const parseSysExBody = (
   body: Readonly<Array<number>>

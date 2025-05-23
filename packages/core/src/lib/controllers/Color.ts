@@ -27,7 +27,6 @@ const fromHex = (hex: string): Color => {
   return fromRGB(parseInt(red, 16), parseInt(green, 16), parseInt(blue, 16))
 }
 
-// const ColorSchema = Schema.String
 const ColorSchema = Schema.transform(Schema.String, Schema.Number, {
   strict: true,
   decode: fromHex,

@@ -82,6 +82,7 @@ export type ResolvedControllerWidget<A = any> = {
   targets: () => Array<MidiTarget>
   component: () => React.ReactElement
   widget: A
+  tracks: () => Array<string>
 }
 
 export type ControllerWidgetType<A extends ControllerWidget> =

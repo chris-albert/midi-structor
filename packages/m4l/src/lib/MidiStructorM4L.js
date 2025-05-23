@@ -16,6 +16,7 @@ var STATUS = {
   CUE: 0x0c,
   METRO_STATE: 0x0d,
   LOOP: 0x0e,
+  HALF_BEAT: 0x0f,
 }
 
 var SYSEX = {
@@ -104,6 +105,9 @@ var Message = {
   loop: function (state) {
     return sysex([STATUS.LOOP, state])
   },
+  halfBeat: function (isHalf) {
+    return sysex([STATUS.HALF_BEAT, isHalf])
+  },
 }
 
 inlets = 1
@@ -131,6 +135,10 @@ function tempo(num) {
 
 function isPlaying(num) {
   outlet(0, Message.isPlaying(num))
+}
+
+function halfBeat(div) {
+  outlet(0, Message.halfBeat(div))
 }
 
 var api = null
@@ -172,11 +180,12 @@ function init() {
   post('nothing to do here right now\n')
 }
 
-function initProject() {
+function initProject(filterTracks) {
   setupObservers()
+  var tracksArray = JSON.parse(filterTracks).tracks
 
-  post('Init Project\n')
-  tracks = parseTracks()
+  post('Init Project', tracksArray, '\n')
+  tracks = parseTracks(tracksArray)
   cues = parseCues()
 
   emit(tracks, cues)
@@ -240,13 +249,13 @@ function generateMessages(tracks, cues) {
   return messages
 }
 
-function parseTracks() {
+function parseTracks(filterTracks) {
   api = new LiveAPI(function () {}, 'live_set')
   var tracksCount = api.getcount('tracks')
   var tracks = []
   var clips = []
   for (var trackIndex = 0; trackIndex < tracksCount; trackIndex++) {
-    var tmp = parseTrack(trackIndex)
+    var tmp = parseTrack(trackIndex, filterTracks)
     if (tmp !== undefined) {
       tracks.push(tmp.track)
       clips = clips.concat(tmp.clips)
@@ -259,11 +268,20 @@ function parseTracks() {
   }
 }
 
-function parseTrack(trackIndex) {
+function exists(array, element) {
+  for (var i = 0; i < array.length; i++) {
+    if (array[i] === element) {
+      return true
+    }
+  }
+  return false
+}
+
+function parseTrack(trackIndex, filterTracks) {
   api.path = 'live_set tracks ' + trackIndex
   var name = api.get('name')[0]
   var color = api.get('color')[0]
-  if (api.get('has_midi_output')[0] === 1) {
+  if (api.get('has_midi_output')[0] === 1 && exists(filterTracks, name)) {
     var clipsCount = api.getcount('arrangement_clips')
     var clips = []
     for (var clipIndex = 0; clipIndex < clipsCount; clipIndex++) {

@@ -24,7 +24,8 @@ const init = (): ForeverBeat => {
   let millisPerHalfBeat = 100
   let noteLength = 4
 
-  const runAllCallbacks = (p: ForeverBeatParams) => callbacks.forEach((cb) => cb(p))
+  const runAllCallbacks = (p: ForeverBeatParams) =>
+    callbacks.forEach((cb) => cb(p))
 
   const onBeat = (beat: number) => {
     runAllCallbacks({ beat, halfBeat: false, isPlaying })
@@ -74,6 +75,10 @@ const init = (): ForeverBeat => {
 
   store.sub(ProjectMidi.atoms.realTime.barBeats, () => {
     onBeat(store.get(ProjectMidi.atoms.realTime.barBeats))
+  })
+
+  store.sub(ProjectMidi.atoms.realTime.halfBeat, () => {
+    // onBeat(store.get(ProjectMidi.atoms.realTime.halfBeat))
   })
 
   const onTick = (f: ForeverBeatCallback) => {

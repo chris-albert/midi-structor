@@ -6,6 +6,7 @@ import { Option, pipe } from 'effect'
 import React from 'react'
 import { focusAtom } from 'jotai-optics'
 import { OpticFor_ } from 'optics-ts'
+import { Set } from 'immutable'
 import {
   Midi,
   MidiDeviceSelection,
@@ -64,6 +65,18 @@ const atoms = {
 const useControllers = () => {
   const activeProject = useAtomValue(ProjectMidi.atoms.project.active)
   return useAtom(atoms.controllers(activeProject))
+}
+
+const useProjectTracks = () => {
+  const [controllers] = useControllers()
+
+  const widgets = controllers.flatMap((controller) =>
+    Option.match(ControllerDevices.findByName(controller.device), {
+      onSome: (device) => device.widgets.resolve(controller.config),
+      onNone: () => [],
+    })
+  )
+  return Set(widgets.flatMap((widget) => widget.tracks())).toArray()
 }
 
 const useControllerAtoms = () => {
@@ -283,4 +296,5 @@ export const ConfiguredController = {
   useControllerName,
   useAddController,
   useControllersValue,
+  useProjectTracks,
 }

@@ -29,6 +29,7 @@ export const ControllerWidgets = <Widgets extends Array<ControllerWidget>>(
             targets: () => controllerWidget.targets(w),
             component: () => controllerWidget.component(w),
             widget: w,
+            tracks: () => controllerWidget.tracks(w),
           } as ResolvedControllerWidget
         },
         onNone: () => {

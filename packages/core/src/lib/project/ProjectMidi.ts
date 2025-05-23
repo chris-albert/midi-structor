@@ -99,6 +99,7 @@ const atoms = {
     isPlaying: atom(false),
     metronomeState: atom(false),
     loopState: atom(false),
+    halfBeat: atom(false),
   },
 }
 
@@ -114,6 +115,7 @@ const useAbletonUIMessages = () => {
   const setIsPlaying = useSetAtom(atoms.realTime.isPlaying)
   const setMetronomeState = useSetAtom(atoms.realTime.metronomeState)
   const setLoopState = useSetAtom(atoms.realTime.loopState)
+  const setHalfBeat = useSetAtom(atoms.realTime.halfBeat)
 
   const setAbletonProjectName = useSetAtom(atoms.project.abletonName)
 
@@ -158,6 +160,8 @@ const useAbletonUIMessages = () => {
       setMetronomeState(msg.value)
     } else if (msg.type === 'loop-state') {
       setLoopState(msg.value)
+    } else if (msg.type === 'half-beat') {
+      setHalfBeat(msg.isHalf)
     }
   }
 
@@ -172,7 +176,7 @@ const useProjectListener = () => {
   const dawEmitter = Midi.useDawEmitter()
   const ableton = useAbletonUIMessages()
   const onMidiStructor = useGlobalMidiStructorStore().usePut()
-  const controllers = ConfiguredController.useControllers()
+  const tracks = ConfiguredController.useProjectTracks()
 
   React.useEffect(() => {
     dawEmitter.send(TX_MESSAGE.init())
@@ -180,8 +184,8 @@ const useProjectListener = () => {
 
   ProjectHooks.useOnStatusChange((status) => {
     if (status.type === 'ack') {
-      console.log('controllers', controllers)
-      dawEmitter.send(TX_MESSAGE.initReady([]))
+      console.log('tracks', tracks)
+      dawEmitter.send(TX_MESSAGE.initReady(tracks))
     }
   })
 
