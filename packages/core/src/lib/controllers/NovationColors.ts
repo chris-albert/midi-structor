@@ -2,216 +2,85 @@ import _ from 'lodash'
 
 //Decompiled ableton sources https://github.com/gluon/AbletonLive11_MIDIRemoteScripts
 // Toook mappings from  https://github.com/zapperment/launchpad-colour-mod/tree/main
-const CLIP_COLOR_TABLE = {
-  // salmon
-  16304336: 107,
-
-  // frank orange
-  15579756: 61,
-
-  // dirty gold
-  12890726: 100,
-
-  // lemonade
-  15856827: 73,
-
-  // lime
-  12380990: 85,
-
-  // highlighter green
-  5632102: 87,
-
-  // bianchi
-  6418872: 88,
-
-  // turquoise
-  9959144: 32,
-
-  // sky blue
-  12442873: 91,
-
-  // sapphire
-  9811172: 92,
-
-  // periwinkle
-  12766969: 116,
-
-  // orchid
-  14793450: 52,
-
-  // magenta
-  14853318: 82,
-
-  // white
+const CLIP_COLOR_TABLE: Record<number, number> = {
+  10927616: 74,
+  16149507: 84,
+  4047616: 76,
+  6441901: 69,
+  14402304: 99,
+  8754719: 19,
+  16725558: 5,
+  3947580: 71,
+  10056267: 10,
+  8237133: 18,
+  12026454: 11,
+  12565097: 73,
+  13381230: 58,
+  12243060: 111,
+  16249980: 13,
+  13013643: 4,
+  10208397: 88,
+  695438: 65,
+  13821080: 110,
+  3101346: 46,
+  16749734: 107,
+  8962746: 102,
+  5538020: 79,
+  13684944: 117,
+  15064289: 119,
+  14183652: 94,
+  11442405: 44,
+  13408551: 100,
+  1090798: 78,
+  11096369: 127,
+  16753961: 96,
+  1769263: 87,
+  5480241: 64,
+  1698303: 90,
+  16773172: 97,
+  7491393: 126,
+  8940772: 80,
+  14837594: 10,
+  8912743: 16,
+  10060650: 105,
+  13872497: 14,
+  16753524: 108,
+  8092539: 70,
+  2319236: 39,
+  1716118: 47,
+  12349846: 59,
+  11481907: 121,
+  15029152: 57,
+  2490280: 25,
+  11119017: 112,
+  10701741: 81,
+  15597486: 8,
+  49071: 77,
+  10851765: 93,
+  12558270: 48,
+  32192: 43,
+  8758722: 103,
+  10204100: 104,
+  11958214: 55,
+  8623052: 66,
+  16726484: 95,
+  12581632: 86,
+  13958625: 28,
+  12173795: 115,
+  13482980: 116,
   16777215: 3,
+  6094824: 33,
+  13496824: 114,
+  9611263: 92,
+  9160191: 36,
+}
 
-  // fire hydrant red
-  15694713: 106,
-
-  // tangerine
-  14780736: 127,
-
-  // sand
-  10855297: 105,
-
-  // sunshine yellow
-  15723127: 14,
-
-  // terminal green
-  11728803: 86,
-
-  // forest
-  5357093: 19,
-
-  // tiffany blue
-  2014124: 65,
-
-  // cyan
-  5628654: 68,
-
-  // cerulean
-  4764640: 39,
-
-  // united nations blue
-  1935034: 43,
-
-  // amtethyst
-  12565226: 93,
-
-  // iris
-  14076642: 116,
-
-  // flamingo
-  15695577: 53,
-
-  // aluminum
-  16054262: 2,
-
-  // terracotta
-  14790567: 105,
-
-  // light salmon
-  16173488: 107,
-
-  // whiskey
-  14604478: 8,
-
-  // canary
-  15924181: 73,
-
-  // primrose
-  15200983: 113,
-
-  // wild willow
-  13952703: 16,
-
-  // dark sea green
-  13756371: 24,
-
-  // honeydew
-  15465713: 114,
-
-  // pale turquoise
-  15530491: 114,
-
-  // periwinkle
-  15331061: 118,
-
-  // fog
-  15855863: 2,
-
-  // dull lavender
-  14605298: 116,
-
-  // whisper
-  16579836: 119,
-
-  // silver chalice
-  14214111: 118,
-
-  // dusty pink
-  14735828: 2,
-
-  // barley corn
-  12695710: 105,
-
-  // pale oyster
-  11911343: 118,
-
-  // dark khaki
-  13687734: 110,
-
-  // pistachio
-  10664482: 18,
-
-  // dollar bill
-  10669463: 16,
-
-  // neptune
-  12837852: 89,
-
-  // nepal
-  13952230: 89,
-
-  // polo blue
-  12638174: 36,
-
-  // vista blue
-  12701922: 116,
-
-  // amethyst smoke
-  14080993: 2,
-
-  // lilac
-  15263724: 118,
-
-  // turkish rose
-  13878477: 70,
-
-  // steel
-  10073772: 117,
-
-  // medium carmine
-  11628393: 121,
-
-  // red ochre
-  11304802: 83,
-
-  // coffee
-  8289123: 83,
-
-  // durian yellow
-  13418542: 15,
-
-  // pomelo green
-  9152321: 19,
-
-  // apple
-  7451749: 27,
-
-  // aquamarine
-  1811861: 65,
-
-  // sea blue
-  3177621: 43,
-
-  // cosmic cobalt
-  2837410: 51,
-
-  // sapphire
-  5077422: 112,
-
-  // plump purple
-  9541570: 93,
-
-  // purpureus
-  11967942: 70,
-
-  // fuchsia rose
-  13007771: 55,
-
-  // eclipse
-  4151376: 103,
+const REVERSE_CLIP_COLOR_TABLE: Record<number, string> = {}
+for (const key in CLIP_COLOR_TABLE) {
+  const value = CLIP_COLOR_TABLE[key]
+  if (value !== undefined) {
+    REVERSE_CLIP_COLOR_TABLE[value] = key
+  }
 }
 
 const RGB_COLOR_TABLE: Array<[number, number]> = [
@@ -355,7 +224,9 @@ const findNearestColor = (sourceColor: number): number => {
   const squaredDistance = (color: [number, number]): number => {
     const z = _.zip(hexToChannels(sourceColor), hexToChannels(color[1]))
     const powed = _.compact(
-      _.map(z, ([a, b]) => (a !== undefined && b !== undefined ? Math.pow(a - b, 2) : undefined)),
+      _.map(z, ([a, b]) =>
+        a !== undefined && b !== undefined ? Math.pow(a - b, 2) : undefined
+      )
     )
     return _.sum(powed)
   }
@@ -372,5 +243,22 @@ const findNearestColor = (sourceColor: number): number => {
   return minIndex
 }
 
-export const getNovationColor = (color: number): number =>
+const getNovationColorNearest = (color: number): number =>
   _.get(CLIP_COLOR_TABLE, color, findNearestColor(color))
+
+const getNovationColor = (color: number): number | undefined =>
+  _.get(CLIP_COLOR_TABLE, color, undefined)
+
+const getColorFromNovation = (color: number): number | undefined => {
+  const c = _.get(REVERSE_CLIP_COLOR_TABLE, color, undefined)
+  if (c !== undefined) {
+    return parseInt(c)
+  } else {
+    return undefined
+  }
+}
+
+export const NovationColors = {
+  getNovationColor,
+  getColorFromNovation,
+}

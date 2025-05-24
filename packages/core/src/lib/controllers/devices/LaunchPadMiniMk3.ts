@@ -20,6 +20,7 @@ import { BarTrackerWidget } from '../widgets/BarTrackerWidget'
 import { TrackSectionsWidget } from '../widgets/TrackSectionsWidget'
 import { KeyBoardWidget } from '../widgets/KeyBoardWidget'
 import { ButtonWidget } from '../widgets/ButtonWidget'
+import { NovationColors } from '../NovationColors'
 
 const COLOR_SCALE = 0.5
 
@@ -53,6 +54,17 @@ const fixColor = (color: Color, fixColor: boolean): Color => {
   }
 }
 
+//Song 1
+//Ableton sends: 16725558
+//We convert to hex: FF3636
+//The byte conversion: 255, 54, 54
+//We send to controller: 255, 54, 54
+
+//Song 2
+//Albeton sends: 32192
+//We convert to hex: 007DC0
+//0, 125, 192
+
 const controller = Controller.of({
   init: (emitter) => () => {
     emitter.send(MidiMessage.sysex([32, 41, 2, 13, 14, 1]))
@@ -61,14 +73,19 @@ const controller = Controller.of({
     const sysexArr = [32, 41, 2, 13, 3]
     _.forEach(pads, (pad) => {
       if (pad.color !== undefined) {
-        const [r, g, b] = Color.toRGB(fixColor(pad.color, true))
-        sysexArr.push(
-          3,
-          MidiTarget.toValue(pad.target),
-          Math.floor(r / 2),
-          Math.floor(g / 2),
-          Math.floor(b / 2)
-        )
+        const novationColor = NovationColors.getNovationColor(pad.color)
+        if (novationColor !== undefined) {
+          sysexArr.push(0, MidiTarget.toValue(pad.target), novationColor)
+        } else {
+          const [r, g, b] = Color.toRGB(fixColor(pad.color, false))
+          sysexArr.push(
+            3,
+            MidiTarget.toValue(pad.target),
+            Math.floor(r / 2),
+            Math.floor(g / 2),
+            Math.floor(b / 2)
+          )
+        }
       }
     })
     emitter.send(MidiMessage.sysex(sysexArr))

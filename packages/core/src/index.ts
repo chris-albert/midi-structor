@@ -27,6 +27,7 @@ export * from './lib/controllers/devices/ControllerDevices'
 export * from './lib/controllers/devices/ControllerDevice'
 export * from './lib/controllers/devices/ui/ControllerUIDevices'
 export * from './lib/controllers/devices/ui/ControllerUIDevice'
+export * from './lib/controllers/NovationColors'
 
 // Widgets
 export * from './lib/controllers/devices/midistructor/widgets/PlayButtonComponent'

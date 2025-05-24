@@ -3,12 +3,15 @@ import { Schema } from 'effect'
 const fromRGB = (red: number, green: number, blue: number): Color =>
   0x1000000 + ((red << 16) | (green << 8) | (blue << 0))
 
+const PREPEND_PADDING = ['', '0', '00', '000', '0000', '00000', '000000']
+
 const toHex = (color: Color): string => {
   const hex = color.toString(16)
   if (hex.length > 6) {
     return hex.substring(1, 7)
   } else {
-    return hex
+    const needs = 6 - hex.length
+    return PREPEND_PADDING[needs] + hex
   }
 }
 
@@ -20,6 +23,7 @@ const toRGB = (color: Color): [number, number, number] => {
     parseInt(hex.substring(4, 6), 16),
   ]
 }
+
 const fromHex = (hex: string): Color => {
   const red = hex.substring(0, 2)
   const green = hex.substring(2, 4)
