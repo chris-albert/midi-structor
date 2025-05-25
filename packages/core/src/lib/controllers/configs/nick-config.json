@@ -17,13 +17,14 @@
       "color": "00ff00"
     },
     {
-      "_tag": "play-stop",
+      "_tag": "button",
       "target": {
-        "_tag": "CC",
-        "controllerNumber": 89
+        "_tag": "Note",
+        "note": 89
       },
-      "playColor": "00ff00",
-      "stopColor": "ff0000"
+      "color": "0000ff",
+      "isFlashing": false,
+      "midi": []
     },
     {
       "_tag": "metronome",

@@ -281,6 +281,90 @@
         }
       ],
       "trackName": "Songs"
+    },
+    {
+      "_tag": "keyboard",
+      "topTargets": [
+        {
+          "_tag": "Note",
+          "note": 61
+        },
+        {
+          "_tag": "Note",
+          "note": 62
+        },
+        {
+          "_tag": "Note",
+          "note": 63
+        },
+        {
+          "_tag": "Note",
+          "note": 64
+        },
+        {
+          "_tag": "Note",
+          "note": 65
+        },
+        {
+          "_tag": "Note",
+          "note": 66
+        },
+        {
+          "_tag": "Note",
+          "note": 67
+        },
+        {
+          "_tag": "Note",
+          "note": 68
+        }
+      ],
+      "bottomTargets": [
+        {
+          "_tag": "Note",
+          "note": 51
+        },
+        {
+          "_tag": "Note",
+          "note": 52
+        },
+        {
+          "_tag": "Note",
+          "note": 53
+        },
+        {
+          "_tag": "Note",
+          "note": 54
+        },
+        {
+          "_tag": "Note",
+          "note": 55
+        },
+        {
+          "_tag": "Note",
+          "note": 56
+        },
+        {
+          "_tag": "Note",
+          "note": 57
+        },
+        {
+          "_tag": "Note",
+          "note": 58
+        }
+      ],
+      "topColor": "524e18",
+      "bottomColor": "f5e942",
+      "trackName": "Chris Keyboard"
+    },
+    {
+      "_tag": "button",
+      "target": {
+        "_tag": "Note",
+        "note": 89
+      },
+      "color": "ff0000",
+      "isFlashing": false,
+      "midi": []
     }
   ]
 }

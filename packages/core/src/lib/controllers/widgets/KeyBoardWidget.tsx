@@ -16,19 +16,27 @@ export const KeyBoardWidget = ControllerWidget.of({
     topTargets: Schema.Array(MidiTarget.Schema),
     bottomTargets: Schema.Array(MidiTarget.Schema),
     trackName: Schema.String,
+    topColor: Color.Schema,
+    bottomColor: Color.Schema,
   }),
   targets: (w) => [...w.topTargets, ...w.bottomTargets],
   tracks: (w) => [w.trackName],
-  component: ({ topTargets, bottomTargets, trackName }) => {
+  component: ({
+    topTargets,
+    bottomTargets,
+    trackName,
+    topColor,
+    bottomColor,
+  }) => {
     const track = ProjectHooks.useTrack(trackName)
 
     const activeClip = ProjectHooks.useActiveClip(track)
 
-    const note = React.useMemo(() => {
+    const [note, noteColor] = React.useMemo(() => {
       if (UIClipsOps.isReal(activeClip)) {
-        return activeClip.name.toLowerCase()
+        return [activeClip.name.toLowerCase(), activeClip.color]
       } else {
-        return undefined
+        return [undefined, undefined]
       }
     }, [activeClip])
 
@@ -46,7 +54,13 @@ export const KeyBoardWidget = ControllerWidget.of({
       return (
         <Pad
           key={`keyboard-top-${index}`}
-          color={accidental !== undefined ? Color.BLUE : Color.BLACK}
+          color={
+            accidental !== undefined
+              ? isActive(accidental) && noteColor !== undefined
+                ? noteColor
+                : topColor
+              : Color.BLACK
+          }
           target={target}
           isFlashing={isActive(accidental)}
           onClick={onClick(accidental)}
@@ -58,7 +72,13 @@ export const KeyBoardWidget = ControllerWidget.of({
       return (
         <Pad
           key={`keyboard-bottom-${index}`}
-          color={note !== undefined ? Color.PURPLE : Color.BLACK}
+          color={
+            note !== undefined
+              ? isActive(note) && noteColor !== undefined
+                ? noteColor
+                : bottomColor
+              : Color.BLACK
+          }
           target={target}
           isFlashing={isActive(note)}
           onClick={onClick(note)}
