@@ -50,6 +50,9 @@ export const ControllerEditRawComponent: React.FC<
           <Button
             onClick={onSave}
             variant='outlined'
+            sx={{
+              mixBlendMode: 'difference',
+            }}
             size='small'>
             Save
           </Button>
