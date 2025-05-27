@@ -1,5 +1,4 @@
 import React from 'react'
-import { MidiTarget } from '../../midi/MidiTarget'
 import { Color } from '../Color'
 import { Midi } from '../../midi/GlobalMidi'
 import { TX_MESSAGE } from '../../project/AbletonUIMessage'
@@ -8,13 +7,14 @@ import { ProjectHooks } from '../../project/ProjectHooks'
 import { ControllerWidget } from '../ControllerWidget'
 import { Schema } from 'effect'
 
-export const MetronomeControlWidget = ControllerWidget.of({
+export const MetronomeControlWidget = ControllerWidget.one({
   name: 'metronome-control',
   schema: Schema.Struct({
-    target: MidiTarget.Schema,
     color: Color.Schema,
   }),
-  targets: (w) => [w.target],
+  init: () => ({
+    color: Color.BLUE,
+  }),
   component: ({ target, color }) => {
     const dawEmitter = Midi.useDawEmitter()
     const metronomeState = ProjectHooks.useMetronomeState()

@@ -1,16 +1,13 @@
 import React from 'react'
 import { ControllerWidget } from '../ControllerWidget'
 import { Schema } from 'effect'
-import { MidiTarget } from '../../midi/MidiTarget'
 import { Color } from '../Color'
 import { ProjectHooks } from '../../project/ProjectHooks'
 
-export const TempoWidget = ControllerWidget.of({
+export const TempoWidget = ControllerWidget.one({
   name: 'tempo',
-  schema: Schema.Struct({
-    target: MidiTarget.Schema,
-  }),
-  targets: (w) => [w.target],
+  schema: Schema.Struct({}),
+  init: () => ({}),
   component: ({ target }) => {
     const tempo = ProjectHooks.useTempo()
     return (

@@ -5,13 +5,15 @@ import { ControllerWidget } from '../../../ControllerWidget'
 import { Schema } from 'effect'
 
 export const SpacerWidgetComponent = MIDIStructorWidget.of({
-  widget: ControllerWidget.of({
+  widget: ControllerWidget.none({
     name: 'spacer',
     schema: Schema.Struct({
       width: Schema.Number,
       isLineBreaking: Schema.optional(Schema.Boolean),
     }),
-    targets: (w) => [],
+    init: () => ({
+      width: 100,
+    }),
     component: ({}) => <></>,
   }),
   Component: (widget) => {

@@ -1,7 +1,6 @@
 import React from 'react'
 import _ from 'lodash'
 import { Color } from '../Color'
-import { MidiTarget } from '../../midi/MidiTarget'
 import { ProjectHooks } from '../../project/ProjectHooks'
 import { ControllerWidget } from '../ControllerWidget'
 import { Schema } from 'effect'
@@ -20,14 +19,16 @@ const color = (
   }
 }
 
-export const BeatsWidget = ControllerWidget.of({
+export const BeatsWidget = ControllerWidget.many({
   name: 'beats',
   schema: Schema.Struct({
-    targets: Schema.Array(MidiTarget.Schema),
     oneColor: Color.Schema,
     restColor: Color.Schema,
   }),
-  targets: (w) => [...w.targets],
+  init: () => ({
+    oneColor: Color.GREEN,
+    restColor: Color.RED,
+  }),
   component: ({ targets, oneColor, restColor }) => {
     const beat = ProjectHooks.useBarBeats()
     const timeSignature = ProjectHooks.useTimeSignature()

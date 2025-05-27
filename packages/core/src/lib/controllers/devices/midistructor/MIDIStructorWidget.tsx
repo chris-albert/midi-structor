@@ -22,6 +22,8 @@ const UIBaseSchema = Schema.Struct({
   visible: Schema.optional(Schema.Boolean),
 })
 
+const defaultBase = (): typeof UIBaseSchema.Type => ({})
+
 type ComponentNoPad<
   K extends SchemaAST.LiteralValue,
   A extends Schema.Struct.Fields
@@ -69,7 +71,7 @@ const of = <
   widget: ControllerWidget<K, A>
   Component: WidgetComponent<K, A>
 }): MIDIStructorWidget<K, A> => ({
-  widget: ControllerWidget.intersect(opts.widget, UIBaseSchema),
+  widget: ControllerWidget.intersect(opts.widget, UIBaseSchema, defaultBase),
   Component: opts.Component,
 })
 

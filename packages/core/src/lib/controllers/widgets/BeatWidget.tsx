@@ -1,16 +1,13 @@
 import React from 'react'
 import { ControllerWidget } from '../ControllerWidget'
-import { MidiTarget } from '../../midi/MidiTarget'
 import { ProjectHooks } from '../../project/ProjectHooks'
 import { Color } from '../Color'
 import { Schema } from 'effect'
 
-export const BeatWidget = ControllerWidget.of({
+export const BeatWidget = ControllerWidget.one({
   name: 'beat',
-  schema: Schema.Struct({
-    target: MidiTarget.Schema,
-  }),
-  targets: (w) => [w.target],
+  schema: Schema.Struct({}),
+  init: () => ({}),
   component: ({ target }) => {
     const barBeat = ProjectHooks.useBarBeats()
     return (

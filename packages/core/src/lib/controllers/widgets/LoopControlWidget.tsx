@@ -1,5 +1,4 @@
 import React from 'react'
-import { MidiTarget } from '../../midi/MidiTarget'
 import { Color } from '../Color'
 import { Midi } from '../../midi/GlobalMidi'
 import { ProjectHooks } from '../../project/ProjectHooks'
@@ -8,13 +7,14 @@ import { TX_MESSAGE } from '../../project/AbletonUIMessage'
 import { ControllerWidget } from '../ControllerWidget'
 import { Schema } from 'effect'
 
-export const LoopControlWidget = ControllerWidget.of({
+export const LoopControlWidget = ControllerWidget.one({
   name: 'loop-control',
   schema: Schema.Struct({
-    target: MidiTarget.Schema,
     color: Color.Schema,
   }),
-  targets: (w) => [w.target],
+  init: () => ({
+    color: Color.GREEN,
+  }),
   component: ({ target, color }) => {
     const dawEmitter = Midi.useDawEmitter()
     const loopState = ProjectHooks.useLoopState()
@@ -24,7 +24,9 @@ export const LoopControlWidget = ControllerWidget.of({
         isFlashing={loopState}
         color={color}
         target={target}
-        onClick={() => dawEmitter.send(TX_MESSAGE.loop(!ProjectHooks.getLoopState()))}
+        onClick={() =>
+          dawEmitter.send(TX_MESSAGE.loop(!ProjectHooks.getLoopState()))
+        }
       />
     )
   },

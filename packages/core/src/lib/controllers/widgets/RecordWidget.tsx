@@ -1,18 +1,18 @@
 import React from 'react'
-import { MidiTarget } from '../../midi/MidiTarget'
 import { Color } from '../Color'
 import { Midi } from '../../midi/GlobalMidi'
 import { TX_MESSAGE } from '../../project/AbletonUIMessage'
 import { ControllerWidget } from '../ControllerWidget'
 import { Schema } from 'effect'
 
-export const RecordWidget = ControllerWidget.of({
+export const RecordWidget = ControllerWidget.one({
   name: 'record',
   schema: Schema.Struct({
-    target: MidiTarget.Schema,
     color: Color.Schema,
   }),
-  targets: (w) => [w.target],
+  init: () => ({
+    color: Color.PURPLE,
+  }),
   component: ({ target, color }) => {
     const dawEmitter = Midi.useDawEmitter()
 

@@ -135,14 +135,16 @@ import { Schema } from 'effect'
  *      Math.floor(((DIFF + .5) * 2) / TSC)
  */
 
-export const BarTrackerWidget = ControllerWidget.of({
+export const BarTrackerWidget = ControllerWidget.many({
   name: 'bar-tracker',
   schema: Schema.Struct({
-    targets: Schema.Array(MidiTarget.Schema),
     trackName: Schema.String,
     color: Color.Schema,
   }),
-  targets: (w) => [...w.targets],
+  init: () => ({
+    trackName: 'Track',
+    color: Color.GREEN,
+  }),
   tracks: (w) => [w.trackName],
   component: ({ targets, trackName, color }) => {
     const track = ProjectHooks.useTrack(trackName)

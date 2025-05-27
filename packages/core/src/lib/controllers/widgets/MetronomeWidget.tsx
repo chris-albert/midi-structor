@@ -1,18 +1,19 @@
 import React from 'react'
 import { Color } from '../Color'
-import { MidiTarget } from '../../midi/MidiTarget'
 import { ForeverBeat } from '../../hooks/ForeverBeat'
 import { ControllerWidget } from '../ControllerWidget'
 import { Schema } from 'effect'
 
-export const MetronomeWidget = ControllerWidget.of({
+export const MetronomeWidget = ControllerWidget.one({
   name: 'metronome',
   schema: Schema.Struct({
-    target: MidiTarget.Schema,
     oneColor: Color.Schema,
     restColor: Color.Schema,
   }),
-  targets: (w) => [w.target],
+  init: () => ({
+    oneColor: Color.GREEN,
+    restColor: Color.RED,
+  }),
   component: ({ target, oneColor, restColor }) => {
     const [color, setColor] = React.useState(Color.BLACK)
 

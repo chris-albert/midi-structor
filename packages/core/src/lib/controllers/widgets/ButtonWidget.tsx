@@ -1,16 +1,14 @@
 import React from 'react'
 import { ControllerWidget } from '../ControllerWidget'
-import { MidiTarget } from '../../midi/MidiTarget'
 import { Color } from '../Color'
 import { Midi } from '../../midi/GlobalMidi'
 import { Schema } from 'effect'
 import { Pad } from '../pads/Pad'
 import { MidiMessage } from '../../midi/MidiMessage'
 
-export const ButtonWidget = ControllerWidget.of({
+export const ButtonWidget = ControllerWidget.one({
   name: 'button',
   schema: Schema.Struct({
-    target: MidiTarget.Schema,
     color: Color.Schema,
     isFlashing: Schema.Boolean,
     midi: Schema.Array(MidiMessage.schema),
@@ -22,7 +20,11 @@ export const ButtonWidget = ControllerWidget.of({
       })
     ),
   }),
-  targets: (w) => [w.target],
+  init: () => ({
+    color: Color.GREEN,
+    isFlashing: false,
+    midi: [],
+  }),
   component: ({ target, color, isFlashing, midi }) => {
     const dawEmitter = Midi.useDawEmitter()
 

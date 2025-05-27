@@ -9,14 +9,16 @@ import { NavigateableClip, UIRealClip } from '../../project/UIStateDisplay'
 import { TX_MESSAGE } from '../../project/AbletonUIMessage'
 import { Pad } from '../pads/Pad'
 
-export const NavClipsWidget = ControllerWidget.of({
+export const NavClipsWidget = ControllerWidget.many({
   name: 'nav-clips',
   schema: Schema.Struct({
-    targets: Schema.Array(MidiTarget.Schema),
     trackName: Schema.String,
     sort: Schema.optional(Schema.Literal('alphabetical', 'order')),
   }),
-  targets: (s) => [...s.targets],
+  init: () => ({
+    trackName: 'Nav Clip Track',
+    sort: 'order' as const,
+  }),
   tracks: (w) => [w.trackName],
   component: ({ targets, trackName, sort }) => {
     const dawEmitter = Midi.useDawEmitter()

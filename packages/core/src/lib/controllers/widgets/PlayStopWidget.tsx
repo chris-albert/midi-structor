@@ -1,19 +1,20 @@
 import { StopWidget } from './StopWidget'
 import { PlayWidget } from './PlayWidget'
-import { MidiTarget } from '../../midi/MidiTarget'
 import { ProjectHooks } from '../../project/ProjectHooks'
 import { Color } from '../Color'
 import { ControllerWidget } from '../ControllerWidget'
 import { Schema } from 'effect'
 
-export const PlayStopWidget = ControllerWidget.of({
+export const PlayStopWidget = ControllerWidget.one({
   name: 'play-stop',
   schema: Schema.Struct({
-    target: MidiTarget.Schema,
     playColor: Color.Schema,
     stopColor: Color.Schema,
   }),
-  targets: (w) => [w.target],
+  init: () => ({
+    playColor: Color.GREEN,
+    stopColor: Color.RED,
+  }),
   component: ({ target, playColor, stopColor }) => {
     const isPlaying = ProjectHooks.useIsPlaying()
 

@@ -31,10 +31,9 @@ export const KnobMidi = Schema.Union(
   MidiCCVaryData
 )
 
-export const KnobWidget = ControllerWidget.of({
+export const KnobWidget = ControllerWidget.one({
   name: 'knob',
   schema: Schema.Struct({
-    target: MidiTarget.Schema,
     color: Color.Schema,
     midi: KnobMidi,
     text: Schema.optional(
@@ -45,7 +44,14 @@ export const KnobWidget = ControllerWidget.of({
       })
     ),
   }),
-  targets: (w) => [w.target],
+  init: () => ({
+    color: Color.GREEN,
+    midi: {
+      _tag: 'midi-note-vary-velocity' as const,
+      note: 1,
+      channel: 1,
+    },
+  }),
   component: ({ target, color, midi }) => {
     const dawEmitter = Midi.useDawEmitter()
 

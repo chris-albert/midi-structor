@@ -19,6 +19,13 @@ export const KeyBoardWidget = ControllerWidget.of({
     topColor: Color.Schema,
     bottomColor: Color.Schema,
   }),
+  init: () => ({
+    topTargets: [],
+    bottomTargets: [],
+    trackName: 'Keyboard Track',
+    topColor: Color.GREEN,
+    bottomColor: Color.RED,
+  }),
   targets: (w) => [...w.topTargets, ...w.bottomTargets],
   tracks: (w) => [w.trackName],
   component: ({

@@ -1,7 +1,6 @@
 import React from 'react'
 import { Pad } from '../pads/Pad'
 import { Color } from '../Color'
-import { MidiTarget } from '../../midi/MidiTarget'
 import { ProjectHooks } from '../../project/ProjectHooks'
 import { UIClip } from '../../project/UIStateDisplay'
 import { ControllerWidget } from '../ControllerWidget'
@@ -17,14 +16,16 @@ const validInParent =
     )
   }
 
-export const TrackSectionsWidget = ControllerWidget.of({
+export const TrackSectionsWidget = ControllerWidget.many({
   name: 'track-sections',
   schema: Schema.Struct({
-    targets: Schema.Array(MidiTarget.Schema),
     trackName: Schema.String,
     parentTrackName: Schema.String,
   }),
-  targets: (w) => [...w.targets],
+  init: () => ({
+    trackName: 'Track Sections',
+    parentTrackName: 'Parent Track Sections',
+  }),
   tracks: (w) => [w.trackName, w.parentTrackName],
   component: ({ targets, trackName, parentTrackName = '' }) => {
     const track = ProjectHooks.useTrack(trackName)

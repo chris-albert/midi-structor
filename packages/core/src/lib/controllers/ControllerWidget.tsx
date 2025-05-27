@@ -16,7 +16,7 @@ const TargetsSchema = Schema.Struct({
 type TargetsSchema = typeof TargetsSchema.Type
 type TargetsSchemaFields = typeof TargetsSchema.fields
 
-type WidgetInput = MidiTarget | Array<MidiTarget>
+type WidgetInput = MidiTarget | Array<MidiTarget> | {}
 
 export type ControllerWidget<
   K extends SchemaAST.LiteralValue = any,
@@ -28,7 +28,7 @@ export type ControllerWidget<
   targets: (a: Schema.Struct.Type<A>) => In
   component: (a: Schema.Struct.Type<A>) => React.ReactElement
   tracks: (a: Schema.Struct.Type<A>) => Array<string>
-  init?: (i: In) => Schema.Struct.Type<A>
+  init: (i: In) => Schema.Struct.Type<A>
 }
 
 export type ControllerWidgetProps<
@@ -41,7 +41,7 @@ export type ControllerWidgetProps<
   targets: (a: Schema.Struct.Type<A>) => In
   component: (a: Schema.Struct.Type<A>) => React.ReactElement
   tracks?: (a: Schema.Struct.Type<A>) => Array<string>
-  init?: (i: In) => Schema.Struct.Type<A>
+  init: (i: In) => Schema.Struct.Type<A>
 }
 
 const of = <
@@ -57,6 +57,36 @@ const of = <
   component: props.component,
   tracks: props.tracks || (() => []),
   init: props.init,
+})
+
+/**
+ * Controller Widget with no targets
+ */
+
+export type ControllerWidgetPropsNone<
+  K extends SchemaAST.LiteralValue = any,
+  A extends Schema.Struct.Fields = any
+> = {
+  name: K
+  schema: Schema.Struct<A>
+  component: (a: Schema.Struct.Type<A>) => React.ReactElement
+  init: () => Schema.Struct.Type<A>
+  tracks?: (a: Schema.Struct.Type<A>) => Array<string>
+}
+
+const none = <K extends SchemaAST.LiteralValue, A extends Schema.Struct.Fields>(
+  props: ControllerWidgetPropsNone<K, A>
+): ControllerWidget<K, A, {}> => ({
+  name: props.name,
+  schema: Schema.TaggedStruct(props.name, {
+    ...props.schema.fields,
+  }) as Schema.TaggedStruct<K, A & {}>,
+  targets: (w: any) => w.target,
+  component: props.component,
+  tracks: props.tracks || (() => []),
+  init: () => ({
+    ...(props.init() as any),
+  }),
 })
 
 /**
@@ -134,9 +164,9 @@ const intersect = <
   In extends WidgetInput
 >(
   widget: ControllerWidget<K, A>,
-  bSchema: Schema.Struct<B>
-  // bInit: (i: In) => Schema.Struct.Type<B>
-): ControllerWidget<K, A & B> =>
+  bSchema: Schema.Struct<B>,
+  bInit: (i: In) => Schema.Struct.Type<B>
+): ControllerWidget<K, A & B, In> =>
   of({
     name: widget.name,
     schema: Schema.Struct({
@@ -149,14 +179,15 @@ const intersect = <
       widget.tracks !== undefined
         ? widget.tracks(f as Schema.Struct.Type<A>)
         : [],
-    // init: (input) => ({
-    //   ...(widget.init(input) as any),
-    //   ...(bInit(input) as any),
-    // }),
+    init: (input) => ({
+      ...(widget.init(input) as any),
+      ...(bInit(input) as any),
+    }),
   })
 
 export const ControllerWidget = {
   of,
+  none,
   one,
   many,
   intersect,
