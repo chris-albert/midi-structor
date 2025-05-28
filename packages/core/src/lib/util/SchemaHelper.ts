@@ -39,9 +39,12 @@ const decodeString = <A, B>(opts: DecodeStringOps<A, B>): B =>
   )
 
 const encode = <A>(schema: Schema.Schema<A>, a: A): string =>
-  Option.match(Schema.encodeOption(schema)(a), {
-    onSome: (c) => JSON.stringify(c, null, 2),
-    onNone: () => `Error encoding ${a}`,
+  Either.match(Schema.encodeEither(schema)(a), {
+    onRight: (c) => JSON.stringify(c, null, 2),
+    onLeft: (e) => {
+      console.error('Error encoding', formatError(e))
+      return `Error encoding ${e}`
+    },
   })
 
 export const SchemaHelper = {

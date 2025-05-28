@@ -3,7 +3,12 @@ import { ControllerDevice } from './ControllerDevice'
 import { MidiMessage, SysExMessage } from '../../midi/MidiMessage'
 import { ControllerWidgets } from '../ControllerWidgets'
 import { Either, Schema } from 'effect'
-import { ControllerWidgetsType } from '../ControllerWidget'
+import {
+  ControllerWidget,
+  ControllerWidgetsType,
+  ResolvedControllerWidget,
+  WidgetInput,
+} from '../ControllerWidget'
 import { MidiTarget } from '../../midi/MidiTarget'
 import { Color } from '../Color'
 import { UIMessageStore, UIStore } from './ui/ControllerUIDevice'
@@ -53,7 +58,6 @@ const controller = Controller.of({
     const uiWidgets = MidiStructorUIInit.make({
       widgets: widgets.map((w) => w.widget),
     })
-    console.log('MidiStructor UI widgets', uiWidgets)
     emitter.send(
       MidiMessage.jsonSchemaSysex(
         uiWidgets,
@@ -128,7 +132,41 @@ const device = ControllerDevice.of({
 
 export type MidiStructorUIDevice = typeof device
 
+const getWidgetInput = (
+  widget: ControllerWidget,
+  widgets: Array<ResolvedControllerWidget>,
+  count: number
+): WidgetInput => {
+  const targets = widgets.flatMap((w) => w.targets())
+  console.log('targets', targets)
+  const targetsSet = new Set(targets.map(MidiTarget.toKey))
+  const getNext = (): MidiTarget => {
+    const find = MidiTarget.allTargets.find(
+      (t) => !targetsSet.has(MidiTarget.toKey(t))
+    )
+    if (find !== undefined) {
+      targetsSet.add(MidiTarget.toKey(find))
+      return find
+    } else {
+      console.error('Ran out of Midi targets')
+      throw new Error('Ran out of Midi targets')
+    }
+  }
+
+  if (widget.inputType === 'none') {
+    return { _tag: 'none' }
+  } else if (widget.inputType === 'one') {
+    return { _tag: 'one', target: getNext() }
+  } else {
+    return {
+      _tag: 'many',
+      targets: Array.from({ length: count }, (i) => getNext()),
+    }
+  }
+}
+
 export const MIDIStructorUI = {
   device,
+  getWidgetInput,
   useStore,
 }

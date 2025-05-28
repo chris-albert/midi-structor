@@ -79,6 +79,14 @@ const toMessage = (target: MidiTarget, value: number): MidiMessage =>
       } as MidiMessage),
   })(target)
 
+const allCCs: Array<MidiTarget> = Array.from({ length: 127 }).map((_, i) =>
+  cc(i)
+)
+const allNotes: Array<MidiTarget> = Array.from({ length: 127 }).map((_, i) =>
+  note(i)
+)
+const allTargets: Array<MidiTarget> = [...allCCs, ...allNotes]
+
 const toValue = (target: MidiTarget): number =>
   _MidiTarget.$match({
     Note: ({ note }) => note,
@@ -95,6 +103,7 @@ export const MidiTarget = {
   toKey,
   toMessage,
   toValue,
+  allTargets,
   match: _MidiTarget.$match,
   Schema: MidiTargetSchema,
 }

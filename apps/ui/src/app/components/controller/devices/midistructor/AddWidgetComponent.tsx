@@ -1,18 +1,24 @@
 import React from 'react'
 import { Box } from '@mui/material'
-import { WidgetButtonComponent } from './WidgetButtonComponent'
 import {
+  ConfiguredController,
   MIDIStructorUI,
   MIDIStructorUIWidgetsUpdate,
 } from '@midi-structor/core'
+import { WidgetButtonComponent } from './WidgetButtonComponent'
 
 export type AddWidgetComponentProps = {
   updateWidgets: MIDIStructorUIWidgetsUpdate
+  configuredController: ConfiguredController
 }
 
 export const AddWidgetComponent: React.FC<AddWidgetComponentProps> = ({
   updateWidgets,
+  configuredController,
 }) => {
+  const resolved = MIDIStructorUI.device.widgets.resolve(
+    configuredController.config
+  )
   return (
     <Box
       sx={{
@@ -24,9 +30,11 @@ export const AddWidgetComponent: React.FC<AddWidgetComponentProps> = ({
         <WidgetButtonComponent
           key={`widet-${widget.name}`}
           onClick={() => {
+            const input = MIDIStructorUI.getWidgetInput(widget, resolved, 8)
+            const newWidget = widget.init(input)
+            // @ts-ignore
             updateWidgets((w) => {
-              // console.log(w, widget)
-              return [...w]
+              return [...w, newWidget]
             })
           }}>
           {widget.name}

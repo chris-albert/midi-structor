@@ -1,5 +1,9 @@
 import _ from 'lodash'
-import { ControllerWidget, ResolvedControllerWidget } from './ControllerWidget'
+import {
+  ControllerWidget,
+  ResolvedControllerWidget,
+  WidgetInput,
+} from './ControllerWidget'
 import { ControllerConfig } from './ControllerConfig'
 import { Option, Schema } from 'effect'
 
@@ -26,7 +30,16 @@ export const ControllerWidgets = <Widgets extends Array<ControllerWidget>>(
         onSome: (controllerWidget) => {
           return {
             name: controllerWidget.name,
-            targets: () => controllerWidget.targets(w),
+            targets: () => {
+              const t = controllerWidget.targets(w) as WidgetInput
+              if (t._tag === 'none') {
+                return []
+              } else if (t._tag === 'one') {
+                return [t.target]
+              } else {
+                return t.targets
+              }
+            },
             component: () => controllerWidget.component(w),
             widget: w,
             tracks: () => controllerWidget.tracks(w),

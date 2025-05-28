@@ -1,18 +1,27 @@
 import React from 'react'
 import { Box, Button, Drawer } from '@mui/material'
-import { AddWidgetComponent } from '../../../AddWidgetComponent'
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
-import { MIDIStructorUIWidgetsUpdate } from '@midi-structor/core'
+import {
+  ConfiguredController,
+  MIDIStructorUIWidgetsUpdate,
+} from '@midi-structor/core'
+import { AddWidgetComponent } from './AddWidgetComponent'
 
 export type MidiStructorEditWidgetsProps = {
   editWidgets: boolean
   toggleEditWidgets: () => void
   updateWidgets: MIDIStructorUIWidgetsUpdate
+  configuredController: ConfiguredController
 }
 
 export const MidiStructorEditWidgets: React.FC<
   MidiStructorEditWidgetsProps
-> = ({ editWidgets, toggleEditWidgets, updateWidgets }) => {
+> = ({
+  editWidgets,
+  toggleEditWidgets,
+  updateWidgets,
+  configuredController,
+}) => {
   const [addWidgetOpen, setAddWidgetOpen] = React.useState(false)
 
   return (
@@ -21,7 +30,10 @@ export const MidiStructorEditWidgets: React.FC<
         anchor='top'
         open={addWidgetOpen}
         onClose={() => setAddWidgetOpen(false)}>
-        <AddWidgetComponent updateWidgets={updateWidgets} />
+        <AddWidgetComponent
+          updateWidgets={updateWidgets}
+          configuredController={configuredController}
+        />
       </Drawer>
       <Box
         sx={{

@@ -26,7 +26,11 @@ export const KeyBoardWidget = ControllerWidget.of({
     topColor: Color.GREEN,
     bottomColor: Color.RED,
   }),
-  targets: (w) => [...w.topTargets, ...w.bottomTargets],
+  targets: (w) => ({
+    _tag: 'many',
+    targets: [...w.topTargets, ...w.bottomTargets],
+  }),
+  inputType: 'many',
   tracks: (w) => [w.trackName],
   component: ({
     topTargets,

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Schema, SchemaAST } from 'effect'
+import { Data, Schema, SchemaAST } from 'effect'
 import { MidiTarget } from '../midi/MidiTarget'
 
 const TargetSchema = Schema.Struct({
@@ -16,7 +16,17 @@ const TargetsSchema = Schema.Struct({
 type TargetsSchema = typeof TargetsSchema.Type
 type TargetsSchemaFields = typeof TargetsSchema.fields
 
-type WidgetInput = MidiTarget | Array<MidiTarget> | {}
+const WidgetInputNone = Schema.TaggedStruct('none', {})
+const WidgetInputOne = Schema.TaggedStruct('one', TargetSchema.fields)
+const WidgetInputMany = Schema.TaggedStruct('many', TargetsSchema.fields)
+
+const WidgetInput = Schema.Union(
+  WidgetInputNone,
+  WidgetInputOne,
+  WidgetInputMany
+)
+
+export type WidgetInput = typeof WidgetInput.Type
 
 export type ControllerWidget<
   K extends SchemaAST.LiteralValue = any,
@@ -29,7 +39,32 @@ export type ControllerWidget<
   component: (a: Schema.Struct.Type<A>) => React.ReactElement
   tracks: (a: Schema.Struct.Type<A>) => Array<string>
   init: (i: In) => Schema.Struct.Type<A>
+  inputType: In['_tag']
 }
+
+export type ControllerWidgetKey<A> = A extends ControllerWidget<
+  infer K,
+  infer A,
+  infer In
+>
+  ? K
+  : never
+
+export type ControllerWidgetValue<A> = A extends ControllerWidget<
+  infer K,
+  infer A,
+  infer In
+>
+  ? A
+  : never
+
+export type ControllerWidgetInput<A> = A extends ControllerWidget<
+  infer K,
+  infer A,
+  infer In
+>
+  ? In
+  : never
 
 export type ControllerWidgetProps<
   K extends SchemaAST.LiteralValue = any,
@@ -42,6 +77,7 @@ export type ControllerWidgetProps<
   component: (a: Schema.Struct.Type<A>) => React.ReactElement
   tracks?: (a: Schema.Struct.Type<A>) => Array<string>
   init: (i: In) => Schema.Struct.Type<A>
+  inputType: In['_tag']
 }
 
 const of = <
@@ -57,6 +93,7 @@ const of = <
   component: props.component,
   tracks: props.tracks || (() => []),
   init: props.init,
+  inputType: props.inputType,
 })
 
 /**
@@ -76,17 +113,19 @@ export type ControllerWidgetPropsNone<
 
 const none = <K extends SchemaAST.LiteralValue, A extends Schema.Struct.Fields>(
   props: ControllerWidgetPropsNone<K, A>
-): ControllerWidget<K, A, {}> => ({
+): ControllerWidget<K, A, typeof WidgetInputNone.Type> => ({
   name: props.name,
   schema: Schema.TaggedStruct(props.name, {
     ...props.schema.fields,
   }) as Schema.TaggedStruct<K, A & {}>,
-  targets: (w: any) => w.target,
+  targets: (w: any) => ({ _tag: 'none' }),
   component: props.component,
   tracks: props.tracks || (() => []),
   init: () => ({
+    _tag: props.name,
     ...(props.init() as any),
   }),
+  inputType: 'none',
 })
 
 /**
@@ -108,19 +147,21 @@ export type ControllerWidgetPropsOne<
 
 const one = <K extends SchemaAST.LiteralValue, A extends Schema.Struct.Fields>(
   props: ControllerWidgetPropsOne<K, A>
-): ControllerWidget<K, A & TargetSchemaFields, MidiTarget> => ({
+): ControllerWidget<K, A & TargetSchemaFields, typeof WidgetInputOne.Type> => ({
   name: props.name,
   schema: Schema.TaggedStruct(props.name, {
     ...TargetSchema.fields,
     ...props.schema.fields,
   }) as Schema.TaggedStruct<K, A & TargetSchemaFields>,
-  targets: (w: any) => w.target,
+  targets: (w: any) => ({ _tag: 'one', target: w.target }),
   component: props.component,
   tracks: props.tracks || (() => []),
-  init: (target) => ({
-    target,
+  init: (input) => ({
+    _tag: props.name,
+    target: input.target,
     ...(props.init() as any),
   }),
+  inputType: 'one',
 })
 
 /**
@@ -142,19 +183,25 @@ export type ControllerWidgetPropsMany<
 
 const many = <K extends SchemaAST.LiteralValue, A extends Schema.Struct.Fields>(
   props: ControllerWidgetPropsMany<K, A>
-): ControllerWidget<K, A & TargetsSchemaFields, Array<MidiTarget>> => ({
+): ControllerWidget<
+  K,
+  A & TargetsSchemaFields,
+  typeof WidgetInputMany.Type
+> => ({
   name: props.name,
   schema: Schema.TaggedStruct(props.name, {
     ...TargetsSchema.fields,
     ...props.schema.fields,
   }) as Schema.TaggedStruct<K, A & TargetsSchemaFields>,
-  targets: (w: any) => w.targets,
+  targets: (w: any) => ({ _tag: 'many', targets: w.targets }),
   component: props.component,
   tracks: props.tracks || (() => []),
-  init: (targets) => ({
-    targets,
+  init: (input) => ({
+    _tag: props.name,
+    targets: input.targets,
     ...(props.init() as any),
   }),
+  inputType: 'many',
 })
 
 const intersect = <
@@ -183,6 +230,7 @@ const intersect = <
       ...(widget.init(input) as any),
       ...(bInit(input) as any),
     }),
+    inputType: widget.inputType,
   })
 
 export const ControllerWidget = {

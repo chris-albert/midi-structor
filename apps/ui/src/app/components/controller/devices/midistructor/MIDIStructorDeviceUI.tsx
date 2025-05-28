@@ -12,7 +12,7 @@ import {
   MIDIStructorUIWidgets,
 } from '@midi-structor/core'
 import { MidiStructorComponent } from './MidiStructorComponent'
-import { Box } from '@mui/material'
+import { Box, LinearProgress } from '@mui/material'
 import { MidiStructorEditWidgets } from './MidiStructorEditWidgets'
 import { Either, Schema } from 'effect'
 import { toast } from 'react-toastify'
@@ -48,7 +48,10 @@ const MIDIStructorDeviceUIComponent: React.FC<
         // @ts-ignore
         setWidgets(widgets.widgets)
       },
-      onLeft: (error) => toast.error(error),
+      onLeft: (error) => {
+        console.error(error)
+        toast.error(error)
+      },
     })
   }
 
@@ -58,6 +61,7 @@ const MIDIStructorDeviceUIComponent: React.FC<
         editWidgets={editWidgets}
         toggleEditWidgets={() => setEditWidgets((e) => !e)}
         updateWidgets={updateWidgets}
+        configuredController={configuredController}
       />
       <MidiStructorComponent
         editWidgets={editWidgets}
