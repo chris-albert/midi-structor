@@ -9,7 +9,7 @@ const render = (node: ReactNode) => {
     info,
     0,
     null,
-    true,
+    false,
     null,
     'Midi',
     console.error,

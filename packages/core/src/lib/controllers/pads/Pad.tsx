@@ -12,12 +12,12 @@ export const Pad: React.FC<PadProps> = (props) => {
   const [color, setColor] = React.useState(props.color)
 
   React.useEffect(() => {
-    if (props.isFlashing) {
-      return ForeverBeat.onTick((p) => setColor(p.halfBeat ? Color.BLACK : props.color))
-    } else {
-      setColor(props.color)
-      return () => {}
-    }
+    // if (props.isFlashing) {
+    //   return ForeverBeat.onTick((p) => setColor(p.halfBeat ? Color.BLACK : props.color))
+    // } else {
+    //   setColor(props.color)
+    //   return () => {}
+    // }
   }, [props.color, props.isFlashing])
 
   return (

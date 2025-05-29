@@ -4,6 +4,7 @@ import { Controller, TargetColor } from './Controller'
 import { MidiEmitter, MidiListener } from '../midi/GlobalMidi'
 import { Color } from './Color'
 import { ConfiguredController } from './ConfiguredController'
+import hash from 'object-hash'
 
 export type ControllerInstance = {
   underlying: Controller
@@ -25,6 +26,7 @@ const create = (
   let initCalled = false
 
   const render = controller.render(emitter)
+
   const clear = () => {
     render(
       controller.targets.map((target) => ({
@@ -33,10 +35,10 @@ const create = (
       }))
     )
   }
+
   const init = (widgets: Array<ResolvedControllerWidget>) => {
     if (!initCalled) {
       controller.init(emitter)(widgets)
-      clear()
       cleanupLoading = controller.loading(emitter)(controller)
       initCalled = true
     }
@@ -69,7 +71,10 @@ const create = (
   }
 }
 
-const CONTROLLER_INSTANCES: Record<string, ControllerInstance> = {}
+const CONTROLLER_INSTANCES: Record<
+  string,
+  { configHash: string; instance: ControllerInstance }
+> = {}
 
 const of = (
   configuredController: ConfiguredController,
@@ -78,13 +83,15 @@ const of = (
   listener: MidiListener
 ): ControllerInstance => {
   const key = `${configuredController.name}:${configuredController.id}`
+  const configHash = hash(configuredController.config)
   const maybeInstance = CONTROLLER_INSTANCES[key]
-  if (maybeInstance !== undefined) {
-    return maybeInstance
+  if (maybeInstance !== undefined && maybeInstance.configHash == configHash) {
+    return maybeInstance.instance
   } else {
-    const newInstance = create(controller, emitter, listener)
-    CONTROLLER_INSTANCES[key] = newInstance
-    return newInstance
+    console.log('Creating controller instance', configuredController.name)
+    const instance = create(controller, emitter, listener)
+    CONTROLLER_INSTANCES[key] = { configHash, instance }
+    return instance
   }
 }
 
