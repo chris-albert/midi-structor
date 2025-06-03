@@ -11,7 +11,6 @@ import { Box, Drawer, Paper } from '@mui/material'
 import { WidgetSettingsComponent } from '../../../widgets/WidgetSettingsComponent'
 import IconButton from '@mui/material/IconButton'
 import MenuIcon from '@mui/icons-material/Menu'
-import { Widget } from '../../../../model/Widgets'
 
 const getLabel = (widget: MIDIStructorUIWidget): React.ReactElement | null =>
   widget.label === undefined ? null : (
@@ -84,7 +83,7 @@ export const WidgetComponent: React.FC<WidgetComponentProps> = ({
             flexShrink: 0,
           }}>
           <WidgetSettingsComponent
-            widget={widget as Widget}
+            widget={widget}
             updateWidgets={updateWidgets}
             onClose={() => setSettingsOpen((s) => !s)}
           />

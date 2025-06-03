@@ -1,5 +1,6 @@
 import { Data, Schema } from 'effect'
 import { MidiMessage } from './MidiMessage'
+import { SchemaForm } from '../controllers/widgets/form/SchemaForm'
 
 export type MidiTarget = Data.TaggedEnum<{
   Note: { note: number }
@@ -19,7 +20,7 @@ const MidiTargetSchema = Schema.Union(
   Schema.TaggedStruct('PC', {
     programNumber: Schema.Number,
   })
-).annotations({ identifier: 'MidiTarget' })
+).annotations(SchemaForm.annotation('MidiTarget'))
 
 const notes = ({
   from,

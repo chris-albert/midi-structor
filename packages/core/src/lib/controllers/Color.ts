@@ -1,4 +1,5 @@
 import { Schema } from 'effect'
+import { SchemaForm } from './widgets/form/SchemaForm'
 
 const fromRGB = (red: number, green: number, blue: number): Color =>
   0x1000000 + ((red << 16) | (green << 8) | (blue << 0))
@@ -35,7 +36,7 @@ const ColorSchema = Schema.transform(Schema.String, Schema.Number, {
   strict: true,
   decode: fromHex,
   encode: toHex,
-})
+}).annotations(SchemaForm.annotation('Color'))
 
 export type Color = number
 

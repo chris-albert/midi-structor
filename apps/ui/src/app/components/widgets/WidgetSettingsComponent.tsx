@@ -5,7 +5,6 @@ import {
   moveRightWidget,
   removeWidget,
   replaceWidget,
-  Widget,
 } from '../../model/Widgets'
 import { Box, Button, Card, CardContent, CardHeader } from '@mui/material'
 import { JSONEditor } from '../JSONEditor'
@@ -17,13 +16,16 @@ import ArrowRightIcon from '@mui/icons-material/ArrowRightOutlined'
 import DeleteIcon from '@mui/icons-material/Delete'
 import {
   AllMidiStructorWidgets,
+  MIDIStructorUIWidget,
   MIDIStructorUIWidgetsUpdate,
+  MIDIStructorWidget,
   SchemaHelper,
 } from '@midi-structor/core'
 import CloseIcon from '@mui/icons-material/Close'
+import { WidgetSettingsFormComponent } from './WidgetSettingsFormComponent'
 
 export type WidgetSettingsComponentProps = {
-  widget: Widget
+  widget: MIDIStructorUIWidget
   updateWidgets: MIDIStructorUIWidgetsUpdate
   onClose: () => void
 }
@@ -33,6 +35,11 @@ export const WidgetSettingsComponent: React.FC<
 > = ({ widget, updateWidgets, onClose }) => {
   const [settings, setSettings] = React.useState(
     SchemaHelper.encode(AllMidiStructorWidgets.schema, widget)
+  )
+
+  // @ts-ignore
+  const config: MIDIStructorWidget<any, any> = AllMidiStructorWidgets.getByName(
+    widget._tag
   )
 
   const onWidgetSave = () => {
@@ -62,6 +69,12 @@ export const WidgetSettingsComponent: React.FC<
         title={widget._tag}
       />
       <CardContent>
+        <WidgetSettingsFormComponent
+          widget={widget}
+          config={config}
+          settings={settings}
+          setSettings={setSettings}
+        />
         <JSONEditor
           height='300px'
           width='505px'
