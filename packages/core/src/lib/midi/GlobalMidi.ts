@@ -7,6 +7,7 @@ import { MidiMessage } from './MidiMessage'
 import { EventEmitter } from '../EventEmitter'
 import { MidiDeviceManager } from './MidiDeviceManager'
 import { AtomStorage } from '../storage/AtomStorage'
+import ProjectWorkerMain from '../workers/project/ProjectWorkerMain?worker'
 
 export const MidiType = Schema.Union(
   Schema.Literal('daw'),
@@ -15,7 +16,10 @@ export const MidiType = Schema.Union(
 )
 export type MidiType = typeof MidiType.Type
 
-export const MidiDeviceType = Schema.Union(Schema.Literal('input'), Schema.Literal('output'))
+export const MidiDeviceType = Schema.Union(
+  Schema.Literal('input'),
+  Schema.Literal('output')
+)
 export type MidiDeviceType = typeof MidiDeviceType.Type
 
 export type MidiSelection = {
@@ -52,7 +56,9 @@ const emptyEmitter = (): MidiEmitter => ({
   },
 })
 
-export const selectedAtom = (name: string): PrimitiveAtom<Option.Option<string>> =>
+export const selectedAtom = (
+  name: string
+): PrimitiveAtom<Option.Option<string>> =>
   AtomStorage.atom<Option.Option<string>>(name, Option.none())
 
 const atoms = {
@@ -66,20 +72,15 @@ const atoms = {
       output: selectedAtom('daw-midi-output-selected'),
     },
   },
-  agent: {
-    emitter: atom<MidiEmitter>(emptyEmitter()),
-    listener: atom<MidiListener>(EventEmitter<MidiEventRecord>()),
-    selected: {
-      input: selectedAtom('agent-midi-input-selected'),
-      output: selectedAtom('agent-midi-output-selected'),
-    },
-  },
 }
 
 const deviceManager = () => store.get(atoms.deviceManager)
 
 const onSelectedInput = (selection: MidiSelection) => {
-  const maybeListener = pipe(store.get(selection.selected.input), Option.flatMap(deviceManager().getInput))
+  const maybeListener = pipe(
+    store.get(selection.selected.input),
+    Option.flatMap(deviceManager().getInput)
+  )
   store.set(
     selection.listener,
     Option.getOrElse(maybeListener, () => MidiDeviceManager.emptyListener())
@@ -87,17 +88,25 @@ const onSelectedInput = (selection: MidiSelection) => {
 }
 
 const onSelectedOutput = (selection: MidiSelection) => {
-  const maybeEmitter = pipe(store.get(selection.selected.output), Option.flatMap(deviceManager().getOutput))
+  const maybeEmitter = pipe(
+    store.get(selection.selected.output),
+    Option.flatMap(deviceManager().getOutput)
+  )
   store.set(
     selection.emitter,
     Option.getOrElse(maybeEmitter, () => MidiDeviceManager.emptyEmitter())
   )
 }
 
-const getByType = (type: MidiType): MidiSelection => (type === 'daw' ? atoms.daw : atoms.agent)
+const getByType = (type: MidiType): MidiSelection => atoms.daw
 
-const getSelectedAtom = (type: MidiType, deviceType: MidiDeviceType): PrimitiveAtom<Option.Option<string>> =>
-  deviceType === 'input' ? getByType(type).selected.input : getByType(type).selected.output
+const getSelectedAtom = (
+  type: MidiType,
+  deviceType: MidiDeviceType
+): PrimitiveAtom<Option.Option<string>> =>
+  deviceType === 'input'
+    ? getByType(type).selected.input
+    : getByType(type).selected.output
 
 const selectionInit = (midiType: MidiType) => {
   const selection = getByType(midiType)
@@ -109,7 +118,11 @@ const selectionInit = (midiType: MidiType) => {
   onSelectedOutput(selection)
 }
 
-const setSelected = (name: Option.Option<string>, midiType: MidiType, deviceType: MidiDeviceType) => {
+const setSelected = (
+  name: Option.Option<string>,
+  midiType: MidiType,
+  deviceType: MidiDeviceType
+) => {
   const selected = getSelectedAtom(midiType, deviceType)
   store.set(selected, name)
 }
@@ -117,10 +130,16 @@ const setSelected = (name: Option.Option<string>, midiType: MidiType, deviceType
 const getSelected = (midiType: MidiType, deviceType: MidiDeviceType) =>
   store.get(getSelectedAtom(midiType, deviceType))
 
-const useMidiDevices = (midiType: MidiType, deviceType: MidiDeviceType): MidiDeviceSelection => {
+const useMidiDevices = (
+  midiType: MidiType,
+  deviceType: MidiDeviceType
+): MidiDeviceSelection => {
   const manager = useAtomValue(atoms.deviceManager)
 
-  const devices = React.useMemo(() => (deviceType === 'input' ? manager.inputs : manager.outputs), [manager])
+  const devices = React.useMemo(
+    () => (deviceType === 'input' ? manager.inputs : manager.outputs),
+    [manager]
+  )
 
   const [selected, setSelected] = useAtom(getSelectedAtom(midiType, deviceType))
 
@@ -142,8 +161,6 @@ const useDeviceManager = () => useAtomValue(atoms.deviceManager)
 
 const runInit = () => {
   selectionInit('daw')
-  selectionInit('controller')
-  selectionInit('agent')
 }
 
 const init = (manager: MidiDeviceManager) => {
@@ -161,8 +178,6 @@ export const Midi = {
   //Hooks
   useDawEmitter: () => useAtomValue(atoms.daw.emitter),
   useDawListener: () => useAtomValue(atoms.daw.listener),
-  useAgentListener: () => useAtomValue(atoms.agent.listener),
-  useAgentEmitter: () => useAtomValue(atoms.agent.emitter),
   //Temporary exports
   dawListener: store.get(atoms.daw.listener),
   dawListenerAtom: atoms.daw.listener,

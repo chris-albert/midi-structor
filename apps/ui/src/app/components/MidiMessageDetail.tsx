@@ -1,5 +1,5 @@
 import React from 'react'
-import { AgentMidi, MidiMessageWithRaw } from '@midi-structor/core'
+import { MidiMessageWithRaw } from '@midi-structor/core'
 import {
   Box,
   Grid,
@@ -29,7 +29,10 @@ export type MidiMessageDetailProps = {
   messageNumber: number
 }
 
-export const MidiMessageDetail: React.FC<MidiMessageDetailProps> = ({ message, messageNumber }) => {
+export const MidiMessageDetail: React.FC<MidiMessageDetailProps> = ({
+  message,
+  messageNumber,
+}) => {
   let detail = <Box>Unknown</Box>
 
   let jsonType = <Box></Box>
@@ -90,15 +93,6 @@ export const MidiMessageDetail: React.FC<MidiMessageDetailProps> = ({ message, m
             </Box>
           )
         }
-      } else {
-        jsonType = <Box>Agent</Box>
-        const parsed = AgentMidi.parse(message)
-        detail = (
-          <JSONEditor
-            height={'200px'}
-            value={JSON.stringify(parsed, null, 2)}
-          />
-        )
       }
     } catch (e) {
       detail = <Box>Unable to parse JSON, raw sysex data [{message.raw}]</Box>
@@ -168,7 +162,10 @@ export const MidiMessageDetail: React.FC<MidiMessageDetailProps> = ({ message, m
             <Grid
               item
               xs={9}>
-              <Box sx={{ display: 'flex', justifyContent: 'flex-start', mr: 2 }}>{values}</Box>
+              <Box
+                sx={{ display: 'flex', justifyContent: 'flex-start', mr: 2 }}>
+                {values}
+              </Box>
             </Grid>
           </Grid>
         </AccordionSummary>

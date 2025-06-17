@@ -26,7 +26,7 @@
     "@midi-structor/typescript-config": "workspace:*",
     "@types/events": "^3.0.3",
     "madge": "^8.0.0",
-    "typescript": "^5.7.3"
+    "typescript": "^5.8.3"
   },
   "exports": {
     ".": "./src/index.ts"

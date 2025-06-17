@@ -26,6 +26,8 @@ const createWindow = (): void => {
     },
   })
 
+  console.log('MAIN_WINDOW_WEBPACK_ENTRY', MAIN_WINDOW_WEBPACK_ENTRY)
+
   console.log(
     'MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY',
     MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY

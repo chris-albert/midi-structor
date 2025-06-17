@@ -4,6 +4,10 @@
 pnpm --filter @midi-structor/core i promise-worker
 ```
 
+```
+pnpm --filter @midi-structor/core -D i typescript@5.8.3
+```
+
 https://docs.cycling74.com/legacy/max8/vignettes/live_object_model
 
 ## This project uses `turborepo` and `pnpm`
@@ -76,4 +80,28 @@ sequenceDiagram
     MIDI Structor->>Ableton: metronome [boolean]
     MIDI Structor->>Ableton: loop [boolean]
     
+```
+
+Electron Utility Processes
+```mermaid
+stateDiagram
+        eMain: Main
+        eLive: Live
+        eProject: Project
+        eDevice1: Device 1
+        eDevice2: Device 2
+        state Devices {
+                [*] --> eDevice1
+                [*] --> eDevice2
+                eDevice1 --> [*]
+                eDevice2 --> [*]
+        }
+        [*] --> eMain
+        eLive --> eProject
+        eMain --> eProject
+        eMain --> eLive
+        eMain --> Devices
+        Devices --> eProject
+        Devices --> eLive
+
 ```
