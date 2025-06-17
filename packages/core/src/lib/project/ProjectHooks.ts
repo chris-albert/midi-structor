@@ -6,7 +6,7 @@ import {
   useSetAtom,
   WritableAtom,
 } from 'jotai'
-import { ProjectConfig, ProjectImportStatus, ProjectMidi } from './ProjectMidi'
+import { ProjectImportStatus, ProjectMidi } from './ProjectMidi'
 import React from 'react'
 import _ from 'lodash'
 import { List } from 'immutable'
@@ -15,6 +15,7 @@ import { splitAtom } from 'jotai/utils'
 import { emptyTrack, UIArrangement, UIClip, UITrack } from './UIStateDisplay'
 import { useListAtom } from '../hooks/ListAtom'
 import { Option } from 'effect'
+import { ProjectConfig } from './ProjectConfig'
 
 const store = getDefaultStore()
 
@@ -73,7 +74,7 @@ const useActiveProjectValue = () => {
   const projects = useAtomValue(ProjectMidi.atoms.projectsConfig)
   const project = _.find(projects.projects, (p) => p.key === activeProject)
 
-  return project || ProjectMidi.defaultProjectConfig()
+  return project || ProjectConfig.defaultProjectConfig()
 }
 
 const useUpdateActiveProject = () => {
@@ -117,7 +118,7 @@ const useSetActiveProjectName = () => {
 const useProjectStyle = () => {
   const project = useActiveProjectValue()
   const style = {
-    ...ProjectMidi.defaultProjectConfig().style,
+    ...ProjectConfig.defaultProjectConfig().style,
     ...project.style,
   }
   return {

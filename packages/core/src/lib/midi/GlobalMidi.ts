@@ -40,6 +40,8 @@ export type MidiDeviceSelection = {
 
 const store = getDefaultStore()
 
+export type MidiEventEmitter = EventEmitter<MidiMessage>
+
 export type MidiListener = Omit<EventEmitter<MidiEventRecord>, 'emit'>
 
 const emptyListener = (): MidiListener => ({
@@ -163,8 +165,16 @@ const runInit = () => {
   selectionInit('daw')
 }
 
+const PROJECT_WORKER_MAIN = new ProjectWorkerMain()
 const init = (manager: MidiDeviceManager) => {
   store.set(atoms.deviceManager, manager)
+
+  store.sub(atoms.daw.listener, () => {
+    const listener = store.get(atoms.daw.listener)
+    listener.on('*', (m) =>
+      PROJECT_WORKER_MAIN.postMessage(['DAW_LISTENER', m])
+    )
+  })
   runInit()
 }
 

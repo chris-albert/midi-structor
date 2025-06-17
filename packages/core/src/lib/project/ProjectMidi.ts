@@ -11,52 +11,12 @@ import {
 } from './UIStateDisplay'
 import { atom, getDefaultStore, useAtom, useAtomValue, useSetAtom } from 'jotai'
 import { atomFamily } from 'jotai/utils'
-import {
-  AbletonUIMessage,
-  parseAbletonUIMessage,
-  TX_MESSAGE,
-} from './AbletonUIMessage'
+import { AbletonUIMessage, parseAbletonUIMessage } from './AbletonUIMessage'
 import React from 'react'
 import { AtomStorage } from '../storage/AtomStorage'
-import { Schema } from 'effect'
-import { ProjectHooks } from './ProjectHooks'
+import { ProjectConfig, ProjectsConfig } from './ProjectConfig'
 
 const store = getDefaultStore()
-
-export const ProjectConfig = Schema.Struct({
-  label: Schema.String,
-  key: Schema.String,
-  abletonProject: Schema.optional(Schema.String),
-  style: Schema.Struct({
-    accent: Schema.Struct({
-      color1: Schema.String,
-      color2: Schema.String,
-    }),
-  }),
-})
-
-export type ProjectConfig = Schema.Schema.Type<typeof ProjectConfig>
-
-export const ProjectsConfig = Schema.Struct({
-  projects: Schema.Array(ProjectConfig),
-})
-
-export type ProjectsConfig = Schema.Schema.Type<typeof ProjectsConfig>
-
-const defaultProjectConfig = (): ProjectConfig => ({
-  label: 'Default',
-  key: 'default',
-  style: {
-    accent: {
-      color1: '#6a11cb',
-      color2: '#2575fc',
-    },
-  },
-})
-
-const defaultProjectsConfig: () => ProjectsConfig = () => ({
-  projects: [defaultProjectConfig()],
-})
 
 export type TimeSignature = {
   noteCount: number
@@ -76,7 +36,7 @@ const atoms = {
   importStatus: atom<ProjectImportStatus>({ type: 'none' }),
   projectsConfig: AtomStorage.atom<ProjectsConfig>(
     'projects-config',
-    defaultProjectsConfig()
+    ProjectConfig.defaultProjectsConfig()
   ),
   project: {
     active: AtomStorage.atom('active-project', 'default'),
@@ -181,7 +141,5 @@ const useProjectListener = () => {
 
 export const ProjectMidi = {
   useProjectListener,
-  defaultProjectsConfig,
-  defaultProjectConfig,
   atoms,
 }

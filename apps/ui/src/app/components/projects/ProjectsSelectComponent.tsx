@@ -6,7 +6,6 @@ import {
   ConfiguredController,
   ProjectConfig,
   ProjectHooks,
-  ProjectMidi,
 } from '@midi-structor/core'
 import RefreshIcon from '@mui/icons-material/Refresh'
 import IconButton from '@mui/material/IconButton'
@@ -63,7 +62,7 @@ export const ProjectsSelectComponent: React.FC<
         activeLabel={activeProjectLabel}
         onNew={(newLabel) => {
           projects.add({
-            ...ProjectMidi.defaultProjectConfig(),
+            ...ProjectConfig.defaultProjectConfig(),
             label: newLabel,
             key: _.replace(_.toLower(newLabel), ' ', '-'),
           })
