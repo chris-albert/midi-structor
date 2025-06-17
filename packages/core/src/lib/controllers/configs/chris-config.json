@@ -357,14 +357,12 @@
       "trackName": "Chris Keyboard"
     },
     {
-      "_tag": "button",
+      "_tag": "soft-refresh",
       "target": {
-        "_tag": "Note",
-        "note": 89
+        "_tag": "CC",
+        "controllerNumber": 89
       },
-      "color": "ff0000",
-      "isFlashing": false,
-      "midi": []
+      "color": "ff0000"
     }
   ]
 }

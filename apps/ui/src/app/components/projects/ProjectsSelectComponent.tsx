@@ -2,7 +2,12 @@ import React from 'react'
 import { Box } from '@mui/material'
 import { SelectComponent, SelectItem } from '../form/SelectComponent'
 import _ from 'lodash'
-import { ProjectConfig, ProjectHooks, ProjectMidi } from '@midi-structor/core'
+import {
+  ConfiguredController,
+  ProjectConfig,
+  ProjectHooks,
+  ProjectMidi,
+} from '@midi-structor/core'
 import RefreshIcon from '@mui/icons-material/Refresh'
 import IconButton from '@mui/material/IconButton'
 import { useNavigate } from 'react-router-dom'
@@ -18,6 +23,7 @@ export const ProjectsSelectComponent: React.FC<
   const activeProjectLabel = ProjectHooks.useActiveProjectLabel()
   const projects = ProjectHooks.useProjectsListAtom()
   const navigate = useNavigate()
+  const refreshControllers = ConfiguredController.useRefreshControllers()
 
   React.useEffect(() => {
     setItems(
@@ -35,7 +41,8 @@ export const ProjectsSelectComponent: React.FC<
   }
 
   const onRefresh = () => {
-    navigate(0)
+    refreshControllers()
+    // navigate(0)
   }
 
   return (

@@ -21,6 +21,7 @@ import { TrackSectionsWidget } from '../widgets/TrackSectionsWidget'
 import { KeyBoardWidget } from '../widgets/KeyBoardWidget'
 import { ButtonWidget } from '../widgets/ButtonWidget'
 import { NovationColors } from '../NovationColors'
+import { SoftRefreshWidget } from '../widgets/SoftRefreshWidget'
 
 const COLOR_SCALE = 0.5
 
@@ -147,6 +148,7 @@ const device = ControllerDevice.of({
     TrackSectionsWidget,
     KeyBoardWidget,
     ButtonWidget,
+    SoftRefreshWidget,
   ]),
 })
 

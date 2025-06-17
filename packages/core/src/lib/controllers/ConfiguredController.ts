@@ -1,5 +1,5 @@
 import { atomFamily, splitAtom } from 'jotai/utils'
-import { useAtomValue, useAtom, PrimitiveAtom, atom } from 'jotai'
+import { useAtomValue, useAtom, PrimitiveAtom, atom, useSetAtom } from 'jotai'
 import { AtomStorage } from '../storage/AtomStorage'
 import { ProjectMidi } from '../project/ProjectMidi'
 import { Option, pipe } from 'effect'
@@ -65,6 +65,25 @@ const atoms = {
 const useControllers = () => {
   const activeProject = useAtomValue(ProjectMidi.atoms.project.active)
   return useAtom(atoms.controllers(activeProject))
+}
+
+const RELOAD_PROJECT = 'reload-project'
+const useRefreshControllers = () => {
+  const setActiveProject = useSetAtom(ProjectMidi.atoms.project.active)
+
+  return () => {
+    console.log('onrefresh')
+    setActiveProject((currentProject) => {
+      setTimeout(() => {
+        setActiveProject(currentProject)
+      }, 500)
+      return RELOAD_PROJECT
+    })
+  }
+}
+
+const useIsReloadProject = () => {
+  return useAtomValue(ProjectMidi.atoms.project.active) === RELOAD_PROJECT
 }
 
 const useProjectTracks = () => {
@@ -297,4 +316,6 @@ export const ConfiguredController = {
   useAddController,
   useControllersValue,
   useProjectTracks,
+  useRefreshControllers,
+  useIsReloadProject,
 }
