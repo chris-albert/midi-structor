@@ -30,13 +30,7 @@ export const useActiveClip = (track: UITrack): UIClip => {
 const useArrangement = () => ProjectState.project.arrangement.useValue()
 
 const useTracks = () => {
-  // const tracks = ProjectState.project.arrangement
-  //   .useFocusMemo((o) => o.prop('tracks'))
-  //   .useValue()
-  // console.log('tracks', tracks)
-  // return tracks
   const arrangement = useArrangement()
-  // console.log('arrangement2', arrangement)
   return arrangement.tracks
 }
 
