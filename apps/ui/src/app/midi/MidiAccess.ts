@@ -9,7 +9,6 @@ import {
   MidiListener,
   MidiEmitter,
   ControllerMidi,
-  ProjectMidi,
 } from '@midi-structor/core'
 import React from 'react'
 import _ from 'lodash'

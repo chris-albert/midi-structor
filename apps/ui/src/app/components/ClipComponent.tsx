@@ -5,14 +5,16 @@ import { Box } from '@mui/material'
 import { zoomAtom } from '../model/Settings'
 
 export type ClipComponentProps = {
-  clipAtom: PrimitiveAtom<UIClip>
+  clip: UIClip
 }
 
-export const ClipComponent: React.FC<ClipComponentProps> = ({ clipAtom }) => {
-  const clip = useAtomValue(clipAtom)
+export const ClipComponent: React.FC<ClipComponentProps> = ({ clip }) => {
   const zoom = useAtomValue(zoomAtom)
 
-  const width = clip.endTime === undefined ? 100 : (clip.endTime - clip.startTime) * 10 * (1 + zoom / 10)
+  const width =
+    clip.endTime === undefined
+      ? 100
+      : (clip.endTime - clip.startTime) * 10 * (1 + zoom / 10)
 
   if (clip.type === 'real') {
     return (

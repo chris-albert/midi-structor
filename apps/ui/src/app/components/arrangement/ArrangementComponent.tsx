@@ -6,15 +6,17 @@ import { ProjectHooks } from '@midi-structor/core'
 
 export type ArrangementComponentProps = {}
 
-export const ArrangementComponent: React.FC<ArrangementComponentProps> = ({}) => {
-  const tracks = ProjectHooks.useTracksAtoms()
+export const ArrangementComponent: React.FC<
+  ArrangementComponentProps
+> = ({}) => {
+  const tracks = ProjectHooks.useTracks()
 
   return (
     <Box>
       <ArrangementTimelineComponent />
-      {tracks.map((trackAtom, i) => (
+      {tracks.map((track, i) => (
         <Box key={`tracks-${i}`}>
-          <TrackComponent trackAtom={trackAtom} />
+          <TrackComponent track={track} />
         </Box>
       ))}
     </Box>

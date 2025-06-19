@@ -27,7 +27,7 @@ export const MonitorPage: React.FC<MonitorPageProps> = () => {
       setListenEnabled((enabled) => {
         if (enabled) {
           setTotalCount((count) => {
-            setMessages((m) => _.take([[message, count], ...m], maxMessages))
+            // setMessages((m) => _.take([[message, count], ...m], maxMessages))
             return count + 1
           })
         }
@@ -41,7 +41,7 @@ export const MonitorPage: React.FC<MonitorPageProps> = () => {
       setListenEnabled((enabled) => {
         if (enabled) {
           setTotalCount((count) => {
-            setMessages((m) => _.take([[message, count], ...m], maxMessages))
+            // setMessages((m) => _.take([[message, count], ...m], maxMessages))
             return count + 1
           })
         }

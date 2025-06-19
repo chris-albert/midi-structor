@@ -1,5 +1,5 @@
 import React from 'react'
-import { Midi, MIDIStructorUI, ProjectMidi } from '@midi-structor/core'
+import { Midi, MIDIStructorUI } from '@midi-structor/core'
 import { MidiStructorComponent } from '../components/controller/devices/midistructor/MidiStructorComponent'
 import { Box } from '@mui/material'
 

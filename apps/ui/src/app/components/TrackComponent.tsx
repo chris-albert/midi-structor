@@ -8,19 +8,13 @@ import { useNavigate } from 'react-router-dom'
 import { focusAtom } from 'jotai-optics'
 
 export type TrackComponentProps = {
-  trackAtom: PrimitiveAtom<UITrack>
+  track: UITrack
 }
 
-export const TrackComponent: React.FC<TrackComponentProps> = ({ trackAtom }) => {
+export const TrackComponent: React.FC<TrackComponentProps> = ({ track }) => {
   const navigate = useNavigate()
-  const track = useAtomValue(trackAtom)
 
-  const clips = useAtomValue(
-    React.useMemo(() => {
-      const clips = focusAtom(trackAtom, (o) => o.prop('clips'))
-      return splitAtom(clips)
-    }, [trackAtom]),
-  )
+  const clips = track.clips
 
   return (
     <Grid
@@ -42,7 +36,7 @@ export const TrackComponent: React.FC<TrackComponentProps> = ({ trackAtom }) => 
           }}>
           {clips.map((clip, index) => (
             <Box key={`track-${track.name}-clip-${index}`}>
-              <ClipComponent clipAtom={clip} />
+              <ClipComponent clip={clip} />
             </Box>
           ))}
         </Box>

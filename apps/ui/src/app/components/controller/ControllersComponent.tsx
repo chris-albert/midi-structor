@@ -3,11 +3,7 @@ import { TabItem, TabsComponent } from '../TabsComponent'
 import { Box, LinearProgress } from '@mui/material'
 import AddCircleIcon from '@mui/icons-material/AddCircle'
 import { AddControllerComponent } from './AddControllerComponent'
-import {
-  ConfiguredController,
-  ProjectHooks,
-  ProjectMidi,
-} from '@midi-structor/core'
+import { ConfiguredController, ProjectHooks } from '@midi-structor/core'
 import { ControllerComponent } from './ControllerComponent'
 import { ControllerAvatarComponent } from './ControllerAvatarComponent'
 

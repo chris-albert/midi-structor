@@ -1,7 +1,6 @@
 import { atomFamily, splitAtom } from 'jotai/utils'
 import { useAtomValue, useAtom, PrimitiveAtom, atom, useSetAtom } from 'jotai'
 import { AtomStorage } from '../storage/AtomStorage'
-import { ProjectMidi } from '../project/ProjectMidi'
 import { Option, pipe } from 'effect'
 import React from 'react'
 import { focusAtom } from 'jotai-optics'
@@ -22,6 +21,7 @@ import { ControllerConfig } from './ControllerConfig'
 import { ControllerDevices } from './devices/ControllerDevices'
 import { ControllerUIDevices } from './devices/ui/ControllerUIDevices'
 import { v4 } from 'uuid'
+import { ProjectHooks } from '../project/ProjectHooks'
 
 export type ConfiguredController = {
   name: string
@@ -63,16 +63,15 @@ const atoms = {
 }
 
 const useControllers = () => {
-  const activeProject = useAtomValue(ProjectMidi.atoms.project.active)
+  const activeProject = ProjectHooks.useActiveProjectName()
   return useAtom(atoms.controllers(activeProject))
 }
 
 const RELOAD_PROJECT = 'reload-project'
 const useRefreshControllers = () => {
-  const setActiveProject = useSetAtom(ProjectMidi.atoms.project.active)
+  const setActiveProject = ProjectHooks.useSetActiveProject()
 
   return () => {
-    console.log('onrefresh')
     setActiveProject((currentProject) => {
       setTimeout(() => {
         setActiveProject(currentProject)
@@ -83,7 +82,7 @@ const useRefreshControllers = () => {
 }
 
 const useIsReloadProject = () => {
-  return useAtomValue(ProjectMidi.atoms.project.active) === RELOAD_PROJECT
+  return ProjectHooks.useActiveProjectName() === RELOAD_PROJECT
 }
 
 const useProjectTracks = () => {
@@ -99,7 +98,7 @@ const useProjectTracks = () => {
 }
 
 const useControllerAtoms = () => {
-  const activeProject = useAtomValue(ProjectMidi.atoms.project.active)
+  const activeProject = ProjectHooks.useActiveProjectName()
   const controllers = React.useMemo(
     () => atoms.controllers(activeProject),
     [activeProject]

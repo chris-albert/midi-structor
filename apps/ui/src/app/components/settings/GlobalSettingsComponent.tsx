@@ -40,14 +40,8 @@ export const GlobalSettingsComponent: React.FC<
           }}>
           <Typography variant='h6'>DAW MIDI</Typography>
           <Divider />
-          <MidiSelectComponent
-            midiType='daw'
-            midiDeviceType='input'
-          />
-          <MidiSelectComponent
-            midiType='daw'
-            midiDeviceType='output'
-          />
+          <MidiSelectComponent midiDeviceType='input' />
+          <MidiSelectComponent midiDeviceType='output' />
           <Button
             size='small'
             sx={{

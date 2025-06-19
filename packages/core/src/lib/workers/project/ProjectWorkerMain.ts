@@ -6,6 +6,7 @@ import { ProjectMain } from './ProjectMain'
 console.log('Loading Project Worker Main')
 
 const DAW_LISTENER = EventEmitter<MidiEventRecord>()
+const DAW_EMITTER = EventEmitter<MidiEventRecord>()
 
 onmessage = (message) => {
   if (_.isArray(message.data) && message.data.length == 2) {
@@ -15,4 +16,6 @@ onmessage = (message) => {
   }
 }
 
-ProjectMain.init(DAW_LISTENER)
+DAW_EMITTER.on('*', (m) => postMessage(['DAW_EMITTER', m]))
+
+ProjectMain.init(DAW_LISTENER, DAW_EMITTER)

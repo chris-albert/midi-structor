@@ -1,4 +1,9 @@
-import { generateRawMidiMessage, MidiMessage, MidiMessageWithRaw, parseMidiInput } from './MidiMessage'
+import {
+  generateRawMidiMessage,
+  MidiMessage,
+  MidiMessageWithRaw,
+  parseMidiInput,
+} from './MidiMessage'
 import { EventEmitter, EventRecord } from '../EventEmitter'
 
 export type MidiPort = {
@@ -14,7 +19,7 @@ export type MidiPort = {
 
 export type MidiMessageType = MidiMessage['type'] | '*'
 
-export type MidiEventRecord = EventRecord<MidiMessageWithRaw>
+export type MidiEventRecord = EventRecord<MidiMessage>
 
 export type MidiInput = MidiPort & {
   type: 'input'

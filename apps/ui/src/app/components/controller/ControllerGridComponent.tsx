@@ -40,8 +40,7 @@ export const ControllerGridComponent: React.FC<
   }, [padStore, controllerUI.pads])
 
   const onClick = (pad: ControllerPad) => {
-    const message = MidiTarget.toMessage(pad.target, 127)
-    listener.emit({ raw: [] as any, time: new Date(), ...message })
+    listener.emit(MidiTarget.toMessage(pad.target, 127))
   }
 
   return (

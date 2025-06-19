@@ -1,7 +1,4 @@
-import { getDefaultStore } from 'jotai'
-import { ProjectMidi } from '../project/ProjectMidi'
-
-const store = getDefaultStore()
+import { ProjectState } from '../state/ProjectState'
 
 type ForeverBeatParams = {
   beat: number
@@ -59,23 +56,19 @@ const init = (): ForeverBeat => {
   }
   calcMillisPerHalfBeat()
 
-  store.sub(ProjectMidi.atoms.realTime.tempo, () => {
-    bpm = store.get(ProjectMidi.atoms.realTime.tempo)
+  ProjectState.realTime.tempo.sub((value) => {
+    bpm = value
     calcMillisPerHalfBeat()
   })
 
-  store.sub(ProjectMidi.atoms.realTime.timeSignature, () => {
-    noteLength = store.get(ProjectMidi.atoms.realTime.timeSignature).noteLength
+  ProjectState.realTime.timeSignature.sub((value) => {
+    noteLength = value.noteLength
     calcMillisPerHalfBeat()
   })
 
-  store.sub(ProjectMidi.atoms.realTime.isPlaying, () => {
-    onIsPlaying(store.get(ProjectMidi.atoms.realTime.isPlaying))
-  })
+  ProjectState.realTime.isPlaying.sub(onIsPlaying)
 
-  store.sub(ProjectMidi.atoms.realTime.barBeats, () => {
-    onBeat(store.get(ProjectMidi.atoms.realTime.barBeats))
-  })
+  ProjectState.realTime.barBeats.sub(onBeat)
 
   const onTick = (f: ForeverBeatCallback) => {
     callbacks = [...callbacks, f]

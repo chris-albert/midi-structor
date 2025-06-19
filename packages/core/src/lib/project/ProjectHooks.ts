@@ -1,23 +1,11 @@
-import {
-  atom,
-  getDefaultStore,
-  useAtom,
-  useAtomValue,
-  useSetAtom,
-  WritableAtom,
-} from 'jotai'
-import { ProjectImportStatus, ProjectMidi } from './ProjectMidi'
 import React from 'react'
 import _ from 'lodash'
 import { List } from 'immutable'
-import { focusAtom } from 'jotai-optics'
-import { splitAtom } from 'jotai/utils'
-import { emptyTrack, UIArrangement, UIClip, UITrack } from './UIStateDisplay'
-import { useListAtom } from '../hooks/ListAtom'
+import { emptyTrack, UIClip, UITrack } from './UIStateDisplay'
+import { useListState } from '../hooks/ListAtom'
 import { Option } from 'effect'
 import { ProjectConfig } from './ProjectConfig'
-
-const store = getDefaultStore()
+import { ProjectImportStatus, ProjectState } from '../state/ProjectState'
 
 const isClipActive = (clip: UIClip, beat: number): boolean => {
   return (
@@ -39,28 +27,21 @@ export const useActiveClip = (track: UITrack): UIClip => {
   return React.useMemo(() => searchActiveClip(track.clips, beat), [beat])
 }
 
-const useArrangementAtom = () => {
-  const activeProject = useAtomValue(ProjectMidi.atoms.project.active)
-  // return React.useMemo(() => ProjectMidi.atoms.project.arrangement(activeProject), [activeProject])
-  return ProjectMidi.atoms.project.arrangement(activeProject)
+const useArrangement = () => ProjectState.project.arrangement.useValue()
+
+const useTracks = () => {
+  // const tracks = ProjectState.project.arrangement
+  //   .useFocusMemo((o) => o.prop('tracks'))
+  //   .useValue()
+  // console.log('tracks', tracks)
+  // return tracks
+  const arrangement = useArrangement()
+  // console.log('arrangement2', arrangement)
+  return arrangement.tracks
 }
-
-const useArrangement = () => useAtomValue(useArrangementAtom())
-
-const useTracksAtom = () => {
-  const arrangement: WritableAtom<UIArrangement, [UIArrangement], void> =
-    useArrangementAtom()
-
-  return React.useMemo(
-    () => focusAtom(arrangement, (o) => o.prop('tracks')),
-    [arrangement]
-  )
-}
-
-const useTracks = () => useAtomValue(useTracksAtom())
 
 const useTrackOrUndefined = (trackName: string): UITrack | undefined => {
-  const tracks = useAtomValue(useTracksAtom())
+  const tracks = useTracks()
   return tracks.find((t) => t.name === trackName)
 }
 
@@ -69,17 +50,21 @@ const useTrack = (trackName: string) => {
   return track === undefined ? emptyTrack : track
 }
 
+const useSetActiveProject = () => ProjectState.project.active.useSet()
+const useActiveProjectName = () => ProjectState.project.active.useValue()
+
 const useActiveProjectValue = () => {
-  const activeProject = useAtomValue(ProjectMidi.atoms.project.active)
-  const projects = useAtomValue(ProjectMidi.atoms.projectsConfig)
+  const activeProject = useActiveProjectName()
+  const projects = ProjectState.project.config.useValue()
   const project = _.find(projects.projects, (p) => p.key === activeProject)
 
   return project || ProjectConfig.defaultProjectConfig()
 }
 
 const useUpdateActiveProject = () => {
-  const active = useAtomValue(ProjectMidi.atoms.project.active)
-  const [projects, setProjects] = useAtom(ProjectMidi.atoms.projectsConfig)
+  const active = useActiveProjectName()
+  const projects = ProjectState.project.config.useValue()
+  const setProjects = ProjectState.project.config.useSet()
   const projectsList = List(projects.projects)
   const origProjectIndex = projectsList.findIndex((p) => p.key === active)
   return (newProjectFunc: (pc: ProjectConfig) => ProjectConfig) => {
@@ -95,7 +80,7 @@ const useUpdateActiveProject = () => {
   }
 }
 
-const useProjects = () => useAtomValue(ProjectMidi.atoms.projectsConfig)
+const useProjects = () => ProjectState.project.config.useValue()
 
 const useSetActiveProjectName = () => {
   const updateProject = useUpdateActiveProject()
@@ -129,10 +114,10 @@ const useProjectStyle = () => {
   }
 }
 
-const useProjectsConfig = () => useAtom(ProjectMidi.atoms.projectsConfig)
+const useProjectsConfig = () => useProjects()
 
 const useActiveProjectLabel = () => {
-  const activeProject = useAtomValue(ProjectMidi.atoms.project.active)
+  const activeProject = ProjectState.project.active.useValue()
   const projects = useProjects()
   const project = _.find(projects.projects, (p) => p.key === activeProject)
   if (project !== undefined) {
@@ -143,47 +128,35 @@ const useActiveProjectLabel = () => {
 }
 
 const useProjectsListAtom = () => {
-  const projects = React.useMemo(
-    () =>
-      focusAtom(ProjectMidi.atoms.projectsConfig, (o) => o.prop('projects')),
-    [ProjectMidi.atoms.projectsConfig]
+  const projects = ProjectState.project.config.useFocusMemo((o) =>
+    o.prop('projects')
   )
-  return useListAtom(projects)
+  return useListState(projects)
 }
 
-const useAbletonProjectName = () =>
-  useAtomValue(ProjectMidi.atoms.project.abletonName)
-
-const useSetActiveProject = () => useSetAtom(ProjectMidi.atoms.project.active)
-const useActiveProject = () => useAtomValue(ProjectMidi.atoms.project.active)
+const useAbletonProjectName = () => ProjectState.project.abletonName.useValue()
 
 const useOnStatusChange = (f: (status: ProjectImportStatus) => void) => {
-  const importStatus = useAtomValue(ProjectMidi.atoms.importStatus)
+  const importStatus = ProjectState.importStatus.useValue()
   React.useEffect(() => f(importStatus), [importStatus])
 }
 
 const useIsProjectLoading = () =>
-  useAtomValue(ProjectMidi.atoms.importStatus).type !== 'done'
+  ProjectState.importStatus.useValue().type !== 'done'
 
-const useBeat = () => useAtomValue(ProjectMidi.atoms.realTime.beats)
-const useBarBeats = () => useAtomValue(ProjectMidi.atoms.realTime.barBeats)
-const useTimeSignature = () =>
-  useAtomValue(ProjectMidi.atoms.realTime.timeSignature)
-const useTempo = () => useAtomValue(ProjectMidi.atoms.realTime.tempo)
-const useIsPlaying = () => useAtomValue(ProjectMidi.atoms.realTime.isPlaying)
-const useMetronomeState = () =>
-  useAtomValue(ProjectMidi.atoms.realTime.metronomeState)
-const getMetronomeState = () => {
-  return store.get(ProjectMidi.atoms.realTime.metronomeState)
-}
-const useLoopState = () => useAtomValue(ProjectMidi.atoms.realTime.loopState)
-const getLoopState = () => {
-  return store.get(ProjectMidi.atoms.realTime.loopState)
-}
+const useBeat = () => ProjectState.realTime.beats.useValue()
+const useBarBeats = () => ProjectState.realTime.barBeats.useValue()
+const useTimeSignature = () => ProjectState.realTime.timeSignature.useValue()
+const useTempo = () => ProjectState.realTime.tempo.useValue()
+const useIsPlaying = () => ProjectState.realTime.isPlaying.useValue()
+const useMetronomeState = () => ProjectState.realTime.metronomeState.useValue()
+const getMetronomeState = () => ProjectState.realTime.metronomeState.get()
+const useLoopState = () => ProjectState.realTime.loopState.useValue()
+const getLoopState = () => ProjectState.realTime.loopState.get()
 
 const useOnProjectLoad = () => {
   const projects = useProjects()
-  const activeProject = useActiveProject()
+  const activeProject = useActiveProjectName()
   const setActiveProject = useSetActiveProject()
   return (abletonProject: string) => {
     const project = List(projects.projects).find(
@@ -212,6 +185,7 @@ export const ProjectHooks = {
   useAbletonProjectName,
   useSetActiveProjectName,
   useActiveProjectValue,
+  useActiveProjectName,
   useUpdateActiveProject,
   useTracks,
   useTrack,
@@ -222,7 +196,4 @@ export const ProjectHooks = {
   getLoopState,
   useOnProjectLoad,
   useIsProjectLoading,
-  useTracksAtoms: () => {
-    return useAtomValue(splitAtom(useTracksAtom()))
-  },
 }

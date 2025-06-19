@@ -1,12 +1,30 @@
 import { atom, SetStateAction } from 'jotai'
 
+type Update<A> = {
+  type: 'update'
+  value: A
+}
+
+type Init = {
+  type: 'init'
+}
+
+type Event<A> = Update<A> | Init
+
 export function atomWithBroadcast<Value>(key: string, initialValue: Value) {
   const baseAtom = atom(initialValue)
-  const listeners = new Set<(event: MessageEvent<any>) => void>()
+  const listeners = new Set<(event: MessageEvent<Event<Value>>) => void>()
   const channel = new BroadcastChannel(key)
 
-  channel.onmessage = (event) => {
-    listeners.forEach((l) => l(event))
+  let last: Value = initialValue
+
+  channel.onmessage = (e) => {
+    const event = e as MessageEvent<Event<Value>>
+    if (event.data.type === 'update') {
+      listeners.forEach((l) => l(event))
+    } else if (event.data.type === 'init') {
+      channel.postMessage({ type: 'update', value: last })
+    }
   }
 
   const broadcastAtom = atom(
@@ -15,25 +33,29 @@ export function atomWithBroadcast<Value>(key: string, initialValue: Value) {
       set(baseAtom, update.value)
 
       if (!update.isEvent) {
-        channel.postMessage(get(baseAtom))
+        last = get(baseAtom)
+        channel.postMessage({ type: 'update', value: last })
       }
     }
   )
 
   broadcastAtom.onMount = (setAtom) => {
-    const listener = (event: MessageEvent<any>) => {
-      setAtom({ isEvent: true, value: event.data })
+    const listener = (event: MessageEvent<Event<Value>>) => {
+      if (event.data.type === 'update') {
+        setAtom({ isEvent: true, value: event.data.value })
+      }
     }
-
     listeners.add(listener)
-
+    channel.postMessage({ type: 'init' })
     return () => {
       listeners.delete(listener)
     }
   }
 
   const returnedAtom = atom(
-    (get) => get(broadcastAtom),
+    (get) => {
+      return get(broadcastAtom)
+    },
     (_get, set, update: SetStateAction<Value>) => {
       set(broadcastAtom, { isEvent: false, value: update })
     }
