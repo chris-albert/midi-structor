@@ -11,6 +11,7 @@ import { atomWithBroadcast } from '../util/AtomWithBroadcast'
 import { AtomStorage } from '../storage/AtomStorage'
 import { focusAtom } from 'jotai-optics'
 import { Lens, OpticFor_ } from 'optics-ts'
+import { splitAtom } from 'jotai/utils'
 
 const store = getDefaultStore()
 
@@ -21,8 +22,11 @@ export type State<A> = {
   get: () => A
   set: (s: Set<A>) => void
   sub: (f: (a: A) => SubCleanup) => void
+
   useValue: () => Awaited<A>
   useSet: () => (s: Set<A>) => void
+  use: () => [Awaited<A>, (s: Set<A>) => void]
+
   focus: <B>(f: (o: OpticFor_<A>) => Lens<A, any, B>) => State<B>
   useFocusMemo: <B>(f: (o: OpticFor_<A>) => Lens<A, any, B>) => State<B>
 }
@@ -59,6 +63,7 @@ const fromAtom = <A>(
 
   const useValue = () => useAtomValue(atom)
   const useSet = () => useSetAtom(atom)
+  const use = (): [Awaited<A>, (s: Set<A>) => void] => [useValue(), useSet()]
 
   const focus = <B>(f: (o: OpticFor_<A>) => Lens<A, any, B>): State<B> =>
     fromAtom(focusAtom(atom, f))
@@ -76,6 +81,7 @@ const fromAtom = <A>(
     sub,
     useValue,
     useSet,
+    use,
     focus,
     useFocusMemo,
   }
@@ -90,8 +96,12 @@ const mem = <A>(name: string, initial: A): State<A> =>
 const storage = <A>(name: string, initial: A): State<A> =>
   fromAtom<A>(AtomStorage.atom<A>(name, initial))
 
+const array = <A>(state: State<Array<A>>): Array<State<A>> =>
+  state.get().map((a, i) => memSingle(`array-element-${i}`, a))
+
 export const State = {
   mem,
   memSingle,
   storage,
+  array,
 }

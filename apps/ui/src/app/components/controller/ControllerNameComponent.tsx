@@ -1,16 +1,15 @@
 import React from 'react'
-import { PrimitiveAtom } from 'jotai/index'
-import { ConfiguredController } from '@midi-structor/core'
+import { ConfiguredController, State } from '@midi-structor/core'
 import { Box, TextField } from '@mui/material'
 
 export type ControllerNameComponentProps = {
-  controllerAtom: PrimitiveAtom<ConfiguredController>
+  controllerState: State<ConfiguredController>
 }
 
 export const ControllerNameComponent: React.FC<
   ControllerNameComponentProps
-> = ({ controllerAtom }) => {
-  const controller = ConfiguredController.useController(controllerAtom)
+> = ({ controllerState }) => {
+  const controller = ConfiguredController.useController(controllerState)
 
   return (
     <Box sx={{ width: '100%' }}>

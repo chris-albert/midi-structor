@@ -1,16 +1,19 @@
 import React from 'react'
-import { ConfiguredController, ControllerDevices } from '@midi-structor/core'
-import { PrimitiveAtom } from 'jotai/index'
+import {
+  ConfiguredController,
+  ControllerDevices,
+  State,
+} from '@midi-structor/core'
 import { SelectComponent, SelectItem } from '../form/SelectComponent'
 
 export type DeviceSelectorComponentProps = {
-  controllerAtom: PrimitiveAtom<ConfiguredController>
+  controllerState: State<ConfiguredController>
 }
 
 export const DeviceSelectorComponent: React.FC<
   DeviceSelectorComponentProps
-> = ({ controllerAtom }) => {
-  const controller = ConfiguredController.useController(controllerAtom)
+> = ({ controllerState }) => {
+  const controller = ConfiguredController.useController(controllerState)
 
   const deviceItems: Array<SelectItem> = ControllerDevices.getNames().map(
     (name) => ({

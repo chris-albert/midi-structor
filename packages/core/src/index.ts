@@ -32,3 +32,5 @@ export * from './lib/controllers/devices/midistructor/MIDIStructorWidget'
 export * from './lib/controllers/devices/midistructor/MIDIStructorWidgets'
 export * from './lib/controllers/devices/midistructor/widgets/AllMidiStructorWidgets'
 export * from './lib/controllers/widgets/form/SchemaForm'
+
+export * from './lib/state/State'

@@ -7,7 +7,7 @@ export type ControllersComponentProps = {}
 export const ControllersComponent: React.FC<
   ControllersComponentProps
 > = ({}) => {
-  const [controllers] = ConfiguredController.useControllers()
+  const controllers = ConfiguredController.useControllers()
 
   console.log('Controllers', controllers)
 

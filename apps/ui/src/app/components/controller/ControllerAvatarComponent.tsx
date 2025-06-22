@@ -1,14 +1,15 @@
 import React from 'react'
-import { PrimitiveAtom } from 'jotai'
-import { ConfiguredController } from '@midi-structor/core'
+import { ConfiguredController, State } from '@midi-structor/core'
 import { StringAvatarComponent, stringToColor } from '../StringAvatarComponent'
 
 export type ControllerAvatarComponentProps = {
-  controllerAtom: PrimitiveAtom<ConfiguredController>
+  controllerState: State<ConfiguredController>
 }
 
-export const ControllerAvatarComponent: React.FC<ControllerAvatarComponentProps> = ({ controllerAtom }) => {
-  const controller = ConfiguredController.useController(controllerAtom)
+export const ControllerAvatarComponent: React.FC<
+  ControllerAvatarComponentProps
+> = ({ controllerState }) => {
+  const controller = ConfiguredController.useController(controllerState)
   return (
     <StringAvatarComponent
       label={controller.name}

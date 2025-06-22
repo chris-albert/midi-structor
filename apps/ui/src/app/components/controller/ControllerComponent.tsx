@@ -1,19 +1,24 @@
 import React from 'react'
-import { ConfiguredController, ControllerDevices } from '@midi-structor/core'
+import {
+  ConfiguredController,
+  ControllerDevices,
+  State,
+} from '@midi-structor/core'
 import { Box, Divider, Typography } from '@mui/material'
 import IconButton from '@mui/material/IconButton'
-import { PrimitiveAtom } from 'jotai'
 import SettingsIcon from '@mui/icons-material/Settings'
 import { ControllerEditComponent } from './ControllerEditComponent'
 import { ControllerHomeComponent } from './ControllerHomeComponent'
 import { Option } from 'effect'
 
 export type ControllerComponentProps = {
-  controllerAtom: PrimitiveAtom<ConfiguredController>
+  controllerState: State<ConfiguredController>
 }
 
-export const ControllerComponent: React.FC<ControllerComponentProps> = ({ controllerAtom }) => {
-  const controller = ConfiguredController.useController(controllerAtom)
+export const ControllerComponent: React.FC<ControllerComponentProps> = ({
+  controllerState,
+}) => {
+  const controller = ConfiguredController.useController(controllerState)
 
   const [isEdit, setIsEdit] = React.useState(false)
 
@@ -56,11 +61,11 @@ export const ControllerComponent: React.FC<ControllerComponentProps> = ({ contro
         <Divider />
         {isEdit ? (
           <ControllerEditComponent
-            controllerAtom={controllerAtom}
+            controllerState={controllerState}
             device={device}
           />
         ) : (
-          <ControllerHomeComponent controllerAtom={controllerAtom} />
+          <ControllerHomeComponent controllerState={controllerState} />
         )}
       </Box>
     ),

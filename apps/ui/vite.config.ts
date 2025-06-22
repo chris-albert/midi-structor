@@ -11,7 +11,7 @@ export default defineConfig({
   server: {
     port: 3000,
     host: 'localhost',
-    hmr: true,
+    hmr: false, // this needs to be false for webworker dev
   },
   plugins: [
     react(),

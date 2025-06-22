@@ -1,9 +1,6 @@
-import { atomFamily, splitAtom } from 'jotai/utils'
-import { useAtomValue, useAtom, PrimitiveAtom, atom, useSetAtom } from 'jotai'
-import { AtomStorage } from '../storage/AtomStorage'
+import { useAtomValue, useAtom, PrimitiveAtom } from 'jotai'
 import { Option, pipe } from 'effect'
 import React from 'react'
-import { focusAtom } from 'jotai-optics'
 import { OpticFor_ } from 'optics-ts'
 import { Set } from 'immutable'
 import {
@@ -22,6 +19,7 @@ import { ControllerDevices } from './devices/ControllerDevices'
 import { ControllerUIDevices } from './devices/ui/ControllerUIDevices'
 import { v4 } from 'uuid'
 import { ProjectHooks } from '../project/ProjectHooks'
+import { State } from '../state/State'
 
 export type ConfiguredController = {
   name: string
@@ -53,18 +51,29 @@ const defaultConfiguredController = (name: string): ConfiguredController => ({
 export type VirtualStore = Record<string, Color>
 
 const atoms = {
-  controllers: atomFamily((name: string) =>
-    AtomStorage.atom<ConfiguredControllers>(`controllers-${name}`, [])
-  ),
-  virtualStore: atomFamily((name: string) => atom<VirtualStore>({})),
-  virtualListener: atomFamily((name: string) =>
-    atom<EventEmitter<MidiEventRecord>>(EventEmitter<MidiEventRecord>())
+  controllers: (name: string) =>
+    State.storage<ConfiguredControllers>(`controllers-${name}`, []),
+  virtualStore: State.mem<VirtualStore>('virtual-store', {}),
+  virtualListener: State.mem<EventEmitter<MidiEventRecord>>(
+    'virtual-listener',
+    EventEmitter<MidiEventRecord>()
   ),
 }
 
 const useControllers = () => {
   const activeProject = ProjectHooks.useActiveProjectName()
-  return useAtom(atoms.controllers(activeProject))
+  return React.useMemo(
+    () => atoms.controllers(activeProject),
+    [activeProject]
+  ).useValue()
+}
+
+const useSetControllers = () => {
+  const activeProject = ProjectHooks.useActiveProjectName()
+  return React.useMemo(
+    () => atoms.controllers(activeProject),
+    [activeProject]
+  ).useSet()
 }
 
 const RELOAD_PROJECT = 'reload-project'
@@ -86,7 +95,7 @@ const useIsReloadProject = () => {
 }
 
 const useProjectTracks = () => {
-  const [controllers] = useControllers()
+  const controllers = useControllers()
 
   const widgets = controllers.flatMap((controller) =>
     Option.match(ControllerDevices.findByName(controller.device), {
@@ -97,54 +106,47 @@ const useProjectTracks = () => {
   return Set(widgets.flatMap((widget) => widget.tracks())).toArray()
 }
 
-const useControllerAtoms = () => {
+const useControllerStates = () => {
   const activeProject = ProjectHooks.useActiveProjectName()
   const controllers = React.useMemo(
     () => atoms.controllers(activeProject),
     [activeProject]
   )
-  return splitAtom(controllers)
+  return State.array(controllers)
 }
 
 const useAddController = () => {
-  const [_, setControllers] = useControllers()
+  const setControllers = useSetControllers()
 
   return (name: string) => {
     setControllers((c) => [...c, defaultConfiguredController(name)])
   }
 }
 
-const useControllersValue = () => {
-  return useAtomValue(useControllerAtoms())
-}
-
 const useRemoveController = () => {
-  const [_, setControllers] = useControllers()
+  const setControllers = useSetControllers()
   return (controller: ConfiguredController) => {
     setControllers((cs) => cs.filter((c) => c !== controller))
   }
 }
 
-const useControllerName = (controller: PrimitiveAtom<ConfiguredController>) => {
-  const nameAtom = React.useMemo(
-    () => focusAtom(controller, (s) => s.prop('name')),
-    []
-  )
-  return useAtomValue(nameAtom)
+const useControllerName = (controller: State<ConfiguredController>) => {
+  return controller.useFocusMemo((o) => o.prop('name'))
 }
 
-const useSafeFocus = <A, K extends keyof A>(atom: PrimitiveAtom<A>, key: K) => {
+const useSafeFocus = <A, K extends keyof A>(state: State<A>, key: K) => {
   const selectFunc = React.useCallback((o: OpticFor_<A>) => o.prop(key), [key])
-  return focusAtom(atom, selectFunc)
+  return state.useFocusMemo(selectFunc)
 }
 
-const useController = (controller: PrimitiveAtom<ConfiguredController>) => {
-  const controllerValue = useAtomValue(controller)
-  const [name, setName] = useAtom(useSafeFocus(controller, 'name'))
-  const [enabled, setEnabled] = useAtom(useSafeFocus(controller, 'enabled'))
-  const [config, setConfig] = useAtom(useSafeFocus(controller, 'config'))
-  const [device, setDevice] = useAtom(useSafeFocus(controller, 'device'))
-  const [color, setColor] = useAtom(useSafeFocus(controller, 'color'))
+const useController = (controller: State<ConfiguredController>) => {
+  const controllerValue = controller.useValue()
+
+  const [name, setName] = useSafeFocus(controller, 'name').use()
+  const [enabled, setEnabled] = useSafeFocus(controller, 'enabled').use()
+  const [config, setConfig] = useSafeFocus(controller, 'config').use()
+  const [device, setDevice] = useSafeFocus(controller, 'device').use()
+  const [color, setColor] = useSafeFocus(controller, 'color').use()
   const removeController = useRemoveController()
 
   const remove = () => {
@@ -167,13 +169,11 @@ const useController = (controller: PrimitiveAtom<ConfiguredController>) => {
   }
 }
 
-const useRealController = (controller: PrimitiveAtom<ConfiguredController>) => {
-  const baseController = useController(
-    controller as PrimitiveAtom<ConfiguredController>
-  )
+const useRealController = (controller: State<ConfiguredController>) => {
+  const baseController = useController(controller)
   const selected = useSafeFocus(controller, 'selected')
-  const [input, setInput] = useAtom(useSafeFocus(selected, 'input'))
-  const [output, setOutput] = useAtom(useSafeFocus(selected, 'output'))
+  const [input, setInput] = useSafeFocus(selected, 'input').use()
+  const [output, setOutput] = useSafeFocus(selected, 'output').use()
 
   return {
     ...baseController,
@@ -190,9 +190,9 @@ export type ControllerMidiDeviceSelections = {
 }
 
 const useMidiDeviceSelection = (
-  controllerAtom: PrimitiveAtom<ConfiguredController>
+  controllerState: State<ConfiguredController>
 ): ControllerMidiDeviceSelections => {
-  const controller = useRealController(controllerAtom)
+  const controller = useRealController(controllerState)
   const manager = Midi.useDeviceManager()
 
   const input: MidiDeviceSelection = {
@@ -255,7 +255,7 @@ const useUIStore = (controller: ConfiguredController) => {
 }
 
 const useVirtualListener = (controller: ConfiguredController) =>
-  useAtomValue(atoms.virtualListener(controller.name))
+  atoms.virtualListener.useValue()
 
 const useVirtualIO = (
   controller: ConfiguredController
@@ -313,7 +313,7 @@ export const ConfiguredController = {
   useMidiDeviceSelection,
   useControllerName,
   useAddController,
-  useControllersValue,
+  useControllerStates,
   useProjectTracks,
   useRefreshControllers,
   useIsReloadProject,

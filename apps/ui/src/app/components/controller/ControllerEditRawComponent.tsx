@@ -4,22 +4,22 @@ import {
   ControllerConfig,
   ControllerDevice,
   ProjectHooks,
+  State,
 } from '@midi-structor/core'
-import { PrimitiveAtom } from 'jotai/index'
 import { Button, Card, CardContent, CardHeader } from '@mui/material'
 import { JSONEditor } from '../JSONEditor'
 import { Either } from 'effect'
 import { toast } from 'react-toastify'
 
 export type ControllerEditRawComponentProps = {
-  controllerAtom: PrimitiveAtom<ConfiguredController>
+  controllerState: State<ConfiguredController>
   device: ControllerDevice
 }
 
 export const ControllerEditRawComponent: React.FC<
   ControllerEditRawComponentProps
-> = ({ controllerAtom, device }) => {
-  const controller = ConfiguredController.useController(controllerAtom)
+> = ({ controllerState, device }) => {
+  const controller = ConfiguredController.useController(controllerState)
   const [rawControllerConfig, setRawControllerConfig] = React.useState('')
   const projectStyle = ProjectHooks.useProjectStyle()
 

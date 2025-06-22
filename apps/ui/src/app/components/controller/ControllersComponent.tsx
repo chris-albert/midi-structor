@@ -17,7 +17,7 @@ export type ControllersComponentProps = {}
 export const ControllersComponent: React.FC<
   ControllersComponentProps
 > = ({}) => {
-  const controllers = ConfiguredController.useControllersValue()
+  const controllers = ConfiguredController.useControllerStates()
   const projectStyle = ProjectHooks.useProjectStyle()
   const isReloadProject = ConfiguredController.useIsReloadProject()
 
@@ -30,8 +30,8 @@ export const ControllersComponent: React.FC<
   } else {
     const controllersTabs: Array<TabItem> = [
       ...controllers.map((controller) => ({
-        icon: () => <ControllerAvatarComponent controllerAtom={controller} />,
-        content: () => <ControllerComponent controllerAtom={controller} />,
+        icon: () => <ControllerAvatarComponent controllerState={controller} />,
+        content: () => <ControllerComponent controllerState={controller} />,
       })),
       addTabItem,
     ]

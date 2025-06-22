@@ -1,6 +1,9 @@
 import React from 'react'
-import { PrimitiveAtom } from 'jotai/index'
-import { ConfiguredController, ControllerDevice } from '@midi-structor/core'
+import {
+  ConfiguredController,
+  ControllerDevice,
+  State,
+} from '@midi-structor/core'
 import {
   Box,
   Button,
@@ -18,14 +21,14 @@ import { MuiColorInput } from 'mui-color-input'
 import { stringToColor } from '../StringAvatarComponent'
 
 export type ControllerEditComponentProps = {
-  controllerAtom: PrimitiveAtom<ConfiguredController>
+  controllerState: State<ConfiguredController>
   device: ControllerDevice
 }
 
 export const ControllerEditComponent: React.FC<
   ControllerEditComponentProps
-> = ({ controllerAtom, device }) => {
-  const controller = ConfiguredController.useController(controllerAtom)
+> = ({ controllerState, device }) => {
+  const controller = ConfiguredController.useController(controllerState)
 
   return (
     <Box sx={{ pt: 1, display: 'flex', gap: 2 }}>
@@ -33,8 +36,8 @@ export const ControllerEditComponent: React.FC<
         sx={{ width: '50%', display: 'flex', flexDirection: 'column', gap: 2 }}>
         <Typography variant='h6'>General</Typography>
         <Divider />
-        <ControllerNameComponent controllerAtom={controllerAtom} />
-        <DeviceSelectorComponent controllerAtom={controllerAtom} />
+        <ControllerNameComponent controllerState={controllerState} />
+        <DeviceSelectorComponent controllerState={controllerState} />
         <Box sx={{ ml: 1 }}>
           <FormControlLabel
             labelPlacement='end'
@@ -60,7 +63,7 @@ export const ControllerEditComponent: React.FC<
         </Box>
         <Typography variant='h6'>MIDI</Typography>
         <Divider />
-        <ControllerBrowserModeComponent controllerAtom={controllerAtom} />
+        <ControllerBrowserModeComponent controllerState={controllerState} />
         <Divider />
         <Box
           sx={{
@@ -79,7 +82,7 @@ export const ControllerEditComponent: React.FC<
       </Box>
       <Box sx={{ width: '50%' }}>
         <ControllerEditRawComponent
-          controllerAtom={controllerAtom}
+          controllerState={controllerState}
           device={device}
         />
       </Box>
