@@ -29,6 +29,7 @@ export type State<A> = {
 
   focus: <B>(f: (o: OpticFor_<A>) => Lens<A, any, B>) => State<B>
   useFocusMemo: <B>(f: (o: OpticFor_<A>) => Lens<A, any, B>) => State<B>
+  useFocus: <B extends keyof A>(key: B) => State<A[B]>
 
   array: () => A extends Array<infer B> ? Array<State<B>> : never
 }
@@ -62,6 +63,11 @@ const fromAtom = <A>(
   const focus = <B>(f: (o: OpticFor_<A>) => Lens<A, any, B>): State<B> =>
     fromAtom(focusAtom(atom, f))
 
+  const useFocus = <B extends keyof A>(key: B): State<A[B]> => {
+    const cb = React.useCallback((o: OpticFor_<A>) => o.prop(key), [key])
+    return focus<A[B]>(cb)
+  }
+
   const useFocusMemo = <B>(
     f: (o: OpticFor_<A>) => Lens<A, any, B>
   ): State<B> => {
@@ -84,6 +90,7 @@ const fromAtom = <A>(
     useSet,
     use,
     focus,
+    useFocus,
     useFocusMemo,
     array,
   }

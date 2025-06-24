@@ -134,19 +134,14 @@ const useControllerName = (controller: State<ConfiguredController>) => {
   return controller.useFocusMemo((o) => o.prop('name'))
 }
 
-const useSafeFocus = <A, K extends keyof A>(state: State<A>, key: K) => {
-  const selectFunc = React.useCallback((o: OpticFor_<A>) => o.prop(key), [key])
-  return state.useFocusMemo(selectFunc)
-}
-
 const useController = (controller: State<ConfiguredController>) => {
   const controllerValue = controller.useValue()
 
-  const [name, setName] = useSafeFocus(controller, 'name').use()
-  const [enabled, setEnabled] = useSafeFocus(controller, 'enabled').use()
-  const [config, setConfig] = useSafeFocus(controller, 'config').use()
-  const [device, setDevice] = useSafeFocus(controller, 'device').use()
-  const [color, setColor] = useSafeFocus(controller, 'color').use()
+  const [name, setName] = controller.useFocus('name').use()
+  const [enabled, setEnabled] = controller.useFocus('enabled').use()
+  const [config, setConfig] = controller.useFocus('config').use()
+  const [device, setDevice] = controller.useFocus('device').use()
+  const [color, setColor] = controller.useFocus('color').use()
   const removeController = useRemoveController()
 
   const remove = () => {
@@ -171,9 +166,9 @@ const useController = (controller: State<ConfiguredController>) => {
 
 const useRealController = (controller: State<ConfiguredController>) => {
   const baseController = useController(controller)
-  const selected = useSafeFocus(controller, 'selected')
-  const [input, setInput] = useSafeFocus(selected, 'input').use()
-  const [output, setOutput] = useSafeFocus(selected, 'output').use()
+  const selected = controller.useFocus('selected')
+  const [input, setInput] = selected.useFocus('input').use()
+  const [output, setOutput] = selected.useFocus('output').use()
 
   return {
     ...baseController,
