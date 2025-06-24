@@ -79,11 +79,16 @@ const handshake = (dawEmitter: EventEmitter<MidiEventRecord>) => {
   })
 }
 
+const onActiveProject = () => {}
+
 const init = (
   dawListener: EventEmitter<MidiEventRecord>,
   dawEmitter: EventEmitter<MidiEventRecord>
 ) => {
   console.log('Project Main')
+  ProjectState.project.active.sub((activeProject) => {
+    console.log('active project', activeProject)
+  })
   listener(dawListener)
   handshake(dawEmitter)
 }

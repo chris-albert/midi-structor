@@ -112,7 +112,7 @@ const useControllerStates = () => {
     () => atoms.controllers(activeProject),
     [activeProject]
   )
-  return State.array(controllers)
+  return controllers.array()
 }
 
 const useAddController = () => {

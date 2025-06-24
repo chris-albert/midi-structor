@@ -1,4 +1,5 @@
-import { atom, SetStateAction } from 'jotai'
+import { atom, PrimitiveAtom, SetStateAction } from 'jotai'
+import { AtomStorage } from '../storage/AtomStorage'
 
 type Update<A> = {
   type: 'update'
@@ -55,8 +56,15 @@ export function atomWithBroadcastVanilla<Value>(
   return returnedAtom
 }
 
-export function atomWithBroadcast<Value>(key: string, initialValue: Value) {
-  const baseAtom = atom(initialValue)
+export const atomWithBroadcast = <Value>(
+  key: string,
+  initialValue: Value,
+  type: 'mem' | 'storage' = 'mem'
+): PrimitiveAtom<Value> => {
+  const isMem = type === 'mem'
+  const baseAtom = isMem
+    ? atom(initialValue)
+    : AtomStorage.atom(key, initialValue)
   const listeners = new Set<(event: MessageEvent<Event<Value>>) => void>()
   const channel = new BroadcastChannel(key)
 
@@ -90,7 +98,9 @@ export function atomWithBroadcast<Value>(key: string, initialValue: Value) {
       }
     }
     listeners.add(listener)
-    channel.postMessage({ type: 'init' })
+    if (isMem) {
+      channel.postMessage({ type: 'init' })
+    }
     return () => {
       listeners.delete(listener)
     }

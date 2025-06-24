@@ -2,15 +2,16 @@ import React from 'react'
 import {
   atom,
   getDefaultStore,
+  PrimitiveAtom,
   SetStateAction,
   useAtomValue,
   useSetAtom,
   WritableAtom,
 } from 'jotai'
 import { atomWithBroadcast } from '../util/AtomWithBroadcast'
-import { AtomStorage } from '../storage/AtomStorage'
 import { focusAtom } from 'jotai-optics'
 import { Lens, OpticFor_ } from 'optics-ts'
+import { splitAtom } from 'jotai/utils'
 
 const store = getDefaultStore()
 
@@ -28,6 +29,8 @@ export type State<A> = {
 
   focus: <B>(f: (o: OpticFor_<A>) => Lens<A, any, B>) => State<B>
   useFocusMemo: <B>(f: (o: OpticFor_<A>) => Lens<A, any, B>) => State<B>
+
+  array: () => A extends Array<infer B> ? Array<State<B>> : never
 }
 
 const fromAtom = <A>(
@@ -66,6 +69,13 @@ const fromAtom = <A>(
     return React.useMemo(() => focus(f), [value])
   }
 
+  const array = (): A extends Array<infer B> ? Array<State<B>> : never => {
+    const arrayAtom: PrimitiveAtom<Array<A>> = atom as unknown as PrimitiveAtom<
+      Array<A>
+    >
+    return store.get(splitAtom(arrayAtom)).map((a) => fromAtom(a)) as any
+  }
+
   return {
     get,
     set,
@@ -75,6 +85,7 @@ const fromAtom = <A>(
     use,
     focus,
     useFocusMemo,
+    array,
   }
 }
 
@@ -82,17 +93,13 @@ const memSingle = <A>(name: string, initial: A): State<A> =>
   fromAtom<A>(atom(initial))
 
 const mem = <A>(name: string, initial: A): State<A> =>
-  fromAtom<A>(atomWithBroadcast(name, initial))
+  fromAtom<A>(atomWithBroadcast<A>(name, initial))
 
 const storage = <A>(name: string, initial: A): State<A> =>
-  fromAtom<A>(AtomStorage.atom<A>(name, initial))
-
-const array = <A>(state: State<Array<A>>): Array<State<A>> =>
-  state.get().map((a, i) => memSingle(`array-element-${i}`, a))
+  fromAtom<A>(atomWithBroadcast<A>(name, initial, 'storage'))
 
 export const State = {
   mem,
   memSingle,
   storage,
-  array,
 }
