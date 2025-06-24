@@ -11,7 +11,6 @@ import { atomWithBroadcast } from '../util/AtomWithBroadcast'
 import { AtomStorage } from '../storage/AtomStorage'
 import { focusAtom } from 'jotai-optics'
 import { Lens, OpticFor_ } from 'optics-ts'
-import { splitAtom } from 'jotai/utils'
 
 const store = getDefaultStore()
 
@@ -34,15 +33,7 @@ export type State<A> = {
 const fromAtom = <A>(
   atom: WritableAtom<A, [update: SetStateAction<A>], void>
 ): State<A> => {
-  const get = (): A => {
-    // @ts-ignore
-    let a: A = null
-    store.set(atom, (aa) => {
-      a = aa
-      return aa
-    })
-    return a
-  }
+  const get = (): A => store.get(atom)
 
   const set = (s: Set<A>): void => {
     store.set(atom, s)

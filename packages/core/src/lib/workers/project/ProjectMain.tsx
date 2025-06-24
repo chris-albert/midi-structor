@@ -35,7 +35,6 @@ const listener = (dawListener: EventEmitter<MidiEventRecord>) => {
     } else if (msg.type === 'init-done') {
       ProjectState.importStatus.set({ type: 'finalizing' })
       const arrangement = initDone(ProjectState.initArrangement.get())
-      console.log('arrangement', arrangement)
       ProjectState.project.arrangement.set(arrangement)
       ProjectState.importStatus.set({ type: 'done' })
     } else if (msg.type === 'beat') {
