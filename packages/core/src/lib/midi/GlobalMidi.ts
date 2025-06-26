@@ -136,7 +136,7 @@ const runInit = () => {
   selectionInit()
 }
 
-const PROJECT_WORKER_MAIN = new ProjectWorkerMain()
+const PROJECT_WORKER_MAIN = new ProjectWorkerMain({ name: 'project' })
 let isInit = false
 const init = (manager: MidiDeviceManager) => {
   states.deviceManager.set(manager)

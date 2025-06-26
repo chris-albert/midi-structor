@@ -1,5 +1,6 @@
 import { atom, PrimitiveAtom, SetStateAction, getDefaultStore } from 'jotai'
 import { AtomStorage } from '../storage/AtomStorage'
+import { StateManager } from '../state/StateManager'
 
 const store = getDefaultStore()
 
@@ -72,6 +73,8 @@ export const atomWithBroadcast = <Value>(
       : atom(initialValue)
   const listeners = new Set<(event: MessageEvent<Event<Value>>) => void>()
   const channel = new BroadcastChannel(key)
+
+  StateManager.getDefault()
 
   let last: Value | undefined = undefined
 

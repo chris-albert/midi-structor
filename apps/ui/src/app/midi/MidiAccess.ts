@@ -80,7 +80,7 @@ const useAccess = () => {
       .then((manager) => {
         Midi.init(manager)
         AllControllerUIDevices.init()
-        ControllerMidi.init()
+        // ControllerMidi.init()
       })
       .catch(console.error)
   }, [])
