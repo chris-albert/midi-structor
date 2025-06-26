@@ -18,6 +18,11 @@ const onStatusChange = (status: ProjectImportStatus) => {
 
 const MidiStatusChangeComponent: React.FC = () => {
   ProjectHooks.useOnStatusChange(onStatusChange)
+  // const activeProject = ProjectHooks.useActiveProjectName()
+  //
+  // React.useEffect(() => {
+  //   console.log('active project', activeProject)
+  // }, [activeProject])
   return <></>
 }
 

@@ -1,6 +1,7 @@
 import { emptyArrangement, InitArrangement } from '../project/UIStateDisplay'
 import { State } from './State'
 import { ProjectConfig, ProjectsConfig } from '../project/ProjectConfig'
+import { ConfiguredControllers } from '../controllers/ConfiguredController'
 
 export type TimeSignature = {
   noteCount: number
@@ -25,7 +26,10 @@ export const ProjectState = {
       'projects-config',
       ProjectConfig.defaultProjectsConfig()
     ),
-    active: State.storage<string>('active-project', 'default'),
+    active: State.storage<string>('active-project', 'init'),
+    controllers: State.family((name: string) =>
+      State.storage<ConfiguredControllers>(`controllers-${name}`, [])
+    ),
     abletonName: State.mem<string | undefined>('ableton-name', undefined),
     arrangement: State.mem('arrangement', emptyArrangement()),
   },

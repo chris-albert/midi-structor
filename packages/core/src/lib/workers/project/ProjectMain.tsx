@@ -13,7 +13,6 @@ import {
   initTrack,
 } from '../../project/UIStateDisplay'
 import { ProjectState } from '../../state/ProjectState'
-import { ConfiguredController } from '../../controllers/ConfiguredController'
 
 const listener = (dawListener: EventEmitter<MidiEventRecord>) => {
   const onAbletonUIMessage = (msg: AbletonUIMessage) => {
@@ -87,7 +86,10 @@ const init = (
 ) => {
   console.log('Project Main')
   ProjectState.project.active.sub((activeProject) => {
-    console.log('active project', activeProject)
+    console.log('--------Active project', activeProject)
+    ProjectState.project.controllers(activeProject).sub((controllers) => {
+      console.log('--------Project controllers', activeProject, controllers)
+    })
   })
   listener(dawListener)
   handshake(dawEmitter)

@@ -444,6 +444,9 @@ importers:
       jotai:
         specifier: ^2.11.0
         version: 2.12.2(@types/react@18.3.1)(react@18.3.1)
+      jotai-minidb:
+        specifier: ^0.0.8
+        version: 0.0.8(jotai@2.12.2(@types/react@18.3.1)(react@18.3.1))
       jotai-optics:
         specifier: ^0.4.0
         version: 0.4.0(jotai@2.12.2(@types/react@18.3.1)(react@18.3.1))(optics-ts@2.4.1)
@@ -2395,6 +2398,10 @@ packages:
   '@remix-run/router@1.23.0':
     resolution: {integrity: sha512-O3rHJzAQKamUz1fvE0Qaw0xSFqsA/yafi2iqeE0pvdFtCO1viYx8QL6f3Ln/aCCTLxs68SLf0KPM9eSeM8yBnA==}
     engines: {node: '>=14.0.0'}
+
+  '@rocicorp/resolver@1.0.2':
+    resolution: {integrity: sha512-TfjMTQp9cNNqNtHFfa+XHEGdA7NnmDRu+ZJH4YF3dso0Xk/b9DMhg/sl+b6CR4ThFZArXXDsG1j8Mwl34wcOZQ==}
+    engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
 
   '@rollup/plugin-inject@5.0.5':
     resolution: {integrity: sha512-2+DEJbNBoPROPkgTDNe8/1YXWcqxbN5DTjASVIOx8HS+pITXushyNiBV56RB08zuptzz8gT3YfkqriTBVycepg==}
@@ -5644,6 +5651,9 @@ packages:
     peerDependencies:
       postcss: ^8.1.0
 
+  idb-keyval@6.2.2:
+    resolution: {integrity: sha512-yjD9nARJ/jb1g+CvD0tlhUHOrJ9Sy0P8T9MF3YaLlHnSRpwPfpTX0XIvpmw3gAJUmEu3FiICLBDPXVwyEvrleg==}
+
   identity-obj-proxy@3.0.0:
     resolution: {integrity: sha512-00n6YnVHKrinT9t0d9+5yZC6UBNJANpYEQvL2LlX6Ab9lnmxzIRcEmTPuyGScvl1+jKuCICX1Z0Ab1pPKKdikA==}
     engines: {node: '>=4'}
@@ -6195,6 +6205,11 @@ packages:
 
   jju@1.4.0:
     resolution: {integrity: sha512-8wb9Yw966OSxApiCt0K3yNJL8pnNeIv+OEq2YMidz4FKP6nonSRoOXc80iXY4JaN2FC11B9qsNmDsm+ZOfMROA==}
+
+  jotai-minidb@0.0.8:
+    resolution: {integrity: sha512-rC8tK12VlPxOOdPF27TQV2ov5B5BBgvW+YtKzodKAy5vfT3EoRwnBTBbPDevFJFqAtxw2CdKnKlznSk63Rs1cw==}
+    peerDependencies:
+      jotai: '>=1.10.0'
 
   jotai-optics@0.4.0:
     resolution: {integrity: sha512-osbEt9AgS55hC4YTZDew2urXKZkaiLmLqkTS/wfW5/l0ib8bmmQ7kBXSFaosV6jDDWSp00IipITcJARFHdp42g==}
@@ -12312,6 +12327,8 @@ snapshots:
 
   '@remix-run/router@1.23.0': {}
 
+  '@rocicorp/resolver@1.0.2': {}
+
   '@rollup/plugin-inject@5.0.5(rollup@4.36.0)':
     dependencies:
       '@rollup/pluginutils': 5.1.4(rollup@4.36.0)
@@ -16253,6 +16270,8 @@ snapshots:
     dependencies:
       postcss: 8.5.3
 
+  idb-keyval@6.2.2: {}
+
   identity-obj-proxy@3.0.0:
     dependencies:
       harmony-reflect: 1.6.2
@@ -16952,6 +16971,12 @@ snapshots:
       - ts-node
 
   jju@1.4.0: {}
+
+  jotai-minidb@0.0.8(jotai@2.12.2(@types/react@18.3.1)(react@18.3.1)):
+    dependencies:
+      '@rocicorp/resolver': 1.0.2
+      idb-keyval: 6.2.2
+      jotai: 2.12.2(@types/react@18.3.1)(react@18.3.1)
 
   jotai-optics@0.4.0(jotai@2.12.2(@types/react@18.3.1)(react@18.3.1))(optics-ts@2.4.1):
     dependencies:

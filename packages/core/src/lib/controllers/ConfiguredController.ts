@@ -20,6 +20,7 @@ import { ControllerUIDevices } from './devices/ui/ControllerUIDevices'
 import { v4 } from 'uuid'
 import { ProjectHooks } from '../project/ProjectHooks'
 import { State } from '../state/State'
+import { ProjectState } from '../state/ProjectState'
 
 export type ConfiguredController = {
   name: string
@@ -51,8 +52,6 @@ const defaultConfiguredController = (name: string): ConfiguredController => ({
 export type VirtualStore = Record<string, Color>
 
 const atoms = {
-  controllers: (name: string) =>
-    State.storage<ConfiguredControllers>(`controllers-${name}`, []),
   virtualStore: State.mem<VirtualStore>('virtual-store', {}),
   virtualListener: State.mem<EventEmitter<MidiEventRecord>>(
     'virtual-listener',
@@ -63,15 +62,16 @@ const atoms = {
 const useControllers = () => {
   const activeProject = ProjectHooks.useActiveProjectName()
   return React.useMemo(
-    () => atoms.controllers(activeProject),
+    () => ProjectState.project.controllers(activeProject),
     [activeProject]
   ).useValue()
+  // return atoms.controllers(activeProject).useValue()
 }
 
 const useSetControllers = () => {
   const activeProject = ProjectHooks.useActiveProjectName()
   return React.useMemo(
-    () => atoms.controllers(activeProject),
+    () => ProjectState.project.controllers(activeProject),
     [activeProject]
   ).useSet()
 }
@@ -109,10 +109,10 @@ const useProjectTracks = () => {
 const useControllerStates = () => {
   const activeProject = ProjectHooks.useActiveProjectName()
   const controllers = React.useMemo(
-    () => atoms.controllers(activeProject),
+    () => ProjectState.project.controllers(activeProject),
     [activeProject]
   )
-  return controllers.array()
+  return controllers.useArray()
 }
 
 const useAddController = () => {
@@ -126,7 +126,7 @@ const useAddController = () => {
 const useRemoveController = () => {
   const setControllers = useSetControllers()
   return (controller: ConfiguredController) => {
-    setControllers((cs) => cs.filter((c) => c !== controller))
+    setControllers((cs) => cs.filter((c) => c.id !== controller.id))
   }
 }
 

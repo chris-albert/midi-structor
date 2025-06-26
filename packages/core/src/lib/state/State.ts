@@ -22,6 +22,7 @@ export type State<A> = {
   get: () => A
   set: (s: Set<A>) => void
   sub: (f: (a: A) => SubCleanup) => void
+  subAndInit: (f: (a: A) => SubCleanup) => void
 
   useValue: () => Awaited<A>
   useSet: () => (s: Set<A>) => void
@@ -32,10 +33,12 @@ export type State<A> = {
   useFocus: <B extends keyof A>(key: B) => State<A[B]>
 
   array: () => A extends Array<infer B> ? Array<State<B>> : never
+  useArray: () => A extends Array<infer B> ? Array<State<B>> : never
 }
 
 const fromAtom = <A>(
-  atom: WritableAtom<A, [update: SetStateAction<A>], void>
+  atom: WritableAtom<A, [update: SetStateAction<A>], void>,
+  name: string
 ): State<A> => {
   const get = (): A => store.get(atom)
 
@@ -44,24 +47,33 @@ const fromAtom = <A>(
   }
 
   let subCleanup: (() => void) | undefined = undefined
-  const sub = (f: (a: A) => SubCleanup): void => {
-    store.sub(atom, () => {
-      if (subCleanup !== undefined) {
-        subCleanup()
-      }
+  const _sub = (f: (a: A) => SubCleanup, onInit: boolean): void => {
+    const callF = () => {
       const res = f(get())
       if (typeof res === 'function') {
         subCleanup = res
       }
+    }
+    if (onInit) {
+      callF()
+    }
+    store.sub(atom, () => {
+      if (subCleanup !== undefined) {
+        subCleanup()
+      }
+      callF()
     })
   }
+
+  const sub = (f: (a: A) => SubCleanup): void => _sub(f, false)
+  const subAndInit = (f: (a: A) => SubCleanup): void => _sub(f, true)
 
   const useValue = () => useAtomValue(atom)
   const useSet = () => useSetAtom(atom)
   const use = (): [Awaited<A>, (s: Set<A>) => void] => [useValue(), useSet()]
 
   const focus = <B>(f: (o: OpticFor_<A>) => Lens<A, any, B>): State<B> =>
-    fromAtom(focusAtom(atom, f))
+    fromAtom(focusAtom(atom, f), name)
 
   const useFocus = <B extends keyof A>(key: B): State<A[B]> => {
     const cb = React.useCallback((o: OpticFor_<A>) => o.prop(key), [key])
@@ -79,13 +91,23 @@ const fromAtom = <A>(
     const arrayAtom: PrimitiveAtom<Array<A>> = atom as unknown as PrimitiveAtom<
       Array<A>
     >
-    return store.get(splitAtom(arrayAtom)).map((a) => fromAtom(a)) as any
+    return store.get(splitAtom(arrayAtom)).map((a) => fromAtom(a, name)) as any
+  }
+
+  const useArray = (): A extends Array<infer B> ? Array<State<B>> : never => {
+    const arrayAtom: PrimitiveAtom<Array<A>> = atom as unknown as PrimitiveAtom<
+      Array<A>
+    >
+    return useAtomValue(splitAtom(arrayAtom)).map((a) =>
+      fromAtom(a, name)
+    ) as any
   }
 
   return {
     get,
     set,
     sub,
+    subAndInit,
     useValue,
     useSet,
     use,
@@ -93,20 +115,37 @@ const fromAtom = <A>(
     useFocus,
     useFocusMemo,
     array,
+    useArray,
   }
 }
 
 const memSingle = <A>(name: string, initial: A): State<A> =>
-  fromAtom<A>(atom(initial))
+  fromAtom<A>(atom(initial), name)
 
 const mem = <A>(name: string, initial: A): State<A> =>
-  fromAtom<A>(atomWithBroadcast<A>(name, initial))
+  fromAtom<A>(atomWithBroadcast<A>(name, initial), name)
 
 const storage = <A>(name: string, initial: A): State<A> =>
-  fromAtom<A>(atomWithBroadcast<A>(name, initial, 'storage'))
+  fromAtom<A>(atomWithBroadcast<A>(name, initial, 'storage'), name)
+
+const FAMILY_CACHE: Record<string, State<any>> = {}
+
+const family =
+  <A>(f: (n: string) => State<A>): ((n: string) => State<A>) =>
+  (name) => {
+    const exists = FAMILY_CACHE[name]
+    if (exists !== undefined) {
+      return exists as State<A>
+    } else {
+      const init = f(name)
+      FAMILY_CACHE[name] = init
+      return init
+    }
+  }
 
 export const State = {
   mem,
   memSingle,
   storage,
+  family,
 }
