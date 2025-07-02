@@ -1,6 +1,7 @@
 import { Option, Schema } from 'effect'
 import { ControllerConfig } from './ControllerConfig'
 import { v4 } from 'uuid'
+import { ControllerConfigOps } from './ControllerConfigOps'
 
 const ConfiguredControllerSchema = Schema.Struct({
   id: Schema.String,
@@ -23,7 +24,7 @@ export type ConfiguredControllers = typeof ConfiguredControllersSchema.Type
 const defaultConfiguredController = (name: string): ConfiguredController => ({
   name,
   enabled: true,
-  config: ControllerConfig.empty(),
+  config: ControllerConfigOps.empty(),
   device: 'Launchpad Mini [MK3]',
   selected: {
     input: Option.none(),

@@ -2,7 +2,7 @@ import React from 'react'
 import {
   ConfiguredController,
   ConfiguredControllerHooks,
-  ControllerConfig,
+  ControllerConfigOps,
   ControllerDevice,
   ProjectHooks,
   State,
@@ -26,12 +26,12 @@ export const ControllerEditRawComponent: React.FC<
 
   React.useEffect(() => {
     setRawControllerConfig(
-      ControllerConfig.stringify(controller.config, device)
+      ControllerConfigOps.stringify(controller.config, device)
     )
   }, [controller.config])
 
   const onSave = () => {
-    Either.match(ControllerConfig.parse(rawControllerConfig, device), {
+    Either.match(ControllerConfigOps.parse(rawControllerConfig, device), {
       onRight: (config) => {
         controller.setConfig(config)
         toast.success('Successfully saved config')

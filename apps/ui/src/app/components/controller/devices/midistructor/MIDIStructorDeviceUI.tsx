@@ -9,8 +9,8 @@ import {
   MIDIStructorUIWidgetsUpdate,
   SchemaHelper,
   AllMidiStructorWidgets,
-  ControllerConfig,
   MIDIStructorUIWidgets,
+  ControllerConfigOps,
 } from '@midi-structor/core'
 import { MidiStructorComponent } from './MidiStructorComponent'
 import { Box, LinearProgress } from '@mui/material'
@@ -45,16 +45,19 @@ const MIDIStructorDeviceUIComponent: React.FC<
       }),
       { widgets: updated }
     )
-    Either.match(ControllerConfig.parse(stringWidgets, MIDIStructorUI.device), {
-      onRight: (widgets) => {
-        // @ts-ignore
-        setWidgets(widgets.widgets)
-      },
-      onLeft: (error) => {
-        console.error(error)
-        toast.error(error)
-      },
-    })
+    Either.match(
+      ControllerConfigOps.parse(stringWidgets, MIDIStructorUI.device),
+      {
+        onRight: (widgets) => {
+          // @ts-ignore
+          setWidgets(widgets.widgets)
+        },
+        onLeft: (error) => {
+          console.error(error)
+          toast.error(error)
+        },
+      }
+    )
   }
 
   return (

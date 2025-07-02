@@ -30,6 +30,7 @@ export * from './lib/controllers/devices/ui/ControllerUIDevice'
 export * from './lib/controllers/NovationColors'
 
 // Widgets
+export * from './lib/controllers/ControllerConfigOps'
 export * from './lib/controllers/devices/midistructor/widgets/PlayButtonComponent'
 export * from './lib/controllers/devices/midistructor/widgets/StopButtonComponent'
 export * from './lib/controllers/devices/midistructor/MIDIStructorWidget'
