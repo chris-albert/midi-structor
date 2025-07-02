@@ -21,7 +21,7 @@ type Set<A> = ((a: A) => A) | A
 export type State<A> = {
   get: () => A
   set: (s: Set<A>) => void
-  sub: (f: (a: A) => SubCleanup) => void
+  sub: (f: (a: A) => SubCleanup) => SubCleanup
   subAndInit: (f: (a: A) => SubCleanup) => void
 
   useValue: () => Awaited<A>
@@ -47,7 +47,7 @@ const fromAtom = <A>(
   }
 
   let subCleanup: (() => void) | undefined = undefined
-  const _sub = (f: (a: A) => SubCleanup, onInit: boolean): void => {
+  const _sub = (f: (a: A) => SubCleanup, onInit: boolean): SubCleanup => {
     const callF = () => {
       const res = f(get())
       if (typeof res === 'function') {
@@ -57,16 +57,19 @@ const fromAtom = <A>(
     if (onInit) {
       callF()
     }
-    store.sub(atom, () => {
+    const _subCleanup = store.sub(atom, () => {
       if (subCleanup !== undefined) {
         subCleanup()
       }
       callF()
     })
+    return () => {
+      _subCleanup()
+    }
   }
 
-  const sub = (f: (a: A) => SubCleanup): void => _sub(f, false)
-  const subAndInit = (f: (a: A) => SubCleanup): void => _sub(f, true)
+  const sub = (f: (a: A) => SubCleanup): SubCleanup => _sub(f, false)
+  const subAndInit = (f: (a: A) => SubCleanup): SubCleanup => _sub(f, true)
 
   const useValue = () => useAtomValue(atom)
   const useSet = () => useSetAtom(atom)

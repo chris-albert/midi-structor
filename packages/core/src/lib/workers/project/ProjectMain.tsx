@@ -72,33 +72,32 @@ const listener = (dawListener: EventEmitter<MidiEventRecord>) => {
   })
 }
 
-const handshake = (dawEmitter: EventEmitter<MidiEventRecord>) => {
+const handshake = (
+  dawEmitter: EventEmitter<MidiEventRecord>,
+  tracks: Array<string>
+) => {
   dawEmitter.emit(TX_MESSAGE.init())
 
-  ProjectState.importStatus.sub((importStatus) => {
+  return ProjectState.importStatus.sub((importStatus) => {
     if (importStatus.type === 'ack') {
-      dawEmitter.emit(
-        TX_MESSAGE.initReady(['Songs', 'Parts', 'Chris Keyboard']) // TODO: Get real tracks
-      )
+      dawEmitter.emit(TX_MESSAGE.initReady(tracks))
     }
   })
 }
 
-// const getActiveProjectConfig = (projects: ProjectsConfig): ProjectConfig =>
-//   _.find(projects.projects, (p) => p.key === projects.active) ||
-//   DefaultProjectConfig()
-//
-// const getTracks = (config: ProjectConfig): Array<string> => {
-//   const widgets = config.controllers.flatMap((controller) =>
-//     Option.match(ControllerDevices.findByName(controller.device), {
-//       onSome: (device) => device.widgets.resolve(controller.config),
-//       onNone: () => [],
-//     })
-//   )
-//   return Set(widgets.flatMap((widget) => widget.tracks())).toArray()
-// }
+const getActiveProjectConfig = (projects: ProjectsConfig): ProjectConfig =>
+  _.find(projects.projects, (p) => p.key === projects.active) ||
+  DefaultProjectConfig()
 
-const onActiveProject = () => {}
+const getTracks = (config: ProjectConfig): Array<string> => {
+  const widgets = config.controllers.flatMap((controller) =>
+    Option.match(ControllerDevices.findByName(controller.device), {
+      onSome: (device) => device.widgets.resolve(controller.config),
+      onNone: () => [],
+    })
+  )
+  return Set(widgets.flatMap((widget) => widget.tracks())).toArray()
+}
 
 const init = (
   dawListener: EventEmitter<MidiEventRecord>,
@@ -106,12 +105,12 @@ const init = (
 ) => {
   console.log('Project Main')
   ProjectState.project.config.sub((projects) => {
-    console.log('projects', projects)
-    // const activeProject = getActiveProjectConfig(projects)
-    // console.log('----------Project', getTracks(activeProject))
+    const activeProject = getActiveProjectConfig(projects)
+    console.log('Active project', activeProject)
+    const tracks = getTracks(activeProject)
+    return handshake(dawEmitter, tracks)
   })
   listener(dawListener)
-  handshake(dawEmitter)
 }
 
 export const ProjectMain = {

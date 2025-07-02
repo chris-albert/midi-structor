@@ -216,7 +216,9 @@ const useIO = (controller: ConfiguredController) => {
 
   real.listener.on('*', listener.emit)
 
-  virtual.listener.on('*', listener.emit)
+  React.useEffect(() => {
+    virtual.listener.on('*', listener.emit)
+  }, [])
 
   return {
     emitter,

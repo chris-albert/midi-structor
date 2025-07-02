@@ -119,11 +119,11 @@ const runInit = () => {
   selectionInit()
 }
 
-const PROJECT_WORKER_MAIN = new ProjectWorkerMain({ name: 'project' })
 let isInit = false
 const init = (manager: MidiDeviceManager) => {
   states.deviceManager.set(manager)
   if (!isInit) {
+    const PROJECT_WORKER_MAIN = new ProjectWorkerMain({ name: 'project' })
     // Set up DAW Listener
     states.daw.listener.sub((listener) =>
       listener.on('*', (m) =>
