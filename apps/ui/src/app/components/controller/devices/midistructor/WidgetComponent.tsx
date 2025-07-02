@@ -57,7 +57,7 @@ export const WidgetComponent: React.FC<WidgetComponentProps> = ({
   const [settingsOpen, setSettingsOpen] = React.useState(false)
   const projectStyle = ProjectHooks.useProjectStyle()
 
-  const el = AllMidiStructorWidgets.Component(widget, onClick, store)
+  const el = AllMidiStructorWidgets.all.Component(widget, onClick, store)
   const label = getLabel(widget)
   const widgetBody = (
     <Box

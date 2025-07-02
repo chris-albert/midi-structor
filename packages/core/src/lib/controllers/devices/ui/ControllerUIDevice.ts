@@ -1,21 +1,8 @@
 import React from 'react'
-import {
-  ConfiguredController,
-  ControllerDevice,
-  MidiMessage,
-} from '@midi-structor/core'
+import { ConfiguredController, ControllerDevice } from '@midi-structor/core'
 import { ControllerWidget } from '../../ControllerWidget'
-import {
-  MIDIStructorUIWidgets,
-  MIDIStructorUIWidgetsUpdate,
-} from '../MIDIStructorUI'
-
-export type UIMessageStore<A> = Record<string, A>
-
-export type UIStore<A> = (name: string) => {
-  usePut: () => (m: MidiMessage) => void
-  useGet: () => UIMessageStore<A>
-}
+import { MIDIStructorUIWidgets } from '../MIDIStructorUI'
+import { UIStore } from './UIStore'
 
 export type ControllerUIDevice<A, Widgets extends Array<ControllerWidget>> = {
   controller: ControllerDevice<Widgets>

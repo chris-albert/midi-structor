@@ -1,33 +1,9 @@
 import { MIDIStructorWidget, OnClick } from './MIDIStructorWidget'
 import _ from 'lodash'
 import React from 'react'
-import { MIDIStructorPad, MIDIStructorStore } from '../MIDIStructorUI'
-import { MidiTarget } from '../../../midi/MidiTarget'
 import { Schema } from 'effect'
 import { ControllerWidgetType } from '../../ControllerWidget'
-
-const state = (store: MIDIStructorStore) => {
-  const one = (target: MidiTarget): MIDIStructorPad => {
-    const maybe = store[MidiTarget.toKey(target)]
-    if (maybe !== undefined && maybe._tag === 'pad') {
-      return maybe
-    } else {
-      return MIDIStructorPad.make({
-        target,
-        color: 0,
-        options: {},
-      })
-    }
-  }
-
-  const many = (targets: Readonly<Array<MidiTarget>>): Array<MIDIStructorPad> =>
-    targets.map(one)
-
-  return {
-    one,
-    many,
-  }
-}
+import { MIDIStructorStore } from '../MidiStructorStore'
 
 export type MIDIStructorWidgetsType<
   A extends Array<MIDIStructorWidget<any, any>>

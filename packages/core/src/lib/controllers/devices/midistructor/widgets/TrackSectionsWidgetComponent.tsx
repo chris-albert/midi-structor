@@ -4,7 +4,7 @@ import { PadUIComponent } from './PadUIComponent'
 import { TrackSectionsWidget } from '../../../widgets/TrackSectionsWidget'
 import { Box, Typography } from '@mui/material'
 import { Color } from '../../../Color'
-import { MIDIStructorPad } from '../../MIDIStructorUI'
+import { MIDIStructorPad } from '../../MidiStructorMessage'
 
 const isActive = (pad: MIDIStructorPad): boolean =>
   pad.options?.isActive || false

@@ -1,8 +1,7 @@
 import { Controller } from '../Controller'
 import { ControllerDevice } from './ControllerDevice'
-import { MidiMessage, SysExMessage } from '../../midi/MidiMessage'
-import { ControllerWidgets } from '../ControllerWidgets'
-import { Either, Schema } from 'effect'
+import { MidiMessage } from '../../midi/MidiMessage'
+import { Schema } from 'effect'
 import {
   ControllerWidget,
   ControllerWidgetsType,
@@ -10,13 +9,11 @@ import {
   WidgetInput,
 } from '../ControllerWidget'
 import { MidiTarget } from '../../midi/MidiTarget'
-import { Color } from '../Color'
-import { UIMessageStore, UIStore } from './ui/ControllerUIDevice'
-import { atomFamily } from 'jotai/utils'
-import { atom, useAtomValue, useSetAtom } from 'jotai'
 import { AllMidiStructorWidgets } from './midistructor/widgets/AllMidiStructorWidgets'
+import { MIDIStructorPad, MidiStructorUIInit } from './MidiStructorMessage'
+import { MidiStructorMidi } from './MidiStructorMidi'
 
-const widgets = ControllerWidgets(AllMidiStructorWidgets.controllerWidgets)
+const widgets = AllMidiStructorWidgets.controller
 
 type ElementType<T> = T extends (infer U)[] ? U : never
 
@@ -30,28 +27,7 @@ export type MIDIStructorUIWidgetsUpdate = (
 
 export type MIDIStructorUIWidget = ElementType<MIDIStructorUIWidgets>
 
-export const MidiStructorUIInit = Schema.TaggedStruct('init', {
-  widgets: Schema.Array(widgets.schema),
-})
-
-export const MIDIStructorPad = Schema.TaggedStruct('pad', {
-  target: MidiTarget.Schema,
-  color: Color.Schema,
-  options: Schema.optional(Schema.Any),
-})
-
-export type MIDIStructorPad = typeof MIDIStructorPad.Type
-
-export const MIDIStructorMessage = Schema.Union(
-  MidiStructorUIInit,
-  MIDIStructorPad
-)
-export type MIDIStructorMessage = typeof MIDIStructorMessage.Type
-
 export const MIDIStructorResend = Schema.TaggedStruct('resend', {})
-
-export const MidiStructorSysexControlCode = 50
-export const MidiStructorUIManufacturer = 0x03
 
 const controller = Controller.of({
   init: (emitter) => (widgets) => {
@@ -62,8 +38,8 @@ const controller = Controller.of({
       MidiMessage.jsonSchemaSysex(
         uiWidgets,
         MidiStructorUIInit,
-        [MidiStructorSysexControlCode],
-        MidiStructorUIManufacturer
+        [MidiStructorMidi.sysexControlCode],
+        MidiStructorMidi.manufacturer
       )
     )
   },
@@ -77,52 +53,13 @@ const controller = Controller.of({
             options: pad.options,
           }),
           MIDIStructorPad,
-          [MidiStructorSysexControlCode]
+          [MidiStructorMidi.sysexControlCode]
         )
       )
     })
   },
   targets: [],
 })
-
-export type MIDIStructorStore = UIMessageStore<MIDIStructorMessage>
-
-const atomStore = atomFamily((name: string) => atom<MIDIStructorStore>({}))
-
-const parseMessage = (sysex: SysExMessage): any => {
-  return Either.match(
-    MidiMessage.parseJsonSysex(sysex, MIDIStructorMessage, 1),
-    {
-      onRight: (m) => {
-        if (m._tag === 'init') {
-          return { init: m }
-        } else if (m._tag === 'pad') {
-          return { [MidiTarget.toKey(m.target)]: m }
-        } else {
-          return {}
-        }
-      },
-      onLeft: (parseError) => {
-        console.error('Error parsing MIDIStructor UI widgets', parseError)
-        return {}
-      },
-    }
-  )
-}
-
-const useStore: UIStore<MIDIStructorMessage> = (name) => {
-  const setStore = useSetAtom(atomStore(name))
-  return {
-    usePut: () => (m: MidiMessage) => {
-      if (m.type === 'sysex') {
-        if (m.body[0] === MidiStructorSysexControlCode) {
-          setStore((s) => ({ ...s, ...parseMessage(m) }))
-        }
-      }
-    },
-    useGet: () => useAtomValue(atomStore(name)),
-  }
-}
 
 const device = ControllerDevice.of({
   name: 'MIDI Structor UI',
@@ -168,5 +105,5 @@ const getWidgetInput = (
 export const MIDIStructorUI = {
   device,
   getWidgetInput,
-  useStore,
+  widgets,
 }

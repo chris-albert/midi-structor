@@ -11,9 +11,10 @@ import {
   AllMidiStructorWidgets,
   MIDIStructorUIWidgets,
   ControllerConfigOps,
+  MidiStructorStore,
 } from '@midi-structor/core'
 import { MidiStructorComponent } from './MidiStructorComponent'
-import { Box, LinearProgress } from '@mui/material'
+import { Box } from '@mui/material'
 import { MidiStructorEditWidgets } from './MidiStructorEditWidgets'
 import { Either, Schema } from 'effect'
 import { toast } from 'react-toastify'
@@ -28,7 +29,7 @@ const MIDIStructorDeviceUIComponent: React.FC<
 > = ({ configuredController, setWidgets }) => {
   const listener =
     ConfiguredControllerHooks.useVirtualListener(configuredController)
-  const store = MIDIStructorUI.useStore(configuredController.name).useGet()
+  const store = MidiStructorStore.useStore(configuredController.name).useGet()
   const midiEmitter: MidiEmitter = {
     send: (m: MidiMessage) => {
       listener.emit(MidiMessage.raw(m))
@@ -41,7 +42,7 @@ const MIDIStructorDeviceUIComponent: React.FC<
     const updated = widgets(configuredController.config.widgets)
     const stringWidgets = SchemaHelper.encode(
       Schema.Struct({
-        widgets: Schema.Array(AllMidiStructorWidgets.schema),
+        widgets: Schema.Array(AllMidiStructorWidgets.all.schema),
       }),
       { widgets: updated }
     )
@@ -88,7 +89,7 @@ export const MIDIStructorDeviceUI = ControllerUIDevice.of({
       />
     )
   },
-  useStore: MIDIStructorUI.useStore,
+  useStore: MidiStructorStore.useStore,
 })
 
 export type MIDIStructorDeviceUI = typeof MIDIStructorDeviceUI

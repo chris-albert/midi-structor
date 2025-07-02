@@ -34,7 +34,7 @@ export const WidgetSettingsComponent: React.FC<
   WidgetSettingsComponentProps
 > = ({ widget, updateWidgets, onClose }) => {
   const [settings, setSettings] = React.useState(
-    SchemaHelper.encode(AllMidiStructorWidgets.schema, widget)
+    SchemaHelper.encode(AllMidiStructorWidgets.all.schema, widget)
   )
 
   // @ts-ignore
@@ -44,7 +44,7 @@ export const WidgetSettingsComponent: React.FC<
 
   const onWidgetSave = () => {
     SchemaHelper.decodeString({
-      schema: AllMidiStructorWidgets.schema,
+      schema: AllMidiStructorWidgets.all.schema,
       str: settings,
       ok: (newWidget) => {
         updateWidgets(replaceWidget(widget, newWidget))

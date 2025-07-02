@@ -11,8 +11,9 @@ import { SpacerWidgetComponent } from './SpacerWidgetComponent'
 import { ButtonWidgetComponent } from './ButtonWidgetComponent'
 import { KnobWidgetComponent } from './KnobWidgetComponent'
 import { MetronomeControlWidgetComponent } from './MetronomeControlWidgetComponent'
+import { ControllerWidgets } from '../../../ControllerWidgets'
 
-export const AllMidiStructorWidgets = MIDIStructorWidgets([
+const all = MIDIStructorWidgets([
   PlayStopWidgetComponent,
   BeatsWidgetComponent,
   ActiveClipWidgetComponent,
@@ -26,3 +27,10 @@ export const AllMidiStructorWidgets = MIDIStructorWidgets([
   KnobWidgetComponent,
   MetronomeControlWidgetComponent,
 ])
+
+const controller = ControllerWidgets(all.controllerWidgets)
+
+export const AllMidiStructorWidgets = {
+  all,
+  controller,
+}
