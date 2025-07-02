@@ -1,6 +1,7 @@
 import React from 'react'
 import {
   ConfiguredController,
+  ConfiguredControllerHooks,
   ControllerDevice,
   State,
 } from '@midi-structor/core'
@@ -28,7 +29,7 @@ export type ControllerEditComponentProps = {
 export const ControllerEditComponent: React.FC<
   ControllerEditComponentProps
 > = ({ controllerState, device }) => {
-  const controller = ConfiguredController.useController(controllerState)
+  const controller = ConfiguredControllerHooks.useController(controllerState)
 
   return (
     <Box sx={{ pt: 1, display: 'flex', gap: 2 }}>

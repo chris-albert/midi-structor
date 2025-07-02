@@ -6,6 +6,8 @@ import { useListState } from '../hooks/ListAtom'
 import { Option } from 'effect'
 import { ProjectConfig } from './ProjectConfig'
 import { ProjectImportStatus, ProjectState } from '../state/ProjectState'
+import { State } from '../state/State'
+import { DefaultProjectConfig } from './DefaultProjectConfig'
 
 const isClipActive = (clip: UIClip, beat: number): boolean => {
   return (
@@ -44,15 +46,31 @@ const useTrack = (trackName: string) => {
   return track === undefined ? emptyTrack : track
 }
 
-const useSetActiveProject = () => ProjectState.project.active.useSet()
-const useActiveProjectName = () => ProjectState.project.active.useValue()
+const useSetActiveProject = () =>
+  ProjectState.project.config.useFocus('active').useSet()
+
+const useActiveProjectName = () =>
+  ProjectState.project.config.useFocus('active').useValue()
 
 const useActiveProjectValue = () => {
   const activeProject = useActiveProjectName()
   const projects = ProjectState.project.config.useValue()
   const project = _.find(projects.projects, (p) => p.key === activeProject)
 
-  return project || ProjectConfig.defaultProjectConfig()
+  return project || DefaultProjectConfig()
+}
+
+const useActiveProjectState = (): State<ProjectConfig> => {
+  const activeProject = useActiveProjectName()
+  const projects = ProjectState.project.config.useValue()
+  const projectIndex = _.findIndex(
+    projects.projects,
+    (p) => p.key === activeProject
+  )
+  const project = ProjectState.project.config.useFocus('projects').useArray()[
+    projectIndex
+  ]
+  return project
 }
 
 const useUpdateActiveProject = () => {
@@ -70,7 +88,7 @@ const useUpdateActiveProject = () => {
             newProjectFunc(projects.projects[origProjectIndex])
           )
         : projectsList
-    setProjects({ projects: newProjects.toArray() })
+    setProjects({ active, projects: newProjects.toArray() })
   }
 }
 
@@ -97,7 +115,7 @@ const useSetActiveProjectName = () => {
 const useProjectStyle = () => {
   const project = useActiveProjectValue()
   const style = {
-    ...ProjectConfig.defaultProjectConfig().style,
+    ...DefaultProjectConfig().style,
     ...project.style,
   }
   return {
@@ -111,7 +129,7 @@ const useProjectStyle = () => {
 const useProjectsConfig = () => useProjects()
 
 const useActiveProjectLabel = () => {
-  const activeProject = ProjectState.project.active.useValue()
+  const activeProject = useActiveProjectName()
   const projects = useProjects()
   const project = _.find(projects.projects, (p) => p.key === activeProject)
   if (project !== undefined) {
@@ -162,6 +180,25 @@ const useOnProjectLoad = () => {
   }
 }
 
+const RELOAD_PROJECT = 'reload-project'
+
+const useRefreshProject = () => {
+  const setActiveProject = useSetActiveProject()
+
+  return () => {
+    setActiveProject((currentProject) => {
+      setTimeout(() => {
+        setActiveProject(currentProject)
+      }, 500)
+      return RELOAD_PROJECT
+    })
+  }
+}
+
+const useIsReloadProject = () => {
+  return ProjectHooks.useActiveProjectName() === RELOAD_PROJECT
+}
+
 export const ProjectHooks = {
   useOnStatusChange,
   useBeat,
@@ -180,6 +217,7 @@ export const ProjectHooks = {
   useSetActiveProjectName,
   useActiveProjectValue,
   useActiveProjectName,
+  useActiveProjectState,
   useUpdateActiveProject,
   useTracks,
   useTrack,
@@ -190,4 +228,6 @@ export const ProjectHooks = {
   getLoopState,
   useOnProjectLoad,
   useIsProjectLoading,
+  useRefreshProject,
+  useIsReloadProject,
 }

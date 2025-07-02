@@ -1,5 +1,5 @@
 import React from 'react'
-import { ConfiguredController } from './ConfiguredController'
+import { ConfiguredControllerHooks } from './ConfiguredControllerHooks'
 import { ControllerComponent } from './ControllerComponent'
 
 export type ControllersComponentProps = {}
@@ -7,7 +7,7 @@ export type ControllersComponentProps = {}
 export const ControllersComponent: React.FC<
   ControllersComponentProps
 > = ({}) => {
-  const controllers = ConfiguredController.useControllers()
+  const controllers = ConfiguredControllerHooks.useControllers()
 
   console.log('Controllers', controllers)
 

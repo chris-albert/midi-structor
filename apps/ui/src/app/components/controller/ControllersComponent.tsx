@@ -3,7 +3,7 @@ import { TabItem, TabsComponent } from '../TabsComponent'
 import { Box, LinearProgress } from '@mui/material'
 import AddCircleIcon from '@mui/icons-material/AddCircle'
 import { AddControllerComponent } from './AddControllerComponent'
-import { ConfiguredController, ProjectHooks } from '@midi-structor/core'
+import { ConfiguredControllerHooks, ProjectHooks } from '@midi-structor/core'
 import { ControllerComponent } from './ControllerComponent'
 import { ControllerAvatarComponent } from './ControllerAvatarComponent'
 
@@ -17,9 +17,9 @@ export type ControllersComponentProps = {}
 export const ControllersComponent: React.FC<
   ControllersComponentProps
 > = ({}) => {
-  const controllers = ConfiguredController.useControllerStates()
+  const controllers = ConfiguredControllerHooks.useControllerStates()
   const projectStyle = ProjectHooks.useProjectStyle()
-  const isReloadProject = ConfiguredController.useIsReloadProject()
+  const isReloadProject = ProjectHooks.useIsReloadProject()
 
   if (isReloadProject) {
     return (

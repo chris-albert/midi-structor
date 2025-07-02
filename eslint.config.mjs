@@ -1,4 +1,5 @@
 import nx from '@nx/eslint-plugin'
+import importPlugin from 'eslint-plugin-import'
 
 export default [
   ...nx.configs['flat/base'],
@@ -9,7 +10,11 @@ export default [
   },
   {
     files: ['**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx'],
+    plugins: {
+      import: importPlugin,
+    },
     rules: {
+      'import/no-cycle': [2, { maxDepth: '∞' }],
       '@nx/enforce-module-boundaries': [
         'error',
         {
@@ -26,7 +31,14 @@ export default [
     },
   },
   {
-    files: ['**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx', '**/*.cjs', '**/*.mjs'],
+    files: [
+      '**/*.ts',
+      '**/*.tsx',
+      '**/*.js',
+      '**/*.jsx',
+      '**/*.cjs',
+      '**/*.mjs',
+    ],
     // Override or add rules here
     rules: {
       allowObjectTypes: 'off',

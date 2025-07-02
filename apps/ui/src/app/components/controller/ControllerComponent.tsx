@@ -1,6 +1,7 @@
 import React from 'react'
 import {
   ConfiguredController,
+  ConfiguredControllerHooks,
   ControllerDevices,
   State,
 } from '@midi-structor/core'
@@ -18,7 +19,7 @@ export type ControllerComponentProps = {
 export const ControllerComponent: React.FC<ControllerComponentProps> = ({
   controllerState,
 }) => {
-  const controller = ConfiguredController.useController(controllerState)
+  const controller = ConfiguredControllerHooks.useController(controllerState)
 
   const [isEdit, setIsEdit] = React.useState(false)
 

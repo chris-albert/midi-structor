@@ -1,6 +1,7 @@
 import React from 'react'
 import {
   ConfiguredController,
+  ConfiguredControllerHooks,
   ControllerDevices,
   State,
 } from '@midi-structor/core'
@@ -13,7 +14,7 @@ export type DeviceSelectorComponentProps = {
 export const DeviceSelectorComponent: React.FC<
   DeviceSelectorComponentProps
 > = ({ controllerState }) => {
-  const controller = ConfiguredController.useController(controllerState)
+  const controller = ConfiguredControllerHooks.useController(controllerState)
 
   const deviceItems: Array<SelectItem> = ControllerDevices.getNames().map(
     (name) => ({

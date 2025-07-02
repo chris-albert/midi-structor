@@ -2,7 +2,7 @@ import React from 'react'
 import { Box, Button, Divider, TextField, Typography } from '@mui/material'
 import { Controller, useForm } from 'react-hook-form'
 import AddCircleIcon from '@mui/icons-material/AddCircle'
-import { ConfiguredController } from '@midi-structor/core'
+import { ConfiguredControllerHooks } from '@midi-structor/core'
 
 type AddControllerForm = {
   name: string
@@ -10,7 +10,9 @@ type AddControllerForm = {
 
 export type AddControllerComponentProps = {}
 
-export const AddControllerComponent: React.FC<AddControllerComponentProps> = ({}) => {
+export const AddControllerComponent: React.FC<
+  AddControllerComponentProps
+> = ({}) => {
   const {
     handleSubmit,
     formState: { errors, isValid },
@@ -22,7 +24,7 @@ export const AddControllerComponent: React.FC<AddControllerComponentProps> = ({}
     },
   })
 
-  const addConfiguredController = ConfiguredController.useAddController()
+  const addConfiguredController = ConfiguredControllerHooks.useAddController()
 
   const onSubmit = (form: AddControllerForm) => {
     addConfiguredController(form.name)

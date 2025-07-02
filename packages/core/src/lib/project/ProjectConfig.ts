@@ -1,9 +1,11 @@
 import { Schema } from 'effect'
+import { ConfiguredController } from '../controllers/ConfiguredController'
 
 export const ProjectConfigSchema = Schema.Struct({
   label: Schema.String,
   key: Schema.String,
   abletonProject: Schema.optional(Schema.String),
+  controllers: ConfiguredController.SchemaArray,
   style: Schema.Struct({
     accent: Schema.Struct({
       color1: Schema.String,
@@ -15,28 +17,12 @@ export const ProjectConfigSchema = Schema.Struct({
 export type ProjectConfig = Schema.Schema.Type<typeof ProjectConfigSchema>
 
 export const ProjectsConfig = Schema.Struct({
+  active: Schema.String,
   projects: Schema.Array(ProjectConfigSchema),
 })
 
 export type ProjectsConfig = Schema.Schema.Type<typeof ProjectsConfig>
 
-const defaultProjectConfig = (): ProjectConfig => ({
-  label: 'Default',
-  key: 'default',
-  style: {
-    accent: {
-      color1: '#6a11cb',
-      color2: '#2575fc',
-    },
-  },
-})
-
-const defaultProjectsConfig: () => ProjectsConfig = () => ({
-  projects: [defaultProjectConfig()],
-})
-
 export const ProjectConfig = {
   Schema: ProjectConfigSchema,
-  defaultProjectConfig,
-  defaultProjectsConfig,
 }

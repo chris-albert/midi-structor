@@ -3,6 +3,7 @@ import {
   MIDIStructorUI,
   ControllerUIDevice,
   ConfiguredController,
+  ConfiguredControllerHooks,
   MidiEmitter,
   MidiMessage,
   MIDIStructorUIWidgetsUpdate,
@@ -25,7 +26,8 @@ type MIDIStructorDeviceUIComponentProps = {
 const MIDIStructorDeviceUIComponent: React.FC<
   MIDIStructorDeviceUIComponentProps
 > = ({ configuredController, setWidgets }) => {
-  const listener = ConfiguredController.useVirtualListener(configuredController)
+  const listener =
+    ConfiguredControllerHooks.useVirtualListener(configuredController)
   const store = MIDIStructorUI.useStore(configuredController.name).useGet()
   const midiEmitter: MidiEmitter = {
     send: (m: MidiMessage) => {

@@ -1,7 +1,8 @@
 
 # Installing a node package to a submodule
 ```
-pnpm --filter @midi-structor/core i jotai-minidb 
+pnpm --filter @midi-structor/core i jotai-minidb
+pnpm --save-dev i eslint-plugin-import
 ```
 
 ```

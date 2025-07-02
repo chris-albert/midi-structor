@@ -1,5 +1,9 @@
 import React from 'react'
-import { ConfiguredController, State } from '@midi-structor/core'
+import {
+  ConfiguredController,
+  ConfiguredControllerHooks,
+  State,
+} from '@midi-structor/core'
 import { Box, TextField } from '@mui/material'
 
 export type ControllerNameComponentProps = {
@@ -9,7 +13,7 @@ export type ControllerNameComponentProps = {
 export const ControllerNameComponent: React.FC<
   ControllerNameComponentProps
 > = ({ controllerState }) => {
-  const controller = ConfiguredController.useController(controllerState)
+  const controller = ConfiguredControllerHooks.useController(controllerState)
 
   return (
     <Box sx={{ width: '100%' }}>

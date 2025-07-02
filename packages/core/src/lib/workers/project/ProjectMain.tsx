@@ -5,6 +5,7 @@ import {
   parseAbletonUIMessage,
   TX_MESSAGE,
 } from '../../project/AbletonUIMessage'
+import { ProjectConfig, ProjectsConfig } from '../../project/ProjectConfig'
 import {
   initArrangement,
   initClip,
@@ -13,6 +14,11 @@ import {
   initTrack,
 } from '../../project/UIStateDisplay'
 import { ProjectState } from '../../state/ProjectState'
+import _ from 'lodash'
+import { Option } from 'effect'
+import { ControllerDevices } from '../../controllers/devices/ControllerDevices'
+import { Set } from 'immutable'
+import { DefaultProjectConfig } from '../../project/DefaultProjectConfig'
 
 const listener = (dawListener: EventEmitter<MidiEventRecord>) => {
   const onAbletonUIMessage = (msg: AbletonUIMessage) => {
@@ -78,6 +84,20 @@ const handshake = (dawEmitter: EventEmitter<MidiEventRecord>) => {
   })
 }
 
+// const getActiveProjectConfig = (projects: ProjectsConfig): ProjectConfig =>
+//   _.find(projects.projects, (p) => p.key === projects.active) ||
+//   DefaultProjectConfig()
+//
+// const getTracks = (config: ProjectConfig): Array<string> => {
+//   const widgets = config.controllers.flatMap((controller) =>
+//     Option.match(ControllerDevices.findByName(controller.device), {
+//       onSome: (device) => device.widgets.resolve(controller.config),
+//       onNone: () => [],
+//     })
+//   )
+//   return Set(widgets.flatMap((widget) => widget.tracks())).toArray()
+// }
+
 const onActiveProject = () => {}
 
 const init = (
@@ -85,11 +105,10 @@ const init = (
   dawEmitter: EventEmitter<MidiEventRecord>
 ) => {
   console.log('Project Main')
-  ProjectState.project.active.sub((activeProject) => {
-    console.log('--------Active project', activeProject)
-    ProjectState.project.controllers(activeProject).sub((controllers) => {
-      console.log('--------Project controllers', activeProject, controllers)
-    })
+  ProjectState.project.config.sub((projects) => {
+    console.log('projects', projects)
+    // const activeProject = getActiveProjectConfig(projects)
+    // console.log('----------Project', getTracks(activeProject))
   })
   listener(dawListener)
   handshake(dawEmitter)

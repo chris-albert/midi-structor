@@ -1,5 +1,9 @@
 import React from 'react'
-import { ConfiguredController, State } from '@midi-structor/core'
+import {
+  ConfiguredController,
+  ConfiguredControllerHooks,
+  State,
+} from '@midi-structor/core'
 import { StringAvatarComponent, stringToColor } from '../StringAvatarComponent'
 
 export type ControllerAvatarComponentProps = {
@@ -9,7 +13,7 @@ export type ControllerAvatarComponentProps = {
 export const ControllerAvatarComponent: React.FC<
   ControllerAvatarComponentProps
 > = ({ controllerState }) => {
-  const controller = ConfiguredController.useController(controllerState)
+  const controller = ConfiguredControllerHooks.useController(controllerState)
   return (
     <StringAvatarComponent
       label={controller.name}

@@ -74,7 +74,7 @@ export const atomWithBroadcast = <Value>(
   const listeners = new Set<(event: MessageEvent<Event<Value>>) => void>()
   const channel = new BroadcastChannel(key)
 
-  StateManager.getDefault()
+  // StateManager.getDefault()
 
   let last: Value | undefined = undefined
 

@@ -3,7 +3,7 @@ import { Box } from '@mui/material'
 import { SelectComponent, SelectItem } from '../form/SelectComponent'
 import _ from 'lodash'
 import {
-  ConfiguredController,
+  DefaultProjectConfig,
   ProjectConfig,
   ProjectHooks,
 } from '@midi-structor/core'
@@ -22,7 +22,7 @@ export const ProjectsSelectComponent: React.FC<
   const activeProjectLabel = ProjectHooks.useActiveProjectLabel()
   const projects = ProjectHooks.useProjectsListAtom()
   const navigate = useNavigate()
-  const refreshControllers = ConfiguredController.useRefreshControllers()
+  const refreshProject = ProjectHooks.useRefreshProject()
 
   React.useEffect(() => {
     setItems(
@@ -40,7 +40,7 @@ export const ProjectsSelectComponent: React.FC<
   }
 
   const onRefresh = () => {
-    refreshControllers()
+    refreshProject()
     // navigate(0)
   }
 
@@ -62,7 +62,7 @@ export const ProjectsSelectComponent: React.FC<
         activeLabel={activeProjectLabel}
         onNew={(newLabel) => {
           projects.add({
-            ...ProjectConfig.defaultProjectConfig(),
+            ...DefaultProjectConfig(),
             label: newLabel,
             key: _.replace(_.toLower(newLabel), ' ', '-'),
           })

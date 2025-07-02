@@ -2,7 +2,7 @@ import React from 'react'
 import { ControllerWidget } from '../ControllerWidget'
 import { Color } from '../Color'
 import { Schema } from 'effect'
-import { ConfiguredController } from '../ConfiguredController'
+import { ProjectHooks } from '../../project/ProjectHooks'
 
 export const SoftRefreshWidget = ControllerWidget.one({
   name: 'soft-refresh',
@@ -13,7 +13,7 @@ export const SoftRefreshWidget = ControllerWidget.one({
     color: Color.PURPLE,
   }),
   component: ({ target, color }) => {
-    const refreshControllers = ConfiguredController.useRefreshControllers()
+    const refreshControllers = ProjectHooks.useRefreshProject()
     return (
       <pad
         color={color}

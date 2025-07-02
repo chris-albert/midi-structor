@@ -78,6 +78,7 @@ const empty = (): ControllerConfig => ({
 export type ControllerConfig = typeof ControllerConfigSchema.Type
 
 export const ControllerConfig = {
+  Schema: ControllerConfigSchema,
   empty,
   parse,
   stringify,

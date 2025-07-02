@@ -1,6 +1,7 @@
 import React from 'react'
 import {
   ConfiguredController,
+  ConfiguredControllerHooks,
   ControllerUIDevices,
   MIDIStructorUIWidgets,
   State,
@@ -15,7 +16,7 @@ export type ControllerHomeComponentProps = {
 export const ControllerHomeComponent: React.FC<
   ControllerHomeComponentProps
 > = ({ controllerState }) => {
-  const controller = ConfiguredController.useController(controllerState)
+  const controller = ConfiguredControllerHooks.useController(controllerState)
   const devices = ControllerUIDevices.useDevices()
 
   const setWidgets = (widgets: MIDIStructorUIWidgets) => {

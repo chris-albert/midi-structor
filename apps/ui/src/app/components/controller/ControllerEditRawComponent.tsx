@@ -1,6 +1,7 @@
 import React from 'react'
 import {
   ConfiguredController,
+  ConfiguredControllerHooks,
   ControllerConfig,
   ControllerDevice,
   ProjectHooks,
@@ -19,7 +20,7 @@ export type ControllerEditRawComponentProps = {
 export const ControllerEditRawComponent: React.FC<
   ControllerEditRawComponentProps
 > = ({ controllerState, device }) => {
-  const controller = ConfiguredController.useController(controllerState)
+  const controller = ConfiguredControllerHooks.useController(controllerState)
   const [rawControllerConfig, setRawControllerConfig] = React.useState('')
   const projectStyle = ProjectHooks.useProjectStyle()
 

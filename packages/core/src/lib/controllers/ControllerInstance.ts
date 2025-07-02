@@ -1,10 +1,11 @@
 import { ResolvedControllerWidget } from './ControllerWidget'
 import { MidiMessage } from '../midi/MidiMessage'
 import { Controller, TargetColor } from './Controller'
-import { MidiEmitter, MidiListener } from '../midi/GlobalMidi'
 import { Color } from './Color'
 import { ConfiguredController } from './ConfiguredController'
 import hash from 'object-hash'
+import { MidiEmitter } from '../midi/MidiEmitter'
+import { MidiListener } from '../midi/MidiListener'
 
 export type ControllerInstance = {
   underlying: Controller

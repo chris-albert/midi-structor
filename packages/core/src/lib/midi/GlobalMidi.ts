@@ -1,12 +1,13 @@
 import { Option, pipe, Schema } from 'effect'
 import React from 'react'
 import { MidiDevice, MidiEventRecord } from './MidiDevice'
-import { MidiMessage } from './MidiMessage'
 import { EventEmitter } from '../EventEmitter'
 import { MidiDeviceManager } from './MidiDeviceManager'
 import ProjectWorkerMain from '../workers/project/ProjectWorkerMain?worker'
 import _ from 'lodash'
 import { State } from '../state/State'
+import { MidiEmitter } from './MidiEmitter'
+import { MidiListener } from './MidiListener'
 
 export const MidiDeviceType = Schema.Union(
   Schema.Literal('input'),
@@ -21,24 +22,6 @@ export type MidiDeviceSelection = {
   selected: string | undefined
 }
 
-export type MidiEventEmitter = EventEmitter<MidiMessage>
-
-export type MidiListener = Omit<EventEmitter<MidiEventRecord>, 'emit'>
-
-const emptyListener = (): MidiListener => ({
-  on: () => () => {},
-})
-
-export type MidiEmitter = {
-  send: (m: MidiMessage) => void
-}
-
-const emptyEmitter = (): MidiEmitter => ({
-  send: (message: MidiMessage) => {
-    console.debug('Empty send', message)
-  },
-})
-
 export const selectedAtom = (name: string): State<Option.Option<string>> =>
   State.storage<Option.Option<string>>(name, Option.none())
 
@@ -46,7 +29,7 @@ const states = {
   deviceManager: State.memSingle('device-manager', MidiDeviceManager.empty),
   devices: State.memSingle('devices', MidiDevice.empty),
   daw: {
-    emitter: State.memSingle<MidiEmitter>('daw-emitter', emptyEmitter()),
+    emitter: State.memSingle<MidiEmitter>('daw-emitter', MidiEmitter.empty()),
     listener: State.memSingle<MidiListener>(
       'daw-listener',
       EventEmitter<MidiEventRecord>()
@@ -66,7 +49,7 @@ const onSelectedInput = () => {
     Option.flatMap(deviceManager().getInput)
   )
   states.daw.listener.set(
-    Option.getOrElse(maybeListener, () => MidiDeviceManager.emptyListener())
+    Option.getOrElse(maybeListener, () => MidiListener.empty())
   )
 }
 
@@ -76,7 +59,7 @@ const onSelectedOutput = () => {
     Option.flatMap(deviceManager().getOutput)
   )
   states.daw.emitter.set(
-    Option.getOrElse(maybeEmitter, () => MidiDeviceManager.emptyEmitter())
+    Option.getOrElse(maybeEmitter, () => MidiEmitter.empty())
   )
 }
 
@@ -169,7 +152,6 @@ export const Midi = {
   setSelected,
   getSelected,
   useDeviceManager,
-  emptyListener,
   //Hooks
   useDawEmitter: () => states.daw.emitter.useValue(),
   useDawListener: () => states.daw.listener.useValue(),

@@ -1,7 +1,7 @@
 import { MidiTarget } from '../midi/MidiTarget'
 import { MidiMessage } from '../midi/MidiMessage'
-import { MidiEmitter } from '../midi/GlobalMidi'
 import { ResolvedControllerWidget } from './ControllerWidget'
+import { MidiEmitter } from '../midi/MidiEmitter'
 
 export const messageToKey = (message: MidiMessage): string => {
   if (message.type === 'noteon' && message.velocity > 0) {

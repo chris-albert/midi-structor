@@ -1,18 +1,6 @@
-import { MidiEmitter, MidiListener } from './GlobalMidi'
-import { MidiMessage } from './MidiMessage'
 import { Option } from 'effect'
-
-export const emptyEmitter = (): MidiEmitter => ({
-  send: (message: MidiMessage) => {
-    console.debug('Empty send', message)
-  },
-})
-
-export const emptyListener = (): MidiListener => ({
-  on: (m) => () => {
-    console.log('Empty listener', m)
-  },
-})
+import { MidiListener } from './MidiListener'
+import { MidiEmitter } from './MidiEmitter'
 
 export type MidiDeviceManager = {
   isAllowed: boolean
@@ -32,6 +20,4 @@ const empty: MidiDeviceManager = {
 
 export const MidiDeviceManager = {
   empty,
-  emptyEmitter,
-  emptyListener,
 }

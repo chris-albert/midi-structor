@@ -4,6 +4,7 @@ import { ControllerPad, ControllerUI } from './ControllerUI'
 import {
   Color,
   ConfiguredController,
+  ConfiguredControllerHooks,
   ControllerUIDevice,
   MidiTarget,
 } from '@midi-structor/core'
@@ -28,7 +29,7 @@ export const ControllerGridComponent: React.FC<
 > = ({ controllerUI, controller, device }) => {
   const buttonSize = 75
   const padStore = device.useStore(controller.name).useGet()
-  const listener = ConfiguredController.useVirtualListener(controller)
+  const listener = ConfiguredControllerHooks.useVirtualListener(controller)
 
   const pads: Array<Array<PadWithState>> = React.useMemo(() => {
     return controllerUI.pads.map((padRow, ri) =>
