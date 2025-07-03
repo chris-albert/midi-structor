@@ -67,10 +67,9 @@ const useActiveProjectState = (): State<ProjectConfig> => {
     projects.projects,
     (p) => p.key === activeProject
   )
-  const project = ProjectState.project.config.useFocus('projects').useArray()[
+  return ProjectState.project.config.useFocus('projects').useArray()[
     projectIndex
   ]
-  return project
 }
 
 const useUpdateActiveProject = () => {

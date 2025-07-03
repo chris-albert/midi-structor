@@ -5,8 +5,9 @@ export type EventEmitter<A> = {
   emit: <N extends keyof A & string>(b: A[N]) => void
 }
 
-export const EventEmitter = <A extends Record<any, { type: string }>>(): EventEmitter<A> =>
-  buildEmitter<A>(new NodeEventEmitter())
+export const EventEmitter = <
+  A extends Record<any, { type: string }>
+>(): EventEmitter<A> => buildEmitter<A>(new NodeEventEmitter())
 
 export const buildEmitter = <A extends Record<any, { type: string }>>(
   emitter: NodeEventEmitter
@@ -27,4 +28,30 @@ export type EventRecord<A extends { type: string }> = {
   [E in A as E['type']]: E
 } & {
   '*': A
+}
+
+const EMITTER_CACHE: Record<string, EventEmitter<any>> = {}
+
+export const EventEmitterWithBroadcast = <
+  A extends Record<any, { type: string }>
+>(
+  name: string
+): EventEmitter<A> => {
+  const cached = EMITTER_CACHE[name]
+  if (cached === undefined) {
+    const emitter = EventEmitter<A>()
+    const channel = new BroadcastChannel(name)
+
+    channel.onmessage = (event) => {
+      emitter.emit(event.data)
+    }
+
+    emitter.on('*', (data) => {
+      channel.postMessage(data)
+    })
+    EMITTER_CACHE[name] = emitter
+    return emitter
+  } else {
+    return cached
+  }
 }

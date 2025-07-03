@@ -107,8 +107,10 @@ const init = (
   ProjectState.project.config.sub((projects) => {
     const activeProject = getActiveProjectConfig(projects)
     console.log('Active project', activeProject)
-    const tracks = getTracks(activeProject)
-    return handshake(dawEmitter, tracks)
+    if (activeProject.key !== 'reload-project') {
+      const tracks = getTracks(activeProject)
+      return handshake(dawEmitter, tracks)
+    }
   })
   listener(dawListener)
 }

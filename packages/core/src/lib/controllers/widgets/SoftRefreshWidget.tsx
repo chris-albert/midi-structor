@@ -19,7 +19,6 @@ export const SoftRefreshWidget = ControllerWidget.one({
         color={color}
         target={target}
         onClick={() => {
-          console.log('refreshing')
           refreshControllers()
         }}
       />

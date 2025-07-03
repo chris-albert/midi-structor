@@ -1,7 +1,7 @@
 import { Option, pipe } from 'effect'
 import { Color } from './Color'
 import { State } from '../state/State'
-import { EventEmitter } from '../EventEmitter'
+import { EventEmitter, EventEmitterWithBroadcast } from '../EventEmitter'
 import { MidiEventRecord } from '../midi/MidiDevice'
 import { ProjectHooks } from '../project/ProjectHooks'
 import { ControllerDevices } from './devices/ControllerDevices'
@@ -18,10 +18,10 @@ export type VirtualStore = Record<string, Color>
 
 const atoms = {
   virtualStore: State.mem<VirtualStore>('virtual-store', {}),
-  virtualListener: State.mem<EventEmitter<MidiEventRecord>>(
-    'virtual-listener',
-    EventEmitter<MidiEventRecord>()
-  ),
+  // virtualListener: State.mem<EventEmitter<MidiEventRecord>>(
+  //   'virtual-listener',
+  //   EventEmitter<MidiEventRecord>()
+  // ),
 }
 
 const useControllers = () =>
@@ -182,8 +182,13 @@ const useUIStore = (controller: ConfiguredController) => {
     .useStore(controller.name)
 }
 
-const useVirtualListener = (controller: ConfiguredController) =>
-  atoms.virtualListener.useValue()
+const useVirtualListener = (
+  controller: ConfiguredController
+): EventEmitter<MidiEventRecord> => {
+  return React.useMemo(() => {
+    return EventEmitterWithBroadcast(controller.id)
+  }, [controller.id])
+}
 
 const useVirtualIO = (
   controller: ConfiguredController
