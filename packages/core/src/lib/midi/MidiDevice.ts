@@ -1,9 +1,4 @@
-import {
-  generateRawMidiMessage,
-  MidiMessage,
-  MidiMessageWithRaw,
-  parseMidiInput,
-} from './MidiMessage'
+import { MidiMessage } from './MidiMessage'
 import { EventEmitter, EventRecord } from '../EventEmitter'
 
 export type MidiPort = {

@@ -24,6 +24,7 @@ export default defineConfig({
   ],
   worker: {
     plugins: [],
+    format: 'es',
   },
   build: {
     rollupOptions: {

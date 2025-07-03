@@ -18,6 +18,7 @@ export type ControllerInstance = {
 }
 
 const create = (
+  name: string,
   controller: Controller,
   emitter: MidiEmitter,
   listener: MidiListener
@@ -58,6 +59,7 @@ const create = (
   }
 
   const off = () => {
+    delete CONTROLLER_INSTANCES[name]
     cleanupListener()
   }
 
@@ -90,7 +92,7 @@ const of = (
     return maybeInstance.instance
   } else {
     console.log('Creating controller instance', configuredController.name)
-    const instance = create(controller, emitter, listener)
+    const instance = create(key, controller, emitter, listener)
     CONTROLLER_INSTANCES[key] = { configHash, instance }
     return instance
   }
