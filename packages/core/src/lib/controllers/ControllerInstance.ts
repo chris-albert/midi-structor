@@ -23,6 +23,7 @@ const create = (
   emitter: MidiEmitter,
   listener: MidiListener
 ): ControllerInstance => {
+  console.log('controller.create', name)
   let cleanupListener = () => {}
   let cleanupLoading = () => {}
   let initCalled = false
@@ -40,6 +41,7 @@ const create = (
 
   const init = (widgets: Array<ResolvedControllerWidget>) => {
     if (!initCalled) {
+      console.log('controller.init', name)
       controller.init(emitter)(widgets)
       cleanupLoading = controller.loading(emitter)(controller)
       initCalled = true
@@ -47,10 +49,12 @@ const create = (
   }
 
   const loaded = () => {
+    console.log('controller.loaded', name)
     cleanupLoading()
   }
 
   const on = (f: (m: MidiMessage) => void) => {
+    console.log('controller.on', name)
     cleanupListener = listener.on('*', (m) => {
       if (controller.listenFilter(m)) {
         f(m)
@@ -59,7 +63,8 @@ const create = (
   }
 
   const off = () => {
-    delete CONTROLLER_INSTANCES[name]
+    console.log('controller.off', name)
+    // delete CONTROLLER_INSTANCES[name]
     cleanupListener()
   }
 
@@ -91,7 +96,6 @@ const of = (
   if (maybeInstance !== undefined && maybeInstance.configHash == configHash) {
     return maybeInstance.instance
   } else {
-    console.log('Creating controller instance', configuredController.name)
     const instance = create(key, controller, emitter, listener)
     CONTROLLER_INSTANCES[key] = { configHash, instance }
     return instance

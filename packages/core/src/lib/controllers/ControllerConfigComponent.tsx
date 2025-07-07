@@ -23,16 +23,21 @@ export type ControllerConfigComponentProps = {
 export const ControllerConfigComponent: React.FC<
   ControllerConfigComponentProps
 > = ({ controller, name, widgets }) => {
+  const loading = ProjectHooks.useIsProjectLoading()
+
   React.useEffect(() => {
     controller.init(widgets)
   }, [widgets])
 
-  const loading = ProjectHooks.useIsProjectLoading()
+  React.useEffect(() => {
+    if (!loading) {
+      controller.loaded()
+    }
+  }, [loading])
 
   if (loading) {
     return null
   } else {
-    controller.loaded()
     return (
       <controller
         model={controller}

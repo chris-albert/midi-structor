@@ -13,19 +13,32 @@ import { MidiMessage } from '../midi/MidiMessage'
 import { ConfiguredController } from './ConfiguredController'
 import { MidiListener } from '../midi/MidiListener'
 import { MidiEmitter } from '../midi/MidiEmitter'
+import { ProjectState } from '../state/ProjectState'
+import _ from 'lodash'
 
 export type VirtualStore = Record<string, Color>
 
 const atoms = {
   virtualStore: State.mem<VirtualStore>('virtual-store', {}),
-  // virtualListener: State.mem<EventEmitter<MidiEventRecord>>(
-  //   'virtual-listener',
-  //   EventEmitter<MidiEventRecord>()
-  // ),
 }
 
-const useControllers = () =>
-  ProjectHooks.useActiveProjectState().useFocus('controllers').useValue()
+const useControllers = (): Readonly<Array<ConfiguredController>> => {
+  const projectConfig = ProjectState.project.config.useValue()
+
+  return React.useMemo(() => {
+    const active = _.find(
+      projectConfig.projects,
+      (p) => p.key === projectConfig.active
+    )
+    if (active !== undefined) {
+      return active.controllers
+    } else {
+      return []
+    }
+  }, [projectConfig])
+
+  // return ProjectHooks.useActiveProjectState().useFocus('controllers').useValue()
+}
 
 const useSetControllers = () =>
   ProjectHooks.useActiveProjectState().useFocus('controllers').useSet()
