@@ -1,12 +1,10 @@
 import { Option, pipe } from 'effect'
-import { Color } from './Color'
 import { State } from '../state/State'
 import { EventEmitter, EventEmitterWithBroadcast } from '../EventEmitter'
 import { MidiEventRecord } from '../midi/MidiDevice'
 import { ProjectHooks } from '../project/ProjectHooks'
 import { ControllerDevices } from './devices/ControllerDevices'
 import { Set } from 'immutable'
-import { Midi, MidiDeviceSelection } from '../midi/GlobalMidi'
 import React from 'react'
 import { ControllerUIDevices } from './devices/ui/ControllerUIDevices'
 import { MidiMessage } from '../midi/MidiMessage'
@@ -16,12 +14,8 @@ import { MidiEmitter } from '../midi/MidiEmitter'
 import { ProjectState } from '../state/ProjectState'
 import _ from 'lodash'
 import { log } from '../logger/log'
-
-export type VirtualStore = Record<string, Color>
-
-const atoms = {
-  virtualStore: State.mem<VirtualStore>('controller', 'virtual-store', {}),
-}
+import { MidiDeviceSelection } from '../midi/MidiDeviceSelection'
+import { MidiDeviceManager } from '../midi/MidiDeviceManager'
 
 const useControllers = (): Readonly<Array<ConfiguredController>> => {
   const projectConfig = ProjectState.project.config.useValue()
@@ -133,7 +127,7 @@ const useMidiDeviceSelection = (
   controllerState: State<ConfiguredController>
 ): ControllerMidiDeviceSelections => {
   const controller = useRealController(controllerState)
-  const manager = Midi.useDeviceManager()
+  const manager = MidiDeviceManager.use()
 
   const input: MidiDeviceSelection = {
     type: 'input',
@@ -161,7 +155,7 @@ export type ConfiguredControllerIO = {
 const useRealIO = (
   controller: ConfiguredController
 ): ConfiguredControllerIO => {
-  const manager = Midi.useDeviceManager()
+  const manager = MidiDeviceManager.use()
 
   log.info('useRealIO', controller, manager)
 

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Midi, MidiStructorStore } from '@midi-structor/core'
+import { DawMidi, MidiStructorStore } from '@midi-structor/core'
 import { MidiStructorComponent } from '../components/controller/devices/midistructor/MidiStructorComponent'
 import { Box } from '@mui/material'
 
@@ -7,8 +7,8 @@ export type UIPageProps = {}
 
 export const UIPage: React.FC<UIPageProps> = ({}) => {
   const store = MidiStructorStore.useStore('global:MIDIStructorUI')
-  const emitter = Midi.useDawEmitter()
-  const dawListener = Midi.useDawListener()
+  const emitter = DawMidi.useDawEmitter()
+  const dawListener = DawMidi.useDawListener()
   const onMidiStructor = store.usePut()
 
   React.useEffect(() => {

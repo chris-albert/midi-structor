@@ -1,9 +1,9 @@
 import React from 'react'
 import { Color } from '../Color'
-import { Midi } from '../../midi/GlobalMidi'
 import { TX_MESSAGE } from '../../project/AbletonUIMessage'
 import { ControllerWidget } from '../ControllerWidget'
 import { Schema } from 'effect'
+import { DawMidi } from '../../midi/DawMidi'
 
 export const StopWidget = ControllerWidget.one({
   name: 'stop',
@@ -14,7 +14,7 @@ export const StopWidget = ControllerWidget.one({
     color: Color.RED,
   }),
   component: ({ target, color }) => {
-    const dawEmitter = Midi.useDawEmitter()
+    const dawEmitter = DawMidi.useDawEmitter()
 
     return (
       <pad

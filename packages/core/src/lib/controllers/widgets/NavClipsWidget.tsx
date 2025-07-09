@@ -2,12 +2,12 @@ import React from 'react'
 import { ControllerWidget } from '../ControllerWidget'
 import { MidiTarget } from '../../midi/MidiTarget'
 import { Schema } from 'effect'
-import { Midi } from '../../midi/GlobalMidi'
 import { ProjectHooks } from '../../project/ProjectHooks'
 import _ from 'lodash'
 import { NavigateableClip, UIRealClip } from '../../project/UIStateDisplay'
 import { TX_MESSAGE } from '../../project/AbletonUIMessage'
 import { Pad } from '../pads/Pad'
+import { DawMidi } from '../../midi/DawMidi'
 
 export const NavClipsWidget = ControllerWidget.many({
   name: 'nav-clips',
@@ -21,7 +21,7 @@ export const NavClipsWidget = ControllerWidget.many({
   }),
   tracks: (w) => [w.trackName],
   component: ({ targets, trackName, sort }) => {
-    const dawEmitter = Midi.useDawEmitter()
+    const dawEmitter = DawMidi.useDawEmitter()
     const arrangement = ProjectHooks.useArrangement()
     const track = ProjectHooks.useTrack(trackName)
     const activeClip = ProjectHooks.useActiveClip(track)

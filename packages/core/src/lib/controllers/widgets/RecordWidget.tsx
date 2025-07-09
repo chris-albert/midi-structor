@@ -1,9 +1,9 @@
 import React from 'react'
 import { Color } from '../Color'
-import { Midi } from '../../midi/GlobalMidi'
 import { TX_MESSAGE } from '../../project/AbletonUIMessage'
 import { ControllerWidget } from '../ControllerWidget'
 import { Schema } from 'effect'
+import { DawMidi } from '../../midi/DawMidi'
 
 export const RecordWidget = ControllerWidget.one({
   name: 'record',
@@ -14,7 +14,7 @@ export const RecordWidget = ControllerWidget.one({
     color: Color.PURPLE,
   }),
   component: ({ target, color }) => {
-    const dawEmitter = Midi.useDawEmitter()
+    const dawEmitter = DawMidi.useDawEmitter()
 
     return (
       <pad

@@ -1,11 +1,11 @@
 import React from 'react'
 import { Color } from '../Color'
-import { Midi } from '../../midi/GlobalMidi'
 import { ProjectHooks } from '../../project/ProjectHooks'
 import { Pad } from '../pads/Pad'
 import { TX_MESSAGE } from '../../project/AbletonUIMessage'
 import { ControllerWidget } from '../ControllerWidget'
 import { Schema } from 'effect'
+import { DawMidi } from '../../midi/DawMidi'
 
 export const LoopControlWidget = ControllerWidget.one({
   name: 'loop-control',
@@ -16,7 +16,7 @@ export const LoopControlWidget = ControllerWidget.one({
     color: Color.GREEN,
   }),
   component: ({ target, color }) => {
-    const dawEmitter = Midi.useDawEmitter()
+    const dawEmitter = DawMidi.useDawEmitter()
     const loopState = ProjectHooks.useLoopState()
 
     return (

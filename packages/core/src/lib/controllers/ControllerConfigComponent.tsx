@@ -1,5 +1,4 @@
 import React from 'react'
-import { Controller } from './Controller'
 import { ResolvedControllerWidget } from './ControllerWidget'
 import { ProjectHooks } from '../project/ProjectHooks'
 import { ControllerInstance } from './ControllerInstance'

@@ -1,11 +1,10 @@
 import React from 'react'
 import { ControllerWidget } from '../ControllerWidget'
-import { MidiTarget } from '../../midi/MidiTarget'
 import { Color } from '../Color'
 import { MidiChannel } from '../../midi/MidiMessage'
-import { Midi } from '../../midi/GlobalMidi'
 import { Pad } from '../pads/Pad'
 import { Schema } from 'effect'
+import { DawMidi } from '../../midi/DawMidi'
 
 export const MidiNoteOnVaryVelocity = Schema.TaggedStruct(
   'midi-note-vary-velocity',
@@ -53,7 +52,7 @@ export const KnobWidget = ControllerWidget.one({
     },
   }),
   component: ({ target, color, midi }) => {
-    const dawEmitter = Midi.useDawEmitter()
+    const dawEmitter = DawMidi.useDawEmitter()
 
     return (
       <Pad

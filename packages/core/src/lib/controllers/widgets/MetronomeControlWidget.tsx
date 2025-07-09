@@ -1,11 +1,11 @@
 import React from 'react'
 import { Color } from '../Color'
-import { Midi } from '../../midi/GlobalMidi'
 import { TX_MESSAGE } from '../../project/AbletonUIMessage'
 import { Pad } from '../pads/Pad'
 import { ProjectHooks } from '../../project/ProjectHooks'
 import { ControllerWidget } from '../ControllerWidget'
 import { Schema } from 'effect'
+import { DawMidi } from '../../midi/DawMidi'
 
 export const MetronomeControlWidget = ControllerWidget.one({
   name: 'metronome-control',
@@ -16,7 +16,7 @@ export const MetronomeControlWidget = ControllerWidget.one({
     color: Color.BLUE,
   }),
   component: ({ target, color }) => {
-    const dawEmitter = Midi.useDawEmitter()
+    const dawEmitter = DawMidi.useDawEmitter()
     const metronomeState = ProjectHooks.useMetronomeState()
 
     return (

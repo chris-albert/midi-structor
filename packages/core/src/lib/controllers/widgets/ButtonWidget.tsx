@@ -1,10 +1,10 @@
 import React from 'react'
 import { ControllerWidget } from '../ControllerWidget'
 import { Color } from '../Color'
-import { Midi } from '../../midi/GlobalMidi'
 import { Schema } from 'effect'
 import { Pad } from '../pads/Pad'
 import { MidiMessage } from '../../midi/MidiMessage'
+import { DawMidi } from '../../midi/DawMidi'
 
 export const ButtonWidget = ControllerWidget.one({
   name: 'button',
@@ -26,7 +26,7 @@ export const ButtonWidget = ControllerWidget.one({
     midi: [],
   }),
   component: ({ target, color, isFlashing, midi }) => {
-    const dawEmitter = Midi.useDawEmitter()
+    const dawEmitter = DawMidi.useDawEmitter()
 
     return (
       <Pad

@@ -1,6 +1,7 @@
 import { Option } from 'effect'
 import { MidiListener } from './MidiListener'
 import { MidiEmitter } from './MidiEmitter'
+import { State } from '../state/State'
 
 export type MidiDeviceManager = {
   isAllowed: boolean
@@ -18,6 +19,14 @@ const empty: MidiDeviceManager = {
   outputs: [],
 }
 
+const states = {
+  deviceManager: State.memSingle('device-manager', empty),
+}
+
+const useDeviceManager = () => states.deviceManager.useValue()
+
 export const MidiDeviceManager = {
   empty,
+  state: states.deviceManager,
+  use: useDeviceManager,
 }

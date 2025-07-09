@@ -2,7 +2,7 @@ import React from 'react'
 import {
   MidiInput,
   MidiMessageWithRaw,
-  Midi,
+  DawMidi,
   ConfiguredControllerHooks,
 } from '@midi-structor/core'
 import { Box, Button, Card, CardContent, Grid } from '@mui/material'
@@ -14,7 +14,7 @@ export type MonitorPageProps = {}
 export const MonitorPage: React.FC<MonitorPageProps> = () => {
   const maxMessages = 100
 
-  const dawListener = Midi.useDawListener()
+  const dawListener = DawMidi.useDawListener()
   const controllerListener = ConfiguredControllerHooks.useListeners()
   const [messages, setMessages] = React.useState<
     Array<[MidiMessageWithRaw, number]>
