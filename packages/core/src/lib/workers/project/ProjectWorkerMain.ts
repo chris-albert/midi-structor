@@ -2,8 +2,9 @@ import { EventEmitter } from '../../EventEmitter'
 import { MidiEventRecord } from '../../midi/MidiDevice'
 import _ from 'lodash'
 import { ProjectMain } from './ProjectMain'
+import { log } from '../../logger/log'
 
-console.log('Loading Project Worker Main')
+log.info('Loading Project Worker Main')
 
 const DAW_LISTENER = EventEmitter<MidiEventRecord>()
 const DAW_EMITTER = EventEmitter<MidiEventRecord>()

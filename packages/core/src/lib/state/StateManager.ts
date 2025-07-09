@@ -3,7 +3,7 @@ import { ProcessManager } from '../ProcessManager'
 type StateManager = {}
 
 const init = (): StateManager => {
-  const accessType = ProcessManager.getType()
+  const accessType = ProcessManager.type
   console.log('StateManager initialized', accessType)
   const managerName = `state-manager-${accessType}`
 

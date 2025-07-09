@@ -1,15 +1,16 @@
 import { ReactControllersApp } from './ReactControllersApp'
 import ControllerWorkerMain from '../workers/controller/ControllerWorkerMain?worker'
+import { log } from '../logger/log'
 
 const USE_WORKER = true
 
 const usingWorker = () => {
-  console.log('Loading Worker Controller...')
+  log.info('Loading Worker Controller...')
   new ControllerWorkerMain({ name: 'controller' })
 }
 
 const usingLocal = () => {
-  console.log('Loading Local Controller...')
+  log.info('Loading Local Controller...')
   ReactControllersApp()
 }
 

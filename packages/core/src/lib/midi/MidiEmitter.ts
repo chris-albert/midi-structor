@@ -1,4 +1,5 @@
 import { MidiMessage } from './MidiMessage'
+import { log } from '../logger/log'
 
 export type MidiEmitter = {
   send: (m: MidiMessage) => void
@@ -6,7 +7,7 @@ export type MidiEmitter = {
 
 const empty = (): MidiEmitter => ({
   send: (message: MidiMessage) => {
-    console.debug('Empty send', message)
+    log.debug('Empty send', message)
   },
 })
 

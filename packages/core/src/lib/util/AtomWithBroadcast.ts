@@ -105,37 +105,12 @@ export const atomWithBroadcast = <Value>(
   const channel = new BroadcastChannel(key)
   const id = v4()
 
-  // const debug = log.enabled(key === 'import-status', log.info)
-  const debug = log.enabled(false, log.info)
+  const debug = log.enabled(key === 'arrangement', log.info)
+  // const debug = log.enabled(false, log.info)
 
   debug('Creating', { owner, isOwner, key, id })
 
   let last: Value | undefined = undefined
-
-  const fireAllListeners = (event: MessageEvent<Event<Value>>) => {
-    listeners.forEach((l) => l(event))
-  }
-
-  channel.onmessage = (e) => {
-    const event = e as MessageEvent<Event<Value>>
-    debug('Received message', event.data)
-    if (event.data.type === 'update') {
-      fireAllListeners(event)
-    }
-    if (isOwner && event.data.type === 'init') {
-      channel.postMessage({
-        type: 'init-ack',
-        id: event.data.id,
-        value: last || store.get(baseAtom),
-      })
-    } else if (
-      !isOwner &&
-      event.data.type === 'init-ack' &&
-      event.data.id === id
-    ) {
-      fireAllListeners(event)
-    }
-  }
 
   const broadcastAtom = atom(
     (get) => get(baseAtom),
@@ -158,6 +133,34 @@ export const atomWithBroadcast = <Value>(
       }
     }
   )
+
+  const fireAllListeners = (event: MessageEvent<Event<Value>>) => {
+    // listeners.forEach((l) => l(event))
+    if (event.data.type === 'update' || event.data.type === 'init-ack') {
+      store.set(broadcastAtom, { isEvent: true, value: event.data.value })
+    }
+  }
+
+  channel.onmessage = (e) => {
+    const event = e as MessageEvent<Event<Value>>
+    debug('Received message', event.data)
+    if (event.data.type === 'update') {
+      fireAllListeners(event)
+    }
+    if (isOwner && event.data.type === 'init') {
+      channel.postMessage({
+        type: 'init-ack',
+        id: event.data.id,
+        value: last || store.get(baseAtom),
+      })
+    } else if (
+      !isOwner &&
+      event.data.type === 'init-ack' &&
+      event.data.id === id
+    ) {
+      fireAllListeners(event)
+    }
+  }
 
   broadcastAtom.onMount = (setAtom) => {
     debug('on mount')

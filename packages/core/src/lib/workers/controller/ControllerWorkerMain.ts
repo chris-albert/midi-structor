@@ -1,5 +1,6 @@
 import { ReactControllersApp } from '../../controllers/ReactControllersApp'
+import { log } from '../../logger/log'
 
-console.log('Loading Controller Worker Main')
+log.info('Loading Controller Worker Main')
 
 ReactControllersApp()

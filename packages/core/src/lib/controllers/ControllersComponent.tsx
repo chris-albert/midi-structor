@@ -1,6 +1,7 @@
 import React from 'react'
 import { ConfiguredControllerHooks } from './ConfiguredControllerHooks'
 import { ControllerComponent } from './ControllerComponent'
+import { log } from '../logger/log'
 
 export type ControllersComponentProps = {}
 
@@ -9,7 +10,7 @@ export const ControllersComponent: React.FC<
 > = ({}) => {
   const controllers = ConfiguredControllerHooks.useControllers()
 
-  console.log('Controllers', controllers)
+  log.info('Controllers', controllers)
 
   return controllers.map((controller) => (
     <ControllerComponent
