@@ -83,26 +83,71 @@ sequenceDiagram
     
 ```
 
-Electron Utility Processes
-```mermaid
-stateDiagram
-        eMain: Main
-        eLive: Live
-        eProject: Project
-        eDevice1: Device 1
-        eDevice2: Device 2
-        state Devices {
-                [*] --> eDevice1
-                [*] --> eDevice2
-                eDevice1 --> [*]
-                eDevice2 --> [*]
-        }
-        [*] --> eMain
-        eLive --> eProject
-        eMain --> eProject
-        eMain --> eLive
-        eMain --> Devices
-        Devices --> eProject
-        Devices --> eLive
+## State Diagrams
 
+Clean Init
+```mermaid
+sequenceDiagram
+  autonumber
+  participant O as Owner
+  participant L as Borrower 1
+  participant B as Borrower 2
+
+
+  O ->> O: init
+  L ->> L: init
+  L ->> O: init {id}
+  O ->> L: init-ack {id, value}
+
+  B ->> B: init
+  B ->> O: init {id}
+  O ->> B: init-ack {id, value}
 ```
+
+After init updates
+```mermaid
+sequenceDiagram
+  autonumber
+  participant O as Owner
+  participant L as Borrower 1
+  participant B as Borrower 2
+
+  opt Updated by Owner
+    O ->> O: update (internal)
+
+    opt State Updated
+      O ->> L: update {value}
+    end
+
+    opt State Updated
+      O ->> B: update {value}
+    end
+  end
+
+  opt Updated by Borrower 1
+    L ->> O: update {value}
+
+    opt State Updated
+      O ->> L: update {value}
+    end
+
+    opt State Updated
+      O ->> B: update {value}
+    end
+
+  end
+
+  opt Updated by Borrower 2
+    B ->> O: update {value}
+
+    opt State Updated
+      O ->> L: update {value}
+    end
+
+    opt State Updated
+      O ->> B: update {value}
+    end
+
+  end
+```
+

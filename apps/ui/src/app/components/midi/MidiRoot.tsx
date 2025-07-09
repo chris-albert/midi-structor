@@ -1,6 +1,6 @@
 import React from 'react'
 import { MidiAccess } from '../../midi/MidiAccess'
-import { ProjectHooks, ProjectImportStatus } from '@midi-structor/core'
+import { log, ProjectHooks, ProjectImportStatus } from '@midi-structor/core'
 import { toast } from 'react-toastify'
 
 export type MidiRootProps = {}

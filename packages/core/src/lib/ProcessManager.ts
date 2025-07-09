@@ -2,16 +2,6 @@ const IS_WEB_WORKER = typeof window === 'undefined'
 
 export type ProcessType = 'main' | 'project' | 'controller'
 
-const processTypeColor = (type: ProcessType): string => {
-  if (type === 'main') {
-    return '32'
-  } else if (type === 'project') {
-    return '34'
-  } else {
-    return '33'
-  }
-}
-
 const getType = (): ProcessType => {
   if (IS_WEB_WORKER && typeof self !== 'undefined') {
     const name = self.name
@@ -25,10 +15,27 @@ const getType = (): ProcessType => {
   }
 }
 
-const isWorker = () => IS_WEB_WORKER
+const type = getType()
+
+const processTypeColor = (type: ProcessType): string => {
+  if (type === 'main') {
+    return '32'
+  } else if (type === 'project') {
+    return '34'
+  } else {
+    return '33'
+  }
+}
+
+const color = processTypeColor(type)
+
+const isWorker = IS_WEB_WORKER
 
 export const ProcessManager = {
-  getType,
+  type,
+  isMain: type === 'main',
+  isProject: type === 'project',
+  isController: type === 'controller',
   isWorker,
-  processTypeColor,
+  color,
 }

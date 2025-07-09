@@ -2,18 +2,7 @@ import { atom, PrimitiveAtom, SetStateAction, getDefaultStore } from 'jotai'
 import { AtomStorage } from '../storage/AtomStorage'
 import { v4 } from 'uuid'
 import { ProcessManager, ProcessType } from '../ProcessManager'
-import { log, LogFn } from '../logger/log'
-
-const stateType = ProcessManager.getType()
-
-const SHOULD_LOG = true
-
-// const log = (key: string, id: string, msg: string, rest: any = null) => {
-//   if (SHOULD_LOG && key === 'projects-config') {
-//     // console.log(`--${stateType}:${key} - ${msg}`, rest)
-//     newLog.info(`${key} - ${msg}`, rest)
-//   }
-// }
+import { log } from '../logger/log'
 
 const store = getDefaultStore()
 
@@ -79,8 +68,27 @@ export function atomWithBroadcastVanilla<Value>(
   return returnedAtom
 }
 
-const IS_WEB_WORKER = typeof window === 'undefined'
-
+/**
+ * We are defining the concept of `owner`, we need this since we are using
+ * web-workers, and need a clean way to init and update all the `borrowers`.
+ *
+ * Rules:
+ * 1. `borrowers` can *only* get state updates from the `owner` (no internal updates)
+ * 2. `borrowers` can *only* update state by sending a message to the `owner`
+ *
+ * We also need to be careful with how each instance is initialized, since
+ * we are using web-workers there are many different orders each `atom` is
+ * created in.
+ *
+ * Scenario 1: Clean and easy
+ * The `owner` is loaded first, then each `borrower`. When each `borrower` is
+ * loaded, it sends aa `init` message to its `channel`, which only the
+ * `owner` will process and send back an `init-ack` to the `channel`. Now since
+ * we can have multiple `borrowers`, we need to only listen for `init` events
+ * tagged with our `id.
+ *
+ *
+ */
 export const atomWithBroadcast = <Value>(
   owner: ProcessType,
   key: string,
@@ -88,17 +96,19 @@ export const atomWithBroadcast = <Value>(
   type: 'mem' | 'storage' = 'mem'
 ): PrimitiveAtom<Value> => {
   const isMem = type === 'mem'
+  const isOwner = owner === ProcessManager.type
   const baseAtom =
-    !isMem && !IS_WEB_WORKER
+    !isMem && ProcessManager.isMain
       ? AtomStorage.atom(key, initialValue)
       : atom(initialValue)
   const listeners = new Set<(event: MessageEvent<Event<Value>>) => void>()
   const channel = new BroadcastChannel(key)
   const id = v4()
 
-  const debug = log.enabled(key === 'projects-config', log.info)
+  // const debug = log.enabled(key === 'import-status', log.info)
+  const debug = log.enabled(false, log.info)
 
-  debug('Creating', { owner, key, id })
+  debug('Creating', { owner, isOwner, key, id })
 
   let last: Value | undefined = undefined
 
@@ -108,57 +118,72 @@ export const atomWithBroadcast = <Value>(
 
   channel.onmessage = (e) => {
     const event = e as MessageEvent<Event<Value>>
+    debug('Received message', event.data)
     if (event.data.type === 'update') {
       fireAllListeners(event)
-    } else if (event.data.type === 'init-ack') {
-      if (event.data.id === id) {
-        debug('init-ack', event.data)
-        fireAllListeners(event)
-      }
-    } else if (event.data.type === 'init') {
-      debug('Got init')
+    }
+    if (isOwner && event.data.type === 'init') {
       channel.postMessage({
         type: 'init-ack',
         id: event.data.id,
         value: last || store.get(baseAtom),
       })
+    } else if (
+      !isOwner &&
+      event.data.type === 'init-ack' &&
+      event.data.id === id
+    ) {
+      fireAllListeners(event)
     }
   }
 
   const broadcastAtom = atom(
     (get) => get(baseAtom),
     (get, set, update: { isEvent: boolean; value: SetStateAction<Value> }) => {
-      set(baseAtom, update.value)
-      if (!update.isEvent) {
-        last = get(baseAtom)
-        channel.postMessage({ type: 'update', value: last })
+      const value: Value =
+        typeof update.value === 'function'
+          ? (update.value as (p: Value) => Value)(get(baseAtom))
+          : update.value
+      if (isOwner) {
+        // Only update local state and post changes if owner
+        set(baseAtom, update.value)
+        last = value
+        debug('Posting message', value)
+        channel.postMessage({ type: 'update', value })
+      } else {
+        // I'm not the owner and got an update from the owner
+        if (update.isEvent) {
+          set(baseAtom, update.value)
+        }
       }
     }
   )
 
-  const onMount: typeof broadcastAtom.onMount = (setAtom) => {
+  broadcastAtom.onMount = (setAtom) => {
+    debug('on mount')
     const listener = (event: MessageEvent<Event<Value>>) => {
-      if (event.data.type === 'update') {
+      debug('Received listener', event.data)
+      if (event.data.type === 'update' || event.data.type === 'init-ack') {
         setAtom({ isEvent: true, value: event.data.value })
       }
     }
     listeners.add(listener)
-    if (isMem || IS_WEB_WORKER) {
-      debug('Posting init')
-      channel.postMessage({ type: 'init', id })
-    }
     return () => {
       listeners.delete(listener)
     }
   }
 
-  broadcastAtom.onMount = onMount
+  if (!isOwner) {
+    debug('Posting init')
+    channel.postMessage({ type: 'init', id })
+  }
 
   const returnedAtom = atom(
     (get) => {
       return get(broadcastAtom)
     },
     (_get, set, update: SetStateAction<Value>) => {
+      debug('Atom set', update)
       set(broadcastAtom, { isEvent: false, value: update })
     }
   )

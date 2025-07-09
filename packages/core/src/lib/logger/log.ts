@@ -18,8 +18,8 @@ type Logger = {
 const NO_OP: LogFn = () => {}
 
 const logger = (): Logger => {
-  const stateType = ProcessManager.getType()
-  const ansiColor = ProcessManager.processTypeColor(stateType)
+  const stateType = ProcessManager.type
+  const ansiColor = ProcessManager.color
 
   const message = `\x1b[${ansiColor}m[${stateType}]\x1b[0m %s`
 

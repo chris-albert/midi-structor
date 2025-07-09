@@ -19,6 +19,7 @@ import { Option } from 'effect'
 import { ControllerDevices } from '../../controllers/devices/ControllerDevices'
 import { Set } from 'immutable'
 import { DefaultProjectConfig } from '../../project/DefaultProjectConfig'
+import { log } from '../../logger/log'
 
 const listener = (dawListener: EventEmitter<MidiEventRecord>) => {
   const onAbletonUIMessage = (msg: AbletonUIMessage) => {
@@ -103,10 +104,10 @@ const init = (
   dawListener: EventEmitter<MidiEventRecord>,
   dawEmitter: EventEmitter<MidiEventRecord>
 ) => {
-  console.log('Project Main')
+  log.info('Project Main')
   ProjectState.project.config.sub((projects) => {
     const activeProject = getActiveProjectConfig(projects)
-    console.log('Active project', activeProject)
+    log.info('Active project', activeProject)
     if (activeProject.key !== 'reload-project') {
       const tracks = getTracks(activeProject)
       return handshake(dawEmitter, tracks)
