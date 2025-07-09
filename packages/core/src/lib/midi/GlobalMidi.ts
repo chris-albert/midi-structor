@@ -1,6 +1,6 @@
 import { Option, pipe, Schema } from 'effect'
 import React from 'react'
-import { MidiDevice, MidiEventRecord } from './MidiDevice'
+import { MidiEventRecord } from './MidiDevice'
 import { EventEmitter } from '../EventEmitter'
 import { MidiDeviceManager } from './MidiDeviceManager'
 import ProjectWorkerMain from '../workers/project/ProjectWorkerMain?worker'
@@ -8,6 +8,7 @@ import _ from 'lodash'
 import { State } from '../state/State'
 import { MidiEmitter } from './MidiEmitter'
 import { MidiListener } from './MidiListener'
+import { log } from '../logger/log'
 
 export const MidiDeviceType = Schema.Union(
   Schema.Literal('input'),
@@ -27,7 +28,6 @@ export const selectedAtom = (name: string): State<Option.Option<string>> =>
 
 const states = {
   deviceManager: State.memSingle('device-manager', MidiDeviceManager.empty),
-  devices: State.memSingle('devices', MidiDevice.empty),
   daw: {
     emitter: State.memSingle<MidiEmitter>('daw-emitter', MidiEmitter.empty()),
     listener: State.memSingle<MidiListener>(

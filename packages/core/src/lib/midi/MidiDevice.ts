@@ -24,19 +24,3 @@ export type MidiOutput = MidiPort & {
   type: 'output'
   send: (i: MidiMessage) => void
 }
-
-export type MidiDevices = {
-  isAllowed: boolean
-  inputs: Array<MidiInput>
-  outputs: Array<MidiOutput>
-}
-
-const empty: MidiDevices = {
-  isAllowed: false,
-  inputs: [],
-  outputs: [],
-}
-
-export const MidiDevice = {
-  empty,
-}

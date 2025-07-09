@@ -15,6 +15,7 @@ import { MidiListener } from '../midi/MidiListener'
 import { MidiEmitter } from '../midi/MidiEmitter'
 import { ProjectState } from '../state/ProjectState'
 import _ from 'lodash'
+import { log } from '../logger/log'
 
 export type VirtualStore = Record<string, Color>
 
@@ -36,8 +37,6 @@ const useControllers = (): Readonly<Array<ConfiguredController>> => {
       return []
     }
   }, [projectConfig])
-
-  // return ProjectHooks.useActiveProjectState().useFocus('controllers').useValue()
 }
 
 const useSetControllers = () =>
@@ -163,6 +162,8 @@ const useRealIO = (
   controller: ConfiguredController
 ): ConfiguredControllerIO => {
   const manager = Midi.useDeviceManager()
+
+  log.info('useRealIO', controller, manager)
 
   const listener = React.useMemo(
     () =>
