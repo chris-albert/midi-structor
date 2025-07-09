@@ -12,6 +12,7 @@ import { atomWithBroadcast } from '../util/AtomWithBroadcast'
 import { focusAtom } from 'jotai-optics'
 import { Lens, OpticFor_ } from 'optics-ts'
 import { splitAtom } from 'jotai/utils'
+import { ProcessType } from '../ProcessManager'
 
 const store = getDefaultStore()
 
@@ -125,11 +126,11 @@ const fromAtom = <A>(
 const memSingle = <A>(name: string, initial: A): State<A> =>
   fromAtom<A>(atom(initial), name)
 
-const mem = <A>(name: string, initial: A): State<A> =>
-  fromAtom<A>(atomWithBroadcast<A>(name, initial), name)
+const mem = <A>(owner: ProcessType, name: string, initial: A): State<A> =>
+  fromAtom<A>(atomWithBroadcast<A>(owner, name, initial), name)
 
 const storage = <A>(name: string, initial: A): State<A> =>
-  fromAtom<A>(atomWithBroadcast<A>(name, initial, 'storage'), name)
+  fromAtom<A>(atomWithBroadcast<A>('main', name, initial, 'storage'), name)
 
 const FAMILY_CACHE: Record<string, State<any>> = {}
 

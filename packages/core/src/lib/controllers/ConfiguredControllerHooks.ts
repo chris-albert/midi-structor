@@ -19,7 +19,7 @@ import _ from 'lodash'
 export type VirtualStore = Record<string, Color>
 
 const atoms = {
-  virtualStore: State.mem<VirtualStore>('virtual-store', {}),
+  virtualStore: State.mem<VirtualStore>('controller', 'virtual-store', {}),
 }
 
 const useControllers = (): Readonly<Array<ConfiguredController>> => {

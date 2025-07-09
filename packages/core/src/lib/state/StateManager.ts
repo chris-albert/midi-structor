@@ -1,24 +1,9 @@
-const IS_WEB_WORKER = typeof window === 'undefined'
-
-type StateAccessType = 'main' | 'project' | 'controller'
-
-const getAccessType = (): StateAccessType => {
-  if (IS_WEB_WORKER && typeof self !== 'undefined') {
-    const name = self.name
-    if (name === 'project') {
-      return 'project'
-    } else {
-      return 'controller'
-    }
-  } else {
-    return 'main'
-  }
-}
+import { ProcessManager } from '../ProcessManager'
 
 type StateManager = {}
 
 const init = (): StateManager => {
-  const accessType = getAccessType()
+  const accessType = ProcessManager.getType()
   console.log('StateManager initialized', accessType)
   const managerName = `state-manager-${accessType}`
 

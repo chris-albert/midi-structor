@@ -17,8 +17,12 @@ export type ProjectImportStatus =
   | { type: 'error'; msg: string }
 
 export const ProjectState = {
-  initArrangement: State.mem<InitArrangement>('init-arrangement', []),
-  importStatus: State.mem<ProjectImportStatus>('import-status', {
+  initArrangement: State.mem<InitArrangement>(
+    'project',
+    'init-arrangement',
+    []
+  ),
+  importStatus: State.mem<ProjectImportStatus>('project', 'import-status', {
     type: 'none',
   }),
   project: {
@@ -26,20 +30,28 @@ export const ProjectState = {
       'projects-config',
       DefaultProjectsConfig()
     ),
-    abletonName: State.mem<string | undefined>('ableton-name', undefined),
-    arrangement: State.mem('arrangement', emptyArrangement()),
+    abletonName: State.mem<string | undefined>(
+      'project',
+      'ableton-name',
+      undefined
+    ),
+    arrangement: State.mem('project', 'arrangement', emptyArrangement()),
   },
   realTime: {
-    beats: State.mem('real-time-beats', 0),
-    barBeats: State.mem('real-time-bar-beats', 1),
-    timeSignature: State.mem<TimeSignature>('real-time-time-signature', {
-      noteCount: 4,
-      noteLength: 4,
-    }),
-    tempo: State.mem('real-time-tempo', 0),
-    isPlaying: State.mem('real-time-is-playing', false),
-    metronomeState: State.mem('real-time-metronome-state', false),
-    loopState: State.mem('real-time-loop-state', false),
-    halfBeat: State.mem('real-time-half-beat', false),
+    beats: State.mem('project', 'real-time-beats', 0),
+    barBeats: State.mem('project', 'real-time-bar-beats', 1),
+    timeSignature: State.mem<TimeSignature>(
+      'project',
+      'real-time-time-signature',
+      {
+        noteCount: 4,
+        noteLength: 4,
+      }
+    ),
+    tempo: State.mem('project', 'real-time-tempo', 0),
+    isPlaying: State.mem('project', 'real-time-is-playing', false),
+    metronomeState: State.mem('project', 'real-time-metronome-state', false),
+    loopState: State.mem('project', 'real-time-loop-state', false),
+    halfBeat: State.mem('project', 'real-time-half-beat', false),
   },
 }

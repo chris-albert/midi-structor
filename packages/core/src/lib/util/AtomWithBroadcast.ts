@@ -1,6 +1,19 @@
 import { atom, PrimitiveAtom, SetStateAction, getDefaultStore } from 'jotai'
 import { AtomStorage } from '../storage/AtomStorage'
-import { StateManager } from '../state/StateManager'
+import { v4 } from 'uuid'
+import { ProcessManager, ProcessType } from '../ProcessManager'
+import { log, LogFn } from '../logger/log'
+
+const stateType = ProcessManager.getType()
+
+const SHOULD_LOG = true
+
+// const log = (key: string, id: string, msg: string, rest: any = null) => {
+//   if (SHOULD_LOG && key === 'projects-config') {
+//     // console.log(`--${stateType}:${key} - ${msg}`, rest)
+//     newLog.info(`${key} - ${msg}`, rest)
+//   }
+// }
 
 const store = getDefaultStore()
 
@@ -11,9 +24,16 @@ type Update<A> = {
 
 type Init = {
   type: 'init'
+  id: string
 }
 
-type Event<A> = Update<A> | Init
+type InitAck<A> = {
+  type: 'init-ack'
+  id: string
+  value: A
+}
+
+type Event<A> = Update<A> | Init | InitAck<A>
 
 export function atomWithBroadcastVanilla<Value>(
   key: string,
@@ -62,6 +82,7 @@ export function atomWithBroadcastVanilla<Value>(
 const IS_WEB_WORKER = typeof window === 'undefined'
 
 export const atomWithBroadcast = <Value>(
+  owner: ProcessType,
   key: string,
   initialValue: Value,
   type: 'mem' | 'storage' = 'mem'
@@ -73,18 +94,32 @@ export const atomWithBroadcast = <Value>(
       : atom(initialValue)
   const listeners = new Set<(event: MessageEvent<Event<Value>>) => void>()
   const channel = new BroadcastChannel(key)
+  const id = v4()
 
-  // StateManager.getDefault()
+  const debug = log.enabled(key === 'projects-config', log.info)
+
+  debug('Creating', { owner, key, id })
 
   let last: Value | undefined = undefined
+
+  const fireAllListeners = (event: MessageEvent<Event<Value>>) => {
+    listeners.forEach((l) => l(event))
+  }
 
   channel.onmessage = (e) => {
     const event = e as MessageEvent<Event<Value>>
     if (event.data.type === 'update') {
-      listeners.forEach((l) => l(event))
+      fireAllListeners(event)
+    } else if (event.data.type === 'init-ack') {
+      if (event.data.id === id) {
+        debug('init-ack', event.data)
+        fireAllListeners(event)
+      }
     } else if (event.data.type === 'init') {
+      debug('Got init')
       channel.postMessage({
-        type: 'update',
+        type: 'init-ack',
+        id: event.data.id,
         value: last || store.get(baseAtom),
       })
     }
@@ -109,7 +144,8 @@ export const atomWithBroadcast = <Value>(
     }
     listeners.add(listener)
     if (isMem || IS_WEB_WORKER) {
-      channel.postMessage({ type: 'init' })
+      debug('Posting init')
+      channel.postMessage({ type: 'init', id })
     }
     return () => {
       listeners.delete(listener)
