@@ -1,13 +1,13 @@
 import React from 'react'
+import { Schema, SchemaAST } from 'effect'
+import { MidiTarget } from '../../../midi/MidiTarget'
 import {
   ControllerWidget,
   ControllerWidgetTarget,
   ControllerWidgetTargets,
   ControllerWidgetType,
-  MIDIStructorPad,
-} from '@midi-structor/core'
-import { Schema, SchemaAST } from 'effect'
-import { MidiTarget } from '../../../midi/MidiTarget'
+} from '../../ControllerWidget'
+import { MIDIStructorPad } from '../MidiStructorMessage'
 
 export type OnClick = (target: MidiTarget) => void
 

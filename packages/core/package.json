@@ -28,6 +28,7 @@
   "devDependencies": {
     "@midi-structor/typescript-config": "workspace:*",
     "@types/events": "^3.0.3",
+    "dependency-cruiser": "^16.10.4",
     "madge": "^8.0.0",
     "typescript": "^5.8.3"
   },

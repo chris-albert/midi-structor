@@ -1,8 +1,9 @@
 import React from 'react'
-import { ConfiguredController, ControllerDevice } from '@midi-structor/core'
 import { ControllerWidget } from '../../ControllerWidget'
 import { MIDIStructorUIWidgets } from '../MIDIStructorUI'
 import { UIStore } from './UIStore'
+import { ControllerDevice } from '../ControllerDevice'
+import { ConfiguredController } from '../../ConfiguredController'
 
 export type ControllerUIDevice<A, Widgets extends Array<ControllerWidget>> = {
   controller: ControllerDevice<Widgets>
