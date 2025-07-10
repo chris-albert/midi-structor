@@ -34,8 +34,8 @@ const createWorker = (
   )
 
   worker.onmessage = (message) => {
-    if (_.isArray(message) && message.length == 2) {
-      const [messageType, messageData] = message
+    if (_.isArray(message.data) && message.data.length == 2) {
+      const [messageType, messageData] = message.data
       if (messageType === 'LISTENER') {
         emitter.send(messageData)
       }

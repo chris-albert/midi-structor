@@ -12,6 +12,7 @@ const createIO = (): ConfiguredControllerIO => ({
   listener: LISTENER,
   emitter: {
     send: (message) => {
+      // log.info('on message', message)
       EMITTER.emit(message)
     },
   },
@@ -23,10 +24,10 @@ onmessage = (message) => {
     if (messageType === 'INIT') {
       log.info('Loading controller', messageData)
       ControllerApp(messageData, createIO())
-    } else if (messageType === 'LISTENER') {
+    } else if (messageType === 'EMITTER') {
       LISTENER.emit(messageData)
     }
   }
 }
 
-EMITTER.on('*', (m) => postMessage(['EMITTER', m]))
+EMITTER.on('*', (m) => postMessage(['LISTENER', m]))
