@@ -1,7 +1,6 @@
 import { MidiDeviceManager } from './MidiDeviceManager'
-import ProjectWorkerMain from '../workers/project/ProjectWorkerMain?worker'
-import _ from 'lodash'
 import { DawMidi } from './DawMidi'
+import { ProjectWorker } from '../workers/project/ProjectWorker'
 
 const useMidiAllowed = () => {
   return MidiDeviceManager.state.useValue().isAllowed
@@ -15,22 +14,15 @@ let isInit = false
 const init = (manager: MidiDeviceManager) => {
   MidiDeviceManager.state.set(manager)
   if (!isInit) {
-    const PROJECT_WORKER_MAIN = new ProjectWorkerMain({ name: 'project' })
+    const projectWorker = ProjectWorker.instance()
+
     // Set up DAW Listener
     DawMidi.states.daw.listener.sub((listener) =>
-      listener.on('*', (m) =>
-        PROJECT_WORKER_MAIN.postMessage(['DAW_LISTENER', m])
-      )
+      listener.on('*', projectWorker.emitter.send)
     )
     // Set up DAW Emitter
     DawMidi.states.daw.emitter.sub((emitter) => {
-      PROJECT_WORKER_MAIN.onmessage = (event) => {
-        if (_.isArray(event.data) && event.data.length == 2) {
-          if (event.data[0] === 'DAW_EMITTER') {
-            emitter.send(event.data[1])
-          }
-        }
-      }
+      projectWorker.listener.on('*', emitter.send)
     })
     isInit = true
   }

@@ -465,6 +465,9 @@ importers:
       react-reconciler:
         specifier: 0.28.0
         version: 0.28.0(react@18.3.1)
+      web-midi-api:
+        specifier: ^2.3.9
+        version: 2.3.9
       winston:
         specifier: ^3.17.0
         version: 3.17.0
@@ -3147,6 +3150,9 @@ packages:
 
   '@types/triple-beam@1.3.5':
     resolution: {integrity: sha512-6WaYesThRMCl19iryMYP7/x2OVgCtbIVflDGFpWnb9irXI3UjYE4AzmYuiUKY1AJstGijoY+MgUszMgRxIYTYw==}
+
+  '@types/webmidi@2.1.0':
+    resolution: {integrity: sha512-k898MjEUSHB+6rSeCPQk/kLgie0wgWZ2t78GlWj86HbTQ+XmtbBafYg5LNjn8bVHfItEhPGZPf579Xfc6keV6w==}
 
   '@types/ws@8.18.0':
     resolution: {integrity: sha512-8svvI3hMyvN0kKCJMvTJP/x6Y/EoQbepff882wL+Sn5QsXb3etnamgrJq4isrBxSJj5L2AuXcI0+bgkoAXGUJw==}
@@ -6156,6 +6162,10 @@ packages:
     engines: {node: '>=10'}
     hasBin: true
 
+  jazz-midi@1.7.9:
+    resolution: {integrity: sha512-c8c4BBgwxdsIr1iVm53nadCrtH7BUlnX3V95ciK/gbvXN/ndE5+POskBalXgqlc/r9p2XUbdLTrgrC6fou5p9w==}
+    engines: {node: '>=10.0.0'}
+
   jest-changed-files@29.7.0:
     resolution: {integrity: sha512-fEArFiwf1BpQ+4bXSprcDc3/x4HSzL4al2tozwVpDFpsxALjLYdyiIK4e5Vz66GQJIbXJ82+35PtysofptNX2w==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
@@ -6423,6 +6433,9 @@ packages:
   junk@3.1.0:
     resolution: {integrity: sha512-pBxcB3LFc8QVgdggvZWyeys+hnrNWg4OcZIU/1X59k5jQdLBlCsYGRQaz234SqoRLTCgMH00fY0xRJH+F9METQ==}
     engines: {node: '>=8'}
+
+  jzz@1.9.3:
+    resolution: {integrity: sha512-DXQ7xXuJzC4YxNbQZy9pfHC/DOXM6IHgceTXnkhk1/+lU/qDk8W9xUaNpgCH6t1QDQ9roz7FSVtFc0/JhYQFxg==}
 
   keygrip@1.1.0:
     resolution: {integrity: sha512-iYSchDJ+liQ8iwbSI2QqsQOvqv58eJCEanyJPJi+Khyu8smkcKSFUCbPwzFcL7YVtZ6eONjqRX/38caJ7QjRAQ==}
@@ -9356,6 +9369,9 @@ packages:
   wcwidth@1.0.1:
     resolution: {integrity: sha512-XHPEwS0q6TaxcvG85+8EYkbiCux2XtWG2mkc47Ng2A77BQu9+DqIOJldST4HgPkuea7dvKSj5VgX3P1d4rW8Tg==}
 
+  web-midi-api@2.3.9:
+    resolution: {integrity: sha512-JYlsL3sK9mcPlW4zQx4/xoMn2E2k6Infxph3sgxE3E2zlSqFqgU1U77G0oEJ5ua9XsZ6UEXFyGinfQwTTy8tPQ==}
+
   webidl-conversions@3.0.1:
     resolution: {integrity: sha512-2JAn3z8AR6rjK8Sm8orRC0h/bcl/DqL7tRPdGZ4I1CjdF+EaMLmYxBHyXuKL849eucPFhvBoxMsflfOb8kxaeQ==}
 
@@ -10876,7 +10892,7 @@ snapshots:
       make-fetch-happen: 10.2.1
       nopt: 6.0.0
       proc-log: 2.0.1
-      semver: 7.7.1
+      semver: 7.7.2
       tar: 6.2.1
       which: 2.0.2
     transitivePeerDependencies:
@@ -11984,7 +12000,7 @@ snapshots:
   '@npmcli/fs@2.1.2':
     dependencies:
       '@gar/promisify': 1.1.3
-      semver: 7.7.1
+      semver: 7.7.2
 
   '@npmcli/move-file@2.0.1':
     dependencies:
@@ -13196,6 +13212,8 @@ snapshots:
   '@types/tough-cookie@4.0.5': {}
 
   '@types/triple-beam@1.3.5': {}
+
+  '@types/webmidi@2.1.0': {}
 
   '@types/ws@8.18.0':
     dependencies:
@@ -16902,6 +16920,8 @@ snapshots:
       filelist: 1.0.4
       minimatch: 3.1.2
 
+  jazz-midi@1.7.9: {}
+
   jest-changed-files@29.7.0:
     dependencies:
       execa: 5.1.1
@@ -17383,6 +17403,11 @@ snapshots:
       object.values: 1.2.1
 
   junk@3.1.0: {}
+
+  jzz@1.9.3:
+    dependencies:
+      '@types/webmidi': 2.1.0
+      jazz-midi: 1.7.9
 
   keygrip@1.1.0:
     dependencies:
@@ -20615,6 +20640,10 @@ snapshots:
   wcwidth@1.0.1:
     dependencies:
       defaults: 1.0.4
+
+  web-midi-api@2.3.9:
+    dependencies:
+      jzz: 1.9.3
 
   webidl-conversions@3.0.1: {}
 

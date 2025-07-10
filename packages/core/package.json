@@ -22,6 +22,7 @@
     "promise-worker": "^2.0.1",
     "react": "18.3.1",
     "react-reconciler": "0.28.0",
+    "web-midi-api": "^2.3.9",
     "winston": "^3.17.0",
     "worker-loader": "^3.0.8"
   },
