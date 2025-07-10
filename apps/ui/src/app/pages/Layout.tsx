@@ -2,13 +2,13 @@ import React from 'react'
 import { Box } from '@mui/material'
 import { Nav } from '../Nav'
 import { Outlet } from 'react-router-dom'
-import { Midi } from '@midi-structor/core'
+import { MidiDeviceManager } from '@midi-structor/core'
 import { NoMidiAccessPage } from './NoMidiAccessPage'
 
 export type LayoutProps = {}
 
 export const Layout: React.FC<LayoutProps> = ({}) => {
-  const isAllowed = Midi.useMidiAllowed()
+  const isAllowed = MidiDeviceManager.useMidiAllowed()
 
   return (
     <Box sx={{ height: '100%' }}>

@@ -6,6 +6,7 @@ import { ConfiguredController } from './ConfiguredController'
 import hash from 'object-hash'
 import { MidiEmitter } from '../midi/MidiEmitter'
 import { MidiListener } from '../midi/MidiListener'
+import { log } from '../logger/log'
 
 export type ControllerInstance = {
   underlying: Controller
@@ -23,7 +24,9 @@ const create = (
   emitter: MidiEmitter,
   listener: MidiListener
 ): ControllerInstance => {
-  // console.log('controller.create', name)
+  const debug = log.enabled(false, log.info)
+
+  debug('controller.create', name)
   let cleanupListener = () => {}
   let cleanupLoading = () => {}
   let initCalled = false
@@ -41,7 +44,7 @@ const create = (
 
   const init = (widgets: Array<ResolvedControllerWidget>) => {
     if (!initCalled) {
-      // console.log('controller.init', name)
+      debug('controller.init', name)
       controller.init(emitter)(widgets)
       cleanupLoading = controller.loading(emitter)(controller)
       initCalled = true
@@ -49,12 +52,12 @@ const create = (
   }
 
   const loaded = () => {
-    // console.log('controller.loaded', name)
+    debug('controller.loaded', name)
     cleanupLoading()
   }
 
   const on = (f: (m: MidiMessage) => void) => {
-    // console.log('controller.on', name)
+    debug('controller.on', name)
     cleanupListener = listener.on('*', (m) => {
       if (controller.listenFilter(m)) {
         f(m)
@@ -63,7 +66,7 @@ const create = (
   }
 
   const off = () => {
-    // console.log('controller.off', name)
+    debug('controller.off', name)
     cleanupListener()
   }
 

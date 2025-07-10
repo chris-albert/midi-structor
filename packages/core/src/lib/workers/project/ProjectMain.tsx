@@ -14,11 +14,9 @@ import {
   initTrack,
 } from '../../project/UIStateDisplay'
 import { ProjectState } from '../../state/ProjectState'
-import _ from 'lodash'
 import { Option } from 'effect'
 import { ControllerDevices } from '../../controllers/devices/ControllerDevices'
 import { Set } from 'immutable'
-import { DefaultProjectConfig } from '../../project/DefaultProjectConfig'
 import { log } from '../../logger/log'
 
 const listener = (dawListener: EventEmitter<MidiEventRecord>) => {
@@ -86,10 +84,6 @@ const handshake = (
   })
 }
 
-const getActiveProjectConfig = (projects: ProjectsConfig): ProjectConfig =>
-  _.find(projects.projects, (p) => p.key === projects.active) ||
-  DefaultProjectConfig()
-
 const getTracks = (config: ProjectConfig): Array<string> => {
   const widgets = config.controllers.flatMap((controller) =>
     Option.match(ControllerDevices.findByName(controller.device), {
@@ -105,14 +99,21 @@ const init = (
   dawEmitter: EventEmitter<MidiEventRecord>
 ) => {
   log.info('Project Main')
-  ProjectState.project.config.sub((projects) => {
-    const activeProject = getActiveProjectConfig(projects)
-    log.info('Active project', activeProject)
-    if (activeProject.key !== 'reload-project') {
-      const tracks = getTracks(activeProject)
-      return handshake(dawEmitter, tracks)
-    }
-  })
+  ProjectState.project.config.sub((projects) =>
+    Option.match(ProjectsConfig.getActive(projects), {
+      onSome: (activeProject) => {
+        log.info('Active project', activeProject)
+        if (activeProject.key !== 'reload-project') {
+          const tracks = getTracks(activeProject)
+          return handshake(dawEmitter, tracks)
+        }
+      },
+      onNone: () => {
+        log.error('No active project found', projects)
+        return () => {}
+      },
+    })
+  )
   listener(dawListener)
 }
 

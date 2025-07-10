@@ -149,7 +149,6 @@ const useMidiDeviceSelection = (
 export type ConfiguredControllerIO = {
   emitter: MidiEmitter
   listener: MidiListener
-  enabled: boolean
 }
 
 const useRealIO = (
@@ -180,7 +179,6 @@ const useRealIO = (
   return {
     emitter,
     listener,
-    enabled: controller.enabled,
   }
 }
 
@@ -211,12 +209,13 @@ const useVirtualIO = (
       },
     },
     listener,
-    enabled: controller.enabled,
   }
 }
 
-const useIO = (controller: ConfiguredController) => {
-  const real = useRealIO(controller)
+const useIO = (
+  controller: ConfiguredController,
+  real: ConfiguredControllerIO
+) => {
   const virtual = useVirtualIO(controller)
 
   const emitter: MidiEmitter = {
@@ -236,7 +235,6 @@ const useIO = (controller: ConfiguredController) => {
   return {
     emitter,
     listener,
-    enabled: controller.enabled,
   }
 }
 

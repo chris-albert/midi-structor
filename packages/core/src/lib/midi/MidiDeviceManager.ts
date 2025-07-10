@@ -90,9 +90,12 @@ const states = {
 
 const useDeviceManager = () => states.deviceManager.useValue()
 
+const useMidiAllowed = () => useDeviceManager().isAllowed
+
 export const MidiDeviceManager = {
   empty,
   build,
   state: states.deviceManager,
   use: useDeviceManager,
+  useMidiAllowed,
 }

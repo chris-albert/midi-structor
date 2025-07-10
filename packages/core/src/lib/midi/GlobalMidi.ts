@@ -2,10 +2,6 @@ import { MidiDeviceManager } from './MidiDeviceManager'
 import { DawMidi } from './DawMidi'
 import { ProjectWorker } from '../workers/project/ProjectWorker'
 
-const useMidiAllowed = () => {
-  return MidiDeviceManager.state.useValue().isAllowed
-}
-
 const runInit = () => {
   DawMidi.init()
 }
@@ -31,5 +27,4 @@ const init = (manager: MidiDeviceManager) => {
 
 export const Midi = {
   init,
-  useMidiAllowed,
 }
