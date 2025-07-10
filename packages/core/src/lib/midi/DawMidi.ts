@@ -93,12 +93,30 @@ const useMidiDevices = (deviceType: MidiDeviceType): MidiDeviceSelection => {
   }
 }
 
+let BROADCAST: BroadcastChannel | undefined = undefined
+const getChannel = (): BroadcastChannel => {
+  if (BROADCAST === undefined) {
+    BROADCAST = new BroadcastChannel('project:daw')
+  }
+  return BROADCAST
+}
+
+const useDawEmitter = (): MidiEmitter => {
+  const channel = getChannel()
+  return {
+    send: (message) => {
+      channel.postMessage(message)
+    },
+  }
+}
+
 export const DawMidi = {
   init,
   useMidiDevices,
   setSelected,
   getSelected,
   states,
-  useDawEmitter: () => states.daw.emitter.useValue(),
+  getChannel,
+  useDawEmitter,
   useDawListener: () => states.daw.listener.useValue(),
 }

@@ -18,6 +18,9 @@ import { Option } from 'effect'
 import { ControllerDevices } from '../../controllers/devices/ControllerDevices'
 import { Set } from 'immutable'
 import { log } from '../../logger/log'
+import { MidiEmitter } from '../../midi/MidiEmitter'
+import { DawMidi } from '../../midi/DawMidi'
+import { MidiMessage } from '../../midi/MidiMessage'
 
 const listener = (dawListener: EventEmitter<MidiEventRecord>) => {
   const onAbletonUIMessage = (msg: AbletonUIMessage) => {
@@ -114,6 +117,9 @@ const init = (
       },
     })
   )
+  DawMidi.getChannel().onmessage = (message) => {
+    dawEmitter.emit(message.data as MidiMessage)
+  }
   listener(dawListener)
 }
 
