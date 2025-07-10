@@ -233,28 +233,6 @@ const messagesFromSysex = (
   return colors
 }
 
-// const messagesFromSysex = (
-//   sysex: SysExMessage
-// ): Array<[string, LaunchPadMiniMessage]> => {
-//   const colors: Array<[string, LaunchPadMiniMessage]> = []
-//   const colorsArray = sysex.body.slice(5)
-//   while (colorsArray.length >= 2) {
-//     colorsArray.shift()
-//     const target = colorsArray.shift()
-//     const value = colorsArray.shift() || 0
-//     const color = NovationColors.REVERSE_CLIP_COLOR_TABLE[value]
-//     console.log('value', value, color)
-//     // @ts-ignore
-//     // const color = Color.fromRGB(red * 2, green * 2, blue * 2)
-//     colors.push([
-//       // @ts-ignore
-//       MidiTarget.toKey(getTargetFromNum(target)),
-//       { type: 'color', color: color || 0 },
-//     ])
-//   }
-//   return colors
-// }
-
 const useStore: UIStore<LaunchPadMiniMessage> = (name) => {
   const setStore = useSetAtom(atomStore(name))
   return {

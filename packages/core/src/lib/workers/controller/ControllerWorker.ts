@@ -14,9 +14,9 @@ const createWorker = (
   controller: ConfiguredController,
   manager: MidiDeviceManager
 ) => {
-  const worker = new ControllerWorkerMain({
-    name: `controller:${project.key}:${controller.name}`,
-  })
+  const name = `controller:${project.key}:${controller.name}`
+  const worker = new ControllerWorkerMain({ name })
+  log.info('Creating controller worker', name)
   worker.postMessage(['INIT', controller])
 
   // Wire up listener

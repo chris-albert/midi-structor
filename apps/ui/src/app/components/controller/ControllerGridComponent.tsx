@@ -29,7 +29,7 @@ export const ControllerGridComponent: React.FC<
 > = ({ controllerUI, controller, device }) => {
   const buttonSize = 75
   const padStore = device.useStore(controller.name).useGet()
-  const listener = ConfiguredControllerHooks.useVirtualListener(controller)
+  const emitter = ConfiguredControllerHooks.useVirtualEmitter(controller)
 
   const pads: Array<Array<PadWithState>> = React.useMemo(() => {
     return controllerUI.pads.map((padRow, ri) =>
@@ -41,7 +41,7 @@ export const ControllerGridComponent: React.FC<
   }, [padStore, controllerUI.pads])
 
   const onClick = (pad: ControllerPad) => {
-    listener.emit(MidiTarget.toMessage(pad.target, 127))
+    emitter.send(MidiTarget.toMessage(pad.target, 127))
   }
 
   return (

@@ -12,7 +12,6 @@ const createIO = (): ConfiguredControllerIO => ({
   listener: LISTENER,
   emitter: {
     send: (message) => {
-      // log.info('on message', message)
       EMITTER.emit(message)
     },
   },

@@ -6,7 +6,6 @@ import { ProjectHooks } from '../project/ProjectHooks'
 import { ControllerDevices } from './devices/ControllerDevices'
 import { Set } from 'immutable'
 import React from 'react'
-import { ControllerUIDevices } from './devices/ui/ControllerUIDevices'
 import { MidiMessage } from '../midi/MidiMessage'
 import { ConfiguredController } from './ConfiguredController'
 import { MidiListener } from '../midi/MidiListener'
@@ -182,32 +181,29 @@ const useRealIO = (
   }
 }
 
-const useUIStore = (controller: ConfiguredController) => {
-  return ControllerUIDevices.useDevices()
-    .getByName(controller.device)
-    .useStore(controller.name)
-}
+const useVirtualListener = (controller: ConfiguredController): MidiListener =>
+  React.useMemo(
+    () => EventEmitterWithBroadcast(`${controller.id}:listener`),
+    [controller.id]
+  )
 
-const useVirtualListener = (
-  controller: ConfiguredController
-): EventEmitter<MidiEventRecord> => {
-  return React.useMemo(() => {
-    return EventEmitterWithBroadcast(controller.id)
-  }, [controller.id])
-}
+const useVirtualEmitter = (controller: ConfiguredController): MidiEmitter =>
+  React.useMemo(
+    () =>
+      MidiEmitter.fromEventEmitter(
+        EventEmitterWithBroadcast(`${controller.id}:emitter`)
+      ),
+    [controller.id]
+  )
 
 const useVirtualIO = (
   controller: ConfiguredController
 ): ConfiguredControllerIO => {
-  const putMessage = useUIStore(controller).usePut()
+  const emitter = useVirtualEmitter(controller)
   const listener = useVirtualListener(controller)
 
   return {
-    emitter: {
-      send: (message: MidiMessage) => {
-        putMessage(message)
-      },
-    },
+    emitter,
     listener,
   }
 }
@@ -249,6 +245,7 @@ export const ConfiguredControllerHooks = {
   useRealIO,
   useVirtualIO,
   useVirtualListener,
+  useVirtualEmitter,
   useListeners,
   useRealController,
   useMidiDeviceSelection,
