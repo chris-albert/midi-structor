@@ -1,7 +1,10 @@
 import { Option, pipe } from 'effect'
 import { State } from '../state/State'
 import { EventEmitter, EventEmitterWithBroadcast } from '../EventEmitter'
-import { MidiEventRecord } from '../midi/MidiDevice'
+import {
+  MidiEventEmitterWithBroadcast,
+  MidiEventRecord,
+} from '../midi/MidiDevice'
 import { ProjectHooks } from '../project/ProjectHooks'
 import { ControllerDevices } from './devices/ControllerDevices'
 import { Set } from 'immutable'
@@ -155,8 +158,6 @@ const useRealIO = (
 ): ConfiguredControllerIO => {
   const manager = MidiDeviceManager.use()
 
-  log.info('useRealIO', controller, manager)
-
   const listener = React.useMemo(
     () =>
       Option.getOrElse(
@@ -181,26 +182,29 @@ const useRealIO = (
   }
 }
 
-const useVirtualListener = (controller: ConfiguredController): MidiListener =>
+const useVirtualListener = (
+  controller: ConfiguredController
+): MidiEventEmitterWithBroadcast =>
   React.useMemo(
-    () => ConfiguredController.virtualListener(controller).listener,
+    () => ConfiguredController.virtualListener(controller),
     [controller.id]
   )
 
-const useVirtualEmitter = (controller: ConfiguredController): MidiEmitter =>
+const useVirtualEmitter = (
+  controller: ConfiguredController
+): MidiEventEmitterWithBroadcast =>
   React.useMemo(
-    () =>
-      MidiEmitter.fromEventEmitter(
-        ConfiguredController.virtualEmitter(controller).emitter
-      ),
+    () => ConfiguredController.virtualEmitter(controller),
     [controller.id]
   )
 
 const useVirtualIO = (
   controller: ConfiguredController
 ): ConfiguredControllerIO => {
-  const emitter = useVirtualEmitter(controller)
-  const listener = useVirtualListener(controller)
+  const emitter = MidiEmitter.fromEventEmitter(
+    useVirtualEmitter(controller).emitter
+  )
+  const listener = useVirtualListener(controller).listener
 
   return {
     emitter,

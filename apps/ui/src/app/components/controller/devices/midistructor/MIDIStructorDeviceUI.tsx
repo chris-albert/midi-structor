@@ -10,6 +10,7 @@ import {
   MIDIStructorUIWidgets,
   ControllerConfigOps,
   MidiStructorStore,
+  MidiEmitter,
 } from '@midi-structor/core'
 import { MidiStructorComponent } from './MidiStructorComponent'
 import { Box } from '@mui/material'
@@ -25,8 +26,9 @@ type MIDIStructorDeviceUIComponentProps = {
 const MIDIStructorDeviceUIComponent: React.FC<
   MIDIStructorDeviceUIComponentProps
 > = ({ configuredController, setWidgets }) => {
-  const midiEmitter =
-    ConfiguredControllerHooks.useVirtualEmitter(configuredController)
+  const midiEmitter = MidiEmitter.fromEventEmitter(
+    ConfiguredControllerHooks.useVirtualListener(configuredController).emitter
+  )
   const store = MidiStructorStore.uiStore(configuredController.name).useGet()
   const [editWidgets, setEditWidgets] = React.useState(false)
 
