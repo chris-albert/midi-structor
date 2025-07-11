@@ -18,7 +18,6 @@ export const ControllersComponent: React.FC<
   ControllersComponentProps
 > = ({}) => {
   const controllers = ConfiguredControllerHooks.useControllerStates()
-  const projectStyle = ProjectHooks.useProjectStyle()
   const isReloadProject = ProjectHooks.useIsReloadProject()
 
   if (isReloadProject) {
@@ -41,13 +40,6 @@ export const ControllersComponent: React.FC<
         <TabsComponent
           orientation='vertical'
           tabs={controllersTabs}
-          // slotProps={{
-          //   tabs: {
-          //     sx: {
-          //       background: projectStyle.leftVerticalGradient,
-          //     },
-          //   },
-          // }}
         />
       </Box>
     )

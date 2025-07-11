@@ -1,9 +1,6 @@
 import { ControllerUIDevice } from './ControllerUIDevice'
 import { Option } from 'effect'
 import _ from 'lodash'
-import { atom, getDefaultStore, useAtomValue } from 'jotai'
-
-const store = getDefaultStore()
 
 export type ControllerUIDevices = {
   findByName: (name: string) => Option.Option<ControllerUIDevice<any, any>>
@@ -15,8 +12,7 @@ const emptyDevices: ControllerUIDevices = {
   getByName: (name: string) => ControllerUIDevice.emptyDevice,
 }
 
-const devicesAtom = atom<ControllerUIDevices>(emptyDevices)
-
+let DEVICES: ControllerUIDevices = emptyDevices
 const init = (all: Array<ControllerUIDevice<any, any>>) => {
   const lookup: Record<string, ControllerUIDevice<any, any>> = _.keyBy(
     all,
@@ -33,10 +29,10 @@ const init = (all: Array<ControllerUIDevice<any, any>>) => {
       onSome: (d) => d,
       onNone: () => ControllerUIDevice.emptyDevice,
     })
-
-  store.set(devicesAtom, { findByName, getByName })
+  DEVICES = { findByName, getByName }
 }
 
-const useDevices = () => useAtomValue(devicesAtom)
+const get = () => DEVICES
+const useDevices = () => DEVICES
 
-export const ControllerUIDevices = { init, useDevices }
+export const ControllerUIDevices = { init, useDevices, get }

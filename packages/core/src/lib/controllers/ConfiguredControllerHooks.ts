@@ -183,7 +183,7 @@ const useRealIO = (
 
 const useVirtualListener = (controller: ConfiguredController): MidiListener =>
   React.useMemo(
-    () => EventEmitterWithBroadcast(`${controller.id}:listener`),
+    () => ConfiguredController.virtualListener(controller).listener,
     [controller.id]
   )
 
@@ -191,7 +191,7 @@ const useVirtualEmitter = (controller: ConfiguredController): MidiEmitter =>
   React.useMemo(
     () =>
       MidiEmitter.fromEventEmitter(
-        EventEmitterWithBroadcast(`${controller.id}:emitter`)
+        ConfiguredController.virtualEmitter(controller).emitter
       ),
     [controller.id]
   )

@@ -27,7 +27,7 @@ const MIDIStructorDeviceUIComponent: React.FC<
 > = ({ configuredController, setWidgets }) => {
   const midiEmitter =
     ConfiguredControllerHooks.useVirtualEmitter(configuredController)
-  const store = MidiStructorStore.useStore(configuredController.name).useGet()
+  const store = MidiStructorStore.uiStore(configuredController.name).useGet()
   const [editWidgets, setEditWidgets] = React.useState(false)
 
   const updateWidgets: MIDIStructorUIWidgetsUpdate = (widgets) => {
@@ -82,7 +82,7 @@ export const MIDIStructorDeviceUI = ControllerUIDevice.of({
       />
     )
   },
-  useStore: MidiStructorStore.useStore,
+  uiStore: MidiStructorStore.uiStore,
 })
 
 export type MIDIStructorDeviceUI = typeof MIDIStructorDeviceUI

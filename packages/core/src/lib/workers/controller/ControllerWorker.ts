@@ -8,6 +8,8 @@ import { ConfiguredController } from '../../controllers/ConfiguredController'
 import { MidiDeviceManager } from '../../midi/MidiDeviceManager'
 import { MidiListener } from '../../midi/MidiListener'
 import { MidiEmitter } from '../../midi/MidiEmitter'
+import { ControllerDevices } from '../../controllers/devices/ControllerDevices'
+import { ControllerUIDevices } from '../../controllers/devices/ui/ControllerUIDevices'
 
 const createWorker = (
   project: ProjectConfig,
@@ -45,6 +47,19 @@ const createWorker = (
   return worker
 }
 
+const setupVirtualController = (controller: ConfiguredController) => {
+  const emitter = ConfiguredController.virtualEmitter(controller).listener
+  const putStore = ControllerUIDevices.get()
+    .getByName(controller.device)
+    .uiStore(controller.id)
+    .put()
+  emitter.on('*', putStore)
+}
+
+const setupVirtualControllers = (project: ProjectConfig) => {
+  _.forEach(project.controllers, setupVirtualController)
+}
+
 const loadProject = (project: ProjectConfig): (() => void) => {
   const manager = MidiDeviceManager.state.get()
   log.info('Loading Controllers for project', project)
@@ -52,6 +67,8 @@ const loadProject = (project: ProjectConfig): (() => void) => {
   const controllerWorkers = _.map(project.controllers, (controller) =>
     createWorker(project, controller, manager)
   )
+
+  setupVirtualControllers(project)
 
   return () => {
     log.info('Cleaning up Controllers for project', project)

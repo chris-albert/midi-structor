@@ -2,6 +2,8 @@ import { Option, Schema } from 'effect'
 import { ControllerConfig } from './ControllerConfig'
 import { v4 } from 'uuid'
 import { ControllerConfigOps } from './ControllerConfigOps'
+import { EventEmitterWithBroadcast } from '../EventEmitter'
+import { MidiEventEmitterWithBroadcast } from '../midi/MidiDevice'
 
 const ConfiguredControllerSchema = Schema.Struct({
   id: Schema.String,
@@ -33,8 +35,20 @@ const defaultConfiguredController = (name: string): ConfiguredController => ({
   id: v4(),
 })
 
+const virtualListener = (
+  controller: ConfiguredController
+): MidiEventEmitterWithBroadcast =>
+  EventEmitterWithBroadcast(`${controller.id}:listener`)
+
+const virtualEmitter = (
+  controller: ConfiguredController
+): MidiEventEmitterWithBroadcast =>
+  EventEmitterWithBroadcast(`${controller.id}:emitter`)
+
 export const ConfiguredController = {
   Schema: ConfiguredControllerSchema,
   SchemaArray: ConfiguredControllersSchema,
   defaultConfiguredController,
+  virtualListener,
+  virtualEmitter,
 }

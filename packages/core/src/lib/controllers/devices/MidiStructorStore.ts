@@ -1,15 +1,11 @@
 import { UIMessageStore, UIStore } from './ui/UIStore'
-import { atomFamily } from 'jotai/utils'
 import { MidiMessage, SysExMessage } from '../../midi/MidiMessage'
-import { atom, useAtomValue, useSetAtom } from 'jotai'
 import { MidiTarget } from '../../midi/MidiTarget'
 import { Either } from 'effect'
 import { MIDIStructorMessage } from './MidiStructorMessage'
 import { MidiStructorMidi } from './MidiStructorMidi'
 
 export type MIDIStructorStore = UIMessageStore<MIDIStructorMessage>
-
-const atomStore = atomFamily((name: string) => atom<MIDIStructorStore>({}))
 
 const parseMessage = (sysex: SysExMessage): any => {
   return Either.match(
@@ -32,20 +28,23 @@ const parseMessage = (sysex: SysExMessage): any => {
   )
 }
 
-const useStore: UIStore<MIDIStructorMessage> = (name) => {
-  const setStore = useSetAtom(atomStore(name))
+const MidiStructorMessageStore = UIStore.state<MIDIStructorMessage>()
+
+const uiStore: UIStore<MIDIStructorMessage> = (name) => {
+  const store = MidiStructorMessageStore(name)
+  const setStore = store.set
   return {
-    usePut: () => (m: MidiMessage) => {
+    put: () => (m: MidiMessage) => {
       if (m.type === 'sysex') {
         if (m.body[0] === MidiStructorMidi.sysexControlCode) {
           setStore((s) => ({ ...s, ...parseMessage(m) }))
         }
       }
     },
-    useGet: () => useAtomValue(atomStore(name)),
+    useGet: () => store.useValue(),
   }
 }
 
 export const MidiStructorStore = {
-  useStore,
+  uiStore,
 }

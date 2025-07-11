@@ -15,6 +15,8 @@ import {
   UIStore,
   ConfiguredController,
   NovationColors,
+  State,
+  log,
 } from '@midi-structor/core'
 import { ControllerPad, ControllerUI, midiFromRowCol } from '../ControllerUI'
 import React from 'react'
@@ -233,10 +235,13 @@ const messagesFromSysex = (
   return colors
 }
 
-const useStore: UIStore<LaunchPadMiniMessage> = (name) => {
-  const setStore = useSetAtom(atomStore(name))
+const LaunchPadMessageStore = UIStore.state<LaunchPadMiniMessage>()
+
+const uiStore: UIStore<LaunchPadMiniMessage> = (name) => {
+  const store = LaunchPadMessageStore(name)
+  const setStore = store.set
   return {
-    usePut: () => (m: MidiMessage) => {
+    put: () => (m: MidiMessage) => {
       if (m.type === 'sysex') {
         if (_.isEqual(m.body.slice(0, 5), [32, 41, 2, 13, 3])) {
           const messages = messagesFromSysex(m)
@@ -248,7 +253,7 @@ const useStore: UIStore<LaunchPadMiniMessage> = (name) => {
         }
       }
     },
-    useGet: () => useAtomValue(atomStore(name)),
+    useGet: () => store.useValue(),
   }
 }
 
@@ -263,5 +268,5 @@ export const LaunchPadMiniMk3UI = ControllerUIDevice.of({
       />
     )
   },
-  useStore,
+  uiStore,
 })

@@ -30,27 +30,36 @@ export type EventRecord<A extends { type: string }> = {
   '*': A
 }
 
-const EMITTER_CACHE: Record<string, EventEmitter<any>> = {}
+export type EventEmitterWithBroadcast<A> = {
+  emitter: EventEmitter<A>
+  listener: EventEmitter<A>
+}
+
+const EMITTER_CACHE: Record<string, EventEmitterWithBroadcast<any>> = {}
 
 export const EventEmitterWithBroadcast = <
   A extends Record<any, { type: string }>
 >(
   name: string
-): EventEmitter<A> => {
+): EventEmitterWithBroadcast<A> => {
   const cached = EMITTER_CACHE[name]
   if (cached === undefined) {
     const emitter = EventEmitter<A>()
+    const listener = EventEmitter<A>()
     const channel = new BroadcastChannel(name)
 
     channel.onmessage = (event) => {
-      emitter.emit(event.data)
+      listener.emit(event.data)
     }
 
     emitter.on('*', (data) => {
       channel.postMessage(data)
     })
-    EMITTER_CACHE[name] = emitter
-    return emitter
+
+    const result = { emitter, listener }
+
+    EMITTER_CACHE[name] = result
+    return result
   } else {
     return cached
   }

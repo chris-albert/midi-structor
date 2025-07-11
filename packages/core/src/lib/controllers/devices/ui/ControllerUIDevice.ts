@@ -12,29 +12,29 @@ export type ControllerUIDevice<A, Widgets extends Array<ControllerWidget>> = {
     device: ControllerUIDevice<A, Widgets>,
     setWidgets: (w: MIDIStructorUIWidgets) => void
   ) => React.ReactElement
-  useStore: UIStore<A>
+  uiStore: UIStore<A>
 }
 
 const of = <A, Widgets extends Array<ControllerWidget>>(
-  device: Omit<ControllerUIDevice<A, Widgets>, 'useStore'> & {
-    useStore?: UIStore<A>
+  device: Omit<ControllerUIDevice<A, Widgets>, 'uiStore'> & {
+    uiStore?: UIStore<A>
   }
 ): ControllerUIDevice<A, Widgets> => ({
-  useStore: device.useStore || dummyStore(),
+  uiStore: device.uiStore || dummyStore(),
   ...device,
 })
 
 const dummyStore =
   <A>(): UIStore<A> =>
   () => ({
-    usePut: () => (m) => {},
+    put: () => (m) => {},
     useGet: () => ({}),
   })
 
 const emptyDevice: ControllerUIDevice<{}, []> = {
   controller: ControllerDevice.empty,
   component: (c: ConfiguredController) => React.createElement('div'),
-  useStore: dummyStore<{}>(),
+  uiStore: dummyStore<{}>(),
 }
 
 export const ControllerUIDevice = {

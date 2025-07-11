@@ -28,7 +28,12 @@ export const ControllerGridComponent: React.FC<
   ControllerGridComponentProps
 > = ({ controllerUI, controller, device }) => {
   const buttonSize = 75
-  const padStore = device.useStore(controller.name).useGet()
+  const store = React.useMemo(
+    () => device.uiStore(controller.id),
+    [controller.id]
+  )
+  const padStore = store.useGet()
+  // console.log('padStore', padStore)
   const emitter = ConfiguredControllerHooks.useVirtualEmitter(controller)
 
   const pads: Array<Array<PadWithState>> = React.useMemo(() => {

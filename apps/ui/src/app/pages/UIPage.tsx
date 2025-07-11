@@ -6,10 +6,10 @@ import { Box } from '@mui/material'
 export type UIPageProps = {}
 
 export const UIPage: React.FC<UIPageProps> = ({}) => {
-  const store = MidiStructorStore.useStore('global:MIDIStructorUI')
+  const store = MidiStructorStore.uiStore('global:MIDIStructorUI')
   const emitter = DawMidi.useDawEmitter()
   const dawListener = DawMidi.useDawListener()
-  const onMidiStructor = store.usePut()
+  const onMidiStructor = store.put()
 
   React.useEffect(() => {
     return dawListener.on('sysex', onMidiStructor)
