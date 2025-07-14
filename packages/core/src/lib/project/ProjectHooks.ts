@@ -8,6 +8,7 @@ import { ProjectConfig } from './ProjectConfig'
 import { ProjectImportStatus, ProjectState } from '../state/ProjectState'
 import { State } from '../state/State'
 import { DefaultProjectConfig } from './DefaultProjectConfig'
+import { ControllerWorker } from '../workers/controller/ControllerWorker'
 
 const isClipActive = (clip: UIClip, beat: number): boolean => {
   return (
@@ -180,23 +181,10 @@ const useOnProjectLoad = () => {
   }
 }
 
-const RELOAD_PROJECT = 'reload-project'
-
 const useRefreshProject = () => {
-  const setActiveProject = useSetActiveProject()
-
   return () => {
-    setActiveProject((currentProject) => {
-      setTimeout(() => {
-        setActiveProject(currentProject)
-      }, 500)
-      return RELOAD_PROJECT
-    })
+    ControllerWorker.sendReloadRequest()
   }
-}
-
-const useIsReloadProject = () => {
-  return ProjectHooks.useActiveProjectName() === RELOAD_PROJECT
 }
 
 export const ProjectHooks = {
@@ -229,5 +217,4 @@ export const ProjectHooks = {
   useOnProjectLoad,
   useIsProjectLoading,
   useRefreshProject,
-  useIsReloadProject,
 }

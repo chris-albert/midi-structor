@@ -1,4 +1,5 @@
 import { EventEmitter as NodeEventEmitter } from 'events'
+import { log } from './logger/log'
 
 export type EventEmitter<A> = {
   on: <N extends keyof A & string>(n: N, f: (a: A[N]) => void) => () => void
@@ -35,32 +36,26 @@ export type EventEmitterWithBroadcast<A> = {
   listener: EventEmitter<A>
 }
 
-const EMITTER_CACHE: Record<string, EventEmitterWithBroadcast<any>> = {}
-
 export const EventEmitterWithBroadcast = <
   A extends Record<any, { type: string }>
 >(
   name: string
 ): EventEmitterWithBroadcast<A> => {
-  const cached = EMITTER_CACHE[name]
-  if (cached === undefined) {
-    const emitter = EventEmitter<A>()
-    const listener = EventEmitter<A>()
-    const channel = new BroadcastChannel(name)
+  // const debug = log.enabled(name === 'controller:worker', log.info)
+  const debug = log.enabled(false, log.info)
+  const emitter = EventEmitter<A>()
+  const listener = EventEmitter<A>()
+  const channel = new BroadcastChannel(name)
 
-    channel.onmessage = (event) => {
-      listener.emit(event.data)
-    }
-
-    emitter.on('*', (data) => {
-      channel.postMessage(data)
-    })
-
-    const result = { emitter, listener }
-
-    EMITTER_CACHE[name] = result
-    return result
-  } else {
-    return cached
+  channel.onmessage = (event) => {
+    debug('Received message', event)
+    listener.emit(event.data)
   }
+
+  emitter.on('*', (data) => {
+    debug('Emitting event', data)
+    channel.postMessage(data)
+  })
+
+  return { emitter, listener }
 }

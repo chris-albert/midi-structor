@@ -18,9 +18,9 @@ import { Option } from 'effect'
 import { ControllerDevices } from '../../controllers/devices/ControllerDevices'
 import { Set } from 'immutable'
 import { log } from '../../logger/log'
-import { MidiEmitter } from '../../midi/MidiEmitter'
 import { DawMidi } from '../../midi/DawMidi'
 import { MidiMessage } from '../../midi/MidiMessage'
+import _ from 'lodash'
 
 const listener = (dawListener: EventEmitter<MidiEventRecord>) => {
   const onAbletonUIMessage = (msg: AbletonUIMessage) => {
@@ -97,6 +97,24 @@ const getTracks = (config: ProjectConfig): Array<string> => {
   return Set(widgets.flatMap((widget) => widget.tracks())).toArray()
 }
 
+let HANDSHAKE_CLEANUP: (() => void) | void | undefined = undefined
+let TRACKS: Array<string> = []
+
+const setupProject = (
+  project: ProjectConfig,
+  dawEmitter: EventEmitter<MidiEventRecord>
+) => {
+  const tracks = getTracks(project)
+  if (!_.isEqual(TRACKS, tracks)) {
+    log.info('Tracks were not equal, reloading project...')
+    TRACKS = tracks
+    HANDSHAKE_CLEANUP = handshake(dawEmitter, tracks)
+  } else {
+    log.info('Tracks were the same, doing nothing here...')
+  }
+  return HANDSHAKE_CLEANUP
+}
+
 const init = (
   dawListener: EventEmitter<MidiEventRecord>,
   dawEmitter: EventEmitter<MidiEventRecord>
@@ -106,10 +124,7 @@ const init = (
     Option.match(ProjectsConfig.getActive(projects), {
       onSome: (activeProject) => {
         log.info('Active project', activeProject)
-        if (activeProject.key !== 'reload-project') {
-          const tracks = getTracks(activeProject)
-          return handshake(dawEmitter, tracks)
-        }
+        return setupProject(activeProject, dawEmitter)
       },
       onNone: () => {
         log.error('No active project found', projects)

@@ -8,8 +8,19 @@ import { ConfiguredController } from '../../controllers/ConfiguredController'
 import { MidiDeviceManager } from '../../midi/MidiDeviceManager'
 import { MidiListener } from '../../midi/MidiListener'
 import { MidiEmitter } from '../../midi/MidiEmitter'
-import { ControllerDevices } from '../../controllers/devices/ControllerDevices'
 import { ControllerUIDevices } from '../../controllers/devices/ui/ControllerUIDevices'
+import { EventEmitterWithBroadcast, EventRecord } from '../../EventEmitter'
+
+type ReloadControllerWorker = {
+  type: 'RELOAD_CONTROLLERS'
+}
+
+type ControllerWorkerMessage = ReloadControllerWorker
+
+const ControllerChannel = () =>
+  EventEmitterWithBroadcast<EventRecord<ControllerWorkerMessage>>(
+    'controller:worker'
+  )
 
 const createWorker = (
   project: ProjectConfig,
@@ -54,13 +65,6 @@ const setupVirtualController = (controller: ConfiguredController) => {
     .uiStore(controller.id)
     .put()
   emitter.on('*', putStore)
-  // emitter.on('*', (m) => {
-  //   if (controller.name === 'UI') {
-  //     log.info('UI Message', m)
-  //   }
-  //
-  //   putStore(m)
-  // })
 }
 
 const setupVirtualControllers = (project: ProjectConfig) => {
@@ -95,10 +99,19 @@ const init = () => {
         },
       })
     )
+    ControllerChannel().listener.on('RELOAD_CONTROLLERS', () => {
+      ProjectState.project.config.set((s) => _.cloneDeep(s))
+    })
     isInit = true
   }
 }
 
+const sendReloadRequest = () => {
+  log.info('Sending reload request...')
+  ControllerChannel().emitter.emit({ type: 'RELOAD_CONTROLLERS' })
+}
+
 export const ControllerWorker = {
   init,
+  sendReloadRequest,
 }

@@ -11,6 +11,11 @@ type Update<A> = {
   value: A
 }
 
+type UpdateRequest<A> = {
+  type: 'update-request'
+  value: A
+}
+
 type Init = {
   type: 'init'
   id: string
@@ -22,7 +27,7 @@ type InitAck<A> = {
   value: A
 }
 
-type Event<A> = Update<A> | Init | InitAck<A>
+type Event<A> = Update<A> | UpdateRequest<A> | Init | InitAck<A>
 
 export function atomWithBroadcastVanilla<Value>(
   key: string,
@@ -87,7 +92,6 @@ export function atomWithBroadcastVanilla<Value>(
  * we can have multiple `borrowers`, we need to only listen for `init` events
  * tagged with our `id.
  *
- *
  */
 export const atomWithBroadcast = <Value>(
   owner: ProcessType,
@@ -101,7 +105,6 @@ export const atomWithBroadcast = <Value>(
     !isMem && ProcessManager.isMain
       ? AtomStorage.atom(key, initialValue)
       : atom(initialValue)
-  const listeners = new Set<(event: MessageEvent<Event<Value>>) => void>()
   const channel = new BroadcastChannel(key)
   const id = v4()
 
@@ -123,20 +126,26 @@ export const atomWithBroadcast = <Value>(
         // Only update local state and post changes if owner
         set(baseAtom, update.value)
         last = value
-        debug('Posting message', value)
+        debug('Posting message as owner', value)
         channel.postMessage({ type: 'update', value })
       } else {
         // I'm not the owner and got an update from the owner
         if (update.isEvent) {
           set(baseAtom, update.value)
+        } else {
+          debug('Posting message as borrower', value)
+          channel.postMessage({ type: 'update-request', value })
         }
       }
     }
   )
 
   const fireAllListeners = (event: MessageEvent<Event<Value>>) => {
-    // listeners.forEach((l) => l(event))
-    if (event.data.type === 'update' || event.data.type === 'init-ack') {
+    if (
+      event.data.type === 'update' ||
+      event.data.type === 'update-request' ||
+      event.data.type === 'init-ack'
+    ) {
       store.set(broadcastAtom, { isEvent: true, value: event.data.value })
     }
   }
@@ -144,6 +153,9 @@ export const atomWithBroadcast = <Value>(
   channel.onmessage = (e) => {
     const event = e as MessageEvent<Event<Value>>
     debug('Received message', event.data)
+    if (event.data.type === 'update-request' && isOwner) {
+      fireAllListeners(event)
+    }
     if (event.data.type === 'update') {
       fireAllListeners(event)
     }
@@ -159,20 +171,6 @@ export const atomWithBroadcast = <Value>(
       event.data.id === id
     ) {
       fireAllListeners(event)
-    }
-  }
-
-  broadcastAtom.onMount = (setAtom) => {
-    debug('on mount')
-    const listener = (event: MessageEvent<Event<Value>>) => {
-      debug('Received listener', event.data)
-      if (event.data.type === 'update' || event.data.type === 'init-ack') {
-        setAtom({ isEvent: true, value: event.data.value })
-      }
-    }
-    listeners.add(listener)
-    return () => {
-      listeners.delete(listener)
     }
   }
 
