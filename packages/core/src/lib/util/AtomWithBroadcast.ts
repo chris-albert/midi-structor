@@ -105,7 +105,7 @@ export const atomWithBroadcast = <Value>(
   const channel = new BroadcastChannel(key)
   const id = v4()
 
-  // const debug = log.enabled(key === 'arrangement', log.info)
+  // const debug = log.enabled(key === 'projects-config', log.info)
   const debug = log.enabled(false, log.info)
 
   debug('Creating', { owner, isOwner, key, id })

@@ -280,7 +280,8 @@
           "note": 38
         }
       ],
-      "trackName": "Songs"
+      "trackName": "Songs",
+      "sort": "alphabetical"
     },
     {
       "_tag": "keyboard",
