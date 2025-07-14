@@ -4,6 +4,31 @@ import React from 'react'
 import { Schema } from 'effect'
 import { ControllerWidgetType } from '../../ControllerWidget'
 import { MIDIStructorStore } from '../MidiStructorStore'
+import { MidiTarget } from '../../../midi/MidiTarget'
+import { MIDIStructorPad } from '../MidiStructorMessage'
+
+const state = (store: MIDIStructorStore) => {
+  const one = (target: MidiTarget): MIDIStructorPad => {
+    const maybe = store[MidiTarget.toKey(target)]
+    if (maybe !== undefined && maybe._tag === 'pad') {
+      return maybe
+    } else {
+      return MIDIStructorPad.make({
+        target,
+        color: 0,
+        options: {},
+      })
+    }
+  }
+
+  const many = (targets: Readonly<Array<MidiTarget>>): Array<MIDIStructorPad> =>
+    targets.map(one)
+
+  return {
+    one,
+    many,
+  }
+}
 
 export type MIDIStructorWidgetsType<
   A extends Array<MIDIStructorWidget<any, any>>

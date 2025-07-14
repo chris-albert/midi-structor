@@ -54,6 +54,13 @@ const setupVirtualController = (controller: ConfiguredController) => {
     .uiStore(controller.id)
     .put()
   emitter.on('*', putStore)
+  // emitter.on('*', (m) => {
+  //   if (controller.name === 'UI') {
+  //     log.info('UI Message', m)
+  //   }
+  //
+  //   putStore(m)
+  // })
 }
 
 const setupVirtualControllers = (project: ProjectConfig) => {

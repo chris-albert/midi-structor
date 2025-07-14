@@ -29,7 +29,7 @@ const MIDIStructorDeviceUIComponent: React.FC<
   const midiEmitter = MidiEmitter.fromEventEmitter(
     ConfiguredControllerHooks.useVirtualListener(configuredController).emitter
   )
-  const store = MidiStructorStore.uiStore(configuredController.name).useGet()
+  const store = MidiStructorStore.uiStore(configuredController.id).useGet()
   const [editWidgets, setEditWidgets] = React.useState(false)
 
   const updateWidgets: MIDIStructorUIWidgetsUpdate = (widgets) => {
