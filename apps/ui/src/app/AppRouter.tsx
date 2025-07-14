@@ -6,6 +6,7 @@ import { MidiPage } from './pages/MidiPage'
 import { ControllersPage } from './pages/ControllersPage'
 import { SettingsPage } from './pages/SettingsPage'
 import { UIPage } from './pages/UIPage'
+import { ProjectSettingsRawComponent } from './components/settings/ProjectSettingsRawComponent'
 
 export type AppRouterProps = {}
 
@@ -36,6 +37,10 @@ export const AppRouter: React.FC<AppRouterProps> = ({}) => {
         <Route
           path='settings'
           element={<SettingsPage />}
+        />
+        <Route
+          path='settings/project'
+          element={<ProjectSettingsRawComponent />}
         />
         <Route
           path='ui'

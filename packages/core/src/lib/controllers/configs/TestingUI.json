@@ -20,10 +20,73 @@
       "label": "Metronome"
     },
     {
+      "_tag": "beat",
+      "target": {
+        "_tag": "CC",
+        "controllerNumber": 4
+      },
+      "label": "Beat"
+    },
+    {
+      "_tag": "tempo",
+      "target": {
+        "_tag": "CC",
+        "controllerNumber": 2
+      },
+      "label": "Tempo"
+    },
+    {
+      "_tag": "time-signature",
+      "target": {
+        "_tag": "CC",
+        "controllerNumber": 3
+      },
+      "label": "Time Sig"
+    },
+    {
       "_tag": "spacer",
       "width": 300,
       "isLineBreaking": true,
       "visible": false
+    },
+    {
+      "_tag": "beats",
+      "targets": [
+        {
+          "_tag": "CC",
+          "controllerNumber": 10
+        },
+        {
+          "_tag": "CC",
+          "controllerNumber": 11
+        },
+        {
+          "_tag": "CC",
+          "controllerNumber": 12
+        },
+        {
+          "_tag": "CC",
+          "controllerNumber": 13
+        },
+        {
+          "_tag": "CC",
+          "controllerNumber": 14
+        },
+        {
+          "_tag": "CC",
+          "controllerNumber": 15
+        },
+        {
+          "_tag": "CC",
+          "controllerNumber": 16
+        },
+        {
+          "_tag": "CC",
+          "controllerNumber": 17
+        }
+      ],
+      "oneColor": "00ff00",
+      "restColor": "ff0000"
     },
     {
       "_tag": "active-clip",
@@ -77,12 +140,6 @@
       "label": "Songs"
     },
     {
-      "_tag": "spacer",
-      "width": 100,
-      "isLineBreaking": true,
-      "visible": false
-    },
-    {
       "_tag": "track-sections",
       "targets": [
         {
@@ -127,6 +184,41 @@
       "width": 0,
       "isLineBreaking": true,
       "visible": false
+    },
+    {
+      "_tag": "button",
+      "target": {
+        "_tag": "CC",
+        "controllerNumber": 100
+      },
+      "color": "ff0000",
+      "isFlashing": false,
+      "midi": [
+        {
+          "type": "cc",
+          "controllerNumber": 10,
+          "data": 10,
+          "channel": 1
+        }
+      ],
+      "text": {
+        "content": "HI"
+      },
+      "label": "Test"
+    },
+    {
+      "_tag": "knob",
+      "target": {
+        "_tag": "CC",
+        "controllerNumber": 101
+      },
+      "color": "0000bb",
+      "midi": {
+        "_tag": "midi-note-vary-velocity",
+        "note": 50,
+        "channel": 1
+      },
+      "label": "My Knob"
     }
   ]
 }

@@ -47,8 +47,9 @@ export const WidgetSettingsFormComponent: React.FC<
     })
   }
 
-  console.log('form', form)
-
+  // console.log('form', form)
+  // console.log('config', config)
+  // const formFields = null
   const formFields = _.map(config.widget.schema.fields, (field, key) => {
     // console.log('Field', key, SchemaForm.getFormName(field.ast), field)
 

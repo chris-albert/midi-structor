@@ -1,6 +1,7 @@
-import { Schema, Option } from 'effect'
+import { Schema, Option, Either } from 'effect'
 import { ConfiguredController } from '../controllers/ConfiguredController'
 import _ from 'lodash'
+import { SchemaHelper } from '../util/SchemaHelper'
 
 export const ProjectConfigSchema = Schema.Struct({
   label: Schema.String,
@@ -24,8 +25,25 @@ const ProjectsConfigSchema = Schema.Struct({
 
 export type ProjectsConfig = Schema.Schema.Type<typeof ProjectsConfigSchema>
 
+const stringify = (config: ProjectConfig): string =>
+  SchemaHelper.encode(ProjectConfigSchema, config)
+
+// const parse = (str: string): Either.Either<ProjectConfig, string> =>
+//   SchemaHelper.decodeString<
+//     ProjectConfig,
+//     Either.Either<ProjectConfig, string>,
+//     ProjectConfig
+//   >({
+//     schema: ProjectConfigSchema,
+//     str,
+//     ok: Either.right,
+//     error: Either.left,
+//   })
+
 export const ProjectConfig = {
   Schema: ProjectConfigSchema,
+  stringify,
+  // parse,
 }
 
 const getActive = (config: ProjectsConfig): Option.Option<ProjectConfig> =>

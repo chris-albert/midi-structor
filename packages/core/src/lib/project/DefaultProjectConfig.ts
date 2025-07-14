@@ -12,19 +12,7 @@ export const DefaultProjectConfig = (): ProjectConfig => ({
   },
 })
 
-export const ReloadProjectConfig = (): ProjectConfig => ({
-  label: 'Reload',
-  key: 'reload-project',
-  controllers: [],
-  style: {
-    accent: {
-      color1: '#6a11cb',
-      color2: '#2575fc',
-    },
-  },
-})
-
 export const DefaultProjectsConfig = (): ProjectsConfig => ({
   active: 'default',
-  projects: [DefaultProjectConfig(), ReloadProjectConfig()],
+  projects: [DefaultProjectConfig()],
 })

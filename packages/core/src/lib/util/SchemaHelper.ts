@@ -11,8 +11,8 @@ type DecodeUnknownOps<A, B> = {
   error: (s: string) => B
 }
 
-type DecodeStringOps<A, B> = {
-  schema: Schema.Schema<A>
+type DecodeStringOps<A, B, I> = {
+  schema: Schema.Schema<A, I>
   str: string
   ok: (a: A) => B
   error: (s: string) => B
@@ -27,7 +27,7 @@ const decodeUnknown = <A, B>(opts: DecodeUnknownOps<A, B>): B =>
     }
   )
 
-const decodeString = <A, B>(opts: DecodeStringOps<A, B>): B =>
+const decodeString = <A, B, I>(opts: DecodeStringOps<A, B, I>): B =>
   Either.match(
     Schema.decodeUnknownEither(Schema.parseJson(opts.schema), {
       errors: 'all',
@@ -38,7 +38,7 @@ const decodeString = <A, B>(opts: DecodeStringOps<A, B>): B =>
     }
   )
 
-const encode = <A>(schema: Schema.Schema<A>, a: A): string =>
+const encode = <A, I>(schema: Schema.Schema<A, I>, a: A): string =>
   Either.match(Schema.encodeEither(schema)(a), {
     onRight: (c) => JSON.stringify(c, null, 2),
     onLeft: (e) => {

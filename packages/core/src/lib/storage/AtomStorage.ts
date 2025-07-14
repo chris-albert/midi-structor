@@ -1,32 +1,33 @@
 import { SyncStorage } from 'jotai/vanilla/utils/atomWithStorage'
 import { atomWithStorage, createJSONStorage } from 'jotai/utils'
-import { PrimitiveAtom, atom } from 'jotai'
-import { MiniDb } from 'jotai-minidb'
+import { PrimitiveAtom } from 'jotai'
+import { Schema, Either } from 'effect'
+import { log } from '../logger/log'
 
-const DB = new MiniDb()
+const storage = <A>(): SyncStorage<A> => createJSONStorage<A>()
 
-const storage = <A>(): SyncStorage<A> => {
-  return createJSONStorage<A>()
-}
-
-const index = <A>(name: string, ifEmpty: A): PrimitiveAtom<A> => {
-  const DB = new MiniDb<A>({
-    name,
-    initialData: {
-      init: ifEmpty,
+const schemaStorage = <A>(): SyncStorage<A> => {
+  return createJSONStorage<A>(() => localStorage, {
+    replacer: (key, value) => {
+      return Either.match(Schema.encodeEither(Schema.Any)(value), {
+        onRight: (value) => value,
+        onLeft: (error) => {
+          log.error('Unable to encode value', value)
+          return {}
+        },
+      })
+    },
+    reviver: (key, value) => {
+      const a = Either.match(Schema.decodeUnknownEither(Schema.Any)(value), {
+        onRight: (value) => value,
+        onLeft: (error) => {
+          log.error('Unable to parse from LocalStorage', value, error)
+          return {}
+        },
+      })
+      return a
     },
   })
-
-  const indexAtom = DB.item('init')
-
-  // const a: PrimitiveAtom<A> = atom<A, A[], void>(
-  // const a = atom(
-  //   (get) => get(indexAtom) || ifEmpty,
-  //   (get, set, action) => set(indexAtom, action)
-  // )
-
-  // return a
-  throw new Error()
 }
 
 const local = <A>(name: string, ifEmpty: A): PrimitiveAtom<A> =>

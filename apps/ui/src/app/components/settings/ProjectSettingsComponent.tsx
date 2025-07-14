@@ -13,6 +13,7 @@ import {
 import { ProjectHooks } from '@midi-structor/core'
 import { MuiColorInput } from 'mui-color-input'
 import { SaveableTextFieldComponent } from '../form/SaveableTextFieldComponent'
+import { useNavigate } from 'react-router-dom'
 
 export type ProjectSettingsComponentProps = {}
 
@@ -24,6 +25,7 @@ export const ProjectSettingsComponent: React.FC<
   const projectStyle = ProjectHooks.useProjectStyle()
   const abletonProject = ProjectHooks.useAbletonProjectName()
   const updateProjectName = ProjectHooks.useSetActiveProjectName()
+  const navigate = useNavigate()
 
   const onAbletonSelect = () => {
     updateProject((p) => ({
@@ -133,6 +135,18 @@ export const ProjectSettingsComponent: React.FC<
               }))
             }}
           />
+          {/*<Divider />*/}
+          {/*<Button*/}
+          {/*  size='small'*/}
+          {/*  sx={{*/}
+          {/*    background: projectStyle.horizontalGradient,*/}
+          {/*  }}*/}
+          {/*  onClick={() => {*/}
+          {/*    navigate('/settings/project')*/}
+          {/*  }}*/}
+          {/*  variant='contained'>*/}
+          {/*  Edit Raw*/}
+          {/*</Button>*/}
         </Box>
       </CardContent>
     </Card>

@@ -38,9 +38,9 @@ export const WidgetSettingsComponent: React.FC<
   )
 
   // @ts-ignore
-  const config: MIDIStructorWidget<any, any> = AllMidiStructorWidgets.getByName(
-    widget._tag
-  )
+  const config: MIDIStructorWidget<any, any> =
+    // @ts-ignore
+    AllMidiStructorWidgets.all.getByName(widget._tag)
 
   const onWidgetSave = () => {
     SchemaHelper.decodeString({
