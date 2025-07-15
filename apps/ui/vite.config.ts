@@ -7,7 +7,8 @@ import { nodePolyfills } from 'vite-plugin-node-polyfills'
 export default defineConfig({
   root: __dirname,
   cacheDir: '../../node_modules/.vite/apps/ui',
-  base: 'https://chris-albert.github.io/midi-structor/',
+  // base: 'https://chris-albert.github.io/midi-structor/',
+  base: './',
   server: {
     port: 3000,
     host: 'localhost',
@@ -25,6 +26,14 @@ export default defineConfig({
   worker: {
     plugins: [],
     format: 'es',
+    rollupOptions: {
+      makeAbsoluteExternalsRelative: true,
+      output: {
+        entryFileNames: `assets/[name].js`,
+        chunkFileNames: `assets/[name].js`,
+        assetFileNames: `assets/[name].[ext]`,
+      },
+    },
   },
   build: {
     rollupOptions: {

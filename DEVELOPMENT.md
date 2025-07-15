@@ -8,6 +8,7 @@ pnpm --save-dev i eslint-plugin-import
 ```
 pnpm --filter @midi-structor/core -D i typescript@5.8.3
 pnpm --filter @midi-structor/core i web-midi-api
+pnpm --filter @midi-structor/electron -D i worker-loader
 ```
 
 https://docs.cycling74.com/legacy/max8/vignettes/live_object_model
