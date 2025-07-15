@@ -30,6 +30,7 @@ export const ControllersComponent: React.FC<
   return (
     <Box sx={{ height: '100%' }}>
       <TabsComponent
+        selectedTabQuery='controllerIndex'
         orientation='vertical'
         tabs={controllersTabs}
       />
