@@ -183,6 +183,9 @@ const instance = Reconciler({
 
   appendChild(parentInstance: Instance, child: Instance | TextInstance): void {
     log('appendChild', parentInstance, child)
+    if (parentInstance.type === 'controller' && child.type === 'pad') {
+      appendPad(parentInstance, child)
+    }
   },
 
   prepareUpdate(

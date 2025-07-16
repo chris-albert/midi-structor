@@ -57,7 +57,7 @@ export const atomWithBroadcast = <Value>(
   const channel = new BroadcastChannel(key)
   const id = v4()
 
-  // const debug = log.enabled(key === 'projects-config', log.info)
+  // const debug = log.enabled(key === 'arrangement', log.info)
   const debug = log.enabled(false, log.info)
 
   debug('Creating', { owner, isOwner, key, id })
@@ -80,7 +80,8 @@ export const atomWithBroadcast = <Value>(
       } else {
         // I'm not the owner and got an update from the owner
         if (update.isEvent) {
-          set(baseAtom, update.value)
+          debug('Setting atom as borrower', ProcessManager.name, value)
+          set(baseAtom, value)
         } else {
           debug('Posting message as borrower', value)
           channel.postMessage({ type: 'update-request', value })
@@ -101,7 +102,7 @@ export const atomWithBroadcast = <Value>(
 
   channel.onmessage = (e) => {
     const event = e as MessageEvent<Event<Value>>
-    debug('Received message', event.data)
+    debug('Received message', ProcessManager.name, event.data)
     if (event.data.type === 'update-request' && isOwner) {
       fireAllListeners(event)
     }
@@ -124,7 +125,7 @@ export const atomWithBroadcast = <Value>(
   }
 
   if (!isOwner) {
-    debug('Posting init')
+    debug('Posting init', ProcessManager.name, id)
     channel.postMessage({ type: 'init', id })
   }
 

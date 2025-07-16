@@ -2,9 +2,10 @@ const IS_WEB_WORKER = typeof window === 'undefined'
 
 export type ProcessType = 'main' | 'project' | 'controller'
 
+const name = self.name
+
 const getType = (): ProcessType => {
   if (IS_WEB_WORKER && typeof self !== 'undefined') {
-    const name = self.name
     if (name === 'project') {
       return 'project'
     } else {
@@ -33,6 +34,7 @@ const isWorker = IS_WEB_WORKER
 
 export const ProcessManager = {
   type,
+  name,
   isMain: type === 'main',
   isProject: type === 'project',
   isController: type === 'controller',

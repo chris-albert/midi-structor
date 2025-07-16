@@ -27,7 +27,7 @@ export const searchActiveClip = (
 export const useActiveClip = (track: UITrack): UIClip => {
   const beat = useBeat()
 
-  return React.useMemo(() => searchActiveClip(track.clips, beat), [beat])
+  return React.useMemo(() => searchActiveClip(track.clips, beat), [beat, track])
 }
 
 const useArrangement = () => ProjectState.project.arrangement.useValue()

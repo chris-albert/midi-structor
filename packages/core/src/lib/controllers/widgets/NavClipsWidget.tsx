@@ -60,7 +60,7 @@ export const NavClipsWidget = ControllerWidget.many({
     const pads = clips.map((clip, index) => (
       <Pad
         isFlashing={clip.clip === activeClip}
-        key={`song-${index}`}
+        key={`song-${index}-${clip.clip.name}`}
         color={clip.clip.color}
         target={clip.target}
         onClick={() => onClick(clip)}
