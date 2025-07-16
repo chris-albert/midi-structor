@@ -1,0 +1,891 @@
+{
+  "label": "Infinite Bits Live",
+  "key": "infinite-bits-live",
+  "controllers": [
+    {
+      "id": "9c05315f-8765-4681-8a1c-28e1328ea919",
+      "name": "Chris",
+      "enabled": true,
+      "config": {
+        "widgets": [
+          {
+            "_tag": "stop",
+            "target": {
+              "_tag": "CC",
+              "controllerNumber": 19
+            },
+            "color": 33488896
+          },
+          {
+            "_tag": "play",
+            "target": {
+              "_tag": "CC",
+              "controllerNumber": 29
+            },
+            "color": 16842496
+          },
+          {
+            "_tag": "metronome",
+            "target": {
+              "_tag": "CC",
+              "controllerNumber": 99
+            },
+            "oneColor": 16842496,
+            "restColor": 33488896
+          },
+          {
+            "_tag": "beats",
+            "targets": [
+              {
+                "_tag": "Note",
+                "note": 81
+              },
+              {
+                "_tag": "Note",
+                "note": 82
+              },
+              {
+                "_tag": "Note",
+                "note": 83
+              },
+              {
+                "_tag": "Note",
+                "note": 84
+              },
+              {
+                "_tag": "Note",
+                "note": 85
+              },
+              {
+                "_tag": "Note",
+                "note": 86
+              },
+              {
+                "_tag": "Note",
+                "note": 87
+              },
+              {
+                "_tag": "Note",
+                "note": 88
+              }
+            ],
+            "oneColor": 16842496,
+            "restColor": 33488896
+          },
+          {
+            "_tag": "bar-tracker",
+            "targets": [
+              {
+                "_tag": "Note",
+                "note": 71
+              },
+              {
+                "_tag": "Note",
+                "note": 72
+              },
+              {
+                "_tag": "Note",
+                "note": 73
+              },
+              {
+                "_tag": "Note",
+                "note": 74
+              },
+              {
+                "_tag": "Note",
+                "note": 75
+              },
+              {
+                "_tag": "Note",
+                "note": 76
+              },
+              {
+                "_tag": "Note",
+                "note": 77
+              },
+              {
+                "_tag": "Note",
+                "note": 78
+              }
+            ],
+            "trackName": "Bars",
+            "color": 16842496
+          },
+          {
+            "_tag": "time-sig-count",
+            "targets": [
+              {
+                "_tag": "Note",
+                "note": 91
+              },
+              {
+                "_tag": "Note",
+                "note": 92
+              },
+              {
+                "_tag": "Note",
+                "note": 93
+              },
+              {
+                "_tag": "Note",
+                "note": 94
+              },
+              {
+                "_tag": "Note",
+                "note": 95
+              },
+              {
+                "_tag": "Note",
+                "note": 96
+              },
+              {
+                "_tag": "Note",
+                "note": 97
+              },
+              {
+                "_tag": "Note",
+                "note": 98
+              }
+            ],
+            "color": 33488896
+          },
+          {
+            "_tag": "track-sections",
+            "targets": [
+              {
+                "_tag": "Note",
+                "note": 41
+              },
+              {
+                "_tag": "Note",
+                "note": 42
+              },
+              {
+                "_tag": "Note",
+                "note": 43
+              },
+              {
+                "_tag": "Note",
+                "note": 44
+              },
+              {
+                "_tag": "Note",
+                "note": 45
+              },
+              {
+                "_tag": "Note",
+                "note": 46
+              },
+              {
+                "_tag": "Note",
+                "note": 47
+              },
+              {
+                "_tag": "Note",
+                "note": 48
+              }
+            ],
+            "trackName": "Chris Parts",
+            "parentTrackName": "Songs"
+          },
+          {
+            "_tag": "nav-clips",
+            "targets": [
+              {
+                "_tag": "Note",
+                "note": 11
+              },
+              {
+                "_tag": "Note",
+                "note": 12
+              },
+              {
+                "_tag": "Note",
+                "note": 13
+              },
+              {
+                "_tag": "Note",
+                "note": 14
+              },
+              {
+                "_tag": "Note",
+                "note": 15
+              },
+              {
+                "_tag": "Note",
+                "note": 16
+              },
+              {
+                "_tag": "Note",
+                "note": 17
+              },
+              {
+                "_tag": "Note",
+                "note": 18
+              },
+              {
+                "_tag": "Note",
+                "note": 21
+              },
+              {
+                "_tag": "Note",
+                "note": 22
+              },
+              {
+                "_tag": "Note",
+                "note": 23
+              },
+              {
+                "_tag": "Note",
+                "note": 24
+              },
+              {
+                "_tag": "Note",
+                "note": 25
+              },
+              {
+                "_tag": "Note",
+                "note": 26
+              },
+              {
+                "_tag": "Note",
+                "note": 27
+              },
+              {
+                "_tag": "Note",
+                "note": 28
+              },
+              {
+                "_tag": "Note",
+                "note": 31
+              },
+              {
+                "_tag": "Note",
+                "note": 32
+              },
+              {
+                "_tag": "Note",
+                "note": 33
+              },
+              {
+                "_tag": "Note",
+                "note": 34
+              },
+              {
+                "_tag": "Note",
+                "note": 35
+              },
+              {
+                "_tag": "Note",
+                "note": 36
+              },
+              {
+                "_tag": "Note",
+                "note": 37
+              },
+              {
+                "_tag": "Note",
+                "note": 38
+              }
+            ],
+            "trackName": "Songs",
+            "sort": "alphabetical"
+          },
+          {
+            "_tag": "keyboard",
+            "topTargets": [
+              {
+                "_tag": "Note",
+                "note": 61
+              },
+              {
+                "_tag": "Note",
+                "note": 62
+              },
+              {
+                "_tag": "Note",
+                "note": 63
+              },
+              {
+                "_tag": "Note",
+                "note": 64
+              },
+              {
+                "_tag": "Note",
+                "note": 65
+              },
+              {
+                "_tag": "Note",
+                "note": 66
+              },
+              {
+                "_tag": "Note",
+                "note": 67
+              },
+              {
+                "_tag": "Note",
+                "note": 68
+              }
+            ],
+            "bottomTargets": [
+              {
+                "_tag": "Note",
+                "note": 51
+              },
+              {
+                "_tag": "Note",
+                "note": 52
+              },
+              {
+                "_tag": "Note",
+                "note": 53
+              },
+              {
+                "_tag": "Note",
+                "note": 54
+              },
+              {
+                "_tag": "Note",
+                "note": 55
+              },
+              {
+                "_tag": "Note",
+                "note": 56
+              },
+              {
+                "_tag": "Note",
+                "note": 57
+              },
+              {
+                "_tag": "Note",
+                "note": 58
+              }
+            ],
+            "trackName": "Chris Keyboard",
+            "topColor": 22171160,
+            "bottomColor": 32893250
+          },
+          {
+            "_tag": "soft-refresh",
+            "target": {
+              "_tag": "CC",
+              "controllerNumber": 89
+            },
+            "color": 33488896
+          }
+        ]
+      },
+      "device": "Launchpad Mini [MK3]",
+      "color": "#ae0003",
+      "selected": {
+        "input": {
+          "_tag": "None"
+        },
+        "output": {
+          "_tag": "None"
+        }
+      }
+    },
+    {
+      "id": "0790576e-a15c-410e-ad42-af9487462164",
+      "name": "Nick",
+      "enabled": true,
+      "config": {
+        "widgets": [
+          {
+            "_tag": "stop",
+            "target": {
+              "_tag": "CC",
+              "controllerNumber": 19
+            },
+            "color": 33488896
+          },
+          {
+            "_tag": "play",
+            "target": {
+              "_tag": "CC",
+              "controllerNumber": 29
+            },
+            "color": 16842496
+          },
+          {
+            "_tag": "soft-refresh",
+            "target": {
+              "_tag": "CC",
+              "controllerNumber": 89
+            },
+            "color": 16777471
+          },
+          {
+            "_tag": "metronome",
+            "target": {
+              "_tag": "CC",
+              "controllerNumber": 99
+            },
+            "oneColor": 16842496,
+            "restColor": 33488896
+          },
+          {
+            "_tag": "beats",
+            "targets": [
+              {
+                "_tag": "Note",
+                "note": 81
+              },
+              {
+                "_tag": "Note",
+                "note": 82
+              },
+              {
+                "_tag": "Note",
+                "note": 83
+              },
+              {
+                "_tag": "Note",
+                "note": 84
+              },
+              {
+                "_tag": "Note",
+                "note": 85
+              },
+              {
+                "_tag": "Note",
+                "note": 86
+              },
+              {
+                "_tag": "Note",
+                "note": 87
+              },
+              {
+                "_tag": "Note",
+                "note": 88
+              }
+            ],
+            "oneColor": 16842496,
+            "restColor": 33488896
+          },
+          {
+            "_tag": "bar-tracker",
+            "targets": [
+              {
+                "_tag": "Note",
+                "note": 71
+              },
+              {
+                "_tag": "Note",
+                "note": 72
+              },
+              {
+                "_tag": "Note",
+                "note": 73
+              },
+              {
+                "_tag": "Note",
+                "note": 74
+              },
+              {
+                "_tag": "Note",
+                "note": 75
+              },
+              {
+                "_tag": "Note",
+                "note": 76
+              },
+              {
+                "_tag": "Note",
+                "note": 77
+              },
+              {
+                "_tag": "Note",
+                "note": 78
+              }
+            ],
+            "trackName": "Bars",
+            "color": 16842496
+          },
+          {
+            "_tag": "time-sig-count",
+            "targets": [
+              {
+                "_tag": "Note",
+                "note": 61
+              },
+              {
+                "_tag": "Note",
+                "note": 62
+              },
+              {
+                "_tag": "Note",
+                "note": 63
+              },
+              {
+                "_tag": "Note",
+                "note": 64
+              },
+              {
+                "_tag": "Note",
+                "note": 65
+              },
+              {
+                "_tag": "Note",
+                "note": 66
+              },
+              {
+                "_tag": "Note",
+                "note": 67
+              },
+              {
+                "_tag": "Note",
+                "note": 68
+              }
+            ],
+            "color": 16777471
+          },
+          {
+            "_tag": "time-sig-length",
+            "targets": [
+              {
+                "_tag": "Note",
+                "note": 51
+              },
+              {
+                "_tag": "Note",
+                "note": 52
+              },
+              {
+                "_tag": "Note",
+                "note": 53
+              },
+              {
+                "_tag": "Note",
+                "note": 54
+              },
+              {
+                "_tag": "Note",
+                "note": 55
+              },
+              {
+                "_tag": "Note",
+                "note": 56
+              },
+              {
+                "_tag": "Note",
+                "note": 57
+              },
+              {
+                "_tag": "Note",
+                "note": 58
+              }
+            ],
+            "color": 25165952
+          },
+          {
+            "_tag": "track-sections",
+            "targets": [
+              {
+                "_tag": "Note",
+                "note": 41
+              },
+              {
+                "_tag": "Note",
+                "note": 42
+              },
+              {
+                "_tag": "Note",
+                "note": 43
+              },
+              {
+                "_tag": "Note",
+                "note": 44
+              },
+              {
+                "_tag": "Note",
+                "note": 45
+              },
+              {
+                "_tag": "Note",
+                "note": 46
+              },
+              {
+                "_tag": "Note",
+                "note": 47
+              },
+              {
+                "_tag": "Note",
+                "note": 48
+              }
+            ],
+            "trackName": "Nick Parts",
+            "parentTrackName": "Songs"
+          },
+          {
+            "_tag": "nav-clips",
+            "targets": [
+              {
+                "_tag": "Note",
+                "note": 11
+              },
+              {
+                "_tag": "Note",
+                "note": 12
+              },
+              {
+                "_tag": "Note",
+                "note": 13
+              },
+              {
+                "_tag": "Note",
+                "note": 14
+              },
+              {
+                "_tag": "Note",
+                "note": 15
+              },
+              {
+                "_tag": "Note",
+                "note": 16
+              },
+              {
+                "_tag": "Note",
+                "note": 17
+              },
+              {
+                "_tag": "Note",
+                "note": 18
+              },
+              {
+                "_tag": "Note",
+                "note": 21
+              },
+              {
+                "_tag": "Note",
+                "note": 22
+              },
+              {
+                "_tag": "Note",
+                "note": 23
+              },
+              {
+                "_tag": "Note",
+                "note": 24
+              },
+              {
+                "_tag": "Note",
+                "note": 25
+              },
+              {
+                "_tag": "Note",
+                "note": 26
+              },
+              {
+                "_tag": "Note",
+                "note": 27
+              },
+              {
+                "_tag": "Note",
+                "note": 28
+              },
+              {
+                "_tag": "Note",
+                "note": 31
+              },
+              {
+                "_tag": "Note",
+                "note": 32
+              },
+              {
+                "_tag": "Note",
+                "note": 33
+              },
+              {
+                "_tag": "Note",
+                "note": 34
+              },
+              {
+                "_tag": "Note",
+                "note": 35
+              },
+              {
+                "_tag": "Note",
+                "note": 36
+              },
+              {
+                "_tag": "Note",
+                "note": 37
+              },
+              {
+                "_tag": "Note",
+                "note": 38
+              }
+            ],
+            "trackName": "Songs",
+            "sort": "alphabetical"
+          }
+        ]
+      },
+      "device": "Launchpad Mini [MK3]",
+      "color": "#0500ff",
+      "selected": {
+        "input": {
+          "_tag": "None"
+        },
+        "output": {
+          "_tag": "None"
+        }
+      }
+    },
+    {
+      "id": "fde1a718-d7ce-4c26-b600-cbedf65fd38a",
+      "name": "UI",
+      "enabled": true,
+      "config": {
+        "widgets": [
+          {
+            "_tag": "play-stop",
+            "target": {
+              "_tag": "CC",
+              "controllerNumber": 1
+            },
+            "playColor": 16842496,
+            "stopColor": 33488896,
+            "label": "Play/Stop"
+          },
+          {
+            "_tag": "metronome-control",
+            "target": {
+              "_tag": "CC",
+              "controllerNumber": 102
+            },
+            "color": 32891714,
+            "label": "Metronome"
+          },
+          {
+            "_tag": "spacer",
+            "width": 300,
+            "isLineBreaking": true,
+            "visible": false
+          },
+          {
+            "_tag": "active-clip",
+            "target": {
+              "_tag": "CC",
+              "controllerNumber": 18
+            },
+            "trackName": "Songs",
+            "label": "Active"
+          },
+          {
+            "_tag": "spacer",
+            "width": 0,
+            "isLineBreaking": true,
+            "visible": false
+          },
+          {
+            "_tag": "nav-clips",
+            "targets": [
+              {
+                "_tag": "CC",
+                "controllerNumber": 20
+              },
+              {
+                "_tag": "CC",
+                "controllerNumber": 21
+              },
+              {
+                "_tag": "CC",
+                "controllerNumber": 22
+              },
+              {
+                "_tag": "CC",
+                "controllerNumber": 23
+              },
+              {
+                "_tag": "CC",
+                "controllerNumber": 24
+              },
+              {
+                "_tag": "CC",
+                "controllerNumber": 25
+              },
+              {
+                "_tag": "CC",
+                "controllerNumber": 26
+              }
+            ],
+            "trackName": "Songs",
+            "sort": "order",
+            "label": "Songs"
+          },
+          {
+            "_tag": "spacer",
+            "width": 100,
+            "isLineBreaking": true,
+            "visible": false
+          },
+          {
+            "_tag": "track-sections",
+            "targets": [
+              {
+                "_tag": "CC",
+                "controllerNumber": 30
+              },
+              {
+                "_tag": "CC",
+                "controllerNumber": 31
+              },
+              {
+                "_tag": "CC",
+                "controllerNumber": 32
+              },
+              {
+                "_tag": "CC",
+                "controllerNumber": 33
+              },
+              {
+                "_tag": "CC",
+                "controllerNumber": 34
+              },
+              {
+                "_tag": "CC",
+                "controllerNumber": 35
+              },
+              {
+                "_tag": "CC",
+                "controllerNumber": 36
+              },
+              {
+                "_tag": "CC",
+                "controllerNumber": 37
+              }
+            ],
+            "trackName": "Parts",
+            "parentTrackName": "Songs",
+            "label": "Parts"
+          },
+          {
+            "_tag": "spacer",
+            "width": 0,
+            "isLineBreaking": true,
+            "visible": false
+          }
+        ]
+      },
+      "device": "MIDI Structor UI",
+      "color": "#7f9400",
+      "selected": {
+        "input": {
+          "_tag": "None"
+        },
+        "output": {
+          "_tag": "None"
+        }
+      }
+    }
+  ],
+  "style": {
+    "accent": {
+      "color1": "#cb113e",
+      "color2": "#2575fc"
+    }
+  }
+}

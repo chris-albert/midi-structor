@@ -1,5 +1,4 @@
 import { atom, PrimitiveAtom, SetStateAction, getDefaultStore } from 'jotai'
-import { AtomStorage } from '../storage/AtomStorage'
 import { v4 } from 'uuid'
 import { ProcessManager, ProcessType } from '../ProcessManager'
 import { log } from '../logger/log'
@@ -29,50 +28,6 @@ type InitAck<A> = {
 
 type Event<A> = Update<A> | UpdateRequest<A> | Init | InitAck<A>
 
-export function atomWithBroadcastVanilla<Value>(
-  key: string,
-  initialValue: Value
-) {
-  const baseAtom = atom(initialValue)
-  const listeners = new Set<(event: MessageEvent<any>) => void>()
-  const channel = new BroadcastChannel(key)
-
-  channel.onmessage = (event) => {
-    listeners.forEach((l) => l(event))
-  }
-
-  const broadcastAtom = atom(
-    (get) => get(baseAtom),
-    (get, set, update: { isEvent: boolean; value: SetStateAction<Value> }) => {
-      set(baseAtom, update.value)
-      if (!update.isEvent) {
-        channel.postMessage(get(baseAtom))
-      }
-    }
-  )
-
-  broadcastAtom.onMount = (setAtom) => {
-    const listener = (event: MessageEvent<any>) => {
-      setAtom({ isEvent: true, value: event.data })
-    }
-
-    listeners.add(listener)
-
-    return () => {
-      listeners.delete(listener)
-    }
-  }
-
-  const returnedAtom = atom(
-    (get) => get(broadcastAtom),
-    (_get, set, update: SetStateAction<Value>) => {
-      set(broadcastAtom, { isEvent: false, value: update })
-    }
-  )
-
-  return returnedAtom
-}
-
 /**
  * We are defining the concept of `owner`, we need this since we are using
  * web-workers, and need a clean way to init and update all the `borrowers`.
@@ -96,15 +51,9 @@ export function atomWithBroadcastVanilla<Value>(
 export const atomWithBroadcast = <Value>(
   owner: ProcessType,
   key: string,
-  initialValue: Value,
-  type: 'mem' | 'storage' = 'mem'
+  baseAtom: PrimitiveAtom<Value>
 ): PrimitiveAtom<Value> => {
-  const isMem = type === 'mem'
   const isOwner = owner === ProcessManager.type
-  const baseAtom =
-    !isMem && ProcessManager.isMain
-      ? AtomStorage.atom(key, initialValue)
-      : atom(initialValue)
   const channel = new BroadcastChannel(key)
   const id = v4()
 

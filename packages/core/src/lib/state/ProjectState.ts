@@ -26,9 +26,10 @@ export const ProjectState = {
     type: 'none',
   }),
   project: {
-    config: State.storage<ProjectsConfig>(
+    config: State.storageSchema(
       'projects-config',
-      DefaultProjectsConfig()
+      DefaultProjectsConfig(),
+      ProjectsConfig.Schema
     ),
     abletonName: State.mem<string | undefined>(
       'project',

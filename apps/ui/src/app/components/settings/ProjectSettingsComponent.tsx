@@ -135,18 +135,18 @@ export const ProjectSettingsComponent: React.FC<
               }))
             }}
           />
-          {/*<Divider />*/}
-          {/*<Button*/}
-          {/*  size='small'*/}
-          {/*  sx={{*/}
-          {/*    background: projectStyle.horizontalGradient,*/}
-          {/*  }}*/}
-          {/*  onClick={() => {*/}
-          {/*    navigate('/settings/project')*/}
-          {/*  }}*/}
-          {/*  variant='contained'>*/}
-          {/*  Edit Raw*/}
-          {/*</Button>*/}
+          <Divider />
+          <Button
+            size='small'
+            sx={{
+              background: projectStyle.horizontalGradient,
+            }}
+            onClick={() => {
+              navigate('/settings/project')
+            }}
+            variant='contained'>
+            Edit Raw
+          </Button>
         </Box>
       </CardContent>
     </Card>

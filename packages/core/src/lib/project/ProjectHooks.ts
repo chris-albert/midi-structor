@@ -88,7 +88,6 @@ const useUpdateActiveProject = () => {
             newProjectFunc(projects.projects[origProjectIndex])
           )
         : projectsList
-    console.log('useUpdateActiveProject', newProjects)
     setProjects({ active, projects: newProjects.toArray() })
   }
 }

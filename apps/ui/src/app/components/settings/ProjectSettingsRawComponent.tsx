@@ -24,13 +24,14 @@ export const ProjectSettingsRawComponent: React.FC<
   }, [project])
 
   const onSave = () => {
-    // Either.match(ProjectConfig.parse(rawProjectConfig), {
-    //   onRight: (config) => {
-    //     toast.success('Successfully saved config')
-    //   },
-    //   onLeft: (error) =>
-    //     toast.error(`Error while saving controller config: ${error}`),
-    // })
+    Either.match(ProjectConfig.parse(rawProjectConfig), {
+      onRight: (config) => {
+        updateProject((p) => config)
+        toast.success('Successfully saved project settings.')
+      },
+      onLeft: (error) =>
+        toast.error(`Error while saving project settings: ${error}`),
+    })
   }
 
   return (

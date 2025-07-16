@@ -28,27 +28,28 @@ export type ProjectsConfig = Schema.Schema.Type<typeof ProjectsConfigSchema>
 const stringify = (config: ProjectConfig): string =>
   SchemaHelper.encode(ProjectConfigSchema, config)
 
-// const parse = (str: string): Either.Either<ProjectConfig, string> =>
-//   SchemaHelper.decodeString<
-//     ProjectConfig,
-//     Either.Either<ProjectConfig, string>,
-//     ProjectConfig
-//   >({
-//     schema: ProjectConfigSchema,
-//     str,
-//     ok: Either.right,
-//     error: Either.left,
-//   })
+const parse = (str: string): Either.Either<ProjectConfig, string> =>
+  SchemaHelper.decodeString<
+    ProjectConfig,
+    Either.Either<ProjectConfig, string>,
+    any
+  >({
+    schema: ProjectConfigSchema,
+    str,
+    ok: Either.right,
+    error: Either.left,
+  })
 
 export const ProjectConfig = {
   Schema: ProjectConfigSchema,
   stringify,
-  // parse,
+  parse,
 }
 
 const getActive = (config: ProjectsConfig): Option.Option<ProjectConfig> =>
   Option.fromNullable(_.find(config.projects, (p) => p.key === config.active))
 
 export const ProjectsConfig = {
+  Schema: ProjectsConfigSchema,
   getActive,
 }

@@ -42,6 +42,12 @@ brew install makeicns
 makeicns -512 midi-structor-logo-512.png
 ```
 
+## LaunchPad Mini MK3 notes
+To set the device ID of the LaunchPad you need to enter the bootloader menu (by holding the "User" button while plugging in).
+The 2 rows at the top designate your device ID, the one that is a different color is your device ID. 
+
+Having different device ID's helps when you have multiple LaunchPad's and need to configure them differently.
+
 Initialize Messages
 ```mermaid
 sequenceDiagram
