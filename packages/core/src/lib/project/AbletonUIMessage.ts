@@ -143,7 +143,8 @@ const RX_STATUS: Record<string, MessageParser> = {
     parse: (input: Array<any>) => {
       return {
         type: 'tick',
-        tick: _.toNumber(input[0]),
+        beat: _.toNumber(input[0]),
+        tick: _.toNumber(input[1]),
       }
     },
   },
@@ -232,6 +233,7 @@ export type LoopStateMessage = {
 
 export type TickMessage = {
   type: 'tick'
+  beat: number
   tick: number
 }
 

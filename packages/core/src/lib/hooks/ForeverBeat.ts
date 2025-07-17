@@ -28,7 +28,7 @@ const init = (): ForeverBeat => {
     runAllCallbacks({ beat, halfBeat: false, isPlaying })
     setTimeout(() => {
       runAllCallbacks({ beat, halfBeat: true, isPlaying })
-    }, millisPerHalfBeat)
+    }, millisPerHalfBeat * 0.5)
   }
 
   const onIsPlaying = (_isPlaying: boolean) => {

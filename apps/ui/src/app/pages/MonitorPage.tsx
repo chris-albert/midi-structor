@@ -1,25 +1,33 @@
 import React from 'react'
 import {
   MidiInput,
-  MidiMessageWithRaw,
+  MidiMessage,
   DawMidi,
   ConfiguredControllerHooks,
+  parseAbletonUIMessage,
 } from '@midi-structor/core'
-import { Box, Button, Card, CardContent, Grid } from '@mui/material'
+import { Box, Button, Card, CardContent, Chip, Grid } from '@mui/material'
 import _ from 'lodash'
 import { MidiMessageDetail } from '../components/MidiMessageDetail'
 
 export type MonitorPageProps = {}
 
 export const MonitorPage: React.FC<MonitorPageProps> = () => {
-  const maxMessages = 100
+  const maxMessages = 500
 
   const dawListener = DawMidi.useDawListener()
   const controllerListener = ConfiguredControllerHooks.useListeners()
-  const [messages, setMessages] = React.useState<
-    Array<[MidiMessageWithRaw, number]>
-  >([])
+  const [messages, setMessages] = React.useState<Array<[MidiMessage, number]>>(
+    []
+  )
   const [totalCount, setTotalCount] = React.useState(0)
+
+  const [initTrackCount, setInitTrackCount] = React.useState(0)
+  const [initClipCount, setInitClipCount] = React.useState(0)
+  const [initCueCount, setInitCueCount] = React.useState(0)
+  const [midiStructorMessageCounts, setMidiStructorMessageCount] =
+    React.useState<Record<string, number>>({})
+
   const [listenEnabled, setListenEnabled] = React.useState(false)
 
   React.useEffect(() => {
@@ -41,7 +49,16 @@ export const MonitorPage: React.FC<MonitorPageProps> = () => {
       setListenEnabled((enabled) => {
         if (enabled) {
           setTotalCount((count) => {
-            // setMessages((m) => _.take([[message, count], ...m], maxMessages))
+            setMessages((m) => _.take([[message, count], ...m], maxMessages))
+            if (message.type === 'sysex') {
+              const json = parseAbletonUIMessage(message)
+              if (json !== undefined) {
+                setMidiStructorMessageCount((m) => ({
+                  ...m,
+                  [json.type]: (m[json.type] || 0) + 1,
+                }))
+              }
+            }
             return count + 1
           })
         }
@@ -52,9 +69,13 @@ export const MonitorPage: React.FC<MonitorPageProps> = () => {
 
   return (
     <Box>
-      <Box sx={{ mb: 2 }}>
+      <Box
+        sx={{
+          mb: 2,
+          display: 'flex',
+          gap: 1,
+        }}>
         <Button
-          sx={{ mr: 1 }}
           variant='outlined'
           color={listenEnabled ? 'error' : 'success'}
           onClick={() => {
@@ -67,9 +88,23 @@ export const MonitorPage: React.FC<MonitorPageProps> = () => {
           onClick={() => {
             setTotalCount(0)
             setMessages([])
+            setMidiStructorMessageCount({})
           }}>
           Clear
         </Button>
+        <Box
+          sx={{
+            display: 'flex',
+            gap: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          {_.map(midiStructorMessageCounts, (messageCount, messageType) => (
+            <Box key={messageType}>
+              <Chip label={`${messageType}: ${messageCount}`} />
+            </Box>
+          ))}
+        </Box>
       </Box>
       <Card sx={{ mb: 1 }}>
         <CardContent>

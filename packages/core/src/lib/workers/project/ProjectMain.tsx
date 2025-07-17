@@ -8,20 +8,21 @@ import {
 import { ProjectConfig, ProjectsConfig } from '../../project/ProjectConfig'
 import {
   arrangementMessageCount,
-  initArrangement,
-  initClip,
-  initCue,
+  InitArrangement,
   initDone,
-  initTrack,
 } from '../../project/UIStateDisplay'
 import { ProjectState } from '../../state/ProjectState'
-import { Option } from 'effect'
+import { Option, Queue, Effect, Schedule } from 'effect'
 import { ControllerDevices } from '../../controllers/devices/ControllerDevices'
 import { Set } from 'immutable'
 import { log } from '../../logger/log'
 import { DawMidi } from '../../midi/DawMidi'
-import { MidiMessage } from '../../midi/MidiMessage'
+import { MidiMessage, SysExMessage } from '../../midi/MidiMessage'
 import _ from 'lodash'
+
+let initArrangement: InitArrangement = []
+
+const listenerQueue = Effect.runSync(Queue.unbounded<SysExMessage>())
 
 const listener = (dawListener: EventEmitter<MidiEventRecord>) => {
   const onAbletonUIMessage = (msg: AbletonUIMessage) => {
@@ -34,21 +35,21 @@ const listener = (dawListener: EventEmitter<MidiEventRecord>) => {
     } else if (msg.type === 'init-project') {
       ProjectState.importStatus.set({ type: 'importing' })
       ProjectState.importMessageCount.set(msg.messageCount)
-      ProjectState.initArrangement.set(initArrangement(msg))
+      initArrangement = []
     } else if (msg.type === 'init-track') {
-      ProjectState.initArrangement.set(initTrack(msg))
+      initArrangement.push(msg)
     } else if (msg.type === 'init-clip') {
-      ProjectState.initArrangement.set(initClip(msg))
+      initArrangement.push(msg)
     } else if (msg.type === 'init-cue') {
-      ProjectState.initArrangement.set(initCue(msg))
+      initArrangement.push(msg)
     } else if (msg.type === 'init-done') {
       ProjectState.importStatus.set({ type: 'finalizing' })
-      const arrangement = initDone(ProjectState.initArrangement.get())
+      const arrangement = initDone(initArrangement)
       const sourceMessageCount = ProjectState.importMessageCount.get()
       const parsedMessageCount = arrangementMessageCount(arrangement)
       ProjectState.project.arrangement.set(arrangement)
       const status = {
-        type: 'done',
+        type: 'done' as const,
         sourceMessageCount,
         parsedMessageCount,
       }
@@ -72,16 +73,21 @@ const listener = (dawListener: EventEmitter<MidiEventRecord>) => {
     } else if (msg.type === 'loop-state') {
       ProjectState.realTime.loopState.set(msg.value)
     } else if (msg.type === 'tick') {
-      ProjectState.realTime.tick.set(msg.tick)
+      ProjectState.realTime.tick.set(msg)
     }
   }
 
   dawListener.on('sysex', (sysex) => {
+    Effect.runSync(Queue.offer(listenerQueue, sysex))
+  })
+
+  const processQueue = Effect.map(Queue.take(listenerQueue), (sysex) => {
     const msg = parseAbletonUIMessage(sysex)
     if (msg !== undefined) {
       onAbletonUIMessage(msg)
     }
   })
+  Effect.runPromise(Effect.repeat(processQueue, Schedule.repeatForever))
 }
 
 const handshake = (

@@ -1,5 +1,5 @@
 import React from 'react'
-import { MidiMessageWithRaw } from '@midi-structor/core'
+import { MidiMessage } from '@midi-structor/core'
 import {
   Box,
   Grid,
@@ -25,7 +25,7 @@ const renderRawAsHex = (raw: Uint8Array): string => {
 }
 
 export type MidiMessageDetailProps = {
-  message: MidiMessageWithRaw
+  message: MidiMessage
   messageNumber: number
 }
 
@@ -43,8 +43,6 @@ export const MidiMessageDetail: React.FC<MidiMessageDetailProps> = ({
     try {
       const json = parseAbletonUIMessage(message)
       if (json !== undefined) {
-        console.log('json message', json)
-
         detail = (
           <JSONEditor
             height={json.type === 'beat' ? '100px' : '500px'}
@@ -95,7 +93,7 @@ export const MidiMessageDetail: React.FC<MidiMessageDetailProps> = ({
         }
       }
     } catch (e) {
-      detail = <Box>Unable to parse JSON, raw sysex data [{message.raw}]</Box>
+      detail = <Box>Unable to parse JSON, raw sysex data [{message.type}]</Box>
     }
   } else if (message.type === 'noteon' || message.type === 'noteoff') {
     values = (
@@ -172,8 +170,8 @@ export const MidiMessageDetail: React.FC<MidiMessageDetailProps> = ({
         <Divider />
         <AccordionDetails>
           {detail}
-          <Box>Raw Int: {renderRawAsInt(message.raw)}</Box>
-          <Box>RawHex: {renderRawAsHex(message.raw)}</Box>
+          {/*<Box>Raw Int: {renderRawAsInt(message.raw)}</Box>*/}
+          {/*<Box>RawHex: {renderRawAsHex(message.raw)}</Box>*/}
         </AccordionDetails>
       </Accordion>
     </Box>

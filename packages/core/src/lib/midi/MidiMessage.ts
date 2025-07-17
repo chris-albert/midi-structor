@@ -151,21 +151,14 @@ export type MidiMessageWithRaw = MidiMessage & {
   time: Date
 }
 
-export const parseMidiInput = (input: any): MidiMessageWithRaw => {
-  const time = new Date()
+export const parseMidiInput = (input: any): MidiMessage => {
   if (input.data !== undefined) {
-    const common = {
-      raw: input.data,
-      time,
-    }
     const data: Uint8Array = input.data
     const status = data[0]
-    // console.log('status', status, data)
     if (status !== undefined) {
       if (status === SYSEX_STATUS) {
         return {
           ...parseRawSysex(data.slice(1, -1)),
-          ...common,
         }
       } else if (status >> 4 === NOTE_ON_STATUS) {
         return {
@@ -173,7 +166,6 @@ export const parseMidiInput = (input: any): MidiMessageWithRaw => {
           channel: (CHANNEL_MASK & status) + 1,
           note: data[1] as number,
           velocity: data[2] as number,
-          ...common,
         }
       } else if (status >> 4 === NOTE_OFF_STATUS) {
         return {
@@ -181,7 +173,6 @@ export const parseMidiInput = (input: any): MidiMessageWithRaw => {
           channel: (CHANNEL_MASK & status) + 1,
           note: data[1] as number,
           velocity: data[2] as number,
-          ...common,
         }
       } else if (status >> 4 === CONTROL_CHANGE_STATUS) {
         return {
@@ -189,74 +180,60 @@ export const parseMidiInput = (input: any): MidiMessageWithRaw => {
           channel: (CHANNEL_MASK & status) + 1,
           controllerNumber: data[1] as number,
           data: data[2] as number,
-          ...common,
         }
       } else if (status >> 4 === PROGRAM_CHANGE_STATUS) {
         return {
           type: 'pc',
           channel: (CHANNEL_MASK & status) + 1,
           programNumber: data[1] as number,
-          ...common,
         }
       } else if (status === TIMING_CLOCK_STATUS) {
         return {
           type: 'clock',
-          ...common,
         }
       } else if (status === MEASURE_END_STATUS) {
         return {
           type: 'measureend',
-          ...common,
         }
       } else if (status === START_STATUS) {
         return {
           type: 'start',
-          ...common,
         }
       } else if (status === CONTINUE_STATUS) {
         return {
           type: 'continue',
-          ...common,
         }
       } else if (status === STOP_STATUS) {
         return {
           type: 'stop',
-          ...common,
         }
       } else if (status === RESET_STATUS) {
         return {
           type: 'reset',
-          ...common,
         }
       } else if (status === ACTIVE_SENSING_STATUS) {
         return {
           type: 'activesensing',
-          ...common,
         }
       } else if (status === MTC_QUARTER_FRAME_STATUS) {
         return {
           type: 'mtcquarterframe',
           data: data[1] as number,
-          ...common,
         }
       } else {
         return {
           type: 'unknown',
-          ...common,
         }
       }
     } else {
       return {
         type: 'unknown',
-        ...common,
       }
     }
   }
   return {
     type: 'error',
     message: 'No data in MIDI message',
-    raw: {} as Uint8Array,
-    time,
   }
 }
 
