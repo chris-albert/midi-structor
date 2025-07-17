@@ -1,10 +1,11 @@
 import React from 'react'
 import { ControllerWidget } from '../ControllerWidget'
 import { Color } from '../Color'
-import { MidiChannel } from '../../midi/MidiMessage'
+import { MidiChannel, MidiMessage } from '../../midi/MidiMessage'
 import { Pad } from '../pads/Pad'
 import { Schema } from 'effect'
 import { DawMidi } from '../../midi/DawMidi'
+import { MidiTarget } from '../../midi/MidiTarget'
 
 export const MidiNoteOnVaryVelocity = Schema.TaggedStruct(
   'midi-note-vary-velocity',
@@ -29,6 +30,45 @@ export const KnobMidi = Schema.Union(
   MidiNoteOnVaryVelocity,
   MidiCCVaryData
 )
+
+const getValueFromMessage = (
+  target: MidiTarget,
+  message: MidiMessage
+): number => {
+  return MidiTarget.match(target, {
+    Note: () => (message.type === 'noteon' ? message.velocity : 0),
+    CC: () => (message.type === 'cc' ? message.data : 0),
+    PC: () => 0,
+  })
+}
+
+const getOutputMessage = (
+  knobMidi: typeof KnobMidi.Type,
+  value: number
+): MidiMessage => {
+  if (knobMidi._tag === 'midi-note-vary-velocity') {
+    return {
+      type: 'noteon',
+      note: knobMidi.note,
+      channel: knobMidi.channel,
+      velocity: value,
+    }
+  } else if (knobMidi._tag === 'midi-note-vary-note') {
+    return {
+      type: 'noteon',
+      note: value,
+      channel: knobMidi.channel,
+      velocity: knobMidi.velocity,
+    }
+  } else {
+    return {
+      type: 'cc',
+      controllerNumber: knobMidi.controllerNumber,
+      channel: knobMidi.channel,
+      data: value,
+    }
+  }
+}
 
 export const KnobWidget = ControllerWidget.one({
   name: 'knob',
@@ -58,8 +98,10 @@ export const KnobWidget = ControllerWidget.one({
       <Pad
         color={color}
         target={target}
-        onClick={() => {
-          console.log('idk what to do here yet')
+        onClick={(message) => {
+          const value = getValueFromMessage(target, message)
+          const outputMessage = getOutputMessage(midi, value)
+          dawEmitter.send(outputMessage)
         }}
       />
     )

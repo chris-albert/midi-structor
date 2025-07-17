@@ -31,8 +31,8 @@ export const MidiStructorComponent: React.FC<MidiStructorComponentProps> = ({
     }
   }, [store])
 
-  const onClick = (target: MidiTarget) => {
-    midiEmitter.send(MidiTarget.toMessage(target, 127))
+  const onClick = (target: MidiTarget, data?: any) => {
+    midiEmitter.send(MidiTarget.toMessage(target, data || 127))
   }
 
   return (

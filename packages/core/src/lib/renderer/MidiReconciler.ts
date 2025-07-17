@@ -25,7 +25,7 @@ declare global {
 export type PadProps = {
   color: Color
   target: MidiTarget
-  onClick?: () => void
+  onClick?: (m: MidiMessage) => void
   key?: string
   options?: any
 }
@@ -126,15 +126,15 @@ const appendPad = (controller: Controller, pad: Pad) => {
 }
 
 type ListenersManager = {
-  add: (target: MidiTarget, f: () => void) => void
+  add: (target: MidiTarget, f: (m: MidiMessage) => void) => void
   on: (message: MidiMessage) => void
 }
 
 const ListenersManager = (): ListenersManager => {
-  const listeners: Record<string, () => void> = {}
+  const listeners: Record<string, (m: MidiMessage) => void> = {}
 
   return {
-    add(target: MidiTarget, f: () => void) {
+    add(target: MidiTarget, f: (m: MidiMessage) => void) {
       const key = MidiTarget.toKey(target)
       listeners[key] = f
     },
@@ -142,7 +142,7 @@ const ListenersManager = (): ListenersManager => {
       const key = messageToKey(message)
       const list = listeners[key]
       if (list !== undefined) {
-        list()
+        list(message)
       }
     },
   }

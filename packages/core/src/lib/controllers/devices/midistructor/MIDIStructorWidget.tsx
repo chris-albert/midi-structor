@@ -9,7 +9,7 @@ import {
 } from '../../ControllerWidget'
 import { MIDIStructorPad } from '../MidiStructorMessage'
 
-export type OnClick = (target: MidiTarget) => void
+export type OnClick = (target: MidiTarget, data?: any) => void
 
 const UIBaseSchema = Schema.Struct({
   label: Schema.optional(Schema.String),

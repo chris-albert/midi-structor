@@ -13,6 +13,7 @@ export const KnobWidgetComponent = MIDIStructorWidget.of({
 
     const onChangeValue = (value: number) => {
       setValue(value)
+      onClick(pad.target, value)
     }
 
     return (
