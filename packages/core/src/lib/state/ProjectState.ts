@@ -8,11 +8,6 @@ export type TimeSignature = {
   noteLength: number
 }
 
-export type Tick = {
-  beat: number
-  tick: number
-}
-
 export type ProjectImportStatus =
   | { type: 'none' }
   | { type: 'ack'; projectName: string }
@@ -59,6 +54,6 @@ export const ProjectState = {
     isPlaying: State.mem('project', 'real-time-is-playing', false),
     metronomeState: State.mem('project', 'real-time-metronome-state', false),
     loopState: State.mem('project', 'real-time-loop-state', false),
-    tick: State.mem<Tick>('project', 'real-time-tick', { beat: 0, tick: 0 }),
+    tick: State.mem('project', 'real-time-tick', 0),
   },
 }

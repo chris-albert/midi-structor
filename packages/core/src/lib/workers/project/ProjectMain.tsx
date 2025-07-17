@@ -73,7 +73,7 @@ const listener = (dawListener: EventEmitter<MidiEventRecord>) => {
     } else if (msg.type === 'loop-state') {
       ProjectState.realTime.loopState.set(msg.value)
     } else if (msg.type === 'tick') {
-      ProjectState.realTime.tick.set(msg)
+      ProjectState.realTime.tick.set(msg.tick)
     }
   }
 

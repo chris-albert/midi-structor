@@ -20,15 +20,38 @@ const init = (): ForeverBeat => {
   let bpm = 120
   let millisPerHalfBeat = 100
   let noteLength = 4
+  let noteCount = 4
+  let beat = 0
 
   const runAllCallbacks = (p: ForeverBeatParams) =>
     callbacks.forEach((cb) => cb(p))
 
-  const onBeat = (beat: number) => {
-    runAllCallbacks({ beat, halfBeat: false, isPlaying })
+  const onBeat = (_beat: number) => {
+    beat = _beat
+  }
+
+  const notPlayingFlash = () => {
+    runAllCallbacks({ beat: 1, halfBeat: false, isPlaying })
     setTimeout(() => {
-      runAllCallbacks({ beat, halfBeat: true, isPlaying })
-    }, millisPerHalfBeat * 0.5)
+      runAllCallbacks({ beat: 1, halfBeat: true, isPlaying })
+    }, Math.floor(millisPerHalfBeat * 0.5))
+  }
+
+  const onTickChanged = (tick: number) => {
+    const correctedBeat = beat === noteCount ? 1 : beat + 1
+    if (noteLength === 4) {
+      if (tick === 0) {
+        runAllCallbacks({ beat: correctedBeat, halfBeat: false, isPlaying })
+      } else if (tick === 2) {
+        runAllCallbacks({ beat: correctedBeat, halfBeat: true, isPlaying })
+      }
+    } else {
+      if (tick === 0 || tick === 5) {
+        runAllCallbacks({ beat: correctedBeat, halfBeat: false, isPlaying })
+      } else if (tick === 2 || tick === 7) {
+        runAllCallbacks({ beat: correctedBeat, halfBeat: true, isPlaying })
+      }
+    }
   }
 
   const onIsPlaying = (_isPlaying: boolean) => {
@@ -36,7 +59,7 @@ const init = (): ForeverBeat => {
     if (!_isPlaying) {
       const loop = () =>
         setTimeout(() => {
-          onBeat(1)
+          notPlayingFlash()
           if (!isPlaying) {
             loop()
           }
@@ -48,10 +71,10 @@ const init = (): ForeverBeat => {
 
   const calcMillisPerHalfBeat = () => {
     if (noteLength <= 4) {
-      millisPerHalfBeat = (60 / bpm / 2) * 1000
+      millisPerHalfBeat = Math.floor((60 / bpm / 2) * 1000)
     } else {
       //assume 8th notes
-      millisPerHalfBeat = (60 / bpm / 4) * 1000
+      millisPerHalfBeat = Math.floor((60 / bpm / 4) * 1000)
     }
   }
   calcMillisPerHalfBeat()
@@ -63,12 +86,14 @@ const init = (): ForeverBeat => {
 
   ProjectState.realTime.timeSignature.sub((value) => {
     noteLength = value.noteLength
+    noteCount = value.noteCount
     calcMillisPerHalfBeat()
   })
 
   ProjectState.realTime.isPlaying.sub(onIsPlaying)
 
   ProjectState.realTime.barBeats.sub(onBeat)
+  ProjectState.realTime.tick.sub(onTickChanged)
 
   const onTick = (f: ForeverBeatCallback) => {
     callbacks = [...callbacks, f]

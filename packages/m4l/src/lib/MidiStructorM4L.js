@@ -105,8 +105,8 @@ var Message = {
   loop: function (state) {
     return sysex([STATUS.LOOP, state])
   },
-  tick: function (beat, tick) {
-    return sysex([STATUS.TICK, beat, tick])
+  tick: function (tick) {
+    return sysex([STATUS.TICK, tick])
   },
 }
 
@@ -137,8 +137,8 @@ function isPlaying(num) {
   outlet(0, Message.isPlaying(num))
 }
 
-function tick(beat, tick) {
-  outlet(0, Message.tick(beat, tick))
+function tick(tick) {
+  outlet(0, Message.tick(tick))
 }
 
 var api = null
