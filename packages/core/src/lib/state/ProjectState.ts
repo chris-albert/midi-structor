@@ -13,7 +13,7 @@ export type ProjectImportStatus =
   | { type: 'ack'; projectName: string }
   | { type: 'importing' }
   | { type: 'finalizing' }
-  | { type: 'done' }
+  | { type: 'done'; sourceMessageCount: number; parsedMessageCount: number }
   | { type: 'error'; msg: string }
 
 export const ProjectState = {
@@ -22,6 +22,7 @@ export const ProjectState = {
     'init-arrangement',
     []
   ),
+  importMessageCount: State.mem('project', 'import-message-count', 0),
   importStatus: State.mem<ProjectImportStatus>('project', 'import-status', {
     type: 'none',
   }),
@@ -53,6 +54,6 @@ export const ProjectState = {
     isPlaying: State.mem('project', 'real-time-is-playing', false),
     metronomeState: State.mem('project', 'real-time-metronome-state', false),
     loopState: State.mem('project', 'real-time-loop-state', false),
-    halfBeat: State.mem('project', 'real-time-half-beat', false),
+    tick: State.mem('project', 'real-time-tick', 0),
   },
 }

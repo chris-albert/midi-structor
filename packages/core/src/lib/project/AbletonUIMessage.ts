@@ -24,7 +24,7 @@ const RX_STATUS: Record<string, MessageParser> = {
     parse: (input: Array<any>) => {
       return {
         type: 'init-project',
-        tracksCount: input[0],
+        messageCount: _.toNumber(input[0]),
       }
     },
   },
@@ -138,12 +138,12 @@ const RX_STATUS: Record<string, MessageParser> = {
       }
     },
   },
-  HALF_BEAT: {
+  TICK: {
     statusByte: 0x0f,
     parse: (input: Array<any>) => {
       return {
-        type: 'half-beat',
-        isHalf: _.toNumber(input[0]) === 1,
+        type: 'tick',
+        tick: _.toNumber(input[0]),
       }
     },
   },
@@ -188,7 +188,7 @@ export type InitAckMessage = {
 
 export type InitProjectMessage = {
   type: 'init-project'
-  tracksCount: number
+  messageCount: number
 }
 
 export type InitTrackMessage = {
@@ -230,9 +230,9 @@ export type LoopStateMessage = {
   value: boolean
 }
 
-export type HalfBeatMessage = {
-  type: 'half-beat'
-  isHalf: boolean
+export type TickMessage = {
+  type: 'tick'
+  tick: number
 }
 
 export type AbletonUIMessage =
@@ -249,7 +249,7 @@ export type AbletonUIMessage =
   | InitCueMessage
   | MetronomeStateMessage
   | LoopStateMessage
-  | HalfBeatMessage
+  | TickMessage
 
 const parseSysExBody = (
   body: Readonly<Array<number>>

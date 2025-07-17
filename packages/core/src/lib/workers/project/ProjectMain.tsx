@@ -7,6 +7,7 @@ import {
 } from '../../project/AbletonUIMessage'
 import { ProjectConfig, ProjectsConfig } from '../../project/ProjectConfig'
 import {
+  arrangementMessageCount,
   initArrangement,
   initClip,
   initCue,
@@ -32,6 +33,7 @@ const listener = (dawListener: EventEmitter<MidiEventRecord>) => {
       ProjectState.project.abletonName.set(msg.projectName)
     } else if (msg.type === 'init-project') {
       ProjectState.importStatus.set({ type: 'importing' })
+      ProjectState.importMessageCount.set(msg.messageCount)
       ProjectState.initArrangement.set(initArrangement(msg))
     } else if (msg.type === 'init-track') {
       ProjectState.initArrangement.set(initTrack(msg))
@@ -42,8 +44,16 @@ const listener = (dawListener: EventEmitter<MidiEventRecord>) => {
     } else if (msg.type === 'init-done') {
       ProjectState.importStatus.set({ type: 'finalizing' })
       const arrangement = initDone(ProjectState.initArrangement.get())
+      const sourceMessageCount = ProjectState.importMessageCount.get()
+      const parsedMessageCount = arrangementMessageCount(arrangement)
       ProjectState.project.arrangement.set(arrangement)
-      ProjectState.importStatus.set({ type: 'done' })
+      const status = {
+        type: 'done',
+        sourceMessageCount,
+        parsedMessageCount,
+      }
+      log.info('Import Status', status)
+      ProjectState.importStatus.set(status)
     } else if (msg.type === 'beat') {
       ProjectState.realTime.beats.set(msg.value)
     } else if (msg.type === 'sig') {
@@ -61,8 +71,8 @@ const listener = (dawListener: EventEmitter<MidiEventRecord>) => {
       ProjectState.realTime.metronomeState.set(msg.value)
     } else if (msg.type === 'loop-state') {
       ProjectState.realTime.loopState.set(msg.value)
-    } else if (msg.type === 'half-beat') {
-      ProjectState.realTime.halfBeat.set(msg.isHalf)
+    } else if (msg.type === 'tick') {
+      ProjectState.realTime.tick.set(msg.tick)
     }
   }
 

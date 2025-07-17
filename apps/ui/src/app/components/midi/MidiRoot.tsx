@@ -12,7 +12,15 @@ const onStatusChange = (status: ProjectImportStatus) => {
   } else if (status.type === 'importing') {
     toast.info('Importing project.')
   } else if (status.type === 'done') {
-    toast.success(`Successfully imported!`)
+    if (status.parsedMessageCount === status.sourceMessageCount) {
+      toast.success(`Successfully imported!`)
+    } else {
+      toast.warn(
+        `Imported... but missing [${
+          status.sourceMessageCount - status.parsedMessageCount
+        }] message(s)`
+      )
+    }
   }
 }
 

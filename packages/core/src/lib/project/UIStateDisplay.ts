@@ -1,4 +1,9 @@
-import { InitClipMessage, InitCueMessage, InitProjectMessage, InitTrackMessage } from './AbletonUIMessage'
+import {
+  InitClipMessage,
+  InitCueMessage,
+  InitProjectMessage,
+  InitTrackMessage,
+} from './AbletonUIMessage'
 import _ from 'lodash'
 import { produce } from 'immer'
 import { Color } from '../controllers/Color'
@@ -66,7 +71,20 @@ export const emptyArrangement = (): UIArrangement => ({
   cues: [],
 })
 
-export type InitArrangement = Array<InitTrackMessage | InitClipMessage | InitCueMessage>
+export const arrangementMessageCount = (arrangement: UIArrangement): number => {
+  const clipCount = _.sum(
+    _.flatMap(arrangement.tracks, (track) =>
+      _.size(_.filter(track.clips, (c) => c.type === 'real'))
+    )
+  )
+  const trackCount = _.size(arrangement.tracks)
+  const cueCount = _.size(arrangement.cues)
+  return clipCount + trackCount + cueCount + 1 //The plus 1 is to account for the done message
+}
+
+export type InitArrangement = Array<
+  InitTrackMessage | InitClipMessage | InitCueMessage
+>
 
 const buildContiguousClips = (clips: Array<InitClipMessage>): Array<UIClip> => {
   let lastEndTime = 0
@@ -92,7 +110,9 @@ const buildContiguousClips = (clips: Array<InitClipMessage>): Array<UIClip> => {
   return uiClips
 }
 
-export const buildArrangement = (initProject: InitArrangement): UIArrangement => {
+export const buildArrangement = (
+  initProject: InitArrangement
+): UIArrangement => {
   const tracksMessages: Array<InitTrackMessage> = []
   const clipsMessages: Array<InitClipMessage> = []
   const cueMessages: Array<InitCueMessage> = []
@@ -122,25 +142,33 @@ export const buildArrangement = (initProject: InitArrangement): UIArrangement =>
   }
 }
 
-export const initArrangement = (message: InitProjectMessage): ((p: InitArrangement) => InitArrangement) => {
+export const initArrangement = (
+  message: InitProjectMessage
+): ((p: InitArrangement) => InitArrangement) => {
   return () => {
     return []
   }
 }
 
-export const initTrack = (message: InitTrackMessage): ((p: InitArrangement) => InitArrangement) => {
+export const initTrack = (
+  message: InitTrackMessage
+): ((p: InitArrangement) => InitArrangement) => {
   return produce<InitArrangement>((arrangement) => {
     arrangement.push(message)
   })
 }
 
-export const initClip = (message: InitClipMessage): ((p: InitArrangement) => InitArrangement) => {
+export const initClip = (
+  message: InitClipMessage
+): ((p: InitArrangement) => InitArrangement) => {
   return produce<InitArrangement>((arrangement) => {
     arrangement.push(message)
   })
 }
 
-export const initCue = (message: InitCueMessage): ((p: InitArrangement) => InitArrangement) => {
+export const initCue = (
+  message: InitCueMessage
+): ((p: InitArrangement) => InitArrangement) => {
   return produce<InitArrangement>((arrangement) => {
     arrangement.push(message)
   })
@@ -150,4 +178,5 @@ export const initDone = (initArrangement: InitArrangement): UIArrangement => {
   return buildArrangement(initArrangement)
 }
 
-export const getHexColor = (hasColor: { color: number }): string => `#${hasColor.color.toString(16)}`
+export const getHexColor = (hasColor: { color: number }): string =>
+  `#${hasColor.color.toString(16)}`

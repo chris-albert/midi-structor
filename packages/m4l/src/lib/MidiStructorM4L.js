@@ -16,7 +16,7 @@ var STATUS = {
   CUE: 0x0c,
   METRO_STATE: 0x0d,
   LOOP: 0x0e,
-  HALF_BEAT: 0x0f,
+  TICK: 0x0f,
 }
 
 var SYSEX = {
@@ -55,8 +55,8 @@ var Message = {
   initAck: function (projectName) {
     return sysex([STATUS.INIT_ACK, projectName])
   },
-  init: function () {
-    return sysex([STATUS.INIT])
+  init: function (totalMessages) {
+    return sysex([STATUS.INIT, totalMessages])
   },
   done: function () {
     return sysex([STATUS.DONE])
@@ -105,8 +105,8 @@ var Message = {
   loop: function (state) {
     return sysex([STATUS.LOOP, state])
   },
-  halfBeat: function (isHalf) {
-    return sysex([STATUS.HALF_BEAT, isHalf])
+  tick: function (tick) {
+    return sysex([STATUS.TICK, tick])
   },
 }
 
@@ -137,8 +137,8 @@ function isPlaying(num) {
   outlet(0, Message.isPlaying(num))
 }
 
-function halfBeat(div) {
-  outlet(0, Message.halfBeat(div))
+function tick(tick) {
+  outlet(0, Message.tick(tick))
 }
 
 var api = null
@@ -194,23 +194,26 @@ function initProject(filterTracks) {
   cues = null
 }
 
+var messages = []
 function emit(tracks, cues) {
-  var messages = generateMessages(tracks, cues)
+  messages = generateMessages(tracks, cues)
   var totalMessages = messages.length
+  outlet(0, Message.init(totalMessages))
   post('Starting to emit', totalMessages, 'messages\n')
   outlet(1, '0%')
-
+  var i = 0
   var task = new Task(function () {
-    if (messages.length > 0) {
+    if (i < messages.length) {
       var percentage =
         Math.floor((arguments.callee.task.iterations / totalMessages) * 100) +
         '%'
       outlet(1, percentage)
-      outlet(0, messages.shift())
+      outlet(0, messages[i])
     } else {
       outlet(1, 'Done')
       post('Done emitting messages\n')
     }
+    i++
   }, {})
   task.interval = EMIT_MILLIS
   task.repeat(messages.length + 1)
@@ -218,7 +221,6 @@ function emit(tracks, cues) {
 
 function generateMessages(tracks, cues) {
   var messages = []
-  messages.push(Message.init())
 
   post('Processing', tracks.tracks.length, 'tracks \n')
   forEach(tracks.tracks, function (track) {
