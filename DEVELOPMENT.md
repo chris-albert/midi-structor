@@ -49,22 +49,33 @@ The 2 rows at the top designate your device ID, the one that is a different colo
 Having different device ID's helps when you have multiple LaunchPad's and need to configure them differently.
 
 Initialize Messages
-```mermaid
 sequenceDiagram
-    MIDI Structor->>Ableton: init
-    Ableton->>MIDI Structor: init-ack [projectName: string]
-     MIDI Structor->>Ableton: init-ready [Array<string>]
-    Ableton->>MIDI Structor: init-project
-    loop Each Clip
-        Ableton->>MIDI Structor: init-clip
-    end
-    loop Each Track
-        Ableton->>MIDI Structor: init-track
-    end
-    loop Each Cue
-        Ableton->>MIDI Structor: init-cue
-    end
-    Ableton->>MIDI Structor: init-done
+  MIDI Structor->>Ableton: init
+  Ableton->>MIDI Structor: init-ack [projectName: string]
+  MIDI Structor->>Ableton: init-ready [tracks: Array<string>]
+  Ableton->>MIDI Structor: init-project
+  loop Each Clip
+  Ableton->>MIDI Structor: init-clip
+  end
+  loop Each Track
+  Ableton->>MIDI Structor: init-track
+  end
+  loop Each Cue
+  Ableton->>MIDI Structor: init-cue
+  end
+  Ableton->>MIDI Structor: init-done
+  MIDI Structor->>MIDI Structor: Determine Missed Messages
+  MIDI Structor->>Ableton: init-resend [messageIds: Array<number>]
+  loop Each Missed Clip
+  Ableton->>MIDI Structor: init-clip
+  end
+  loop Each Missed Track
+  Ableton->>MIDI Structor: init-track
+  end
+  loop Each Missed Cue
+  Ableton->>MIDI Structor: init-cue
+  end
+  Ableton->>MIDI Structor: init-done
 ```
 
 Real Time Messages

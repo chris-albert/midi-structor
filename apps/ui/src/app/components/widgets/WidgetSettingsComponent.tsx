@@ -23,6 +23,7 @@ import {
 } from '@midi-structor/core'
 import CloseIcon from '@mui/icons-material/Close'
 import { WidgetSettingsFormComponent } from './WidgetSettingsFormComponent'
+import _ from 'lodash'
 
 export type WidgetSettingsComponentProps = {
   widget: MIDIStructorUIWidget
@@ -66,7 +67,7 @@ export const WidgetSettingsComponent: React.FC<
             <CloseIcon />
           </IconButton>
         }
-        title={widget._tag}
+        title={_.startCase(widget._tag)}
       />
       <CardContent>
         <WidgetSettingsFormComponent

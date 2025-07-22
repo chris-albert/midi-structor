@@ -5,12 +5,13 @@ import { Schema } from 'effect'
 import { Pad } from '../pads/Pad'
 import { MidiMessage } from '../../midi/MidiMessage'
 import { DawMidi } from '../../midi/DawMidi'
+import { SchemaForm } from './form/SchemaForm'
 
 export const ButtonWidget = ControllerWidget.one({
   name: 'button',
   schema: Schema.Struct({
     color: Color.Schema,
-    isFlashing: Schema.Boolean,
+    isFlashing: Schema.Boolean.annotations(SchemaForm.annotation('Switch')),
     midi: Schema.Array(MidiMessage.schema),
     text: Schema.optional(
       Schema.Struct({

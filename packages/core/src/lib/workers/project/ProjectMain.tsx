@@ -20,7 +20,7 @@ import { DawMidi } from '../../midi/DawMidi'
 import { MidiMessage, SysExMessage } from '../../midi/MidiMessage'
 import _ from 'lodash'
 
-const MAX_RESEND_ATTEMPTS = 2
+const MAX_RESEND_ATTEMPTS = 5
 let resendAttempts = 0
 const determineMissingMessages = (
   messages: InitArrangement,

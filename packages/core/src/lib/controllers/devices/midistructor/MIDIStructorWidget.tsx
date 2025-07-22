@@ -8,18 +8,16 @@ import {
   ControllerWidgetType,
 } from '../../ControllerWidget'
 import { MIDIStructorPad } from '../MidiStructorMessage'
+import { SchemaForm } from '../../widgets/form/SchemaForm'
 
 export type OnClick = (target: MidiTarget, data?: any) => void
 
 const UIBaseSchema = Schema.Struct({
   label: Schema.optional(Schema.String),
-  border: Schema.optional(
-    Schema.Struct({
-      sizePx: Schema.optional(Schema.Number),
-      color: Schema.optional(Schema.String),
-    })
+  border: SchemaForm.Schemas.Border,
+  visible: Schema.optional(Schema.Boolean).annotations(
+    SchemaForm.annotation('Switch')
   ),
-  visible: Schema.optional(Schema.Boolean),
 })
 
 const defaultBase = (): typeof UIBaseSchema.Type => ({})

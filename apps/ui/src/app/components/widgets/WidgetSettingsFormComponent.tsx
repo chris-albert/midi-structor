@@ -11,6 +11,8 @@ import { WidgetSettingsFormField } from './WidgetSettingsFormField'
 import { WidgetSettingsString } from './WidgetSettingsString'
 import { ColorFieldComponent } from './fields/ColorFieldComponent'
 import { MidiTargetFieldComponent } from './fields/MidiTargetFieldComponent'
+import { SwitchFieldComponent } from './fields/SwitchFieldComponent'
+import { BorderFieldComponent } from './fields/BorderFieldComponent'
 
 const Components: Array<WidgetSettingsFormField> = [WidgetSettingsString]
 
@@ -28,21 +30,15 @@ export const WidgetSettingsFormComponent: React.FC<
     _.fromPairs(
       _.compact(
         _.map(JSON.parse(settings), (value, key) => {
-          if (typeof value === 'string') {
-            return [key, value]
-          } else if (typeof value === 'object') {
-            return [key, value]
-          } else {
-            return undefined
-          }
+          return [key, value]
         })
       )
     )
   )
 
   const updateFormField = (key: string, value: any) => {
-    // console.log('updateFormField', key, value)
-    // console.log('form', form)
+    console.log('updateFormField', key, value)
+    console.log('form', form)
     setForm((form) => {
       const newForm = { ...form, [key]: value }
       setSettings((_) => JSON.stringify(newForm, null, 2))
@@ -55,12 +51,13 @@ export const WidgetSettingsFormComponent: React.FC<
   // const formFields = null
   const formFields = _.map(config.widget.schema.fields, (field, key) => {
     const schemaName = SchemaForm.getFormName(field.ast)
-    // console.log('Field', key, SchemaForm.getFormName(field.ast), field)
+    // console.log('SchemaName', key, schemaName, field)
     if (schemaName._tag === 'Some') {
       if (schemaName.value === 'Color') {
         return (
           <ColorFieldComponent
             key={key}
+            label={key}
             value={form[key]}
             onChange={(value) => {
               updateFormField(key, value)
@@ -77,16 +74,36 @@ export const WidgetSettingsFormComponent: React.FC<
             }}
           />
         )
+      } else if (schemaName.value === 'Border') {
+        return (
+          <BorderFieldComponent
+            key={key}
+            value={form[key]}
+            onChange={(isChecked) => {
+              updateFormField(key, isChecked)
+            }}
+          />
+        )
+      } else if (schemaName.value === 'Switch') {
+        return (
+          <SwitchFieldComponent
+            key={key}
+            label={key}
+            value={form[key]}
+            onChange={(isChecked) => {
+              updateFormField(key, isChecked)
+            }}
+          />
+        )
       } else {
-        return <Box key={key}>not implemented yet</Box>
+        return <Box key={key}>{key} not implemented yet</Box>
       }
-    } else {
+    } else if (key !== '_tag') {
       return (
         <TextField
-          disabled={key === '_tag'}
           key={key}
           fullWidth
-          label={key}
+          label={_.startCase(key)}
           variant='outlined'
           size='small'
           value={form[key]}
@@ -95,6 +112,8 @@ export const WidgetSettingsFormComponent: React.FC<
           }}
         />
       )
+    } else {
+      return null
     }
   })
   return (
