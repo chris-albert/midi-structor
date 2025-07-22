@@ -13,6 +13,7 @@ export type ProjectImportStatus =
   | { type: 'ack'; projectName: string }
   | { type: 'importing' }
   | { type: 'finalizing' }
+  | { type: 'resend'; missingMessageIds: Array<number> }
   | { type: 'done'; sourceMessageCount: number; parsedMessageCount: number }
   | { type: 'error'; msg: string }
 

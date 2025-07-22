@@ -21,6 +21,8 @@ const onStatusChange = (status: ProjectImportStatus) => {
         }] message(s)`
       )
     }
+  } else if (status.type === 'error') {
+    toast.error(status.msg)
   }
 }
 

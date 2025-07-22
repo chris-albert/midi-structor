@@ -61,12 +61,21 @@ var Message = {
   done: function () {
     return sysex([STATUS.DONE])
   },
-  track: function (name, trackIndex, color) {
-    return sysex([STATUS.TRACK, name, trackIndex, color])
+  track: function (messageId, name, trackIndex, color) {
+    return sysex([STATUS.TRACK, messageId, name, trackIndex, color])
   },
-  clip: function (name, trackIndex, clipIndex, color, startTime, endTime) {
+  clip: function (
+    messageId,
+    name,
+    trackIndex,
+    clipIndex,
+    color,
+    startTime,
+    endTime
+  ) {
     return sysex([
       STATUS.CLIP,
+      messageId,
       name,
       trackIndex,
       clipIndex,
@@ -90,9 +99,10 @@ var Message = {
   isPlaying: function (playing) {
     return sysex([STATUS.IS_PLAYING, playing])
   },
-  cue: function (cuePoint) {
+  cue: function (messageId, cuePoint) {
     return sysex([
       STATUS.CUE,
+      messageId,
       cuePoint.id,
       cuePoint.name,
       cuePoint.time,
@@ -180,6 +190,23 @@ function init() {
   post('nothing to do here right now\n')
 }
 
+function resend(missingMessageIds) {
+  var ids = JSON.parse(missingMessageIds).missingMessageIds
+  var resendMessages = []
+  forEach(ids, function (missingMessageId) {
+    var message = messages[missingMessageId]
+    if (message !== undefined) {
+      resendMessages.push(message)
+      post('Found message id ', missingMessageId, '\n')
+    } else {
+      post('Did not find message id ', missingMessageId, '\n')
+    }
+  })
+  emit(resendMessages)
+}
+
+var messages = []
+
 function initProject(filterTracks) {
   setupObservers()
   var tracksArray = JSON.parse(filterTracks).tracks
@@ -188,17 +215,16 @@ function initProject(filterTracks) {
   tracks = parseTracks(tracksArray)
   cues = parseCues()
 
-  emit(tracks, cues)
+  messages = generateMessages(tracks, cues)
+  outlet(0, Message.init(messages.length))
+  emit(messages)
 
   tracks = null
   cues = null
 }
 
-var messages = []
-function emit(tracks, cues) {
-  messages = generateMessages(tracks, cues)
+function emit(messages) {
   var totalMessages = messages.length
-  outlet(0, Message.init(totalMessages))
   post('Starting to emit', totalMessages, 'messages\n')
   outlet(1, '0%')
   var i = 0
@@ -210,6 +236,7 @@ function emit(tracks, cues) {
       outlet(1, percentage)
       outlet(0, messages[i])
     } else {
+      outlet(0, Message.done())
       outlet(1, 'Done')
       post('Done emitting messages\n')
     }
@@ -221,16 +248,20 @@ function emit(tracks, cues) {
 
 function generateMessages(tracks, cues) {
   var messages = []
-
+  var messageId = 0
   post('Processing', tracks.tracks.length, 'tracks \n')
   forEach(tracks.tracks, function (track) {
-    messages.push(Message.track(track.name, track.trackIndex, track.color))
+    messages.push(
+      Message.track(messageId, track.name, track.trackIndex, track.color)
+    )
+    messageId++
   })
 
   post('Processing', tracks.clips.length, 'clips \n')
   forEach(tracks.clips, function (clip) {
     messages.push(
       Message.clip(
+        messageId,
         clip.name,
         clip.trackIndex,
         clip.clipIndex,
@@ -239,14 +270,14 @@ function generateMessages(tracks, cues) {
         clip.endTime
       )
     )
+    messageId++
   })
 
   post('Processing', cues.length, 'cues \n')
   forEach(cues, function (cue) {
-    messages.push(Message.cue(cue))
+    messages.push(Message.cue(messageId, cue))
+    messageId++
   })
-
-  messages.push(Message.done())
 
   return messages
 }

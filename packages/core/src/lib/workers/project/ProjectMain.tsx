@@ -20,6 +20,23 @@ import { DawMidi } from '../../midi/DawMidi'
 import { MidiMessage, SysExMessage } from '../../midi/MidiMessage'
 import _ from 'lodash'
 
+const MAX_RESEND_ATTEMPTS = 2
+let resendAttempts = 0
+const determineMissingMessages = (
+  messages: InitArrangement,
+  expectedMessageCount: number
+): Array<number> => {
+  const messageIdLookup = _.keyBy(messages, 'messageId')
+  const missingMessageIds: Array<number> = []
+  Array.from({ length: expectedMessageCount - 1 }).forEach((a, index) => {
+    if (_.get(messageIdLookup, index, undefined) === undefined) {
+      missingMessageIds.push(index)
+    }
+  })
+  log.info('Missing message ids', missingMessageIds)
+  return missingMessageIds
+}
+
 let initArrangement: InitArrangement = []
 
 const listenerQueue = Effect.runSync(Queue.unbounded<SysExMessage>())
@@ -44,17 +61,34 @@ const listener = (dawListener: EventEmitter<MidiEventRecord>) => {
       initArrangement.push(msg)
     } else if (msg.type === 'init-done') {
       ProjectState.importStatus.set({ type: 'finalizing' })
-      const arrangement = initDone(initArrangement)
       const sourceMessageCount = ProjectState.importMessageCount.get()
-      const parsedMessageCount = arrangementMessageCount(arrangement)
-      ProjectState.project.arrangement.set(arrangement)
-      const status = {
-        type: 'done' as const,
-        sourceMessageCount,
-        parsedMessageCount,
+      const missingMessageIds = determineMissingMessages(
+        initArrangement,
+        sourceMessageCount
+      )
+      if (resendAttempts >= MAX_RESEND_ATTEMPTS) {
+        ProjectState.importStatus.set({
+          type: 'error',
+          msg: `Resend attempts exceeded ${MAX_RESEND_ATTEMPTS}!`,
+        })
+      } else if (_.isEmpty(missingMessageIds)) {
+        const arrangement = initDone(initArrangement)
+        const parsedMessageCount = arrangementMessageCount(arrangement)
+        ProjectState.project.arrangement.set(arrangement)
+        const status = {
+          type: 'done' as const,
+          sourceMessageCount,
+          parsedMessageCount,
+        }
+        log.info('Import Status', status)
+        ProjectState.importStatus.set(status)
+      } else {
+        resendAttempts++
+        ProjectState.importStatus.set({
+          type: 'resend',
+          missingMessageIds,
+        })
       }
-      log.info('Import Status', status)
-      ProjectState.importStatus.set(status)
     } else if (msg.type === 'beat') {
       ProjectState.realTime.beats.set(msg.value)
     } else if (msg.type === 'sig') {
@@ -99,6 +133,8 @@ const handshake = (
   return ProjectState.importStatus.sub((importStatus) => {
     if (importStatus.type === 'ack') {
       dawEmitter.emit(TX_MESSAGE.initReady(tracks))
+    } else if (importStatus.type === 'resend') {
+      dawEmitter.emit(TX_MESSAGE.resend(importStatus.missingMessageIds))
     }
   })
 }

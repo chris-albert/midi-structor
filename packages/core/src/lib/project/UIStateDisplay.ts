@@ -79,7 +79,7 @@ export const arrangementMessageCount = (arrangement: UIArrangement): number => {
   )
   const trackCount = _.size(arrangement.tracks)
   const cueCount = _.size(arrangement.cues)
-  return clipCount + trackCount + cueCount + 1 //The plus 1 is to account for the done message
+  return clipCount + trackCount + cueCount
 }
 
 export type InitArrangement = Array<
@@ -135,10 +135,10 @@ export const buildArrangement = (
       return {
         name: track.name,
         color: track.color,
-        clips: buildContiguousClips(trackClips),
+        clips: buildContiguousClips(_.sortBy(trackClips, (c) => c.clipIndex)),
       }
     }),
-    cues: cueMessages,
+    cues: _.sortBy(cueMessages, (c) => c.index),
   }
 }
 

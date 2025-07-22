@@ -26,6 +26,11 @@ var RX_MESSAGE = {
     post('initReady', tracks, '\n')
     outlet(0, 'initProject', tracks)
   },
+  0x42: function (buffer) {
+    var missingMessageIds = charCodesToString(buffer)
+    post('resend', missingMessageIds, '\n')
+    outlet(0, 'resend', missingMessageIds)
+  },
   0x50: function () {
     post('starting\n')
     var api = getApi()

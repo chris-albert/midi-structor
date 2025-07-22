@@ -42,9 +42,10 @@ const RX_STATUS: Record<string, MessageParser> = {
     parse: (input: Array<any>) => {
       return {
         type: 'init-track',
-        name: input[0],
-        trackIndex: _.toNumber(input[1]),
-        color: _.toNumber(input[2]),
+        messageId: _.toNumber(input[0]),
+        name: input[1],
+        trackIndex: _.toNumber(input[2]),
+        color: _.toNumber(input[3]),
       }
     },
   },
@@ -53,12 +54,13 @@ const RX_STATUS: Record<string, MessageParser> = {
     parse: (input: Array<any>) => {
       return {
         type: 'init-clip',
-        name: input[0],
-        trackIndex: _.toNumber(input[1]),
-        clipIndex: _.toNumber(input[2]),
-        color: _.toNumber(input[3]),
-        startTime: _.toNumber(input[4]),
-        endTime: _.toNumber(input[5]),
+        messageId: _.toNumber(input[0]),
+        name: input[1],
+        trackIndex: _.toNumber(input[2]),
+        clipIndex: _.toNumber(input[3]),
+        color: _.toNumber(input[4]),
+        startTime: _.toNumber(input[5]),
+        endTime: _.toNumber(input[6]),
       }
     },
   },
@@ -113,10 +115,11 @@ const RX_STATUS: Record<string, MessageParser> = {
     parse: (input: Array<any>) => {
       return {
         type: 'init-cue',
-        id: _.toNumber(input[0]),
-        name: input[1],
-        time: _.toNumber(input[2]),
-        index: _.toNumber(input[3]),
+        messageId: _.toNumber(input[0]),
+        id: _.toNumber(input[1]),
+        name: input[2],
+        time: _.toNumber(input[3]),
+        index: _.toNumber(input[4]),
       }
     },
   },
@@ -193,6 +196,7 @@ export type InitProjectMessage = {
 
 export type InitTrackMessage = {
   type: 'init-track'
+  messageId: number
   trackIndex: number
   name: string
   color: number
@@ -200,6 +204,7 @@ export type InitTrackMessage = {
 
 export type InitClipMessage = {
   type: 'init-clip'
+  messageId: number
   trackIndex: number
   clipIndex: number
   name: string
@@ -210,6 +215,7 @@ export type InitClipMessage = {
 
 export type InitCueMessage = {
   type: 'init-cue'
+  messageId: number
   id: number
   name: string
   time: number
@@ -310,6 +316,9 @@ export const TX_MESSAGE = {
   },
   initReady: (tracks: Array<string>) => {
     return TX_MESSAGE.baseJSON(0x41, { tracks })
+  },
+  resend: (missingMessageIds: Array<number>) => {
+    return TX_MESSAGE.baseJSON(0x42, { missingMessageIds })
   },
   play: () => {
     return TX_MESSAGE.base(0x50, 1)
