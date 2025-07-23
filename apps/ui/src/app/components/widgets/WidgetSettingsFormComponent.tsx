@@ -121,7 +121,8 @@ export const WidgetSettingsFormComponent: React.FC<
       sx={{
         display: 'flex',
         flexDirection: 'column',
-        gap: 1,
+        gap: 2,
+        pb: 2,
       }}>
       {formFields}
     </Box>

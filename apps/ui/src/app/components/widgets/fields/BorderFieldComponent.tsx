@@ -16,11 +16,14 @@ export const BorderFieldComponent: React.FC<BorderFieldComponentProps> = ({
 }) => {
   return (
     <GroupedInputWithLabelComponent label='Border'>
-      <Box sx={{ display: 'flex', gap: 1 }}>
-        <Typography>Size(px)</Typography>
+      <GroupedInputWithLabelComponent label='Size (px)'>
         <Slider
+          sx={{
+            py: 0,
+            zIndex: 5,
+          }}
           size='small'
-          value={value?.sizePx || 2}
+          value={value?.sizePx !== undefined ? value?.sizePx : 2}
           min={0}
           max={10}
           valueLabelDisplay='auto'
@@ -30,8 +33,7 @@ export const BorderFieldComponent: React.FC<BorderFieldComponentProps> = ({
             }
           }}
         />
-      </Box>
-
+      </GroupedInputWithLabelComponent>
       <ColorFieldComponent
         label='Color'
         value={value?.color || 'ffffff'}

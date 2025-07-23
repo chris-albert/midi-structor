@@ -59,12 +59,15 @@ export const WidgetComponent: React.FC<WidgetComponentProps> = ({
 
   const el = AllMidiStructorWidgets.all.Component(widget, onClick, store)
   const label = getLabel(widget)
+
   const widgetBody = (
     <Box
       sx={{
         p: 2,
-        borderSize: `${widget.border?.sizePx || 1}px`,
-        borderColor: widget.border?.color || 'white',
+        borderWidth: `${
+          widget.border?.sizePx !== undefined ? widget.border?.sizePx : 1
+        }px`,
+        borderColor: `#${widget.border?.color || 'ffffff'}`,
         borderStyle: 'solid',
         borderRadius: '5px',
       }}>

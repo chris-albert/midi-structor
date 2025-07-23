@@ -3,6 +3,7 @@ import { MidiTarget } from '@midi-structor/core'
 import { Box, Typography } from '@mui/material'
 import { SelectComponent, SelectItem } from '../../form/SelectComponent'
 import _ from 'lodash'
+import { GroupedInputWithLabelComponent } from './GroupedInputWithLabelComponent'
 
 const TargetItems: Array<SelectItem> = [
   {
@@ -66,16 +67,7 @@ export const MidiTargetFieldComponent: React.FC<
   }, [targetType, targetValue])
 
   return (
-    <Box
-      sx={{
-        p: 1,
-        display: 'flex',
-        gap: 1,
-        alignItems: 'center',
-        border: '1px solid gray',
-        borderRadius: '5px',
-      }}>
-      <Typography>Target:</Typography>
+    <GroupedInputWithLabelComponent label='MIDI Target'>
       <SelectComponent
         label='Target Type'
         items={TargetItems}
@@ -88,6 +80,6 @@ export const MidiTargetFieldComponent: React.FC<
         onChange={setTargetValue}
         activeLabel={activeValueLabel}
       />
-    </Box>
+    </GroupedInputWithLabelComponent>
   )
 }

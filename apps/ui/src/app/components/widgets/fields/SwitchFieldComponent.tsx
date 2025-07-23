@@ -1,6 +1,7 @@
-import { FormControlLabel, Switch } from '@mui/material'
+import { Switch } from '@mui/material'
 import React from 'react'
 import _ from 'lodash'
+import { GroupedInputWithLabelComponent } from './GroupedInputWithLabelComponent'
 
 export type SwitchFieldComponentProps = {
   label: string
@@ -14,14 +15,15 @@ export const SwitchFieldComponent: React.FC<SwitchFieldComponentProps> = ({
   onChange,
 }) => {
   return (
-    <FormControlLabel
-      control={
-        <Switch
-          checked={value}
-          onChange={(e) => onChange(e.target.checked)}
-        />
-      }
+    <GroupedInputWithLabelComponent
       label={_.startCase(label)}
-    />
+      formControlSx={{
+        padding: '0 5px',
+      }}>
+      <Switch
+        checked={value}
+        onChange={(e) => onChange(e.target.checked)}
+      />
+    </GroupedInputWithLabelComponent>
   )
 }

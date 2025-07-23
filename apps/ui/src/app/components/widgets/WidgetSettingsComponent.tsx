@@ -6,7 +6,14 @@ import {
   removeWidget,
   replaceWidget,
 } from '../../model/Widgets'
-import { Box, Button, Card, CardContent, CardHeader } from '@mui/material'
+import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  Typography,
+} from '@mui/material'
 import { JSONEditor } from '../JSONEditor'
 import { toast } from 'react-toastify'
 import IconButton from '@mui/material/IconButton'
@@ -34,6 +41,8 @@ export type WidgetSettingsComponentProps = {
 export const WidgetSettingsComponent: React.FC<
   WidgetSettingsComponentProps
 > = ({ widget, updateWidgets, onClose }) => {
+  const [viewRaw, setViewRaw] = React.useState(false)
+
   const [settings, setSettings] = React.useState(
     SchemaHelper.encode(AllMidiStructorWidgets.all.schema, widget)
   )
@@ -76,13 +85,16 @@ export const WidgetSettingsComponent: React.FC<
           settings={settings}
           setSettings={setSettings}
         />
-        <JSONEditor
-          height='300px'
-          width='505px'
-          readonly={false}
-          onChange={setSettings}
-          value={settings}
-        />
+        {viewRaw ? (
+          <JSONEditor
+            height='300px'
+            width='505px'
+            readonly={false}
+            onChange={setSettings}
+            value={settings}
+          />
+        ) : null}
+
         <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
           <Box>
             <IconButton
@@ -117,9 +129,21 @@ export const WidgetSettingsComponent: React.FC<
           <Box
             sx={{
               display: 'flex',
-              flexDirection: 'column',
+              flexDirection: 'row',
               justifyContent: 'center',
+              alignItems: 'center',
+              gap: 2,
             }}>
+            <Typography
+              sx={{
+                cursor: 'pointer',
+                fontSize: '.7em',
+              }}
+              onClick={() => {
+                setViewRaw((r) => !r)
+              }}>
+              View Raw
+            </Typography>
             <Button
               onClick={() => {
                 onWidgetSave()

@@ -1,14 +1,16 @@
 import React from 'react'
 import { FormControl, InputLabel } from '@mui/material'
+import { SxProps } from '@mui/system'
 
 export type GroupedInputWithLabelComponentProps = {
   label: string
   children?: React.ReactNode
+  formControlSx?: SxProps
 }
 
 export const GroupedInputWithLabelComponent: React.FC<
   GroupedInputWithLabelComponentProps
-> = ({ label, children }) => {
+> = ({ label, children, formControlSx }) => {
   return (
     <FormControl
       variant='outlined'
@@ -20,6 +22,7 @@ export const GroupedInputWithLabelComponent: React.FC<
         display: 'flex',
         flexDirection: 'column',
         gap: 1,
+        ...formControlSx,
       }}>
       <InputLabel
         sx={{
