@@ -14,6 +14,7 @@ import IconButton from '@mui/material/IconButton'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
 import SettingsIcon from '@mui/icons-material/Settings'
 import { ProjectHooks } from '@midi-structor/core'
+import { SxProps } from '@mui/system'
 
 export type SelectItem<A = string> = {
   label: string
@@ -30,6 +31,7 @@ export type SelectComponentProps<A> = {
   onNew?: (label: string) => void
   onDelete?: (item: A) => void
   onEdit?: (item: A) => void
+  formControlSx?: SxProps
 }
 
 export const SelectComponent = <A,>({
@@ -42,6 +44,7 @@ export const SelectComponent = <A,>({
   onNew,
   onDelete,
   onEdit,
+  formControlSx,
 }: SelectComponentProps<A>): ReactElement<any, any> => {
   const [value, setValue] = React.useState<number | ''>('')
   const [isEdit, setIsEdit] = React.useState(false)
@@ -75,7 +78,7 @@ export const SelectComponent = <A,>({
 
   return (
     <FormControl
-      sx={{ minWidth: 140, width: '100%' }}
+      sx={{ minWidth: 140, width: '100%', ...formControlSx }}
       size='small'>
       <InputLabel id='demo-simple-select-label'>{label}</InputLabel>
       <Select

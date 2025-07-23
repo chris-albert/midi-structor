@@ -23,7 +23,9 @@ export const ButtonWidgetComponent = MIDIStructorWidget.of({
             sx={{
               fontWeight: 'bold',
               color: `#${Color.toHex(widget.text?.color || Color.BLACK)}`,
-              fontSize: widget.text?.size,
+              ...(widget.text?.sizePx !== undefined
+                ? { fontSize: `${widget.text?.sizePx}px` }
+                : {}),
             }}>
             {widget.text?.content || ''}
           </Typography>

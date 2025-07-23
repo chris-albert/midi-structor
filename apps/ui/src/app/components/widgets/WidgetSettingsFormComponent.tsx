@@ -13,8 +13,54 @@ import { ColorFieldComponent } from './fields/ColorFieldComponent'
 import { MidiTargetFieldComponent } from './fields/MidiTargetFieldComponent'
 import { SwitchFieldComponent } from './fields/SwitchFieldComponent'
 import { BorderFieldComponent } from './fields/BorderFieldComponent'
+import { MidiTargetsFieldComponent } from './fields/MidiTargetsFieldComponent'
+import { TextFieldComponent } from './fields/TextFieldComponent'
+import { MidiMessagesFieldComponent } from './fields/MidiMessagesFieldComponent'
 
 const Components: Array<WidgetSettingsFormField> = [WidgetSettingsString]
+
+const SORT_HIGH_KEYS = ['label', 'color', 'target']
+const SORT_LOW_KEYS = ['border', 'visible']
+
+const sort = (
+  fields: Record<string, Schema.Struct.Field>
+): Array<[string, Schema.Struct.Field]> => {
+  const keys: Set<string> = new Set(_.keys(fields))
+
+  const sorted: Array<[string, Schema.Struct.Field]> = []
+
+  SORT_HIGH_KEYS.forEach((key) => {
+    keys.forEach((fieldKey) => {
+      if (_.toLower(fieldKey).includes(key)) {
+        if (fields[fieldKey] !== undefined && keys.has(fieldKey)) {
+          sorted.push([fieldKey, fields[fieldKey]])
+          keys.delete(fieldKey)
+        }
+      }
+    })
+  })
+
+  const sortedLow: Array<[string, Schema.Struct.Field]> = []
+
+  SORT_LOW_KEYS.forEach((key) => {
+    keys.forEach((fieldKey) => {
+      if (_.toLower(fieldKey).includes(key)) {
+        if (fields[fieldKey] !== undefined && keys.has(fieldKey)) {
+          sortedLow.push([fieldKey, fields[fieldKey]])
+          keys.delete(fieldKey)
+        }
+      }
+    })
+  })
+
+  keys.forEach((fieldKey) => {
+    if (fields[fieldKey] !== undefined) {
+      sorted.push([fieldKey, fields[fieldKey]])
+    }
+  })
+
+  return sorted.concat(sortedLow)
+}
 
 export type WidgetSettingsFormComponentProps = {
   widget: MIDIStructorUIWidget
@@ -37,8 +83,8 @@ export const WidgetSettingsFormComponent: React.FC<
   )
 
   const updateFormField = (key: string, value: any) => {
-    console.log('updateFormField', key, value)
-    console.log('form', form)
+    // console.log('updateFormField', key, value)
+    // console.log('form', form)
     setForm((form) => {
       const newForm = { ...form, [key]: value }
       setSettings((_) => JSON.stringify(newForm, null, 2))
@@ -46,10 +92,10 @@ export const WidgetSettingsFormComponent: React.FC<
     })
   }
 
-  // console.log('form', form)
-  // console.log('config', config)
-  // const formFields = null
-  const formFields = _.map(config.widget.schema.fields, (field, key) => {
+  const sortedFields = sort(config.widget.schema.fields)
+
+  const formFields = _.map(sortedFields, (item) => {
+    const [key, field] = item
     const schemaName = SchemaForm.getFormName(field.ast)
     // console.log('SchemaName', key, schemaName, field)
     if (schemaName._tag === 'Some') {
@@ -69,6 +115,16 @@ export const WidgetSettingsFormComponent: React.FC<
           <MidiTargetFieldComponent
             key={key}
             target={form[key]}
+            onChange={(target) => {
+              updateFormField(key, target)
+            }}
+          />
+        )
+      } else if (schemaName.value === 'MidiTargets') {
+        return (
+          <MidiTargetsFieldComponent
+            key={key}
+            targets={form[key]}
             onChange={(target) => {
               updateFormField(key, target)
             }}
@@ -95,6 +151,26 @@ export const WidgetSettingsFormComponent: React.FC<
             }}
           />
         )
+      } else if (schemaName.value === 'MidiMessage') {
+        return (
+          <MidiMessagesFieldComponent
+            key={key}
+            messages={form[key]}
+            onChange={(isChecked) => {
+              updateFormField(key, isChecked)
+            }}
+          />
+        )
+      } else if (schemaName.value === 'Text') {
+        return (
+          <TextFieldComponent
+            key={key}
+            value={form[key]}
+            onChange={(value) => {
+              updateFormField(key, value)
+            }}
+          />
+        )
       } else {
         return <Box key={key}>{key} not implemented yet</Box>
       }
@@ -116,6 +192,7 @@ export const WidgetSettingsFormComponent: React.FC<
       return null
     }
   })
+
   return (
     <Box
       sx={{

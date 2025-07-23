@@ -1,5 +1,6 @@
 import { SchemaAST, Option, Schema } from 'effect'
 import { PropertySignature } from 'effect/Schema'
+import { MidiMessage } from '../../../midi/MidiMessage'
 
 const SchemaFormId = Symbol.for('midi/structor/schema/form/annotation')
 
@@ -26,6 +27,7 @@ const Schemas = {
       color: Schema.optional(Schema.String),
     })
   ).annotations(annotation('Border')),
+  Midi: Schema.Array(MidiMessage.schema).annotations(annotation('MidiMessage')),
 }
 
 export const SchemaForm = {

@@ -142,7 +142,7 @@ export const WidgetSettingsComponent: React.FC<
               onClick={() => {
                 setViewRaw((r) => !r)
               }}>
-              View Raw
+              {viewRaw ? 'Hide' : 'View'} Raw
             </Typography>
             <Button
               onClick={() => {

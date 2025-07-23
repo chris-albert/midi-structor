@@ -6,6 +6,8 @@ import { Pad } from '../pads/Pad'
 import { Schema } from 'effect'
 import { DawMidi } from '../../midi/DawMidi'
 import { MidiTarget } from '../../midi/MidiTarget'
+import { SchemaForm } from './form/SchemaForm'
+import { TextSchema } from './ButtonWidget'
 
 export const MidiNoteOnVaryVelocity = Schema.TaggedStruct(
   'midi-note-vary-velocity',
@@ -75,13 +77,7 @@ export const KnobWidget = ControllerWidget.one({
   schema: Schema.Struct({
     color: Color.Schema,
     midi: KnobMidi,
-    text: Schema.optional(
-      Schema.Struct({
-        content: Schema.String,
-        color: Schema.optional(Color.Schema),
-        size: Schema.optional(Schema.String),
-      })
-    ),
+    text: TextSchema,
   }),
   init: () => ({
     color: Color.GREEN,

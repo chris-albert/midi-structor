@@ -31,6 +31,7 @@ export * from './lib/controllers/devices/MidiStructorStore'
 export * from './lib/controllers/devices/MidiStructorMessage'
 export * from './lib/controllers/devices/ui/ControllerUIDevices'
 export * from './lib/controllers/devices/ui/ControllerUIDevice'
+export * from './lib/controllers/widgets/ButtonWidget'
 export * from './lib/controllers/devices/ui/UIStore'
 export * from './lib/controllers/NovationColors'
 

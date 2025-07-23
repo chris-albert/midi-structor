@@ -82,8 +82,13 @@ export const WidgetComponent: React.FC<WidgetComponentProps> = ({
           open={settingsOpen}
           onClose={() => setSettingsOpen(false)}
           anchor='right'
-          sx={{
-            flexShrink: 0,
+          sx={{}}
+          slotProps={{
+            paper: {
+              sx: {
+                display: 'block',
+              },
+            },
           }}>
           <WidgetSettingsComponent
             widget={widget}

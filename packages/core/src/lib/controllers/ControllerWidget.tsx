@@ -1,6 +1,7 @@
 import React from 'react'
 import { Data, Schema, SchemaAST } from 'effect'
 import { MidiTarget } from '../midi/MidiTarget'
+import { SchemaForm } from './widgets/form/SchemaForm'
 
 const TargetSchema = Schema.Struct({
   target: MidiTarget.Schema,
@@ -10,7 +11,9 @@ type TargetSchema = typeof TargetSchema.Type
 type TargetSchemaFields = typeof TargetSchema.fields
 
 const TargetsSchema = Schema.Struct({
-  targets: Schema.Array(MidiTarget.Schema),
+  targets: Schema.Array(MidiTarget.Schema).annotations(
+    SchemaForm.annotation('MidiTargets')
+  ),
 })
 
 type TargetsSchema = typeof TargetsSchema.Type

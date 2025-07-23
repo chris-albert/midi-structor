@@ -29,11 +29,12 @@ const MidiValueItems: Array<SelectItem<number>> = Array.from({
 export type MidiTargetFieldComponentProps = {
   target: MidiTarget
   onChange: (t: MidiTarget) => void
+  label?: string
 }
 
 export const MidiTargetFieldComponent: React.FC<
   MidiTargetFieldComponentProps
-> = ({ target, onChange }) => {
+> = ({ target, onChange, label }) => {
   const [targetType, setTargetType] = React.useState<string | undefined>(
     undefined
   )
@@ -67,19 +68,32 @@ export const MidiTargetFieldComponent: React.FC<
   }, [targetType, targetValue])
 
   return (
-    <GroupedInputWithLabelComponent label='MIDI Target'>
-      <SelectComponent
-        label='Target Type'
-        items={TargetItems}
-        onChange={setTargetType}
-        activeLabel={activeTypeLabel}
-      />
-      <SelectComponent
-        label='Value'
-        items={MidiValueItems}
-        onChange={setTargetValue}
-        activeLabel={activeValueLabel}
-      />
+    <GroupedInputWithLabelComponent label={label || 'MIDI Target'}>
+      <Box
+        sx={{
+          display: 'flex',
+          gap: 1,
+        }}>
+        <Box sx={{ flexGrow: 2 }}>
+          <SelectComponent
+            label='Type'
+            items={TargetItems}
+            onChange={setTargetType}
+            activeLabel={activeTypeLabel}
+          />
+        </Box>
+        <Box sx={{ flexGrow: 1 }}>
+          <SelectComponent
+            label='Value'
+            items={MidiValueItems}
+            onChange={setTargetValue}
+            activeLabel={activeValueLabel}
+            formControlSx={{
+              minWidth: 80,
+            }}
+          />
+        </Box>
+      </Box>
     </GroupedInputWithLabelComponent>
   )
 }
