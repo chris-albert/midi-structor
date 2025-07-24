@@ -32,29 +32,37 @@ export const duplicateWidget =
     w.flatMap((ww) => (_.isEqual(ww, widget) ? [ww, ww] : ww))
 
 const findWidgetIndex = (widgets: Widgets, widget: Widget): number => {
-  return widgets.findIndex((w) => _.isEqual(w, widget)) || -1
+  return widgets.findIndex((w) => _.isEqual(w, widget))
 }
 
 export const moveRightWidget =
   (widget: Widget): WidgetsUpdate =>
   (widgets) => {
     const widgetIndex = findWidgetIndex(widgets, widget)
-    return [
-      ...widgets.slice(0, widgetIndex),
-      widgets[widgetIndex + 1] as any,
-      widgets[widgetIndex] as any,
-      ...widgets.slice(widgetIndex + 2),
-    ]
+    if (widgetIndex === widgets.length - 1) {
+      return widgets
+    } else {
+      return [
+        ...widgets.slice(0, widgetIndex),
+        widgets[widgetIndex + 1] as any,
+        widgets[widgetIndex] as any,
+        ...widgets.slice(widgetIndex + 2),
+      ]
+    }
   }
 
 export const moveLeftWidget =
   (widget: Widget): WidgetsUpdate =>
   (widgets) => {
     const widgetIndex = findWidgetIndex(widgets, widget)
-    return [
-      ...widgets.slice(0, widgetIndex - 1),
-      widgets[widgetIndex] as any,
-      widgets[widgetIndex - 1] as any,
-      ...widgets.slice(widgetIndex + 1),
-    ]
+    if (widgetIndex === 0) {
+      return widgets
+    } else {
+      return [
+        ...widgets.slice(0, widgetIndex - 1),
+        widgets[widgetIndex] as any,
+        widgets[widgetIndex - 1] as any,
+        ...widgets.slice(widgetIndex + 1),
+      ]
+    }
   }

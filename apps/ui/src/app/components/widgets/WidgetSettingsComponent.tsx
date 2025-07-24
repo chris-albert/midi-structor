@@ -26,6 +26,7 @@ import {
   MIDIStructorUIWidget,
   MIDIStructorUIWidgetsUpdate,
   MIDIStructorWidget,
+  ProjectHooks,
   SchemaHelper,
 } from '@midi-structor/core'
 import CloseIcon from '@mui/icons-material/Close'
@@ -36,12 +37,14 @@ export type WidgetSettingsComponentProps = {
   widget: MIDIStructorUIWidget
   updateWidgets: MIDIStructorUIWidgetsUpdate
   onClose: () => void
+  widgetIndex: number
 }
 
 export const WidgetSettingsComponent: React.FC<
   WidgetSettingsComponentProps
-> = ({ widget, updateWidgets, onClose }) => {
+> = ({ widget, updateWidgets, onClose, widgetIndex }) => {
   const [viewRaw, setViewRaw] = React.useState(false)
+  const projectStyle = ProjectHooks.useProjectStyle()
 
   const [settings, setSettings] = React.useState(
     SchemaHelper.encode(AllMidiStructorWidgets.all.schema, widget)
@@ -67,7 +70,7 @@ export const WidgetSettingsComponent: React.FC<
   }
 
   return (
-    <Card>
+    <Card sx={{ minHeight: '100%' }}>
       <CardHeader
         action={
           <IconButton
@@ -78,53 +81,65 @@ export const WidgetSettingsComponent: React.FC<
         }
         title={_.startCase(widget._tag)}
       />
-      <CardContent>
-        <WidgetSettingsFormComponent
-          widget={widget}
-          config={config}
-          settings={settings}
-          setSettings={setSettings}
-        />
-        {viewRaw ? (
-          <JSONEditor
-            height='300px'
-            width='505px'
-            readonly={false}
-            onChange={setSettings}
-            value={settings}
+      <CardContent
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          height: '100%',
+        }}>
+        <Box sx={{ flex: '1 0 auto' }}>
+          <WidgetSettingsFormComponent
+            widget={widget}
+            config={config}
+            settings={settings}
+            setSettings={setSettings}
           />
-        ) : null}
-
-        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+          {viewRaw ? (
+            <JSONEditor
+              height='300px'
+              width='505px'
+              readonly={false}
+              onChange={setSettings}
+              value={settings}
+            />
+          ) : null}
+        </Box>
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            flexShrink: 0,
+          }}>
           <Box>
-            <IconButton
-              onClick={() => {
-                updateWidgets(removeWidget(widget))
-              }}
-              aria-label='Remove Widget'>
-              <DeleteIcon />
-            </IconButton>
-            <IconButton
-              onClick={() => {
-                updateWidgets(duplicateWidget(widget))
-              }}
-              aria-label='Duplicate'>
-              <ContentCopyIcon />
-            </IconButton>
-            <IconButton
-              onClick={() => {
-                updateWidgets(moveLeftWidget(widget))
-              }}
-              aria-label='Move Left'>
-              <ArrowLeftIcon />
-            </IconButton>
-            <IconButton
-              onClick={() => {
-                updateWidgets(moveRightWidget(widget))
-              }}
-              aria-label='Move Right'>
-              <ArrowRightIcon />
-            </IconButton>
+            {/*<IconButton*/}
+            {/*  onClick={() => {*/}
+            {/*    updateWidgets(removeWidget(widget))*/}
+            {/*  }}*/}
+            {/*  aria-label='Remove Widget'>*/}
+            {/*  <DeleteIcon />*/}
+            {/*</IconButton>*/}
+            {/*<IconButton*/}
+            {/*  onClick={() => {*/}
+            {/*    updateWidgets(duplicateWidget(widget))*/}
+            {/*  }}*/}
+            {/*  aria-label='Duplicate'>*/}
+            {/*  <ContentCopyIcon />*/}
+            {/*</IconButton>*/}
+            {/*<IconButton*/}
+            {/*  disabled={widgetIndex === 0}*/}
+            {/*  onClick={() => {*/}
+            {/*    updateWidgets(moveLeftWidget(widget))*/}
+            {/*  }}*/}
+            {/*  aria-label='Move Left'>*/}
+            {/*  <ArrowLeftIcon />*/}
+            {/*</IconButton>*/}
+            {/*<IconButton*/}
+            {/*  onClick={() => {*/}
+            {/*    updateWidgets(moveRightWidget(widget))*/}
+            {/*  }}*/}
+            {/*  aria-label='Move Right'>*/}
+            {/*  <ArrowRightIcon />*/}
+            {/*</IconButton>*/}
           </Box>
           <Box
             sx={{
@@ -148,7 +163,10 @@ export const WidgetSettingsComponent: React.FC<
               onClick={() => {
                 onWidgetSave()
               }}
-              variant='outlined'
+              sx={{
+                background: projectStyle.offsetGradient,
+              }}
+              variant='contained'
               size='small'>
               Save
             </Button>

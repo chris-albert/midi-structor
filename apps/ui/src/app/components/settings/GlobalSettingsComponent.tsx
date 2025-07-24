@@ -28,7 +28,7 @@ export const GlobalSettingsComponent: React.FC<
       <CardHeader
         title='Global Settings'
         sx={{
-          background: projectStyle.horizontalGradient,
+          background: projectStyle.offsetGradient,
         }}
       />
       <CardContent>
@@ -45,7 +45,7 @@ export const GlobalSettingsComponent: React.FC<
           <Button
             size='small'
             sx={{
-              background: projectStyle.horizontalGradient,
+              background: projectStyle.offsetGradient,
             }}
             onClick={() => {
               navigate('/midi')

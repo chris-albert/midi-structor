@@ -19,7 +19,7 @@ import { MidiMessagesFieldComponent } from './fields/MidiMessagesFieldComponent'
 
 const Components: Array<WidgetSettingsFormField> = [WidgetSettingsString]
 
-const SORT_HIGH_KEYS = ['label', 'color', 'target']
+const SORT_HIGH_KEYS = ['label', 'color', 'target', 'midi']
 const SORT_LOW_KEYS = ['border', 'visible']
 
 const sort = (

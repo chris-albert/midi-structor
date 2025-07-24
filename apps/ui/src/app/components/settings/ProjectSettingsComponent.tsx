@@ -42,7 +42,7 @@ export const ProjectSettingsComponent: React.FC<
       <CardHeader
         title='Project Settings'
         sx={{
-          background: projectStyle.horizontalGradient,
+          background: projectStyle.offsetGradient,
         }}
       />
       <CardContent>
@@ -68,7 +68,7 @@ export const ProjectSettingsComponent: React.FC<
               <Button
                 size='small'
                 sx={{
-                  background: projectStyle.horizontalGradient,
+                  background: projectStyle.offsetGradient,
                 }}
                 onClick={onAbletonSelect}
                 variant='contained'>
@@ -86,7 +86,7 @@ export const ProjectSettingsComponent: React.FC<
               <Chip
                 sx={{
                   ml: 1,
-                  background: projectStyle.horizontalGradient,
+                  background: projectStyle.offsetGradient,
                 }}
                 label={project.abletonProject}
                 variant='outlined'
@@ -139,7 +139,7 @@ export const ProjectSettingsComponent: React.FC<
           <Button
             size='small'
             sx={{
-              background: projectStyle.horizontalGradient,
+              background: projectStyle.offsetGradient,
             }}
             onClick={() => {
               navigate('/settings/project')

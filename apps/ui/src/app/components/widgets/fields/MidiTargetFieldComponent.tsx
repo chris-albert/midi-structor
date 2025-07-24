@@ -19,6 +19,7 @@ const TargetItems: Array<SelectItem> = [
     value: 'PC',
   },
 ]
+
 const MidiValueItems: Array<SelectItem<number>> = Array.from({
   length: 128,
 }).map((_, i) => ({

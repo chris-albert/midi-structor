@@ -38,7 +38,8 @@ export const WidgetsComponent: React.FC<WidgetsComponentProps> = ({
             ...(widget._tag === 'spacer' && widget.isLineBreaking
               ? {
                   flexBasis: '100%',
-                  height: isEdit ? '80px' : '0',
+                  height: isEdit ? '32px' : '0',
+                  // height: 0,
                 }
               : {}),
           }}>
@@ -48,6 +49,7 @@ export const WidgetsComponent: React.FC<WidgetsComponentProps> = ({
             store={store}
             isEdit={isEdit}
             updateWidgets={updateWidgets}
+            widgetIndex={i}
           />
         </Box>
       ))}

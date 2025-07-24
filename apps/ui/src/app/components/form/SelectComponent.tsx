@@ -92,7 +92,7 @@ export const SelectComponent = <A,>({
           slotProps: {
             paper: {
               sx: {
-                background: projectStyle.rightVerticalGradient,
+                background: projectStyle.offsetGradient,
               },
             },
           },

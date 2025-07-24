@@ -65,11 +65,23 @@ export const MidiMessageComponent: React.FC<MidiMessageComponentProps> = ({
 
   const [valueLabel, setValueLabel] = React.useState<string>('')
 
+  const [secondaryMidiValue, setSecondaryMidiValue] = React.useState<
+    number | undefined
+  >(undefined)
+
+  const activeSecondaryMidiValue =
+    secondaryMidiValue !== undefined ? secondaryMidiValue.toString() : undefined
+
+  const [secondaryMidiValueLabel, setSecondaryMidiValueLabel] =
+    React.useState<string>('')
+
   React.useEffect(() => {
     if (midiType === 'noteon') {
       setValueLabel('Note')
+      setSecondaryMidiValueLabel('Velocity')
     } else if (midiType === 'cc') {
       setValueLabel('Control Number')
+      setSecondaryMidiValueLabel('Data')
     } else if (midiType === 'pc') {
       setValueLabel('Program Number')
     }
@@ -80,9 +92,11 @@ export const MidiMessageComponent: React.FC<MidiMessageComponentProps> = ({
     if (value.type === 'noteon') {
       setMidiValue(value.note)
       setMidiChannel(value.channel)
+      setSecondaryMidiValue(value.velocity)
     } else if (value.type === 'cc') {
       setMidiValue(value.controllerNumber)
       setMidiChannel(value.channel)
+      setSecondaryMidiValue(value.data)
     } else if (value.type === 'pc') {
       setMidiValue(value.programNumber)
       setMidiChannel(value.channel)
@@ -109,6 +123,14 @@ export const MidiMessageComponent: React.FC<MidiMessageComponentProps> = ({
           onChange={setMidiValue}
           activeLabel={activeValueLabel}
         />
+        {midiType === 'noteon' || midiType === 'cc' ? (
+          <SelectComponent
+            label={secondaryMidiValueLabel}
+            items={MidiValueItems}
+            onChange={setSecondaryMidiValue}
+            activeLabel={activeSecondaryMidiValue}
+          />
+        ) : null}
         <SelectComponent
           label='Channel'
           items={MidiChannelItems}

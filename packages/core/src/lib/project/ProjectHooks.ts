@@ -123,6 +123,7 @@ const useProjectStyle = () => {
     horizontalGradient: `linear-gradient(to right, ${style.accent.color1}, ${style.accent.color2})`,
     leftVerticalGradient: `linear-gradient(to bottom, ${style.accent.color1}, ${style.accent.color2})`,
     rightVerticalGradient: `linear-gradient(to top, ${style.accent.color1}, ${style.accent.color2})`,
+    offsetGradient: `linear-gradient(45deg, ${style.accent.color1}, ${style.accent.color2})`,
   }
 }
 

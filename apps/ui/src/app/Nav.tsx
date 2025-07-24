@@ -18,7 +18,7 @@ export const Nav: React.FC<NavProps> = () => {
       <AppBar
         position='static'
         sx={{
-          background: projectStyle.horizontalGradient,
+          background: projectStyle.offsetGradient,
         }}>
         <Drawer
           anchor='left'
@@ -29,7 +29,7 @@ export const Nav: React.FC<NavProps> = () => {
             sx={{
               width: 200,
               height: '100%',
-              background: projectStyle.leftVerticalGradient,
+              background: projectStyle.offsetGradient,
             }}>
             <List>
               <NavLinkItem
