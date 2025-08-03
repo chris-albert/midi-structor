@@ -9,6 +9,7 @@ pnpm --save-dev i eslint-plugin-import
 pnpm --filter @midi-structor/core -D i typescript@5.8.3
 pnpm --filter @midi-structor/core i web-midi-api
 pnpm --filter @midi-structor/electron -D i worker-loader
+pnpm --filter @midi-structor/server i express
 ```
 
 https://docs.cycling74.com/legacy/max8/vignettes/live_object_model
@@ -29,6 +30,11 @@ Running web app locally:
 Building web app locally:
 ```
 pnpm ui-deploy
+```
+
+Running electron locally:
+```
+pnpm 
 ```
 
 Building electron, including bundling the ui:

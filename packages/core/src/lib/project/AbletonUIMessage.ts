@@ -1,5 +1,6 @@
 import _ from 'lodash'
 import { SysExMessage } from '../midi/MidiMessage'
+import { Schema } from 'effect'
 
 const DATA_DELIMITER = 0x01
 const MANUFACTURER_ID = 0x02
@@ -194,33 +195,39 @@ export type InitProjectMessage = {
   messageCount: number
 }
 
-export type InitTrackMessage = {
-  type: 'init-track'
-  messageId: number
-  trackIndex: number
-  name: string
-  color: number
-}
+export const InitTrackMessage = Schema.Struct({
+  type: Schema.Literal('init-track'),
+  messageId: Schema.Number,
+  trackIndex: Schema.Number,
+  name: Schema.String,
+  color: Schema.Number,
+})
 
-export type InitClipMessage = {
-  type: 'init-clip'
-  messageId: number
-  trackIndex: number
-  clipIndex: number
-  name: string
-  color: number
-  startTime: number
-  endTime: number
-}
+export type InitTrackMessage = Schema.Schema.Type<typeof InitTrackMessage>
 
-export type InitCueMessage = {
-  type: 'init-cue'
-  messageId: number
-  id: number
-  name: string
-  time: number
-  index: number
-}
+export const InitClipMessage = Schema.Struct({
+  type: Schema.Literal('init-clip'),
+  messageId: Schema.Number,
+  trackIndex: Schema.Number,
+  clipIndex: Schema.Number,
+  name: Schema.String,
+  color: Schema.Number,
+  startTime: Schema.Number,
+  endTime: Schema.Number,
+})
+
+export type InitClipMessage = Schema.Schema.Type<typeof InitClipMessage>
+
+export const InitCueMessage = Schema.Struct({
+  type: Schema.Literal('init-cue'),
+  messageId: Schema.Number,
+  id: Schema.Number,
+  name: Schema.String,
+  time: Schema.Number,
+  index: Schema.Number,
+})
+
+export type InitCueMessage = Schema.Schema.Type<typeof InitCueMessage>
 
 export type InitDoneMessage = {
   type: 'init-done'

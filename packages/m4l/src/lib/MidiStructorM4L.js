@@ -121,7 +121,7 @@ var Message = {
 }
 
 inlets = 1
-outlets = 2
+outlets = 3
 
 function set_emit_millis(millis) {
   EMIT_MILLIS = millis
@@ -214,13 +214,64 @@ function initProject(filterTracks) {
   post('Init Project', tracksArray, '\n')
   tracks = parseTracks(tracksArray)
   cues = parseCues()
+  checkHttp(function (readyState, response) {
+    if (readyState === 4 && response === 'pong') {
+      post('Found MIDI Structor APP running, using HTTP\n')
+      sendHttp(tracks, cues)
+    } else {
+      post('Could not find MIDI Structor running, using MIDI\n')
+      messages = generateMessages(tracks, cues)
+      outlet(0, Message.init(messages.length))
+      emit(messages)
+    }
+    tracks = null
+    cues = null
+  })
+}
 
-  messages = generateMessages(tracks, cues)
-  outlet(0, Message.init(messages.length))
-  emit(messages)
+var BASE_URL = 'http://localhost:3333'
+var ajaxreq = null
+function sendHttp(tracks, cues) {
+  var data = JSON.stringify({ tracks: tracks, cues: cues })
+  ajaxreq = new XMLHttpRequest()
+  ajaxreq.open('POST', BASE_URL + '/project')
+  ajaxreq.setRequestHeader('Content-Type', 'application/json')
+  ajaxreq.onreadystatechange = readystatechange(function (
+    readyState,
+    response
+  ) {
+    if (readyState === 4 && response === 'ok') {
+      post('Successfully sent project over HTTP\n')
+    }
+  })
+  ajaxreq.send(data)
+  // outlet(2, data)
+}
 
-  tracks = null
-  cues = null
+function checkHttp(cb) {
+  ajaxreq = new XMLHttpRequest()
+  ajaxreq.open('GET', BASE_URL + '/ping')
+  ajaxreq.onreadystatechange = readystatechange(cb)
+  ajaxreq.send()
+}
+
+var LOG_HTTP = false
+function readystatechange(callback) {
+  return function () {
+    callback(this.readyState, this.responseText)
+    if (LOG_HTTP) {
+      post('readyState: ' + this.readyState + '\n')
+      post('AllResponseHeaders: ' + this.getAllResponseHeaders() + '\n')
+      post('content_type : ' + this._getResponseKey('content_type') + '\n')
+      post('total_time : ' + this._getResponseKey('total_time') + '\n')
+      post('size_download : ' + this._getResponseKey('size_download') + '\n')
+      post('filename_out : ' + this._getResponseKey('filename_out') + '\n')
+      post('-----------begin-body----------------\n')
+      post(this.responseText)
+      post('-----------end-body-may-truncate----------------\n')
+      post()
+    }
+  }
 }
 
 function emit(messages) {

@@ -7,6 +7,9 @@ import {
 import _ from 'lodash'
 import { produce } from 'immer'
 import { Color } from '../controllers/Color'
+import { Schema } from 'effect'
+import { SchemaHelper } from '../util/SchemaHelper'
+import { log } from '../logger/log'
 
 export type UIRealClip = {
   type: 'real'
@@ -180,3 +183,60 @@ export const initDone = (initArrangement: InitArrangement): UIArrangement => {
 
 export const getHexColor = (hasColor: { color: number }): string =>
   `#${hasColor.color.toString(16)}`
+
+export const RawTrackMessage = Schema.Struct({
+  type: Schema.Literal('init-track'),
+  messageId: Schema.Number,
+  trackIndex: Schema.Number,
+  name: Schema.String,
+  color: Schema.Number,
+})
+
+export type RawTrackMessage = Schema.Schema.Type<typeof RawTrackMessage>
+
+export const RawClipMessage = Schema.Struct({
+  type: Schema.Literal('init-clip'),
+  messageId: Schema.Number,
+  trackIndex: Schema.Number,
+  clipIndex: Schema.Number,
+  name: Schema.String,
+  color: Schema.Number,
+  startTime: Schema.Number,
+  endTime: Schema.Number,
+})
+
+export type RawClipMessage = Schema.Schema.Type<typeof RawClipMessage>
+
+export const RawCueMessage = Schema.Struct({
+  type: Schema.Literal('init-cue'),
+  messageId: Schema.Number,
+  id: Schema.Number,
+  name: Schema.String,
+  time: Schema.Number,
+  index: Schema.Number,
+})
+
+export type RawCueMessage = Schema.Schema.Type<typeof RawCueMessage>
+
+const RawProjectMessage = Schema.Struct({
+  cues: Schema.Array(RawCueMessage),
+  tracks: Schema.Struct({
+    tracks: Schema.Array(RawTrackMessage),
+    clips: Schema.Array(RawClipMessage),
+  }),
+})
+
+export const buildInitArrangement = (raw: any): InitArrangement => {
+  log.info(raw)
+  SchemaHelper.decodeUnknown({
+    schema: RawProjectMessage,
+    raw,
+    ok: (project) => {
+      log.info('Project', project)
+    },
+    error: (error) => {
+      log.info('Project parse error', error)
+    },
+  })
+  return []
+}

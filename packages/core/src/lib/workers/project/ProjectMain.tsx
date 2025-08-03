@@ -2,28 +2,35 @@ import { EventEmitter } from '../../EventEmitter'
 import { MidiEventRecord } from '../../midi/MidiDevice'
 import {
   AbletonUIMessage,
+  InitClipMessage,
+  InitCueMessage,
+  InitTrackMessage,
   parseAbletonUIMessage,
   TX_MESSAGE,
 } from '../../project/AbletonUIMessage'
 import { ProjectConfig, ProjectsConfig } from '../../project/ProjectConfig'
 import {
   arrangementMessageCount,
+  buildInitArrangement,
   InitArrangement,
   initDone,
 } from '../../project/UIStateDisplay'
 import { ProjectState } from '../../state/ProjectState'
-import { Option, Queue, Effect, Schedule } from 'effect'
+import { Option, Queue, Effect, Schedule, Schema } from 'effect'
 import { ControllerDevices } from '../../controllers/devices/ControllerDevices'
 import { Set } from 'immutable'
 import { log } from '../../logger/log'
 import { DawMidi } from '../../midi/DawMidi'
 import { MidiMessage, SysExMessage } from '../../midi/MidiMessage'
 import _ from 'lodash'
+import { SchemaHelper } from '../../util/SchemaHelper'
 
 const MAX_RESEND_ATTEMPTS = 5
 const USE_MIDI_QUEUE = false
 
 let resendAttempts = 0
+
+const PROJECT_CHANNEL = new BroadcastChannel('global-project')
 
 const determineMissingMessages = (
   messages: InitArrangement,
@@ -43,6 +50,10 @@ const determineMissingMessages = (
 let initArrangement: InitArrangement = []
 
 const listenerQueue = Effect.runSync(Queue.unbounded<SysExMessage>())
+
+const processFullProject = (event: MessageEvent<any>) => {
+  buildInitArrangement(event.data)
+}
 
 const listener = (dawListener: EventEmitter<MidiEventRecord>) => {
   const onAbletonUIMessage = (msg: AbletonUIMessage) => {
@@ -120,6 +131,8 @@ const listener = (dawListener: EventEmitter<MidiEventRecord>) => {
       onAbletonUIMessage(msg)
     }
   }
+
+  PROJECT_CHANNEL.onmessage = processFullProject
 
   dawListener.on('sysex', (sysex) => {
     if (USE_MIDI_QUEUE) {

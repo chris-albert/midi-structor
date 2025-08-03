@@ -13,6 +13,7 @@
     "serve": "electron ../../dist/apps/electron/src/index.js",
     "package": "electron-forge package",
     "start": "electron-forge start ",
+    "dev": "electron-forge start",
     "make": "DEBUG=electron-packager electron-forge make",
     "makeraw": "DEBUG=electron-packager tsc node_modules/@electron-forge/cli/src/electron-forge-make"
   },
@@ -22,7 +23,8 @@
     "electron-squirrel-startup": "^1.0.1",
     "electron-updater": "^6.3.9",
     "express": "^4.21.2",
-    "tslib": "^2.8.1"
+    "tslib": "^2.8.1",
+    "@midi-structor/server": "workspace:*"
   },
   "devDependencies": {
     "@electron-forge/cli": "^7.7.0",

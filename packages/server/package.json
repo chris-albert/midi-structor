@@ -1,0 +1,19 @@
+{
+  "name": "@midi-structor/server",
+  "type": "module",
+  "scripts": {
+    "dev": "tsc --watch",
+    "build": "tsc"
+  },
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "devDependencies": {
+    "@midi-structor/typescript-config": "workspace:*",
+    "typescript": "latest"
+  },
+  "dependencies": {
+    "electron-log": "^5.4.2",
+    "express": "^4.21.2"
+  }
+}
