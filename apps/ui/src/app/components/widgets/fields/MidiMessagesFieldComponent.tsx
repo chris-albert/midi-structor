@@ -11,6 +11,7 @@ export type MidiMessagesFieldComponentProps = {
 export const MidiMessagesFieldComponent: React.FC<
   MidiMessagesFieldComponentProps
 > = ({ messages, onChange }) => {
+  const messageUpdated = (message: MidiMessage) => {}
   return (
     <GroupedInputWithLabelComponent label='MIDI Messages'>
       {messages.map((message, i) => (
@@ -18,7 +19,7 @@ export const MidiMessagesFieldComponent: React.FC<
           label={`MIDI Message ${i + 1}`}
           key={i}
           value={message}
-          onChange={() => {}}
+          onChange={messageUpdated}
         />
       ))}
     </GroupedInputWithLabelComponent>

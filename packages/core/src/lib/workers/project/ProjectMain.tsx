@@ -21,7 +21,10 @@ import { MidiMessage, SysExMessage } from '../../midi/MidiMessage'
 import _ from 'lodash'
 
 const MAX_RESEND_ATTEMPTS = 5
+const USE_MIDI_QUEUE = false
+
 let resendAttempts = 0
+
 const determineMissingMessages = (
   messages: InitArrangement,
   expectedMessageCount: number
@@ -111,23 +114,35 @@ const listener = (dawListener: EventEmitter<MidiEventRecord>) => {
     }
   }
 
-  dawListener.on('sysex', (sysex) => {
-    Effect.runSync(Queue.offer(listenerQueue, sysex))
-  })
-
-  const processQueue = Effect.map(Queue.take(listenerQueue), (sysex) => {
+  const processSysex = (sysex: SysExMessage) => {
     const msg = parseAbletonUIMessage(sysex)
     if (msg !== undefined) {
       onAbletonUIMessage(msg)
     }
+  }
+
+  dawListener.on('sysex', (sysex) => {
+    if (USE_MIDI_QUEUE) {
+      Effect.runSync(Queue.offer(listenerQueue, sysex))
+    } else {
+      processSysex(sysex)
+      // log.timed(log.info, () => processSysex(sysex))('info')
+    }
   })
-  Effect.runPromise(Effect.repeat(processQueue, Schedule.repeatForever))
+
+  if (USE_MIDI_QUEUE) {
+    const processQueue = Effect.map(Queue.take(listenerQueue), (sysex) => {
+      processSysex(sysex)
+    })
+    Effect.runPromise(Effect.repeat(processQueue, Schedule.repeatForever))
+  }
 }
 
-const handshake = (
+const handshakeOverMIDI = (
   dawEmitter: EventEmitter<MidiEventRecord>,
   tracks: Array<string>
 ) => {
+  log.info('Starting Handshake over MIDI')
   dawEmitter.emit(TX_MESSAGE.init())
 
   return ProjectState.importStatus.sub((importStatus) => {
@@ -138,6 +153,23 @@ const handshake = (
     }
   })
 }
+
+const handshakeOverUDP = (
+  dawEmitter: EventEmitter<MidiEventRecord>,
+  tracks: Array<string>
+) => {
+  log.info('Starting Handshake over UDP')
+}
+
+const USE_MIDI_HANDSHAKE = true
+
+const handshake = (
+  dawEmitter: EventEmitter<MidiEventRecord>,
+  tracks: Array<string>
+) =>
+  USE_MIDI_HANDSHAKE
+    ? handshakeOverMIDI(dawEmitter, tracks)
+    : handshakeOverUDP(dawEmitter, tracks)
 
 const getTracks = (config: ProjectConfig): Array<string> => {
   const widgets = config.controllers.flatMap((controller) =>

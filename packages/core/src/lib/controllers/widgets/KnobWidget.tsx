@@ -6,8 +6,8 @@ import { Pad } from '../pads/Pad'
 import { Schema } from 'effect'
 import { DawMidi } from '../../midi/DawMidi'
 import { MidiTarget } from '../../midi/MidiTarget'
-import { SchemaForm } from './form/SchemaForm'
 import { TextSchema } from './ButtonWidget'
+import { SchemaForm } from './form/SchemaForm'
 
 export const MidiNoteOnVaryVelocity = Schema.TaggedStruct(
   'midi-note-vary-velocity',
@@ -31,7 +31,9 @@ export const KnobMidi = Schema.Union(
   MidiNoteOnVaryNote,
   MidiNoteOnVaryVelocity,
   MidiCCVaryData
-)
+).annotations(SchemaForm.annotation('MidiKnob'))
+
+export type KnobMidi = Schema.Schema.Type<typeof KnobMidi>
 
 const getValueFromMessage = (
   target: MidiTarget,

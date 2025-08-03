@@ -10,7 +10,7 @@
   },
   "scripts": {
     "serve-old": "ts-node -r tsconfig-paths/register --project tsconfig.lib.json src/index.ts",
-    "serve": "nodemon --watch \"src/**\" --ext \"ts,tsx,json\" --exec \"ts-node -r tsconfig-paths/register --project tsconfig.lib.json src/index.ts\""
+    "dev": "nodemon --watch \"src/**\" --ext \"ts,tsx,json\" --exec \"ts-node -r tsconfig-paths/register --project tsconfig.lib.json src/index.ts\""
   },
   "devDependencies": {
     "@swc/core": "^1.10.14",

@@ -19,6 +19,7 @@ const TargetItems: Array<SelectItem> = [
     value: 'pc',
   },
 ]
+
 const MidiValueItems: Array<SelectItem<number>> = Array.from({
   length: 128,
 }).map((_, i) => ({
@@ -74,6 +75,36 @@ export const MidiMessageComponent: React.FC<MidiMessageComponentProps> = ({
 
   const [secondaryMidiValueLabel, setSecondaryMidiValueLabel] =
     React.useState<string>('')
+
+  React.useEffect(() => {
+    if (
+      midiValue !== undefined &&
+      secondaryMidiValue !== undefined &&
+      midiChannel !== undefined
+    ) {
+      if (midiType === 'noteon') {
+        onChange({
+          type: 'noteon',
+          note: midiValue,
+          velocity: secondaryMidiValue,
+          channel: midiChannel,
+        })
+      } else if (midiType === 'cc') {
+        onChange({
+          type: 'cc',
+          controllerNumber: midiValue,
+          data: secondaryMidiValue,
+          channel: midiChannel,
+        })
+      } else if (midiType === 'pc') {
+        onChange({
+          type: 'pc',
+          programNumber: midiValue,
+          channel: midiChannel,
+        })
+      }
+    }
+  }, [midiType, midiValue, secondaryMidiValue, midiChannel])
 
   React.useEffect(() => {
     if (midiType === 'noteon') {

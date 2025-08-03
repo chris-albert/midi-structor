@@ -16,6 +16,7 @@ import { BorderFieldComponent } from './fields/BorderFieldComponent'
 import { MidiTargetsFieldComponent } from './fields/MidiTargetsFieldComponent'
 import { TextFieldComponent } from './fields/TextFieldComponent'
 import { MidiMessagesFieldComponent } from './fields/MidiMessagesFieldComponent'
+import { KnobFieldComponent } from './fields/KnobFieldComponent'
 
 const Components: Array<WidgetSettingsFormField> = [WidgetSettingsString]
 
@@ -156,6 +157,16 @@ export const WidgetSettingsFormComponent: React.FC<
           <MidiMessagesFieldComponent
             key={key}
             messages={form[key]}
+            onChange={(isChecked) => {
+              updateFormField(key, isChecked)
+            }}
+          />
+        )
+      } else if (schemaName.value === 'MidiKnob') {
+        return (
+          <KnobFieldComponent
+            key={key}
+            value={form[key]}
             onChange={(isChecked) => {
               updateFormField(key, isChecked)
             }}

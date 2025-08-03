@@ -6,6 +6,8 @@ import { ProcessManager } from '../ProcessManager'
 
 export type LogFn = (message: string, ...optionalParams: any[]) => void
 
+type LogLevel = 'debug' | 'info' | 'warn' | 'error'
+
 type Logger = {
   debug: LogFn
   info: LogFn
@@ -13,6 +15,7 @@ type Logger = {
   error: LogFn
   noop: LogFn
   enabled: (p: boolean, f: LogFn) => LogFn
+  timed: <A>(message: string, f: () => A) => (level: LogLevel) => A
 }
 
 const NO_OP: LogFn = () => {}
@@ -22,6 +25,17 @@ const logger = (): Logger => {
   const ansiColor = ProcessManager.color
 
   const message = `\x1b[${ansiColor}m[${stateType}]\x1b[0m %s`
+
+  const timed =
+    <A>(message: string, f: () => A) =>
+    (level: LogLevel): A => {
+      const startTime = performance.now()
+      const result = f()
+      const endTime = performance.now()
+      const totalTime = Math.floor((endTime - startTime) * 1000)
+      console.info(`TIMED ${totalTime}us: ${message}`)
+      return result
+    }
 
   return {
     debug: console.debug.bind(console, message),
@@ -36,6 +50,7 @@ const logger = (): Logger => {
         return NO_OP
       }
     },
+    timed,
   }
 }
 

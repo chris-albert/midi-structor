@@ -8,6 +8,7 @@
     "ui-deploy": "turbo run @midi-structor/ui#build",
     "electron-make": "turbo run @midi-structor/electron#make",
     "build-core": "turbo run @midi-structor/core#build",
+    "agent-dev": "turbo run @midi-structor/agent#dev",
     "madge-image": "madge --image graph.svg --circular ./packages/core",
     "madge": "madge --extensions ts,tsx --circular ./packages/core",
     "madge-ui": "madge --extensions ts,tsx --circular ./apps/ui"
