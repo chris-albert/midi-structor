@@ -1,9 +1,11 @@
 import React from 'react'
 import { SelectComponent, SelectItem } from '../../form/SelectComponent'
 import { MidiMessage } from '@midi-structor/core'
-import { Box } from '@mui/material'
+import { Box, Button } from '@mui/material'
 import { GroupedInputWithLabelComponent } from './GroupedInputWithLabelComponent'
 import _ from 'lodash'
+import AddCircleIcon from '@mui/icons-material/AddCircle'
+import { TrashIcon } from 'primereact/icons/trash'
 
 const TargetItems: Array<SelectItem> = [
   {
@@ -38,12 +40,14 @@ export type MidiMessageComponentProps = {
   label?: string
   value: MidiMessage
   onChange: (value: MidiMessage) => void
+  onRemove?: () => void
 }
 
 export const MidiMessageComponent: React.FC<MidiMessageComponentProps> = ({
   label,
   value,
   onChange,
+  onRemove,
 }) => {
   const [midiType, setMidiType] = React.useState<string | undefined>(undefined)
 
@@ -168,6 +172,22 @@ export const MidiMessageComponent: React.FC<MidiMessageComponentProps> = ({
           onChange={setMidiChannel}
           activeLabel={activeMidiChannel}
         />
+        {onRemove !== undefined ? (
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'end',
+            }}>
+            <Button
+              size='small'
+              startIcon={<TrashIcon />}
+              color='error'
+              onClick={onRemove}
+              variant='contained'>
+              Delete
+            </Button>
+          </Box>
+        ) : null}
       </Box>
     </GroupedInputWithLabelComponent>
   )
