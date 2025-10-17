@@ -229,7 +229,7 @@ function initProject(filterTracks) {
   })
 }
 
-var BASE_URL = 'http://localhost:3333'
+var BASE_URL = 'http://localhost:3101'
 var ajaxreq = null
 function sendHttp(tracks, cues) {
   var data = JSON.stringify({ tracks: tracks, cues: cues })
@@ -375,7 +375,7 @@ function parseTrack(trackIndex, filterTracks) {
       track: {
         type: 'track',
         trackIndex: trackIndex,
-        name: name,
+        name: name.toString(),
         color: color,
       },
       clips: clips,
@@ -391,7 +391,7 @@ function parseTrackClip(trackIndex, clipIndex) {
     type: 'clip',
     trackIndex: trackIndex,
     clipIndex: clipIndex,
-    name: api.get('name')[0],
+    name: api.get('name')[0].toString(),
     color: api.get('color')[0],
     startTime: api.get('start_time')[0],
     endTime: api.get('end_time')[0],
@@ -407,7 +407,7 @@ function parseCues() {
     cues.push({
       type: 'cue',
       id: api.id,
-      name: api.get('name')[0],
+      name: api.get('name')[0].toString(),
       time: api.get('time')[0],
       index: cueIndex,
     })

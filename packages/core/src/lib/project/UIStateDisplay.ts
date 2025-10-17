@@ -185,8 +185,7 @@ export const getHexColor = (hasColor: { color: number }): string =>
   `#${hasColor.color.toString(16)}`
 
 export const RawTrackMessage = Schema.Struct({
-  type: Schema.Literal('init-track'),
-  messageId: Schema.Number,
+  type: Schema.Literal('track'),
   trackIndex: Schema.Number,
   name: Schema.String,
   color: Schema.Number,
@@ -195,8 +194,7 @@ export const RawTrackMessage = Schema.Struct({
 export type RawTrackMessage = Schema.Schema.Type<typeof RawTrackMessage>
 
 export const RawClipMessage = Schema.Struct({
-  type: Schema.Literal('init-clip'),
-  messageId: Schema.Number,
+  type: Schema.Literal('clip'),
   trackIndex: Schema.Number,
   clipIndex: Schema.Number,
   name: Schema.String,
@@ -208,9 +206,8 @@ export const RawClipMessage = Schema.Struct({
 export type RawClipMessage = Schema.Schema.Type<typeof RawClipMessage>
 
 export const RawCueMessage = Schema.Struct({
-  type: Schema.Literal('init-cue'),
-  messageId: Schema.Number,
-  id: Schema.Number,
+  type: Schema.Literal('cue'),
+  id: Schema.String,
   name: Schema.String,
   time: Schema.Number,
   index: Schema.Number,
@@ -226,17 +223,51 @@ const RawProjectMessage = Schema.Struct({
   }),
 })
 
-export const buildInitArrangement = (raw: any): InitArrangement => {
-  log.info(raw)
-  SchemaHelper.decodeUnknown({
+const RawProjectToInit = {
+  track: (track: RawTrackMessage, messageId: number): InitTrackMessage => {
+    return {
+      messageId,
+      ...track,
+      type: 'init-track',
+    }
+  },
+  clip: (clip: RawClipMessage, messageId: number): InitClipMessage => {
+    return {
+      messageId,
+      ...clip,
+      type: 'init-clip',
+    }
+  },
+  cue: (cue: RawCueMessage, messageId: number): InitCueMessage => {
+    return {
+      messageId,
+      ...cue,
+      id: parseInt(cue.id),
+      type: 'init-cue',
+    }
+  },
+}
+
+export const buildInitArrangement = (raw: any): [InitArrangement, number] => {
+  return SchemaHelper.decodeUnknown({
     schema: RawProjectMessage,
     raw,
     ok: (project) => {
-      log.info('Project', project)
+      log.info('Successfully parsed project', project)
+      return [
+        [
+          ...project.tracks.tracks.map(RawProjectToInit.track),
+          ...project.tracks.clips.map(RawProjectToInit.clip),
+          ...project.cues.map(RawProjectToInit.cue),
+        ],
+        project.tracks.tracks.length +
+          project.tracks.clips.length +
+          project.cues.length,
+      ]
     },
     error: (error) => {
       log.info('Project parse error', error)
+      return [[], 0]
     },
   })
-  return []
 }

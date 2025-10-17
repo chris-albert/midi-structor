@@ -38,7 +38,7 @@ const run = (port: number, onProject: (raw: string) => void) => {
 }
 
 app.setName('MIDI Structor')
-const PORT = 3333
+const PORT = 3101
 const loadServer = (onProject: (s: string) => void) => {
   log.info(`Attempting to start server on port ${PORT}`)
   run(PORT, (project: string) => {

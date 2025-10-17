@@ -52,7 +52,24 @@ let initArrangement: InitArrangement = []
 const listenerQueue = Effect.runSync(Queue.unbounded<SysExMessage>())
 
 const processFullProject = (event: MessageEvent<any>) => {
-  buildInitArrangement(event.data)
+  const [initArrangement, count] = buildInitArrangement(event.data)
+  finalizeInitArrangement(initArrangement, count)
+}
+
+const finalizeInitArrangement = (
+  initArrangement: InitArrangement,
+  sourceMessageCount: number
+) => {
+  const arrangement = initDone(initArrangement)
+  const parsedMessageCount = arrangementMessageCount(arrangement)
+  ProjectState.project.arrangement.set(arrangement)
+  const status = {
+    type: 'done' as const,
+    sourceMessageCount,
+    parsedMessageCount,
+  }
+  log.info('Import Status', status)
+  ProjectState.importStatus.set(status)
 }
 
 const listener = (dawListener: EventEmitter<MidiEventRecord>) => {
@@ -86,16 +103,7 @@ const listener = (dawListener: EventEmitter<MidiEventRecord>) => {
           msg: `Resend attempts exceeded ${MAX_RESEND_ATTEMPTS}!`,
         })
       } else if (_.isEmpty(missingMessageIds)) {
-        const arrangement = initDone(initArrangement)
-        const parsedMessageCount = arrangementMessageCount(arrangement)
-        ProjectState.project.arrangement.set(arrangement)
-        const status = {
-          type: 'done' as const,
-          sourceMessageCount,
-          parsedMessageCount,
-        }
-        log.info('Import Status', status)
-        ProjectState.importStatus.set(status)
+        finalizeInitArrangement(initArrangement, sourceMessageCount)
       } else {
         resendAttempts++
         ProjectState.importStatus.set({
