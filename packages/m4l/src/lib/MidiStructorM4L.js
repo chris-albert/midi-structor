@@ -244,7 +244,9 @@ function sendHttp(tracks, cues) {
       post('Successfully sent project over HTTP\n')
     }
   })
+  post('Sending project data over HTTP, data length: ', data.length, '\n')
   ajaxreq.send(data)
+  post('Done sending project data over HTTP\n')
   // outlet(2, data)
 }
 

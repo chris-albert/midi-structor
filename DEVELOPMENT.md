@@ -42,6 +42,11 @@ Building electron, including bundling the ui:
 ./electron-make.sh
 ```
 
+Logs for electron app running:
+```
+tail -f ~/Library/Logs/MIDI\ Structor/main.log
+```
+
 Making MacOSX icons
 ```
 brew install makeicns
@@ -55,6 +60,7 @@ The 2 rows at the top designate your device ID, the one that is a different colo
 Having different device ID's helps when you have multiple LaunchPad's and need to configure them differently.
 
 Initialize Messages
+```mermaid
 sequenceDiagram
   MIDI Structor->>Ableton: init
   Ableton->>MIDI Structor: init-ack [projectName: string]

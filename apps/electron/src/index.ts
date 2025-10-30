@@ -27,7 +27,7 @@ const run = (port: number, onProject: (raw: string) => void) => {
   })
 
   app.post('/project', (req, res) => {
-    log.info(`Agent Server /project ${req.body}`)
+    log.info(`Agent Server /project`)
     onProject(req.body)
     res.send('ok')
   })
@@ -42,7 +42,6 @@ const PORT = 3101
 const loadServer = (onProject: (s: string) => void) => {
   log.info(`Attempting to start server on port ${PORT}`)
   run(PORT, (project: string) => {
-    log.info('Project from server', project)
     onProject(project)
   })
 }

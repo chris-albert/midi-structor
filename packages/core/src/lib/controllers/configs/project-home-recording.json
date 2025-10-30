@@ -1,0 +1,238 @@
+{
+  "label": "Home Recording",
+  "key": "home-recording",
+  "controllers": [
+    {
+      "id": "5b2b07c6-e3a3-4ba5-ba8e-b9c8d22fc1d6",
+      "name": "Main",
+      "enabled": true,
+      "config": {
+        "widgets": [
+          {
+            "_tag": "play-stop",
+            "target": {
+              "_tag": "CC",
+              "controllerNumber": 19
+            },
+            "playColor": 16842496,
+            "stopColor": 33488896
+          },
+          {
+            "_tag": "record",
+            "target": {
+              "_tag": "CC",
+              "controllerNumber": 29
+            },
+            "color": 33489151
+          },
+          {
+            "_tag": "metronome",
+            "target": {
+              "_tag": "CC",
+              "controllerNumber": 99
+            },
+            "oneColor": 16842496,
+            "restColor": 33488896
+          },
+          {
+            "_tag": "beats",
+            "targets": [
+              {
+                "_tag": "Note",
+                "note": 81
+              },
+              {
+                "_tag": "Note",
+                "note": 82
+              },
+              {
+                "_tag": "Note",
+                "note": 83
+              },
+              {
+                "_tag": "Note",
+                "note": 84
+              },
+              {
+                "_tag": "Note",
+                "note": 85
+              },
+              {
+                "_tag": "Note",
+                "note": 86
+              },
+              {
+                "_tag": "Note",
+                "note": 87
+              },
+              {
+                "_tag": "Note",
+                "note": 88
+              }
+            ],
+            "oneColor": 16842496,
+            "restColor": 33488896
+          },
+          {
+            "_tag": "time-sig-count",
+            "targets": [
+              {
+                "_tag": "Note",
+                "note": 91
+              },
+              {
+                "_tag": "Note",
+                "note": 92
+              },
+              {
+                "_tag": "Note",
+                "note": 93
+              },
+              {
+                "_tag": "Note",
+                "note": 94
+              },
+              {
+                "_tag": "Note",
+                "note": 95
+              },
+              {
+                "_tag": "Note",
+                "note": 96
+              },
+              {
+                "_tag": "Note",
+                "note": 97
+              },
+              {
+                "_tag": "Note",
+                "note": 98
+              }
+            ],
+            "color": 33488896
+          },
+          {
+            "_tag": "nav-clips",
+            "targets": [
+              {
+                "_tag": "Note",
+                "note": 11
+              },
+              {
+                "_tag": "Note",
+                "note": 12
+              },
+              {
+                "_tag": "Note",
+                "note": 13
+              },
+              {
+                "_tag": "Note",
+                "note": 14
+              },
+              {
+                "_tag": "Note",
+                "note": 15
+              },
+              {
+                "_tag": "Note",
+                "note": 16
+              },
+              {
+                "_tag": "Note",
+                "note": 17
+              },
+              {
+                "_tag": "Note",
+                "note": 18
+              },
+              {
+                "_tag": "Note",
+                "note": 21
+              },
+              {
+                "_tag": "Note",
+                "note": 22
+              },
+              {
+                "_tag": "Note",
+                "note": 23
+              },
+              {
+                "_tag": "Note",
+                "note": 24
+              },
+              {
+                "_tag": "Note",
+                "note": 25
+              },
+              {
+                "_tag": "Note",
+                "note": 26
+              },
+              {
+                "_tag": "Note",
+                "note": 27
+              },
+              {
+                "_tag": "Note",
+                "note": 28
+              },
+              {
+                "_tag": "Note",
+                "note": 31
+              },
+              {
+                "_tag": "Note",
+                "note": 32
+              },
+              {
+                "_tag": "Note",
+                "note": 33
+              },
+              {
+                "_tag": "Note",
+                "note": 34
+              },
+              {
+                "_tag": "Note",
+                "note": 35
+              },
+              {
+                "_tag": "Note",
+                "note": 36
+              },
+              {
+                "_tag": "Note",
+                "note": 37
+              },
+              {
+                "_tag": "Note",
+                "note": 38
+              }
+            ],
+            "trackName": "Songs",
+            "sort": "alphabetical"
+          }
+        ]
+      },
+      "device": "Launchpad Mini [MK3]",
+      "selected": {
+        "input": {
+          "_tag": "Some",
+          "value": "Launchpad Mini MK3 LPMiniMK3 MIDI Out"
+        },
+        "output": {
+          "_tag": "Some",
+          "value": "Launchpad Mini MK3 LPMiniMK3 MIDI In"
+        }
+      }
+    }
+  ],
+  "style": {
+    "accent": {
+      "color1": "#6a11cb",
+      "color2": "#2575fc"
+    }
+  }
+}
