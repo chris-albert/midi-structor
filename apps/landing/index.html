@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>MIDI Structor — Live MIDI controller configuration for Ableton Live</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="MIDI Structor turns your MIDI controller into a live performance command center. Sync with Ableton Live and configure every pad, button, and knob — visually, in real time." />
+    <link rel="icon" type="image/x-icon" href="./favicon.ico" />
+    <style>
+      :root {
+        --bg: #0d0d11;
+        --bg-raised: #16161d;
+        --bg-card: #1a1a23;
+        --border: #2a2a36;
+        --text: #f2f2f5;
+        --text-dim: #a3a3b2;
+        --red: #ef3b4f;
+        --purple: #7b3ff2;
+        --indigo: #4a4ae0;
+        --grad: linear-gradient(120deg, #ef3b4f, #7b3ff2 55%, #4a4ae0);
+        --radius: 14px;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+          Helvetica, Arial, sans-serif;
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .container {
+        max-width: 1060px;
+        margin: 0 auto;
+        padding: 0 24px;
+      }
+
+      /* ---------- Nav ---------- */
+      nav {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        background: rgba(13, 13, 17, 0.8);
+        border-bottom: 1px solid var(--border);
+      }
+
+      .nav-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 64px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-weight: 700;
+        font-size: 17px;
+        letter-spacing: 0.02em;
+      }
+
+      .brand img {
+        width: 32px;
+        height: 32px;
+        border-radius: 7px;
+        display: block;
+      }
+
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 28px;
+        font-size: 14.5px;
+        color: var(--text-dim);
+      }
+
+      .nav-links a:hover {
+        color: var(--text);
+      }
+
+      .nav-links .nav-cta {
+        color: var(--text);
+        border: 1px solid var(--border);
+        padding: 7px 16px;
+        border-radius: 8px;
+        transition: border-color 0.2s;
+      }
+
+      .nav-links .nav-cta:hover {
+        border-color: var(--purple);
+      }
+
+      /* ---------- Hero ---------- */
+      .hero {
+        position: relative;
+        text-align: center;
+        padding: 96px 0 72px;
+        overflow: hidden;
+      }
+
+      .hero::before {
+        content: '';
+        position: absolute;
+        top: -320px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 900px;
+        height: 640px;
+        background: radial-gradient(
+          ellipse at center,
+          rgba(123, 63, 242, 0.28),
+          rgba(239, 59, 79, 0.1) 55%,
+          transparent 72%
+        );
+        pointer-events: none;
+      }
+
+      .hero .container {
+        position: relative;
+      }
+
+      .eyebrow {
+        display: inline-block;
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--text-dim);
+        border: 1px solid var(--border);
+        background: var(--bg-raised);
+        border-radius: 999px;
+        padding: 6px 16px;
+        margin-bottom: 28px;
+      }
+
+      h1 {
+        font-size: clamp(38px, 6vw, 60px);
+        line-height: 1.1;
+        letter-spacing: -0.02em;
+        font-weight: 800;
+        max-width: 820px;
+        margin: 0 auto 20px;
+      }
+
+      h1 .grad {
+        background: var(--grad);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+
+      .hero p.lede {
+        font-size: clamp(17px, 2.2vw, 20px);
+        color: var(--text-dim);
+        max-width: 640px;
+        margin: 0 auto 40px;
+      }
+
+      .cta-row {
+        display: flex;
+        justify-content: center;
+        gap: 14px;
+        flex-wrap: wrap;
+        margin-bottom: 14px;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+        font-size: 15.5px;
+        font-weight: 600;
+        padding: 13px 26px;
+        border-radius: 10px;
+        transition: transform 0.15s, box-shadow 0.15s, border-color 0.2s;
+      }
+
+      .btn svg {
+        width: 18px;
+        height: 18px;
+        flex-shrink: 0;
+      }
+
+      .btn-primary {
+        background: var(--grad);
+        color: #fff;
+        box-shadow: 0 4px 24px rgba(123, 63, 242, 0.35);
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 32px rgba(123, 63, 242, 0.5);
+      }
+
+      .btn-secondary {
+        background: var(--bg-raised);
+        border: 1px solid var(--border);
+        color: var(--text);
+      }
+
+      .btn-secondary:hover {
+        border-color: var(--purple);
+      }
+
+      .cta-note {
+        font-size: 13px;
+        color: var(--text-dim);
+      }
+
+      .cta-note a {
+        text-decoration: underline;
+        text-underline-offset: 3px;
+      }
+
+      /* ---------- Screenshot ---------- */
+      .shot-wrap {
+        position: relative;
+        margin: 64px auto 0;
+        max-width: 860px;
+        padding: 0 24px;
+      }
+
+      .shot-wrap::before {
+        content: '';
+        position: absolute;
+        inset: 10% 15% -5% 15%;
+        background: var(--grad);
+        filter: blur(80px);
+        opacity: 0.25;
+        pointer-events: none;
+      }
+
+      .shot-wrap img {
+        position: relative;
+        width: 100%;
+        display: block;
+        border-radius: var(--radius);
+        border: 1px solid var(--border);
+        box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6);
+      }
+
+      /* ---------- Sections ---------- */
+      section {
+        padding: 88px 0;
+      }
+
+      .section-head {
+        text-align: center;
+        max-width: 620px;
+        margin: 0 auto 56px;
+      }
+
+      .section-head h2 {
+        font-size: clamp(28px, 4vw, 38px);
+        letter-spacing: -0.02em;
+        line-height: 1.2;
+        margin-bottom: 14px;
+      }
+
+      .section-head p {
+        color: var(--text-dim);
+        font-size: 17px;
+      }
+
+      /* ---------- Highlight feature ---------- */
+      .highlight {
+        display: grid;
+        grid-template-columns: 1.1fr 0.9fr;
+        gap: 48px;
+        align-items: center;
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 48px;
+        margin-bottom: 24px;
+      }
+
+      .highlight h3 {
+        font-size: 26px;
+        letter-spacing: -0.01em;
+        margin-bottom: 14px;
+      }
+
+      .highlight p {
+        color: var(--text-dim);
+        margin-bottom: 12px;
+      }
+
+      .tag {
+        display: inline-block;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        background: rgba(239, 59, 79, 0.14);
+        color: #ff7d8c;
+        border-radius: 6px;
+        padding: 4px 10px;
+        margin-bottom: 18px;
+      }
+
+      /* Decorative pad grid */
+      .pads {
+        display: grid;
+        grid-template-columns: repeat(8, 1fr);
+        gap: 8px;
+        aspect-ratio: 8 / 5;
+      }
+
+      .pads span {
+        border-radius: 6px;
+        background: #0c0c10;
+        border: 1px solid #26262f;
+      }
+
+      .pads span[data-c] {
+        border: none;
+        animation: padPulse 3.6s ease-in-out infinite;
+      }
+
+      .pads span[data-c='red'] { background: #ef3b4f; }
+      .pads span[data-c='lime'] { background: #6ef94c; animation-delay: 0.4s; }
+      .pads span[data-c='yellow'] { background: #efe66a; animation-delay: 0.9s; }
+      .pads span[data-c='cyan'] { background: #48d7f4; animation-delay: 1.3s; }
+      .pads span[data-c='pink'] { background: #f43bd4; animation-delay: 1.7s; }
+      .pads span[data-c='orange'] { background: #ef8b3b; animation-delay: 2.2s; }
+      .pads span[data-c='purple'] { background: #8b6cf2; animation-delay: 2.6s; }
+      .pads span[data-c='blue'] { background: #3b6cef; animation-delay: 3s; }
+
+      @keyframes padPulse {
+        0%, 100% { filter: brightness(0.75); }
+        50% { filter: brightness(1.25); }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .pads span[data-c] {
+          animation: none;
+        }
+      }
+
+      /* ---------- Feature cards ---------- */
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+      }
+
+      .card {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 32px 28px;
+      }
+
+      .card .icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 11px;
+        background: var(--grad);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 20px;
+      }
+
+      .card .icon svg {
+        width: 22px;
+        height: 22px;
+        stroke: #fff;
+      }
+
+      .card h3 {
+        font-size: 18px;
+        margin-bottom: 10px;
+      }
+
+      .card p {
+        font-size: 15px;
+        color: var(--text-dim);
+      }
+
+      /* ---------- How it works ---------- */
+      .steps {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+        counter-reset: step;
+      }
+
+      .step {
+        position: relative;
+        padding: 28px;
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        background: var(--bg-raised);
+      }
+
+      .step::before {
+        counter-increment: step;
+        content: counter(step);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background: var(--grad);
+        color: #fff;
+        font-weight: 700;
+        font-size: 15px;
+        margin-bottom: 16px;
+      }
+
+      .step h3 {
+        font-size: 17px;
+        margin-bottom: 8px;
+      }
+
+      .step p {
+        font-size: 14.5px;
+        color: var(--text-dim);
+      }
+
+      /* ---------- Download band ---------- */
+      .band {
+        text-align: center;
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: 24px;
+        padding: 64px 32px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .band::before {
+        content: '';
+        position: absolute;
+        inset: -60% 20% auto;
+        height: 120%;
+        background: radial-gradient(
+          ellipse at top,
+          rgba(123, 63, 242, 0.22),
+          transparent 65%
+        );
+        pointer-events: none;
+      }
+
+      .band > * {
+        position: relative;
+      }
+
+      .band h2 {
+        font-size: clamp(26px, 4vw, 36px);
+        letter-spacing: -0.02em;
+        margin-bottom: 12px;
+      }
+
+      .band p {
+        color: var(--text-dim);
+        max-width: 520px;
+        margin: 0 auto 32px;
+      }
+
+      /* ---------- Footer ---------- */
+      footer {
+        border-top: 1px solid var(--border);
+        padding: 36px 0;
+        font-size: 14px;
+        color: var(--text-dim);
+      }
+
+      .footer-inner {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        flex-wrap: wrap;
+      }
+
+      .footer-inner a:hover {
+        color: var(--text);
+      }
+
+      /* ---------- Responsive ---------- */
+      @media (max-width: 860px) {
+        .highlight {
+          grid-template-columns: 1fr;
+          padding: 32px;
+        }
+
+        .cards,
+        .steps {
+          grid-template-columns: 1fr;
+        }
+
+        .nav-links {
+          gap: 18px;
+        }
+
+        .nav-links .hide-sm {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <div class="container nav-inner">
+        <a class="brand" href="#">
+          <img src="./assets/midi-structor-logo.png" alt="MIDI Structor logo" />
+          MIDI Structor
+        </a>
+        <div class="nav-links">
+          <a class="hide-sm" href="#features">Features</a>
+          <a class="hide-sm" href="#how">How it works</a>
+          <a href="https://github.com/chris-albert/midi-structor">GitHub</a>
+          <a class="nav-cta" href="#download">Download</a>
+        </div>
+      </div>
+    </nav>
+
+    <header class="hero">
+      <div class="container">
+        <span class="eyebrow">Open source &middot; Built for Ableton Live</span>
+        <h1>
+          Your MIDI controller,<br />
+          <span class="grad">designed for the stage</span>
+        </h1>
+        <p class="lede">
+          MIDI Structor turns your controller into a live performance command
+          center. Sync with Ableton Live and configure every pad, button, and
+          knob — visually, in real time, even mid-performance.
+        </p>
+        <div class="cta-row">
+          <a
+            class="btn btn-primary"
+            href="https://github.com/chris-albert/midi-structor/releases/latest">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="7 10 12 15 17 10" />
+              <line x1="12" y1="15" x2="12" y2="3" />
+            </svg>
+            Download for macOS
+          </a>
+          <a class="btn btn-secondary" href="./app/">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="6 3 20 12 6 21 6 3" />
+            </svg>
+            Launch in browser
+          </a>
+        </div>
+        <p class="cta-note">
+          Apple Silicon &middot; free &amp; open source &middot;
+          <a href="https://github.com/chris-albert/midi-structor#downloading-app-from-releases"
+            >installation notes</a
+          >
+        </p>
+      </div>
+      <div class="shot-wrap">
+        <img
+          src="./assets/midi-structor-app.png"
+          alt="MIDI Structor's controller editor showing a Launchpad-style grid of colored pads for the project &quot;Infinite Bits&quot;" />
+      </div>
+    </header>
+
+    <section id="features">
+      <div class="container">
+        <div class="section-head">
+          <h2>Everything on stage, under your fingers</h2>
+          <p>
+            Stop memorizing MIDI mappings. See your controller on screen, shape
+            it to your set, and let it follow your project.
+          </p>
+        </div>
+
+        <div class="highlight">
+          <div>
+            <span class="tag">Live configuration</span>
+            <h3>Configure your controller while you perform</h3>
+            <p>
+              MIDI Structor mirrors your hardware as an interactive grid.
+              Click any pad to set its color, label, and behavior — launch a
+              clip, jump to a cue, arm a track, stop / solo / mute — and watch
+              your controller light up instantly.
+            </p>
+            <p>
+              No export, no re-flash, no restart. Tweak your layout at
+              soundcheck, or in the middle of a song.
+            </p>
+          </div>
+          <div class="pads" aria-hidden="true">
+            <span data-c="red"></span><span></span><span></span><span data-c="yellow"></span><span></span><span data-c="cyan"></span><span></span><span data-c="lime"></span>
+            <span></span><span data-c="purple"></span><span></span><span></span><span data-c="pink"></span><span></span><span data-c="orange"></span><span></span>
+            <span data-c="lime"></span><span></span><span data-c="blue"></span><span></span><span></span><span data-c="red"></span><span></span><span data-c="yellow"></span>
+            <span></span><span data-c="orange"></span><span></span><span data-c="cyan"></span><span></span><span></span><span data-c="purple"></span><span></span>
+            <span data-c="pink"></span><span></span><span data-c="yellow"></span><span></span><span data-c="lime"></span><span></span><span></span><span data-c="blue"></span>
+          </div>
+        </div>
+
+        <div class="cards">
+          <div class="card">
+            <div class="icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="23 4 23 10 17 10" />
+                <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
+              </svg>
+            </div>
+            <h3>Real-time Ableton Live sync</h3>
+            <p>
+              A Max for Live device streams your project into MIDI Structor —
+              tracks, clips, cues, tempo, time signature, and transport state,
+              updated on every beat.
+            </p>
+          </div>
+          <div class="card">
+            <div class="icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="5 3 19 12 5 21 5 3" />
+              </svg>
+            </div>
+            <h3>Command your set</h3>
+            <p>
+              Play, stop, record, jump to any cue, toggle the metronome and
+              loop — straight from your pads, with your arrangement following
+              along bar by bar.
+            </p>
+          </div>
+          <div class="card">
+            <div class="icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="7" height="7" rx="1" />
+                <rect x="14" y="3" width="7" height="7" rx="1" />
+                <rect x="3" y="14" width="7" height="7" rx="1" />
+                <rect x="14" y="14" width="7" height="7" rx="1" />
+              </svg>
+            </div>
+            <h3>Hardware &amp; virtual controllers</h3>
+            <p>
+              First-class support for the Novation Launchpad Mini MK3, plus a
+              fully customizable on-screen controller you can build from
+              widgets — beats, tempo, track status, and more.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="how">
+      <div class="container">
+        <div class="section-head">
+          <h2>Up and running in three steps</h2>
+        </div>
+        <div class="steps">
+          <div class="step">
+            <h3>Drop in the Max for Live device</h3>
+            <p>
+              Add the MIDI Structor device to your Ableton Live set. It handles
+              syncing your project out to the app.
+            </p>
+          </div>
+          <div class="step">
+            <h3>Connect your controller</h3>
+            <p>
+              Open MIDI Structor, pick your MIDI device, and your project's
+              tracks, clips, and cues appear automatically.
+            </p>
+          </div>
+          <div class="step">
+            <h3>Design your performance</h3>
+            <p>
+              Lay out pads for the songs in your set, assign colors and
+              actions, and take the stage.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="download">
+      <div class="container">
+        <div class="band">
+          <h2>Ready to structure your set?</h2>
+          <p>
+            MIDI Structor is free and open source under the MIT license. Grab
+            the macOS app, or try it right in your browser.
+          </p>
+          <div class="cta-row">
+            <a
+              class="btn btn-primary"
+              href="https://github.com/chris-albert/midi-structor/releases/latest">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
+              </svg>
+              Download for macOS
+            </a>
+            <a class="btn btn-secondary" href="./app/">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="6 3 20 12 6 21 6 3" />
+              </svg>
+              Launch in browser
+            </a>
+          </div>
+          <p class="cta-note">
+            macOS Gatekeeper may flag the unsigned app —
+            <a href="https://github.com/chris-albert/midi-structor#downloading-app-from-releases"
+              >here's the quick fix</a
+            >.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="container footer-inner">
+        <span>MIDI Structor &middot; MIT License</span>
+        <a href="https://github.com/chris-albert/midi-structor">
+          github.com/chris-albert/midi-structor
+        </a>
+      </div>
+    </footer>
+  </body>
+</html>

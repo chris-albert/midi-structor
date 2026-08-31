@@ -29,8 +29,14 @@ jobs:
           CI: false
         run: pnpm ui-deploy
 
+      - name: Assemble site
+        run: |
+          mkdir -p site/app
+          cp -r apps/landing/. site/
+          cp -r apps/ui/dist/. site/app/
+
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./apps/ui/dist
+          publish_dir: ./site
