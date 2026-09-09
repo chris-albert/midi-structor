@@ -19,7 +19,7 @@ if (require('electron-squirrel-startup')) {
 const run = (port: number, onProject: (raw: string) => void) => {
   const app = express()
 
-  app.use(express.json())
+  app.use(express.json({ limit: '2mb' }))
 
   app.get('/ping', (req, res) => {
     log.info('Agent Server /ping')
